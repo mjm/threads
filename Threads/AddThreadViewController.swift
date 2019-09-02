@@ -31,6 +31,7 @@ class AddThreadViewController: UITableViewController {
         searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.searchResultsUpdater = self
         searchController.searchBar.autocapitalizationType = .none
+        searchController.searchBar.placeholder = "Search for new threads"
         
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -43,6 +44,12 @@ class AddThreadViewController: UITableViewController {
             return cell
         }
         updateSnapshot()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        searchController.searchBar.perform(#selector(becomeFirstResponder), with: nil, afterDelay: 0.1)
     }
     
     func updateSnapshot() {
