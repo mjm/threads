@@ -9,23 +9,26 @@
 /* Begin PBXBuildFile section */
 		C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491DF3231D897B0031F463 /* AppDelegate.swift */; };
 		C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491DF5231D897B0031F463 /* SceneDelegate.swift */; };
-		C9491DF8231D897B0031F463 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491DF7231D897B0031F463 /* ViewController.swift */; };
 		C9491DFB231D897B0031F463 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9491DF9231D897B0031F463 /* Main.storyboard */; };
 		C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C9491DFC231D897B0031F463 /* Threads.xcdatamodeld */; };
 		C9491E00231D897C0031F463 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9491DFF231D897C0031F463 /* Assets.xcassets */; };
 		C9491E03231D897C0031F463 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9491E01231D897C0031F463 /* LaunchScreen.storyboard */; };
+		C9491E0D231D8A230031F463 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9491E0C231D8A220031F463 /* CloudKit.framework */; };
+		C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		C9491DF0231D897B0031F463 /* Threads.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Threads.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9491DF3231D897B0031F463 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9491DF5231D897B0031F463 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		C9491DF7231D897B0031F463 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C9491DFA231D897B0031F463 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C9491DFD231D897B0031F463 /* Threads.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Threads.xcdatamodel; sourceTree = "<group>"; };
 		C9491DFF231D897C0031F463 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C9491E02231D897C0031F463 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C9491E04231D897C0031F463 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C9491E0A231D8A1E0031F463 /* Threads.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Threads.entitlements; sourceTree = "<group>"; };
+		C9491E0C231D8A220031F463 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9491E0D231D8A230031F463 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +48,7 @@
 			children = (
 				C9491DF2231D897B0031F463 /* Threads */,
 				C9491DF1231D897B0031F463 /* Products */,
+				C9491E0B231D8A220031F463 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,9 +63,10 @@
 		C9491DF2231D897B0031F463 /* Threads */ = {
 			isa = PBXGroup;
 			children = (
+				C9491E0A231D8A1E0031F463 /* Threads.entitlements */,
 				C9491DF3231D897B0031F463 /* AppDelegate.swift */,
 				C9491DF5231D897B0031F463 /* SceneDelegate.swift */,
-				C9491DF7231D897B0031F463 /* ViewController.swift */,
+				C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */,
 				C9491DF9231D897B0031F463 /* Main.storyboard */,
 				C9491DFF231D897C0031F463 /* Assets.xcassets */,
 				C9491E01231D897C0031F463 /* LaunchScreen.storyboard */,
@@ -68,6 +74,14 @@
 				C9491DFC231D897B0031F463 /* Threads.xcdatamodeld */,
 			);
 			path = Threads;
+			sourceTree = "<group>";
+		};
+		C9491E0B231D8A220031F463 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C9491E0C231D8A220031F463 /* CloudKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,7 +155,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9491DF8231D897B0031F463 /* ViewController.swift in Sources */,
+				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
@@ -288,6 +302,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Threads/Threads.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PE8BN56Z28;
 				INFOPLIST_FILE = Threads/Info.plist;
@@ -306,6 +321,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Threads/Threads.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PE8BN56Z28;
 				INFOPLIST_FILE = Threads/Info.plist;
