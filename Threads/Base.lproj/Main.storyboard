@@ -74,7 +74,13 @@
                         </connections>
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Item" id="etl-dw-Nba"/>
-                    <navigationItem key="navigationItem" title="My Threads" id="ghz-l6-5Wq"/>
+                    <navigationItem key="navigationItem" title="My Threads" id="ghz-l6-5Wq">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="plus" catalog="system" id="N85-6Y-sKZ">
+                            <connections>
+                                <segue destination="ksf-sk-euA" kind="presentation" id="usW-bi-EdY"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cBb-2w-hsK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -97,5 +103,75 @@
             </objects>
             <point key="canvasLocation" x="987" y="447"/>
         </scene>
+        <!--Add Threads-->
+        <scene sceneID="IOe-SV-xsV">
+            <objects>
+                <tableViewController id="TXJ-8d-WgH" customClass="AddThreadViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="up8-yf-XJA">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Thread" textLabel="2jF-3L-NRH" style="IBUITableViewCellStyleDefault" id="mtT-gK-gw8">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mtT-gK-gw8" id="Uwa-Cf-NHY">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2jF-3L-NRH">
+                                            <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="TXJ-8d-WgH" id="lQU-d8-Zq5"/>
+                            <outlet property="delegate" destination="TXJ-8d-WgH" id="xjk-sL-hHH"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Add Threads" id="G0E-rZ-c5h">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="zr6-Sv-6m0">
+                            <connections>
+                                <segue destination="g4O-g8-Ufu" kind="unwind" unwindAction="unwindCancelAddWithSegue:" id="raW-Ag-4UE"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Add" id="xbh-dD-Fd3">
+                            <connections>
+                                <action selector="addToCollection" destination="TXJ-8d-WgH" id="Igr-33-coz"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YAE-XQ-b07" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="g4O-g8-Ufu" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2651" y="-227"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="hR9-YJ-laq">
+            <objects>
+                <navigationController id="ksf-sk-euA" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="JzE-JG-1a0">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="TXJ-8d-WgH" kind="relationship" relationship="rootViewController" id="81a-et-dTX"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cev-K9-iun" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1796" y="-227"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="plus" catalog="system" width="64" height="58"/>
+    </resources>
 </document>

@@ -15,19 +15,21 @@ class MyThreadsViewController: UITableViewController {
         case threads
     }
     
+    private var managedObjectContext: NSManagedObjectContext {
+        return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
+    }
+    
     private var fetchedResultsController: NSFetchedResultsController<Thread>!
     private var dataSource: UITableViewDiffableDataSource<Section, Thread>!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let context = (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
-        
         let request: NSFetchRequest<Thread> = Thread.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "number", ascending: true)]
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: request,
-                                       managedObjectContext: context,
+                                       managedObjectContext: managedObjectContext,
                                        sectionNameKeyPath: nil,
                                        cacheName: nil)
         fetchedResultsController.delegate = self
@@ -53,6 +55,17 @@ class MyThreadsViewController: UITableViewController {
         NSLog("updating snapshot with objects: \(objects)")
         snapshot.appendItems(objects, toSection: .threads)
         dataSource.apply(snapshot)
+    }
+    
+    @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let navController = segue.destination as? UINavigationController {
+            if let addController = navController.viewControllers.first as? AddThreadViewController {
+                addController.managedObjectContext = managedObjectContext
+            }
+        }
     }
 
     /*

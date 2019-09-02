@@ -15,6 +15,9 @@
 		C9491E03231D897C0031F463 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9491E01231D897C0031F463 /* LaunchScreen.storyboard */; };
 		C9491E0D231D8A230031F463 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9491E0C231D8A220031F463 /* CloudKit.framework */; };
 		C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */; };
+		C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E10231DA9A20031F463 /* DMCThread.swift */; };
+		C9491E13231DAA5D0031F463 /* AllThreads.json in Resources */ = {isa = PBXBuildFile; fileRef = C9491E12231DAA5D0031F463 /* AllThreads.json */; };
+		C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E14231DACFA0031F463 /* AddThreadViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +32,9 @@
 		C9491E0A231D8A1E0031F463 /* Threads.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Threads.entitlements; sourceTree = "<group>"; };
 		C9491E0C231D8A220031F463 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewController.swift; sourceTree = "<group>"; };
+		C9491E10231DA9A20031F463 /* DMCThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMCThread.swift; sourceTree = "<group>"; };
+		C9491E12231DAA5D0031F463 /* AllThreads.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AllThreads.json; sourceTree = "<group>"; };
+		C9491E14231DACFA0031F463 /* AddThreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +73,9 @@
 				C9491DF3231D897B0031F463 /* AppDelegate.swift */,
 				C9491DF5231D897B0031F463 /* SceneDelegate.swift */,
 				C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */,
+				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
+				C9491E10231DA9A20031F463 /* DMCThread.swift */,
+				C9491E12231DAA5D0031F463 /* AllThreads.json */,
 				C9491DF9231D897B0031F463 /* Main.storyboard */,
 				C9491DFF231D897C0031F463 /* Assets.xcassets */,
 				C9491E01231D897C0031F463 /* LaunchScreen.storyboard */,
@@ -145,6 +154,7 @@
 				C9491E03231D897C0031F463 /* LaunchScreen.storyboard in Resources */,
 				C9491E00231D897C0031F463 /* Assets.xcassets in Resources */,
 				C9491DFB231D897B0031F463 /* Main.storyboard in Resources */,
+				C9491E13231DAA5D0031F463 /* AllThreads.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,8 +167,10 @@
 			files = (
 				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
+				C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
+				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
