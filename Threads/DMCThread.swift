@@ -26,4 +26,8 @@ extension Thread {
         label = dmcThread.label
         number = dmcThread.number
     }
+    
+    var dmcThread: DMCThread {
+        return DMCThread(number: number!, label: label!)
+    }
 }

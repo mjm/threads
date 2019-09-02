@@ -63,6 +63,12 @@ class AddThreadViewController: UITableViewController {
         }
     }
     
+    private func getExistingThreads() throws -> [DMCThread] {
+        let request: NSFetchRequest<Thread> = Thread.fetchRequest()
+        let threads = try managedObjectContext.fetch(request)
+        return threads.map { $0.dmcThread }
+    }
+    
     @IBAction func addToCollection() {
         for t in selectedThreads {
             _ = Thread(dmcThread: t, context: managedObjectContext)
@@ -96,7 +102,14 @@ class AddThreadViewController: UITableViewController {
 
 extension AddThreadViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        resultsViewController.search(searchController.searchBar.text ?? "", excluding: selectedThreads)
+        var exclusions = Set(selectedThreads)
+        do {
+            exclusions.formUnion(try getExistingThreads())
+        } catch {
+            NSLog("Error fetching existing threads: \(error)")
+        }
+        
+        resultsViewController.search(searchController.searchBar.text ?? "", excluding: exclusions)
     }
 }
 
@@ -119,7 +132,7 @@ class ThreadResultsViewController: UITableViewController {
         }
     }
     
-    func search(_ query: String, excluding: [DMCThread]) {
+    func search(_ query: String, excluding: Set<DMCThread>) {
         let items = DMCThread.all.filter { !excluding.contains($0) && ($0.number.hasPrefix(query) || $0.label.contains(query)) }
         var snapshot = NSDiffableDataSourceSnapshot<Section, DMCThread>()
         snapshot.appendSections(Section.allCases)
