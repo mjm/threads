@@ -17,7 +17,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="DPy-uQ-uHk"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Projects" id="saS-6N-mA4"/>
+                    <tabBarItem key="tabBarItem" title="Projects" image="rectangle.3.offgrid.fill" catalog="system" selectedImage="rectangle.3.offgrid.fill" id="saS-6N-mA4"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6jT-q5-NY1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -90,7 +90,7 @@
         <scene sceneID="swQ-Ox-NyJ">
             <objects>
                 <navigationController id="7Qc-1p-aK9" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Collection" id="pT0-KO-7s3"/>
+                    <tabBarItem key="tabBarItem" title="Collection" image="tray.full.fill" catalog="system" selectedImage="tray.full.fill" id="pT0-KO-7s3"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="ITR-WJ-RNg">
                         <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -173,5 +173,7 @@
     </scenes>
     <resources>
         <image name="plus" catalog="system" width="64" height="58"/>
+        <image name="rectangle.3.offgrid.fill" catalog="system" width="64" height="40"/>
+        <image name="tray.full.fill" catalog="system" width="64" height="44"/>
     </resources>
 </document>
