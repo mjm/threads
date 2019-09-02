@@ -133,7 +133,14 @@ class ThreadResultsViewController: UITableViewController {
     }
     
     func search(_ query: String, excluding: Set<DMCThread>) {
-        let items = DMCThread.all.filter { !excluding.contains($0) && ($0.number.hasPrefix(query) || $0.label.contains(query)) }
+        let lowerQuery = query.lowercased()
+        
+        let items = DMCThread.all.filter {
+            return !excluding.contains($0) &&
+                ($0.number.lowercased().hasPrefix(lowerQuery) ||
+                    $0.label.lowercased().contains(lowerQuery))
+        }
+        
         var snapshot = NSDiffableDataSourceSnapshot<Section, DMCThread>()
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems(items, toSection: .threads)
