@@ -37,7 +37,7 @@ class AddThreadViewController: UITableViewController {
         
         definesPresentationContext = true
         
-        dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
+        dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath)
             cell.textLabel!.text = "\(item.number): \(item.label)"
             return cell
@@ -74,6 +74,8 @@ class AddThreadViewController: UITableViewController {
             _ = Thread(dmcThread: t, context: managedObjectContext)
         }
         
+        AppDelegate.save()
+        
         presentingViewController!.dismiss(animated: true)
     }
     
@@ -97,6 +99,23 @@ class AddThreadViewController: UITableViewController {
         
         searchController.searchBar.text = ""
         dismiss(animated: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if tableView == self.tableView {
+            let delete = UIContextualAction(style: .destructive, title: "Don't Add") { action, view, completionHandler in
+                self.selectedThreads.remove(at: indexPath.row)
+                self.updateSnapshot()
+                completionHandler(true)
+            }
+            delete.image = UIImage(systemName: "nosign")
+            
+            let config = UISwipeActionsConfiguration(actions: [delete])
+            config.performsFirstActionWithFullSwipe = true
+            return config
+        }
+        
+        return nil
     }
 }
 

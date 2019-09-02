@@ -77,5 +77,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    class func save() {
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+    }
 }
 
