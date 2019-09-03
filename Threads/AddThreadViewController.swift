@@ -38,9 +38,11 @@ class AddThreadViewController: UITableViewController {
         
         definesPresentationContext = true
         
+        tableView.register(ThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
+        
         dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath)
-            cell.textLabel!.text = "\(item.number): \(item.label)"
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ThreadTableViewCell
+            cell.populate(item)
             return cell
         }
         updateSnapshot()
@@ -149,11 +151,11 @@ class ThreadResultsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Thread")
+        tableView.register(ThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
         
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath)
-            cell.textLabel!.text = "\(item.number): \(item.label)"
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ThreadTableViewCell
+            cell.populate(item)
             return cell
         }
     }

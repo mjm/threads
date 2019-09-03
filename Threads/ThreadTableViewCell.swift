@@ -23,6 +23,12 @@ class ThreadTableViewCell: UITableViewCell {
             numberLabel.text = ""
         }
     }
+    
+    func populate(_ thread: DMCThread) {
+        colorView.backgroundColor = thread.color
+        labelLabel.text = thread.label
+        numberLabel.text = "DMC \(thread.number)"
+    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
