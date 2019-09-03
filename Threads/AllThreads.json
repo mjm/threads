@@ -1,34 +1,42 @@
 [
     {
         "number": "208",
-        "label": "Lavender Very Dark"
+        "label": "Lavender Very Dark",
+        "colorHex": "#935C7F"
     },
     {
         "number": "209",
-        "label": "Lavender Dark"
+        "label": "Lavender Dark",
+        "colorHex": "#CD95B9"
     },
     {
         "number": "210",
-        "label": "Lavender Medium"
+        "label": "Lavender Medium",
+        "colorHex": "#EBCFE1"
     },
     {
         "number": "211",
-        "label": "Lavender Light"
+        "label": "Lavender Light",
+        "colorHex": "#F2DAE4"
     },
     {
         "number": "221",
-        "label": "Shell Pink Very Dark"
+        "label": "Shell Pink Very Dark",
+        "colorHex": "#9A2B4B"
     },
     {
         "number": "223",
-        "label": "Shell Pink Light"
+        "label": "Shell Pink Light",
+        "colorHex": "#D98075"
     },
     {
         "number": "224",
-        "label": "Shell Pink Very Light"
+        "label": "Shell Pink Very Light",
+        "colorHex": "#FEC7B2"
     },
     {
         "number": "225",
-        "label": "Shell Pink Ultra Very L"
+        "label": "Shell Pink Ultra Very L",
+        "colorHex": "#FFF0E5"
     }
 ]

@@ -19,7 +19,21 @@
 		C9491E13231DAA5D0031F463 /* AllThreads.json in Resources */ = {isa = PBXBuildFile; fileRef = C9491E12231DAA5D0031F463 /* AllThreads.json */; };
 		C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E14231DACFA0031F463 /* AddThreadViewController.swift */; };
 		C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */; };
+		C9491E19231DD7D00031F463 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E18231DD7D00031F463 /* Color.swift */; };
+		C9491E29231DDBC60031F463 /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E28231DDBC60031F463 /* ColorTests.swift */; };
+		C9491E2C231DE0070031F463 /* ThreadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E2A231DE0070031F463 /* ThreadTableViewCell.swift */; };
+		C9491E2D231DE0070031F463 /* ThreadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9491E2B231DE0070031F463 /* ThreadTableViewCell.xib */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C9491E23231DDBB70031F463 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9491DE8231D897A0031F463 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9491DEF231D897A0031F463;
+			remoteInfo = Threads;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		C9491DF0231D897B0031F463 /* Threads.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Threads.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -37,6 +51,12 @@
 		C9491E12231DAA5D0031F463 /* AllThreads.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AllThreads.json; sourceTree = "<group>"; };
 		C9491E14231DACFA0031F463 /* AddThreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadViewController.swift; sourceTree = "<group>"; };
 		C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewDiffableDataSource.swift; sourceTree = "<group>"; };
+		C9491E18231DD7D00031F463 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		C9491E1E231DDBB70031F463 /* ThreadsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ThreadsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9491E22231DDBB70031F463 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C9491E28231DDBC60031F463 /* ColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTests.swift; sourceTree = "<group>"; };
+		C9491E2A231DE0070031F463 /* ThreadTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadTableViewCell.swift; sourceTree = "<group>"; };
+		C9491E2B231DE0070031F463 /* ThreadTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThreadTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +68,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C9491E1B231DDBB70031F463 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -55,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				C9491DF2231D897B0031F463 /* Threads */,
+				C9491E1F231DDBB70031F463 /* ThreadsTests */,
 				C9491DF1231D897B0031F463 /* Products */,
 				C9491E0B231D8A220031F463 /* Frameworks */,
 			);
@@ -64,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				C9491DF0231D897B0031F463 /* Threads.app */,
+				C9491E1E231DDBB70031F463 /* ThreadsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -77,6 +106,9 @@
 				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
 				C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */,
 				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
+				C9491E2A231DE0070031F463 /* ThreadTableViewCell.swift */,
+				C9491E2B231DE0070031F463 /* ThreadTableViewCell.xib */,
+				C9491E18231DD7D00031F463 /* Color.swift */,
 				C9491E10231DA9A20031F463 /* DMCThread.swift */,
 				C9491E12231DAA5D0031F463 /* AllThreads.json */,
 				C9491DF9231D897B0031F463 /* Main.storyboard */,
@@ -94,6 +126,15 @@
 				C9491E0C231D8A220031F463 /* CloudKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C9491E1F231DDBB70031F463 /* ThreadsTests */ = {
+			isa = PBXGroup;
+			children = (
+				C9491E22231DDBB70031F463 /* Info.plist */,
+				C9491E28231DDBC60031F463 /* ColorTests.swift */,
+			);
+			path = ThreadsTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -116,6 +157,24 @@
 			productReference = C9491DF0231D897B0031F463 /* Threads.app */;
 			productType = "com.apple.product-type.application";
 		};
+		C9491E1D231DDBB70031F463 /* ThreadsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C9491E25231DDBB70031F463 /* Build configuration list for PBXNativeTarget "ThreadsTests" */;
+			buildPhases = (
+				C9491E1A231DDBB70031F463 /* Sources */,
+				C9491E1B231DDBB70031F463 /* Frameworks */,
+				C9491E1C231DDBB70031F463 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C9491E24231DDBB70031F463 /* PBXTargetDependency */,
+			);
+			name = ThreadsTests;
+			productName = ThreadsTests;
+			productReference = C9491E1E231DDBB70031F463 /* ThreadsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -128,6 +187,10 @@
 				TargetAttributes = {
 					C9491DEF231D897A0031F463 = {
 						CreatedOnToolsVersion = 11.0;
+					};
+					C9491E1D231DDBB70031F463 = {
+						CreatedOnToolsVersion = 11.0;
+						TestTargetID = C9491DEF231D897A0031F463;
 					};
 				};
 			};
@@ -145,6 +208,7 @@
 			projectRoot = "";
 			targets = (
 				C9491DEF231D897A0031F463 /* Threads */,
+				C9491E1D231DDBB70031F463 /* ThreadsTests */,
 			);
 		};
 /* End PBXProject section */
@@ -158,6 +222,14 @@
 				C9491E00231D897C0031F463 /* Assets.xcassets in Resources */,
 				C9491DFB231D897B0031F463 /* Main.storyboard in Resources */,
 				C9491E13231DAA5D0031F463 /* AllThreads.json in Resources */,
+				C9491E2D231DE0070031F463 /* ThreadTableViewCell.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C9491E1C231DDBB70031F463 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,15 +242,33 @@
 			files = (
 				C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */,
 				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
+				C9491E2C231DE0070031F463 /* ThreadTableViewCell.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
 				C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,
+				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C9491E1A231DDBB70031F463 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9491E29231DDBC60031F463 /* ColorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C9491E24231DDBB70031F463 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9491DEF231D897A0031F463 /* Threads */;
+			targetProxy = C9491E23231DDBB70031F463 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		C9491DF9231D897B0031F463 /* Main.storyboard */ = {
@@ -352,6 +442,46 @@
 			};
 			name = Release;
 		};
+		C9491E26231DDBB70031F463 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = PE8BN56Z28;
+				INFOPLIST_FILE = ThreadsTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattmoriarity.ThreadsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Threads.app/Threads";
+			};
+			name = Debug;
+		};
+		C9491E27231DDBB70031F463 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = PE8BN56Z28;
+				INFOPLIST_FILE = ThreadsTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattmoriarity.ThreadsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Threads.app/Threads";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -369,6 +499,15 @@
 			buildConfigurations = (
 				C9491E08231D897C0031F463 /* Debug */,
 				C9491E09231D897C0031F463 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9491E25231DDBB70031F463 /* Build configuration list for PBXNativeTarget "ThreadsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9491E26231DDBB70031F463 /* Debug */,
+				C9491E27231DDBB70031F463 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

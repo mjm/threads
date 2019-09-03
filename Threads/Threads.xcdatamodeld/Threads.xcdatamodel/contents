@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14897.2" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Thread" representedClassName=".Thread" syncable="YES" codeGenerationType="class">
+        <attribute name="colorHex" optional="YES" attributeType="String"/>
         <attribute name="label" optional="YES" attributeType="String"/>
         <attribute name="number" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Thread" positionX="-54" positionY="-9" width="128" height="73"/>
+        <element name="Thread" positionX="-54" positionY="-9" width="128" height="88"/>
     </elements>
 </model>

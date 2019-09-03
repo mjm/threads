@@ -34,9 +34,10 @@ class MyThreadsViewController: UITableViewController {
                                        cacheName: nil)
         fetchedResultsController.delegate = self
         
+        tableView.register(ThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
         dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath)
-            cell.textLabel!.text = "\(item.number ?? ""): \(item.label ?? "")"
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ThreadTableViewCell
+            cell.populate(item)
             return cell
         }
         
