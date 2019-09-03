@@ -77,6 +77,9 @@ class MyThreadsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let thread = self.fetchedResultsController.object(at: indexPath)
+        if thread.amountInCollection == 0 {
+            return nil
+        }
         
         let bobbin: UIContextualAction
         if thread.onBobbin {
@@ -100,15 +103,26 @@ class MyThreadsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .destructive, title: "Remove") { action, view, completionHandler in
-            let thread = self.fetchedResultsController.object(at: indexPath)
-            self.managedObjectContext.delete(thread)
-            AppDelegate.save()
-            completionHandler(true)
-        }
-        delete.image = UIImage(systemName: "trash")
+        let thread = self.fetchedResultsController.object(at: indexPath)
         
-        let config = UISwipeActionsConfiguration(actions: [delete])
+        let stock: UIContextualAction
+        if thread.amountInCollection == 0 {
+            stock = UIContextualAction(style: .normal, title: "In Stock") { action, view, completionHandler in
+                thread.amountInCollection = 1
+                AppDelegate.save()
+                completionHandler(true)
+            }
+            stock.backgroundColor = UIColor(named: "InStockSwipe")
+        } else {
+            stock = UIContextualAction(style: .destructive, title: "Out of Stock") { action, view, completionHandler in
+                thread.amountInCollection = 0
+                thread.onBobbin = false
+                AppDelegate.save()
+                completionHandler(true)
+            }
+        }
+        
+        let config = UISwipeActionsConfiguration(actions: [stock])
         config.performsFirstActionWithFullSwipe = true
         return config
     }

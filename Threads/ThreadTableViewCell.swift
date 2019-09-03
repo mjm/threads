@@ -13,18 +13,33 @@ class ThreadTableViewCell: UITableViewCell {
     @IBOutlet var colorView: UIView!
     @IBOutlet var labelLabel: UILabel!
     @IBOutlet var numberLabel: UILabel!
-    @IBOutlet var bobbinLabel: UILabel!
+    @IBOutlet var statusLabel: UILabel!
 
     func populate(_ thread: Thread) {
         colorView.backgroundColor = thread.color
-        labelLabel.text = thread.label ?? ""
         if let number = thread.number {
-            // TODO show the onBobbin somewhere else
             numberLabel.text = "DMC \(number)"
         } else {
             numberLabel.text = ""
         }
-        bobbinLabel.isHidden = !thread.onBobbin
+        labelLabel.text = thread.label ?? ""
+        
+        numberLabel.textColor = UIColor.label
+        labelLabel.textColor = UIColor.label
+
+        statusLabel.isHidden = true
+        if thread.inCollection {
+            if thread.onBobbin {
+                statusLabel.isHidden = false
+                statusLabel.text = "On Bobbin"
+            } else if thread.amountInCollection == 0 {
+                statusLabel.isHidden = false
+                statusLabel.text = "Out of Stock"
+                
+                numberLabel.textColor = UIColor.secondaryLabel
+                labelLabel.textColor = UIColor.secondaryLabel
+            }
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

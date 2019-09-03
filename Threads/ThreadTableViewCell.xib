@@ -68,10 +68,10 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="bobbinLabel" destination="cB3-3o-RmA" id="d6U-o5-z0j"/>
                 <outlet property="colorView" destination="N85-Ht-7av" id="XIk-3H-otK"/>
                 <outlet property="labelLabel" destination="ACa-Ct-X8i" id="Nzb-43-smy"/>
                 <outlet property="numberLabel" destination="0VW-95-3OE" id="xJi-AJ-sy1"/>
+                <outlet property="statusLabel" destination="cB3-3o-RmA" id="feu-wk-cx6"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="118.19196428571428"/>
         </tableViewCell>
