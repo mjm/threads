@@ -73,6 +73,30 @@ class MyThreadsViewController: UITableViewController {
         // Disable selection for the time being
         return nil
     }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let thread = self.fetchedResultsController.object(at: indexPath)
+        
+        let bobbin: UIContextualAction
+        if thread.onBobbin {
+            bobbin = UIContextualAction(style: .normal, title: "Off Bobbin") { action, view, completionHandler in
+                thread.onBobbin = false
+                AppDelegate.save()
+                completionHandler(true)
+            }
+        } else {
+            bobbin = UIContextualAction(style: .normal, title: "On Bobbin") { action, view, completionHandler in
+                thread.onBobbin = true
+                AppDelegate.save()
+                completionHandler(true)
+            }
+        }
+        bobbin.backgroundColor = UIColor(named: "BobbinSwipe")
+        
+        let config = UISwipeActionsConfiguration(actions: [bobbin])
+        config.performsFirstActionWithFullSwipe = true
+        return config
+    }
 
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .destructive, title: "Remove") { action, view, completionHandler in
@@ -92,5 +116,17 @@ class MyThreadsViewController: UITableViewController {
 extension MyThreadsViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updateSnapshot()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .update:
+            let thread = anObject as! Thread
+            if let cell = tableView.cellForRow(at: indexPath!) as? ThreadTableViewCell {
+                cell.populate(thread)
+            }
+        default:
+            break
+        }
     }
 }

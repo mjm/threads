@@ -18,7 +18,8 @@ class ThreadTableViewCell: UITableViewCell {
         colorView.backgroundColor = thread.color
         labelLabel.text = thread.label ?? ""
         if let number = thread.number {
-            numberLabel.text = "DMC \(number)"
+            // TODO show the onBobbin somewhere else
+            numberLabel.text = "DMC \(number)\(thread.onBobbin ? " (On Bobbin)" : "")"
         } else {
             numberLabel.text = ""
         }
