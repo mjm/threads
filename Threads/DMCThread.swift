@@ -14,19 +14,11 @@ struct DMCThread: Codable, Hashable {
     var label: String
     var colorHex: String
     
-    var color: UIColor? {
-        get {
-            return UIColor(hex: colorHex)
-        }
-        set {
-            colorHex = newValue?.hexString ?? ""
-        }
-    }
-    
     static var all: [DMCThread] = {
         let url = Bundle.main.url(forResource: "AllThreads", withExtension: "json")!
         let data = try! Data(contentsOf: url)
-        return try! JSONDecoder().decode([DMCThread].self, from: data)
+        let threads = try! JSONDecoder().decode([DMCThread].self, from: data)
+        return threads.sorted { $0.number < $1.number }
     }()
 }
 
@@ -36,10 +28,6 @@ extension Thread {
         label = dmcThread.label
         number = dmcThread.number
         colorHex = dmcThread.colorHex
-    }
-    
-    var dmcThread: DMCThread {
-        return DMCThread(number: number!, label: label!, colorHex: colorHex ?? "")
     }
     
     var color: UIColor? {

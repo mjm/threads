@@ -26,6 +26,7 @@ class MyThreadsViewController: UITableViewController {
         super.viewDidLoad()
         
         let request: NSFetchRequest<Thread> = Thread.fetchRequest()
+        request.predicate = NSPredicate(format: "inCollection = YES")
         request.sortDescriptors = [NSSortDescriptor(key: "number", ascending: true)]
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: request,

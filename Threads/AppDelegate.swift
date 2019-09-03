@@ -56,6 +56,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                  */
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
+            
+            let importContext = container.newBackgroundContext()
+            importContext.perform {
+                do {
+                    try Thread.importThreads(DMCThread.all, context: importContext)
+                    try importContext.save()
+                    NSLog("Imported threads")
+                } catch {
+                    NSLog("Error importing threads into local store: \(error)")
+                }
+            }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
         return container
