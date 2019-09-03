@@ -13,16 +13,18 @@ class ThreadTableViewCell: UITableViewCell {
     @IBOutlet var colorView: UIView!
     @IBOutlet var labelLabel: UILabel!
     @IBOutlet var numberLabel: UILabel!
+    @IBOutlet var bobbinLabel: UILabel!
 
     func populate(_ thread: Thread) {
         colorView.backgroundColor = thread.color
         labelLabel.text = thread.label ?? ""
         if let number = thread.number {
             // TODO show the onBobbin somewhere else
-            numberLabel.text = "DMC \(number)\(thread.onBobbin ? " (On Bobbin)" : "")"
+            numberLabel.text = "DMC \(number)"
         } else {
             numberLabel.text = ""
         }
+        bobbinLabel.isHidden = !thread.onBobbin
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
