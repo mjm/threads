@@ -14,7 +14,7 @@ class AddThreadViewController: UITableViewController {
         case threads
     }
     
-    var managedObjectContext: NSManagedObjectContext!
+    var choices: [Thread] = []
     
     private var searchController: UISearchController!
     private var resultsViewController: ThreadResultsViewController!
@@ -27,7 +27,7 @@ class AddThreadViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        resultsViewController = ThreadResultsViewController(context: managedObjectContext)
+        resultsViewController = ThreadResultsViewController(choices: choices)
         resultsViewController.tableView.delegate = self
         
         searchController = UISearchController(searchResultsController: resultsViewController)
@@ -43,7 +43,6 @@ class AddThreadViewController: UITableViewController {
         definesPresentationContext = true
         
         tableView.register(ThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
-        
         dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ThreadTableViewCell
             cell.populate(item)
@@ -135,17 +134,8 @@ class ThreadResultsViewController: UITableViewController {
     let threads: [Thread]
     var dataSource: UITableViewDiffableDataSource<Section, Thread>!
     
-    init(context: NSManagedObjectContext) {
-        do {
-            let request: NSFetchRequest<Thread> = Thread.fetchRequest()
-            request.predicate = NSPredicate(format: "inCollection = NO")
-            request.sortDescriptors = [NSSortDescriptor(key: "number", ascending: true)]
-            threads = try context.fetch(request)
-        } catch {
-            NSLog("Could not fetch threads to search from")
-            threads = []
-        }
-        
+    init(choices: [Thread]) {
+        self.threads = choices
         super.init(style: .plain)
     }
     

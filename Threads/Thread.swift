@@ -10,16 +10,28 @@ import Foundation
 import CoreData
 
 extension Thread {
-    class func sortedByNumber(context: NSManagedObjectContext) throws -> [Thread] {
+    class func inCollectionFetchRequest() -> NSFetchRequest<Thread> {
+        let request = sortedByNumberFetchRequest()
+        request.predicate = NSPredicate(format: "inCollection = YES")
+        return request
+    }
+    
+    class func notInCollectionFetchRequest() -> NSFetchRequest<Thread> {
+        let request = sortedByNumberFetchRequest()
+        request.predicate = NSPredicate(format: "inCollection = NO")
+        return request
+    }
+    
+    class func sortedByNumberFetchRequest() -> NSFetchRequest<Thread> {
         let request: NSFetchRequest<Thread> = fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "number", ascending: true)]
-        return try context.fetch(request)
+        return request
     }
     
     class func importThreads(_ threads: [DMCThread], context: NSManagedObjectContext) throws {
         // assumes the threads are already sorted by number
         
-        let existingThreads = try sortedByNumber(context: context)
+        let existingThreads = try context.fetch(sortedByNumberFetchRequest())
         
         var leftIter = existingThreads.makeIterator()
         var rightIter = threads.makeIterator()

@@ -25,11 +25,8 @@ class MyThreadsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let request: NSFetchRequest<Thread> = Thread.fetchRequest()
-        request.predicate = NSPredicate(format: "inCollection = YES")
-        request.sortDescriptors = [NSSortDescriptor(key: "number", ascending: true)]
         fetchedResultsController =
-            NSFetchedResultsController(fetchRequest: request,
+            NSFetchedResultsController(fetchRequest: Thread.inCollectionFetchRequest(),
                                        managedObjectContext: managedObjectContext,
                                        sectionNameKeyPath: nil,
                                        cacheName: nil)
@@ -76,7 +73,17 @@ class MyThreadsViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let navController = segue.destination as? UINavigationController {
             if let addController = navController.viewControllers.first as? AddThreadViewController {
-                addController.managedObjectContext = managedObjectContext
+                // only choose from threads that aren't already in the collection
+                let threads: [Thread]
+                do {
+                    let request = Thread.notInCollectionFetchRequest()
+                    threads = try managedObjectContext.fetch(request)
+                } catch {
+                    NSLog("Could not fetch threads to search from")
+                    threads = []
+                }
+                
+                addController.choices = threads
             }
         }
     }
