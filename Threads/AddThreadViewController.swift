@@ -19,7 +19,7 @@ class AddThreadViewController: UITableViewController {
     private var searchController: UISearchController!
     private var resultsViewController: ThreadResultsViewController!
     
-    private var selectedThreads: [Thread] = []
+    private(set) var selectedThreads: [Thread] = []
     private var dataSource: UITableViewDiffableDataSource<Section, Thread>!
     
     @IBOutlet var keyboardAccessoryView: UIToolbar!
@@ -74,16 +74,6 @@ class AddThreadViewController: UITableViewController {
                 addButton.isEnabled = true
             }
         }
-    }
-    
-    @IBAction func addToCollection() {
-        for thread in selectedThreads {
-            thread.addToCollection()
-        }
-        
-        AppDelegate.save()
-        
-        presentingViewController!.dismiss(animated: true)
     }
     
     @IBAction func tapKeyboardShortcut(sender: UIBarButtonItem) {

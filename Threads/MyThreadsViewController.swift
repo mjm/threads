@@ -62,6 +62,14 @@ class MyThreadsViewController: UITableViewController {
     @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
     }
     
+    @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
+        let addViewController = segue.source as! AddThreadViewController
+        for thread in addViewController.selectedThreads {
+            thread.addToCollection()
+        }
+        AppDelegate.save()
+    }
+    
     @IBAction func unwindDeleteThread(segue: UIStoryboardSegue) {
     }
     

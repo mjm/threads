@@ -159,7 +159,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ox2-ni-34M">
-                                            <rect key="frame" x="20" y="43" width="394" height="0.5"/>
+                                            <rect key="frame" x="20" y="43" width="394" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <color key="backgroundColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                         </view>
@@ -240,7 +240,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Add" id="xbh-dD-Fd3">
                             <connections>
-                                <action selector="addToCollection" destination="TXJ-8d-WgH" id="Igr-33-coz"/>
+                                <segue destination="g4O-g8-Ufu" kind="unwind" unwindAction="unwindAddThreadWithSegue:" id="ybv-p0-sQm"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
