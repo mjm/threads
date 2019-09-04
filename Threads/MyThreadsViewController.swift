@@ -70,9 +70,13 @@ class MyThreadsViewController: UITableViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        // Disable selection for the time being
-        return nil
+    @IBSegueAction func makeDetailController(coder: NSCoder, sender: IndexPath) -> ThreadDetailViewController? {
+        let thread = dataSource.itemIdentifier(for: sender)
+        return ThreadDetailViewController(coder: coder, thread: thread!)
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "ThreadDetail", sender: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
