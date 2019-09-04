@@ -21,6 +21,8 @@ class AddThreadViewController: UITableViewController {
     
     private var selectedThreads: [Thread] = []
     private var dataSource: UITableViewDiffableDataSource<Section, Thread>!
+    
+    @IBOutlet var keyboardAccessoryView: UIToolbar!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +34,8 @@ class AddThreadViewController: UITableViewController {
         searchController.searchResultsUpdater = self
         searchController.searchBar.autocapitalizationType = .none
         searchController.searchBar.placeholder = "Search for new threads"
+        searchController.searchBar.keyboardType = .asciiCapableNumberPad
+        searchController.searchBar.inputAccessoryView = keyboardAccessoryView
         
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -81,6 +85,10 @@ class AddThreadViewController: UITableViewController {
         AppDelegate.save()
         
         presentingViewController!.dismiss(animated: true)
+    }
+    
+    @IBAction func tapKeyboardShortcut(sender: UIBarButtonItem) {
+        searchController.searchBar.text = sender.title!
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -173,8 +181,7 @@ class ThreadResultsViewController: UITableViewController {
         
         let items = threads.filter {
             return !excluding.contains($0) &&
-                ($0.number!.lowercased().hasPrefix(lowerQuery) ||
-                    $0.label!.lowercased().contains(lowerQuery))
+                $0.number!.lowercased().hasPrefix(lowerQuery)
         }
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()

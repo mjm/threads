@@ -149,8 +149,39 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="keyboardAccessoryView" destination="6Al-Tc-3HL" id="OFp-HC-LSU"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YAE-XQ-b07" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="6Al-Tc-3HL">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <items>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="iLo-oS-86k"/>
+                        <barButtonItem title="Ecru" id="yLl-Pv-olY">
+                            <connections>
+                                <action selector="tapKeyboardShortcutWithSender:" destination="TXJ-8d-WgH" id="Wsg-os-CKj"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="Blanc" id="i9G-uF-vzn">
+                            <connections>
+                                <action selector="tapKeyboardShortcutWithSender:" destination="TXJ-8d-WgH" id="JhR-qc-0cI"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="B5200" id="RhT-4Z-BSr">
+                            <connections>
+                                <action selector="tapKeyboardShortcutWithSender:" destination="TXJ-8d-WgH" id="hXB-LU-lY4"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="White" id="WIl-y5-3Gd">
+                            <connections>
+                                <action selector="tapKeyboardShortcutWithSender:" destination="TXJ-8d-WgH" id="PPJ-1v-CB7"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="YXL-Uj-LuT"/>
+                    </items>
+                </toolbar>
                 <exit id="g4O-g8-Ufu" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2651" y="-227"/>
