@@ -108,6 +108,7 @@
                                         <constraint firstAttribute="height" constant="15" id="7Q5-Qs-m0a"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <inset key="separatorInset" minX="2000" minY="0.0" maxX="0.0" maxY="0.0"/>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="Label" textLabel="XZJ-Gh-Aus" style="IBUITableViewCellStyleDefault" id="SQi-my-MIF">
                                 <rect key="frame" x="0.0" y="80.5" width="414" height="44"/>
@@ -143,6 +144,28 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Action" textLabel="zyz-0c-m9t" style="IBUITableViewCellStyleDefault" id="JR5-V6-ovI">
+                                <rect key="frame" x="0.0" y="168.5" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JR5-V6-ovI" id="p63-br-3eh">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zyz-0c-m9t">
+                                            <rect key="frame" x="20" y="0.0" width="374" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ox2-ni-34M">
+                                            <rect key="frame" x="20" y="43" width="394" height="1"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                            <color key="backgroundColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </view>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="r11-En-RXD" id="hwV-cz-Zr8"/>
@@ -150,10 +173,14 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="KWr-Sc-efd"/>
+                    <connections>
+                        <segue destination="dpG-mb-lrJ" kind="unwind" identifier="DeleteThread" unwindAction="unwindDeleteThreadWithSegue:" id="upw-QW-M9w"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="93B-t7-4bX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="dpG-mb-lrJ" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2627.536231884058" y="446.65178571428567"/>
+            <point key="canvasLocation" x="2626.0869565217395" y="446.65178571428567"/>
         </scene>
         <!--Collection-->
         <scene sceneID="swQ-Ox-NyJ">

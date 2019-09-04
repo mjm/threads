@@ -62,6 +62,9 @@ class MyThreadsViewController: UITableViewController {
     @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
     }
     
+    @IBAction func unwindDeleteThread(segue: UIStoryboardSegue) {
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let navController = segue.destination as? UINavigationController {
             if let addController = navController.viewControllers.first as? AddThreadViewController {

@@ -11,6 +11,7 @@ import UIKit
 class ThreadDetailViewController: UITableViewController {
     enum Section: CaseIterable {
         case details
+        case actions
     }
     
     enum Cell {
@@ -19,11 +20,15 @@ class ThreadDetailViewController: UITableViewController {
         case bobbin
         case colorBar
         
+        case delete
+        
         var cellIdentifier: String {
             switch self {
             case .label: return "Label"
             case .collection, .bobbin: return "Status"
             case .colorBar: return "ColorBar"
+
+            case .delete: return "Action"
             }
         }
         
@@ -57,6 +62,10 @@ class ThreadDetailViewController: UITableViewController {
                 }
             case .colorBar:
                 cell.backgroundColor = thread.color
+                
+            case .delete:
+                cell.textLabel!.text = "Remove from Collection"
+                cell.textLabel!.textColor = UIColor.systemRed
             }
         }
     }
@@ -92,6 +101,31 @@ class ThreadDetailViewController: UITableViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems([.label, .collection, .bobbin, .colorBar], toSection: .details)
+        snapshot.appendItems([.delete], toSection: .actions)
         dataSource.apply(snapshot)
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let identifier = dataSource.itemIdentifier(for: indexPath)
+        if identifier == .delete {
+            deleteThread(indexPath: indexPath)
+        }
+    }
+    
+    func deleteThread(indexPath: IndexPath) {
+        let alert = UIAlertController(title: "Remove Thread", message: "Are you sure you want to remove this thread from your collection?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            self.tableView.deselectRow(at: indexPath, animated: true)
+        })
+        alert.addAction(UIAlertAction(title: "Remove", style: .destructive) { _ in
+            self.thread.amountInCollection = 0
+            self.thread.inCollection = false
+            self.thread.onBobbin = false
+            AppDelegate.save()
+            
+            self.performSegue(withIdentifier: "DeleteThread", sender: nil)
+        })
+        
+        present(alert, animated: true)
     }
 }
