@@ -50,4 +50,16 @@ extension Thread {
             _ = Thread(dmcThread: item, context: context)
         }
     }
+    
+    func removeFromCollection() {
+        inCollection = false
+        amountInCollection = 0
+        onBobbin = false
+    }
+    
+    func addToCollection() {
+        inCollection = true
+        amountInCollection = 1
+        onBobbin = false
+    }
 }

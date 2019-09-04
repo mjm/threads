@@ -118,9 +118,7 @@ class ThreadDetailViewController: UITableViewController {
             self.tableView.deselectRow(at: indexPath, animated: true)
         })
         alert.addAction(UIAlertAction(title: "Remove", style: .destructive) { _ in
-            self.thread.amountInCollection = 0
-            self.thread.inCollection = false
-            self.thread.onBobbin = false
+            self.thread.removeFromCollection()
             AppDelegate.save()
             
             self.performSegue(withIdentifier: "DeleteThread", sender: nil)

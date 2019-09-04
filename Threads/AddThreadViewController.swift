@@ -77,9 +77,8 @@ class AddThreadViewController: UITableViewController {
     }
     
     @IBAction func addToCollection() {
-        for t in selectedThreads {
-            t.inCollection = true
-            t.amountInCollection = 1
+        for thread in selectedThreads {
+            thread.addToCollection()
         }
         
         AppDelegate.save()
