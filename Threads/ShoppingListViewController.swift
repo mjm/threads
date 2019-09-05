@@ -34,6 +34,7 @@ class ShoppingListViewController: UITableViewController {
         tableView.register(ThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
         dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ThreadTableViewCell
+            cell.mode = .shoppingList
             cell.populate(item)
             return cell
         }

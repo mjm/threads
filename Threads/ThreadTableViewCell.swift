@@ -9,6 +9,12 @@
 import UIKit
 
 class ThreadTableViewCell: UITableViewCell {
+    enum Mode: String {
+        case collection = "Collection"
+        case shoppingList = "ShoppingList"
+    }
+    
+    var mode: Mode = .collection
     
     @IBOutlet var colorView: UIView!
     @IBOutlet var labelLabel: UILabel!
@@ -40,7 +46,8 @@ class ThreadTableViewCell: UITableViewCell {
         labelLabel.textColor = UIColor.label
 
         statusLabel.isHidden = true
-        if thread.inCollection {
+        
+        if mode == .collection && thread.inCollection {
             if thread.onBobbin {
                 statusLabel.isHidden = false
                 statusLabel.text = "On Bobbin"
@@ -53,6 +60,12 @@ class ThreadTableViewCell: UITableViewCell {
                 
                 backgroundColor = UIColor.secondarySystemBackground
             }
+        }
+        
+        if mode == .shoppingList && thread.amountInShoppingList > 0 {
+            let amount = thread.amountInShoppingList
+            statusLabel.isHidden = false
+            statusLabel.text = "\(amount) Skein\(amount == 1 ? "" : "s")"
         }
     }
     
