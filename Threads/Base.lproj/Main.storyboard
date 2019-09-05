@@ -7,6 +7,60 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Shopping List-->
+        <scene sceneID="Imm-UN-qCx">
+            <objects>
+                <tableViewController id="ERj-kv-ZnX" customClass="ShoppingListViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="nL3-vC-lgU">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="z52-x2-1kd">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="z52-x2-1kd" id="R7e-Vw-KUF">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="ERj-kv-ZnX" id="G2J-QK-eRj"/>
+                            <outlet property="delegate" destination="ERj-kv-ZnX" id="Url-6m-Drp"/>
+                        </connections>
+                    </tableView>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Shopping List" id="gHQ-6K-8es">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="plus" catalog="system" id="pVe-xr-uBo">
+                            <connections>
+                                <segue destination="ksf-sk-euA" kind="presentation" id="H6j-Tt-FZU"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ea0-5V-aKU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1796" y="1092"/>
+        </scene>
+        <!--Shopping List-->
+        <scene sceneID="7B4-2u-6PM">
+            <objects>
+                <navigationController id="OBC-aI-n74" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Shopping List" image="cart.fill" catalog="system" id="zSy-q9-B6f"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="3mb-y3-g2x">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="ERj-kv-ZnX" kind="relationship" relationship="rootViewController" id="45l-7B-YAZ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ous-aK-Cs1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="958" y="1092"/>
+        </scene>
         <!--Projects-->
         <scene sceneID="Dtn-2J-Gdl">
             <objects>
@@ -21,7 +75,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6jT-q5-NY1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="987" y="1117"/>
+            <point key="canvasLocation" x="958" y="1799"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Tv6-zM-qd2">
@@ -34,12 +88,13 @@
                     </tabBar>
                     <connections>
                         <segue destination="7Qc-1p-aK9" kind="relationship" relationship="viewControllers" id="Yxn-f5-aOu"/>
+                        <segue destination="OBC-aI-n74" kind="relationship" relationship="viewControllers" id="iHM-sa-43q"/>
                         <segue destination="z9q-X9-SR7" kind="relationship" relationship="viewControllers" id="G6c-nn-aGb"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2pc-wF-2bU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="138" y="766"/>
+            <point key="canvasLocation" x="159" y="1092"/>
         </scene>
         <!--My Threads-->
         <scene sceneID="PT9-Cj-9Wp">
@@ -88,7 +143,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cBb-2w-hsK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1797" y="447"/>
+            <point key="canvasLocation" x="1796" y="447"/>
         </scene>
         <!--Thread Detail View Controller-->
         <scene sceneID="7aa-ah-mso">
@@ -180,7 +235,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="93B-t7-4bX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="dpG-mb-lrJ" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2626.0869565217395" y="446.65178571428567"/>
+            <point key="canvasLocation" x="2625" y="447"/>
         </scene>
         <!--Collection-->
         <scene sceneID="swQ-Ox-NyJ">
@@ -197,7 +252,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dQy-m5-2c3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="987" y="447"/>
+            <point key="canvasLocation" x="959" y="447"/>
         </scene>
         <!--Add Threads-->
         <scene sceneID="IOe-SV-xsV">
@@ -279,7 +334,7 @@
                 </toolbar>
                 <exit id="g4O-g8-Ufu" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2651" y="-227"/>
+            <point key="canvasLocation" x="3443" y="-227"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hR9-YJ-laq">
@@ -295,12 +350,16 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cev-K9-iun" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1796" y="-227"/>
+            <point key="canvasLocation" x="2626" y="-227"/>
         </scene>
     </scenes>
     <resources>
+        <image name="cart.fill" catalog="system" width="64" height="52"/>
         <image name="plus" catalog="system" width="64" height="58"/>
         <image name="rectangle.3.offgrid.fill" catalog="system" width="64" height="40"/>
         <image name="tray.full.fill" catalog="system" width="64" height="44"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="H6j-Tt-FZU"/>
+    </inferredMetricsTieBreakers>
 </document>

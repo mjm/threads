@@ -2,6 +2,7 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14897.2" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Thread" representedClassName=".Thread" syncable="YES" codeGenerationType="class">
         <attribute name="amountInCollection" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="amountInShoppingList" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="colorHex" optional="YES" attributeType="String"/>
         <attribute name="inCollection" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="label" optional="YES" attributeType="String"/>
@@ -9,6 +10,6 @@
         <attribute name="onBobbin" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="Thread" positionX="-54" positionY="-9" width="128" height="133"/>
+        <element name="Thread" positionX="-54" positionY="-9" width="128" height="148"/>
     </elements>
 </model>

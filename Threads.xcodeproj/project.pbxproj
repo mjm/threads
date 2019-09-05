@@ -25,6 +25,7 @@
 		C9491E2D231DE0070031F463 /* ThreadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9491E2B231DE0070031F463 /* ThreadTableViewCell.xib */; };
 		C9491E2F231E0BE00031F463 /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E2E231E0BE00031F463 /* Thread.swift */; };
 		C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */; };
+		C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		C9491E2B231DE0070031F463 /* ThreadTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThreadTableViewCell.xib; sourceTree = "<group>"; };
 		C9491E2E231E0BE00031F463 /* Thread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
 		C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailViewController.swift; sourceTree = "<group>"; };
+		C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */,
 				C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */,
 				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
+				C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */,
 				C9491E2A231DE0070031F463 /* ThreadTableViewCell.swift */,
 				C9491E2B231DE0070031F463 /* ThreadTableViewCell.xib */,
 				C9491E18231DD7D00031F463 /* Color.swift */,
@@ -254,6 +257,7 @@
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
 				C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,
+				C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */,
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
