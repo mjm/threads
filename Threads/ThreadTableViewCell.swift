@@ -14,8 +14,20 @@ class ThreadTableViewCell: UITableViewCell {
     @IBOutlet var labelLabel: UILabel!
     @IBOutlet var numberLabel: UILabel!
     @IBOutlet var statusLabel: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        colorView.layer.cornerRadius = 10
+        colorView.layer.shadowColor = UIColor.systemGray.cgColor
+        colorView.layer.shadowOffset = CGSize(width: 0, height: 0)
+        colorView.layer.shadowRadius = 2
+        colorView.layer.shadowOpacity = 0.7
+    }
 
     func populate(_ thread: Thread) {
+        backgroundColor = UIColor.systemBackground
+        
         colorView.backgroundColor = thread.color
         if let number = thread.number {
             numberLabel.text = "DMC \(number)"
@@ -38,12 +50,10 @@ class ThreadTableViewCell: UITableViewCell {
                 
                 numberLabel.textColor = UIColor.secondaryLabel
                 labelLabel.textColor = UIColor.secondaryLabel
+                
+                backgroundColor = UIColor.secondarySystemBackground
             }
         }
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
     }
     
     static var nib = UINib(nibName: "ThreadTableViewCell", bundle: nil)
