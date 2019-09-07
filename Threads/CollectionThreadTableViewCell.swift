@@ -8,28 +8,14 @@
 
 import UIKit
 
-class CollectionThreadTableViewCell: UITableViewCell {
+class CollectionThreadTableViewCell: ThreadTableViewCell {
 
-    @IBOutlet var colorStackView: UIStackView!
-    @IBOutlet var colorView: SwatchView!
-    @IBOutlet var labelLabel: UILabel!
-    @IBOutlet var numberLabel: UILabel!
     @IBOutlet var statusLabel: UILabel!
 
-    func populate(_ thread: Thread) {
-        backgroundColor = UIColor.systemBackground
-
-        colorView.color = thread.color ?? .systemBackground
-
-        if let number = thread.number {
-            numberLabel.text = "DMC \(number)"
-        } else {
-            numberLabel.text = ""
-        }
-        labelLabel.text = thread.label ?? ""
+    override func populate(_ thread: Thread) {
+        super.populate(thread)
         
-        numberLabel.textColor = UIColor.label
-        labelLabel.textColor = UIColor.label
+        backgroundColor = UIColor.systemBackground
 
         statusLabel.isHidden = true
         

@@ -8,29 +8,13 @@
 
 import UIKit
 
-class ShoppingListThreadTableViewCell: UITableViewCell {
-    
-    @IBOutlet var smallColorStackView: UIStackView!
-    @IBOutlet var smallColorView: SwatchView!
-    @IBOutlet var labelLabel: UILabel!
-    @IBOutlet var numberLabel: UILabel!
+class ShoppingListThreadTableViewCell: ThreadTableViewCell {
+
     @IBOutlet var checkButton: UIButton!
 
-    func populate(_ thread: Thread) {
-        backgroundColor = UIColor.systemBackground
-
-        smallColorView.color = thread.color ?? .systemBackground
-
-        if let number = thread.number {
-            numberLabel.text = "DMC \(number)"
-        } else {
-            numberLabel.text = ""
-        }
-        labelLabel.text = thread.label ?? ""
+    override func populate(_ thread: Thread) {
+        super.populate(thread)
         
-        numberLabel.textColor = UIColor.label
-        labelLabel.textColor = UIColor.label
-
         if thread.amountInShoppingList > 0 {
             let amount = thread.amountInShoppingList
             // TODO show quantity

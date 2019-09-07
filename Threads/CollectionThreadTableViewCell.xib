@@ -87,7 +87,6 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="colorStackView" destination="cKl-ER-nA8" id="wAD-iE-hHc"/>
                 <outlet property="colorView" destination="N85-Ht-7av" id="XIk-3H-otK"/>
                 <outlet property="labelLabel" destination="ACa-Ct-X8i" id="Nzb-43-smy"/>
                 <outlet property="numberLabel" destination="0VW-95-3OE" id="xJi-AJ-sy1"/>
