@@ -138,6 +138,7 @@
                 <outlet property="checkButton" destination="6MR-tE-C89" id="qnn-aQ-hL9"/>
                 <outlet property="colorView" destination="Jdr-Hg-kVF" id="GUh-lL-cwl"/>
                 <outlet property="decreaseButton" destination="2Ea-4y-aU4" id="CQX-sm-C07"/>
+                <outlet property="increaseButton" destination="gwz-tf-9a1" id="WMp-Uo-EC1"/>
                 <outlet property="labelLabel" destination="ACa-Ct-X8i" id="Nzb-43-smy"/>
                 <outlet property="numberLabel" destination="0VW-95-3OE" id="xJi-AJ-sy1"/>
                 <outlet property="quantityLabel" destination="vNI-kF-SAM" id="4V0-9S-kYG"/>
