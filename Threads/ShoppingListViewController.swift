@@ -35,6 +35,14 @@ class ShoppingListViewController: UITableViewController {
         dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ShoppingListThreadTableViewCell
             cell.populate(item)
+            cell.onIncreaseQuantity = {
+                item.amountInShoppingList += 1
+                AppDelegate.save()
+            }
+            cell.onDecreaseQuantity = {
+                item.amountInShoppingList -= 1
+                AppDelegate.save()
+            }
             return cell
         }
         

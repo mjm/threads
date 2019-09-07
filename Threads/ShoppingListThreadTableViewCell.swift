@@ -13,6 +13,10 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell {
     @IBOutlet var checkButton: UIButton!
     @IBOutlet var quantityLabel: UILabel!
 
+    var onDecreaseQuantity: () -> Void = { }
+    var onIncreaseQuantity: () -> Void = { }
+    var onCheckTapped: () -> Void = { }
+
     override func populate(_ thread: Thread) {
         super.populate(thread)
 
@@ -25,9 +29,15 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell {
     var isChecked = false
 
     @IBAction func checkButtonPressed() {
-        // TODO add a delegate or block or something to handle this
-        isChecked = !isChecked
-        checkButton.setImage(UIImage(systemName: isChecked ? "checkmark.circle.fill" : "circle"), for: .normal)
+        onCheckTapped()
+    }
+
+    @IBAction func increaseQuantity() {
+        onIncreaseQuantity()
+    }
+
+    @IBAction func decreaseQuantity() {
+        onDecreaseQuantity()
     }
     
     static var nib = UINib(nibName: "ShoppingListThreadTableViewCell", bundle: nil)

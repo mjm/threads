@@ -29,21 +29,21 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <inset key="contentEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <inset key="imageEdgeInsets" minX="3" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <state key="normal" image="circle" catalog="system">
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="32" weight="light"/>
+                                <state key="normal" image="square" catalog="system">
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="32" weight="thin"/>
                                 </state>
                                 <connections>
                                     <action selector="checkButtonPressed" destination="KGk-i7-Jjw" eventType="touchUpInside" id="JlC-0a-1y8"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1" verticalHuggingPriority="1000" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="YoW-Ny-oO1">
-                                <rect key="frame" x="52" y="0.0" width="138" height="71"/>
+                                <rect key="frame" x="52" y="0.0" width="128" height="71"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="lmW-wR-hQJ">
-                                        <rect key="frame" x="12" y="10" width="114" height="20.5"/>
+                                        <rect key="frame" x="12" y="10" width="116" height="20.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0VW-95-3OE">
-                                                <rect key="frame" x="0.0" y="0.0" width="114" height="20.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="116" height="20.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -51,7 +51,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g6y-G8-EB7">
-                                        <rect key="frame" x="12" y="38.5" width="114" height="22.5"/>
+                                        <rect key="frame" x="12" y="38.5" width="116" height="22.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Htm-4b-UKe">
                                                 <rect key="frame" x="0.0" y="0.0" width="27.5" height="22.5"/>
@@ -74,7 +74,7 @@
                                                 <directionalEdgeInsets key="directionalLayoutMargins" top="2" leading="1" bottom="2" trailing="8"/>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ACa-Ct-X8i">
-                                                <rect key="frame" x="27.5" y="0.0" width="86.5" height="22.5"/>
+                                                <rect key="frame" x="27.5" y="0.0" width="88.5" height="22.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -82,37 +82,46 @@
                                         </subviews>
                                     </stackView>
                                 </subviews>
-                                <directionalEdgeInsets key="directionalLayoutMargins" top="10" leading="12" bottom="10" trailing="12"/>
+                                <directionalEdgeInsets key="directionalLayoutMargins" top="10" leading="12" bottom="10" trailing="0.0"/>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="249" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Hsl-rB-TN7">
-                                <rect key="frame" x="190" y="0.0" width="132" height="71"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="Hsl-rB-TN7">
+                                <rect key="frame" x="180" y="0.0" width="142" height="71"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Ea-4y-aU4">
-                                        <rect key="frame" x="8" y="0.0" width="44" height="71"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="44" height="71"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="44" id="zi2-KZ-bE2"/>
                                         </constraints>
                                         <state key="normal" image="minus.square" catalog="system">
                                             <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
                                         </state>
+                                        <connections>
+                                            <action selector="decreaseQuantity" destination="KGk-i7-Jjw" eventType="touchUpInside" id="nfa-ad-Pe5"/>
+                                        </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vNI-kF-SAM">
-                                        <rect key="frame" x="60" y="0.0" width="12" height="71"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vNI-kF-SAM">
+                                        <rect key="frame" x="44" y="0.0" width="46" height="71"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="46" id="k34-37-Lk3"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gwz-tf-9a1">
-                                        <rect key="frame" x="80" y="0.0" width="44" height="71"/>
+                                        <rect key="frame" x="90" y="0.0" width="44" height="71"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="44" id="fha-9P-IsS"/>
                                         </constraints>
                                         <state key="normal" image="plus.square" catalog="system">
                                             <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
                                         </state>
+                                        <connections>
+                                            <action selector="increaseQuantity" destination="KGk-i7-Jjw" eventType="touchUpInside" id="hG6-GN-wfc"/>
+                                        </connections>
                                     </button>
                                 </subviews>
-                                <directionalEdgeInsets key="directionalLayoutMargins" top="0.0" leading="8" bottom="0.0" trailing="8"/>
+                                <directionalEdgeInsets key="directionalLayoutMargins" top="0.0" leading="0.0" bottom="0.0" trailing="8"/>
                             </stackView>
                         </subviews>
                     </stackView>
@@ -136,8 +145,8 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="circle" catalog="system" width="64" height="62"/>
         <image name="minus.square" catalog="system" width="64" height="56"/>
         <image name="plus.square" catalog="system" width="64" height="56"/>
+        <image name="square" catalog="system" width="64" height="56"/>
     </resources>
 </document>
