@@ -113,6 +113,19 @@ class ShoppingListViewController: UITableViewController {
         }
     }
 
+    @IBAction func addCheckedToCollection() {
+        let request = Thread.purchasedFetchRequest()
+        do {
+            let threads = try managedObjectContext.fetch(request)
+            for thread in threads {
+                thread.removeFromShoppingList()
+                thread.addToCollection()
+            }
+            AppDelegate.save()
+        } catch {
+            NSLog("Could not load purchased threads: \(error)")
+        }
+    }
 }
 
 extension ShoppingListViewController: NSFetchedResultsControllerDelegate {

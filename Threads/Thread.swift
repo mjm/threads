@@ -33,6 +33,12 @@ extension Thread {
         request.predicate = NSPredicate(format: "inShoppingList = NO")
         return request
     }
+
+    class func purchasedFetchRequest() -> NSFetchRequest<Thread> {
+        let request = sortedByNumberFetchRequest()
+        request.predicate = NSPredicate(format: "inShoppingList = YES AND purchased = YES")
+        return request
+    }
     
     class func sortedByNumberFetchRequest() -> NSFetchRequest<Thread> {
         let request: NSFetchRequest<Thread> = fetchRequest()
@@ -76,9 +82,14 @@ extension Thread {
     }
 
     func addToCollection() {
-        inCollection = true
         amountInCollection = 1
-        onBobbin = false
+
+        // If the thread is already in the collection, don't take it off the bobbin.
+        // This can happen when adding things from the shopping list.
+        if !inCollection {
+            inCollection = true
+            onBobbin = false
+        }
     }
     
     func removeFromCollection() {
@@ -90,10 +101,12 @@ extension Thread {
     func addToShoppingList() {
         inShoppingList = true
         amountInShoppingList = 1
+        purchased = false
     }
 
     func removeFromShoppingList() {
         inShoppingList = false
         amountInShoppingList = 0
+        purchased = false
     }
 }
