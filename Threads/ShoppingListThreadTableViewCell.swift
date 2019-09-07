@@ -12,6 +12,7 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell {
 
     @IBOutlet var checkButton: UIButton!
     @IBOutlet var quantityLabel: UILabel!
+    @IBOutlet var decreaseButton: UIButton!
 
     var onDecreaseQuantity: () -> Void = { }
     var onIncreaseQuantity: () -> Void = { }
@@ -20,9 +21,13 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell {
     override func populate(_ thread: Thread) {
         super.populate(thread)
 
-        if thread.amountInShoppingList > 0 {
-            let amount = thread.amountInShoppingList
-            quantityLabel.text = "\(amount)"
+        let amount = thread.amountInShoppingList
+        quantityLabel.text = "\(amount)"
+
+        if amount == 1 {
+            decreaseButton.setImage(UIImage(systemName: "trash"), for: .normal)
+        } else {
+            decreaseButton.setImage(UIImage(systemName: "minus.square"), for: .normal)
         }
     }
 

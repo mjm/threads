@@ -32,7 +32,7 @@ class ShoppingListViewController: UITableViewController {
         fetchedResultsController.delegate = self
         
         tableView.register(ShoppingListThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
-        dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
+        dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ShoppingListThreadTableViewCell
             cell.populate(item)
             cell.onIncreaseQuantity = {
@@ -40,7 +40,11 @@ class ShoppingListViewController: UITableViewController {
                 AppDelegate.save()
             }
             cell.onDecreaseQuantity = {
-                item.amountInShoppingList -= 1
+                if item.amountInShoppingList == 1 {
+                    item.removeFromShoppingList()
+                } else {
+                    item.amountInShoppingList -= 1
+                }
                 AppDelegate.save()
             }
             return cell
@@ -68,7 +72,7 @@ class ShoppingListViewController: UITableViewController {
     @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
         let addViewController = segue.source as! AddThreadViewController
         for thread in addViewController.selectedThreads {
-            thread.amountInShoppingList = 1
+            thread.addToShoppingList()
         }
         AppDelegate.save()
     }

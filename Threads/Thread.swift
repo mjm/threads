@@ -24,13 +24,13 @@ extension Thread {
     
     class func inShoppingListFetchRequest() -> NSFetchRequest<Thread> {
         let request = sortedByNumberFetchRequest()
-        request.predicate = NSPredicate(format: "amountInShoppingList > 0")
+        request.predicate = NSPredicate(format: "inShoppingList = YES")
         return request
     }
     
     class func notInShoppingListFetchRequest() -> NSFetchRequest<Thread> {
         let request = sortedByNumberFetchRequest()
-        request.predicate = NSPredicate(format: "amountInShoppingList = 0")
+        request.predicate = NSPredicate(format: "inShoppingList = NO")
         return request
     }
     
@@ -74,16 +74,26 @@ extension Thread {
             _ = Thread(dmcThread: item, context: context)
         }
     }
+
+    func addToCollection() {
+        inCollection = true
+        amountInCollection = 1
+        onBobbin = false
+    }
     
     func removeFromCollection() {
         inCollection = false
         amountInCollection = 0
         onBobbin = false
     }
-    
-    func addToCollection() {
-        inCollection = true
-        amountInCollection = 1
-        onBobbin = false
+
+    func addToShoppingList() {
+        inShoppingList = true
+        amountInShoppingList = 1
+    }
+
+    func removeFromShoppingList() {
+        inShoppingList = false
+        amountInShoppingList = 0
     }
 }

@@ -5,11 +5,12 @@
         <attribute name="amountInShoppingList" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="colorHex" optional="YES" attributeType="String"/>
         <attribute name="inCollection" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="inShoppingList" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="label" optional="YES" attributeType="String"/>
         <attribute name="number" optional="YES" attributeType="String"/>
         <attribute name="onBobbin" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="Thread" positionX="-54" positionY="-9" width="128" height="148"/>
+        <element name="Thread" positionX="-54" positionY="-9" width="128" height="163"/>
     </elements>
 </model>
