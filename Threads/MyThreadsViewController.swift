@@ -32,9 +32,9 @@ class MyThreadsViewController: UITableViewController {
                                        cacheName: nil)
         fetchedResultsController.delegate = self
         
-        tableView.register(ThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
+        tableView.register(CollectionThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
         dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ThreadTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! CollectionThreadTableViewCell
             cell.populate(item)
             return cell
         }
@@ -159,7 +159,7 @@ extension MyThreadsViewController: NSFetchedResultsControllerDelegate {
         switch type {
         case .update:
             let thread = anObject as! Thread
-            if let cell = tableView.cellForRow(at: indexPath!) as? ThreadTableViewCell {
+            if let cell = tableView.cellForRow(at: indexPath!) as? CollectionThreadTableViewCell {
                 cell.populate(thread)
             }
         default:

@@ -31,10 +31,9 @@ class ShoppingListViewController: UITableViewController {
                                        cacheName: nil)
         fetchedResultsController.delegate = self
         
-        tableView.register(ThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
+        tableView.register(ShoppingListThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
         dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ThreadTableViewCell
-            cell.mode = .shoppingList
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ShoppingListThreadTableViewCell
             cell.populate(item)
             return cell
         }
@@ -95,7 +94,7 @@ extension ShoppingListViewController: NSFetchedResultsControllerDelegate {
         switch type {
         case .update:
             let thread = anObject as! Thread
-            if let cell = tableView.cellForRow(at: indexPath!) as? ThreadTableViewCell {
+            if let cell = tableView.cellForRow(at: indexPath!) as? ShoppingListThreadTableViewCell {
                 cell.populate(thread)
             }
         default:

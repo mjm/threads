@@ -21,12 +21,14 @@
 		C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */; };
 		C9491E19231DD7D00031F463 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E18231DD7D00031F463 /* Color.swift */; };
 		C9491E29231DDBC60031F463 /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E28231DDBC60031F463 /* ColorTests.swift */; };
-		C9491E2C231DE0070031F463 /* ThreadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E2A231DE0070031F463 /* ThreadTableViewCell.swift */; };
-		C9491E2D231DE0070031F463 /* ThreadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9491E2B231DE0070031F463 /* ThreadTableViewCell.xib */; };
+		C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E2A231DE0070031F463 /* CollectionThreadTableViewCell.swift */; };
+		C9491E2D231DE0070031F463 /* CollectionThreadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9491E2B231DE0070031F463 /* CollectionThreadTableViewCell.xib */; };
 		C9491E2F231E0BE00031F463 /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E2E231E0BE00031F463 /* Thread.swift */; };
 		C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */; };
 		C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */; };
 		C9491E372320C67A0031F463 /* SwatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E362320C67A0031F463 /* SwatchView.swift */; };
+		C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E3823235D880031F463 /* ShoppingListThreadTableViewCell.swift */; };
+		C9491E3C23235E210031F463 /* ShoppingListThreadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9491E3923235D890031F463 /* ShoppingListThreadTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,12 +61,14 @@
 		C9491E1E231DDBB70031F463 /* ThreadsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ThreadsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9491E22231DDBB70031F463 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C9491E28231DDBC60031F463 /* ColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTests.swift; sourceTree = "<group>"; };
-		C9491E2A231DE0070031F463 /* ThreadTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadTableViewCell.swift; sourceTree = "<group>"; };
-		C9491E2B231DE0070031F463 /* ThreadTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThreadTableViewCell.xib; sourceTree = "<group>"; };
+		C9491E2A231DE0070031F463 /* CollectionThreadTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionThreadTableViewCell.swift; sourceTree = "<group>"; };
+		C9491E2B231DE0070031F463 /* CollectionThreadTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionThreadTableViewCell.xib; sourceTree = "<group>"; };
 		C9491E2E231E0BE00031F463 /* Thread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
 		C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailViewController.swift; sourceTree = "<group>"; };
 		C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListViewController.swift; sourceTree = "<group>"; };
 		C9491E362320C67A0031F463 /* SwatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwatchView.swift; sourceTree = "<group>"; };
+		C9491E3823235D880031F463 /* ShoppingListThreadTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListThreadTableViewCell.swift; sourceTree = "<group>"; };
+		C9491E3923235D890031F463 /* ShoppingListThreadTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShoppingListThreadTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,8 +120,10 @@
 				C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */,
 				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
 				C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */,
-				C9491E2A231DE0070031F463 /* ThreadTableViewCell.swift */,
-				C9491E2B231DE0070031F463 /* ThreadTableViewCell.xib */,
+				C9491E2A231DE0070031F463 /* CollectionThreadTableViewCell.swift */,
+				C9491E2B231DE0070031F463 /* CollectionThreadTableViewCell.xib */,
+				C9491E3823235D880031F463 /* ShoppingListThreadTableViewCell.swift */,
+				C9491E3923235D890031F463 /* ShoppingListThreadTableViewCell.xib */,
 				C9491E362320C67A0031F463 /* SwatchView.swift */,
 				C9491E18231DD7D00031F463 /* Color.swift */,
 				C9491E10231DA9A20031F463 /* DMCThread.swift */,
@@ -231,10 +237,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9491E03231D897C0031F463 /* LaunchScreen.storyboard in Resources */,
+				C9491E3C23235E210031F463 /* ShoppingListThreadTableViewCell.xib in Resources */,
 				C9491E00231D897C0031F463 /* Assets.xcassets in Resources */,
 				C9491DFB231D897B0031F463 /* Main.storyboard in Resources */,
 				C9491E13231DAA5D0031F463 /* AllThreads.json in Resources */,
-				C9491E2D231DE0070031F463 /* ThreadTableViewCell.xib in Resources */,
+				C9491E2D231DE0070031F463 /* CollectionThreadTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,11 +263,12 @@
 				C9491E2F231E0BE00031F463 /* Thread.swift in Sources */,
 				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,
-				C9491E2C231DE0070031F463 /* ThreadTableViewCell.swift in Sources */,
+				C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
 				C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */,
 				C9491E372320C67A0031F463 /* SwatchView.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,
+				C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */,
 				C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */,
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
