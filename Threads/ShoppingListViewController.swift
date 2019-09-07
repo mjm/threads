@@ -11,7 +11,8 @@ import CoreData
 
 class ShoppingListViewController: UITableViewController {
     enum Section: CaseIterable {
-        case threads
+        case unpurchased
+        case purchased
     }
     
     private var managedObjectContext: NSManagedObjectContext {
@@ -36,14 +37,17 @@ class ShoppingListViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ShoppingListThreadTableViewCell
             cell.populate(item)
             cell.onCheckTapped = {
-                item.purchased = !item.purchased
+                item.togglePurchased()
+                self.delayPurchase(item)
                 AppDelegate.save()
             }
             cell.onIncreaseQuantity = {
+                self.resetDelayedPurchaseTimer()
                 item.amountInShoppingList += 1
                 AppDelegate.save()
             }
             cell.onDecreaseQuantity = {
+                self.resetDelayedPurchaseTimer()
                 if item.amountInShoppingList == 1 {
                     item.removeFromShoppingList()
                 } else {
@@ -64,10 +68,14 @@ class ShoppingListViewController: UITableViewController {
     
     func updateSnapshot() {
         // update the rows of the table
+        let objects = fetchedResultsController.fetchedObjects ?? []
+        var partitioned = objects
+        let p = partitioned.stablePartition { $0.purchased && !pendingPurchases.contains($0) }
+
         var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()
         snapshot.appendSections(Section.allCases)
-        let objects = fetchedResultsController.fetchedObjects ?? []
-        snapshot.appendItems(objects, toSection: .threads)
+        snapshot.appendItems(Array(partitioned[..<p]), toSection: .unpurchased)
+        snapshot.appendItems(Array(partitioned[p...]), toSection: .purchased)
         dataSource.apply(snapshot)
 
         // animate in/out the "Add Checked to Collection" button
@@ -126,6 +134,30 @@ class ShoppingListViewController: UITableViewController {
             NSLog("Could not load purchased threads: \(error)")
         }
     }
+
+    private var purchaseDelayTimer: Timer?
+    private var pendingPurchases = Set<Thread>()
+
+    private func delayPurchase(_ thread: Thread) {
+        if thread.purchased {
+            pendingPurchases.insert(thread)
+        }
+
+        resetDelayedPurchaseTimer()
+    }
+
+    private func resetDelayedPurchaseTimer() {
+        // if we had a previous timer going, cancel so we don't produce too much UI churn
+        if let existingTimer = purchaseDelayTimer {
+            existingTimer.invalidate()
+        }
+
+        purchaseDelayTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { _ in
+            self.pendingPurchases.removeAll()
+            self.updateSnapshot()
+            self.purchaseDelayTimer = nil
+        }
+    }
 }
 
 extension ShoppingListViewController: NSFetchedResultsControllerDelegate {
@@ -137,7 +169,14 @@ extension ShoppingListViewController: NSFetchedResultsControllerDelegate {
         switch type {
         case .update:
             let thread = anObject as! Thread
-            if let cell = tableView.cellForRow(at: indexPath!) as? ShoppingListThreadTableViewCell {
+
+            // we rearrange things in our snapshot, so the fetched results controller lies about the
+            // actual index path of the row
+            guard let indexPath = dataSource.indexPath(for: thread) else {
+                return
+            }
+
+            if let cell = tableView.cellForRow(at: indexPath) as? ShoppingListThreadTableViewCell {
                 cell.populate(thread)
             }
         default:

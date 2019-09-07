@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-extension Thread {
+public class Thread: NSManagedObject {
     class func inCollectionFetchRequest() -> NSFetchRequest<Thread> {
         let request = sortedByNumberFetchRequest()
         request.predicate = NSPredicate(format: "inCollection = YES")
@@ -108,5 +108,11 @@ extension Thread {
         inShoppingList = false
         amountInShoppingList = 0
         purchased = false
+    }
+
+    func togglePurchased() {
+        assert(inShoppingList)
+
+        purchased = !purchased
     }
 }
