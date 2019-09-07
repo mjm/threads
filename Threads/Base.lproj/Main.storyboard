@@ -16,6 +16,21 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <stackView key="tableHeaderView" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eeR-Nw-yzh">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44.5"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dDx-eX-g2o">
+                                    <rect key="frame" x="0.0" y="0.0" width="239" height="44.5"/>
+                                    <color key="backgroundColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="14" maxY="0.0"/>
+                                    <state key="normal" title="Add Checked To Collection" image="tray.and.arrow.down.fill" catalog="system"/>
+                                </button>
+                            </subviews>
+                            <viewLayoutGuide key="safeArea" id="e5I-BI-o39"/>
+                        </stackView>
                         <connections>
                             <outlet property="dataSource" destination="ERj-kv-ZnX" id="G2J-QK-eRj"/>
                             <outlet property="delegate" destination="ERj-kv-ZnX" id="Url-6m-Drp"/>
@@ -329,9 +344,10 @@
         <image name="cart.fill" catalog="system" width="64" height="52"/>
         <image name="plus" catalog="system" width="64" height="58"/>
         <image name="rectangle.3.offgrid.fill" catalog="system" width="64" height="40"/>
+        <image name="tray.and.arrow.down.fill" catalog="system" width="64" height="58"/>
         <image name="tray.full.fill" catalog="system" width="64" height="44"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="usW-bi-EdY"/>
+        <segue reference="H6j-Tt-FZU"/>
     </inferredMetricsTieBreakers>
 </document>

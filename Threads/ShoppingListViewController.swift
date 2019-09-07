@@ -63,11 +63,25 @@ class ShoppingListViewController: UITableViewController {
     }
     
     func updateSnapshot() {
+        // update the rows of the table
         var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()
         snapshot.appendSections(Section.allCases)
         let objects = fetchedResultsController.fetchedObjects ?? []
         snapshot.appendItems(objects, toSection: .threads)
         dataSource.apply(snapshot)
+
+        // animate in/out the "Add Checked to Collection" button
+        let anyChecked = !objects.filter { $0.purchased }.isEmpty
+        let header = self.tableView.tableHeaderView!
+        let height = anyChecked
+            ? header.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+            : 0.0
+
+        let animator = UIViewPropertyAnimator(duration: 0.2, dampingRatio: 0.3) {
+            header.frame.size.height = height
+            header.layoutIfNeeded()
+        }
+        animator.startAnimation()
     }
 
     @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
