@@ -87,6 +87,7 @@ class ShoppingListViewController: UITableViewController {
 
         let animator = UIViewPropertyAnimator(duration: 0.2, dampingRatio: 0.3) {
             header.frame.size.height = height
+            header.isHidden = !anyChecked
             header.layoutIfNeeded()
         }
         animator.startAnimation()
