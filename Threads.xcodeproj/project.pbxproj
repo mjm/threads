@@ -35,6 +35,7 @@
 		C9491E44232491D90031F463 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E43232491D90031F463 /* Project.swift */; };
 		C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */; };
 		C94EB3022325E6A900D4CF56 /* ProjectCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */; };
+		C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		C9491E43232491D90031F463 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCollectionViewCell.swift; sourceTree = "<group>"; };
 		C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectCollectionViewCell.xib; sourceTree = "<group>"; };
+		C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +135,7 @@
 				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
 				C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */,
 				C9491E4123248B940031F463 /* ProjectListViewController.swift */,
+				C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */,
 				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
 				C9491E2A231DE0070031F463 /* CollectionThreadTableViewCell.swift */,
 				C9491E2B231DE0070031F463 /* CollectionThreadTableViewCell.xib */,
@@ -289,6 +292,7 @@
 				C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
 				C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */,
+				C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */,
 				C9491E372320C67A0031F463 /* SwatchView.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,
 				C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */,

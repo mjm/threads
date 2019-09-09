@@ -100,6 +100,15 @@ class ProjectListViewController: UICollectionViewController {
         prototypeCell.widthAnchor.constraint(equalToConstant: targetWidth).isActive = true
         return prototypeCell.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
+    
+    @IBSegueAction func makeDetailController(coder: NSCoder, sender: IndexPath) -> ProjectDetailViewController? {
+        let project = dataSource.itemIdentifier(for: sender)!
+        return ProjectDetailViewController(coder: coder, project: project)
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "ProjectDetail", sender: indexPath)
+    }
 }
 
 extension ProjectListViewController: NSFetchedResultsControllerDelegate {

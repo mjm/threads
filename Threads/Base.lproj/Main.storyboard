@@ -93,10 +93,42 @@
                     <navigationItem key="navigationItem" title="Projects" id="daJ-PV-mF9">
                         <barButtonItem key="rightBarButtonItem" title="Item" image="plus" catalog="system" id="OE0-9D-jX6"/>
                     </navigationItem>
+                    <connections>
+                        <segue destination="q1j-rH-tyn" kind="show" identifier="ProjectDetail" destinationCreationSelector="makeDetailControllerWithCoder:sender:" id="ps8-y5-wb7"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xRj-cQ-Pbn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1795.6521739130437" y="1775.8928571428571"/>
+        </scene>
+        <!--Project Detail View Controller-->
+        <scene sceneID="EFn-vJ-eIk">
+            <objects>
+                <tableViewController id="q1j-rH-tyn" customClass="ProjectDetailViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="dF0-ZR-8VJ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="KJZ-Ss-htG">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KJZ-Ss-htG" id="x4c-zN-yb1">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="q1j-rH-tyn" id="4YC-bc-UJO"/>
+                            <outlet property="delegate" destination="q1j-rH-tyn" id="fPl-J0-eU9"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="Zbh-Dz-3uX"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q15-B8-sMW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2639" y="1776"/>
         </scene>
         <!--Projects-->
         <scene sceneID="lgE-iH-mau">
