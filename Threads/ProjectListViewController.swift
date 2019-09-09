@@ -77,9 +77,16 @@ class ProjectListViewController: UICollectionViewController {
     }
     
     private func sizeForProjectCell() -> CGSize {
+        // how much space do we have to play with?
+        let fixedHorizontalSpacing = collectionView.contentInset.left + collectionView.contentInset.right + flowLayout.sectionInset.left + flowLayout.sectionInset.right
+        let widthForItems = collectionView.bounds.size.width - fixedHorizontalSpacing
+        
+        // how many items can we fit in that space with a reasonable width?
+        let numberOfItems = floor(widthForItems / 150.0)
+        
+        let targetWidth = (widthForItems - (flowLayout.minimumInteritemSpacing * (numberOfItems - 1.0))) / numberOfItems
+        
         let prototypeCell = ProjectCollectionViewCell.makePrototype()
-        let horizontalSpacing = collectionView.contentInset.left + collectionView.contentInset.right + flowLayout.sectionInset.left + flowLayout.sectionInset.right + flowLayout.minimumInteritemSpacing
-        let targetWidth = (collectionView.bounds.size.width - horizontalSpacing) / 2
         prototypeCell.widthAnchor.constraint(equalToConstant: targetWidth).isActive = true
         return prototypeCell.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
@@ -88,5 +95,47 @@ class ProjectListViewController: UICollectionViewController {
 extension ProjectListViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updateSnapshot()
+    }
+}
+
+class ProjectListCollectionViewLayout: UICollectionViewFlowLayout {
+    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        guard let attributes = super.layoutAttributesForItem(at: indexPath)?.copy() as? UICollectionViewLayoutAttributes else {
+            return nil
+        }
+        
+        guard attributes.indexPath.item > 0 else {
+            // if it's the first item, we shouldn't need to move it
+            return attributes
+        }
+        
+        let previousIndexPath = IndexPath(item: attributes.indexPath.item - 1, section: attributes.indexPath.section)
+        guard let previousItemAttributes = layoutAttributesForItem(at: previousIndexPath) else {
+            return attributes
+        }
+        
+        guard previousItemAttributes.frame.origin.y == attributes.frame.origin.y else {
+            return attributes
+        }
+        
+        attributes.frame.origin.x = previousItemAttributes.frame.maxX + minimumInteritemSpacing
+        return attributes
+    }
+    
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        let allAttributes = super.layoutAttributesForElements(in: rect)
+        return allAttributes?.compactMap { attrs in
+            guard attrs.representedElementCategory == .cell else {
+                return attrs
+            }
+            
+            guard let attributes = layoutAttributesForItem(at: attrs.indexPath) else {
+                return attrs
+            }
+            
+            let newAttributes = attrs.copy() as! UICollectionViewLayoutAttributes
+            newAttributes.frame = attributes.frame
+            return newAttributes
+        }
     }
 }
