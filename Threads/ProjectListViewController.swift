@@ -101,6 +101,9 @@ extension ProjectListViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
+// This was inspired by
+//   https://github.com/mischa-hildebrand/AlignedCollectionViewFlowLayout/blob/master/AlignedCollectionViewFlowLayout/Classes/AlignedCollectionViewFlowLayout.swift
+// but was heavily adapted/reduced to just what was needed here.
 class ProjectListCollectionViewLayout: UICollectionViewFlowLayout {
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         guard let attributes = super.layoutAttributesForItem(at: indexPath)?.copy() as? UICollectionViewLayoutAttributes else {
