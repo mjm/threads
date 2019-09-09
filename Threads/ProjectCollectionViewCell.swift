@@ -13,6 +13,12 @@ class ProjectCollectionViewCell: UICollectionViewCell {
     @IBOutlet var colorView: UIView!
     @IBOutlet var nameLabel: UILabel!
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        colorView.layer.cornerRadius = 10
+    }
+    
     static var nib = UINib(nibName: "ProjectCollectionViewCell", bundle: nil)
     
     class func makePrototype() -> ProjectCollectionViewCell {
