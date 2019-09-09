@@ -76,15 +76,18 @@ class ProjectListViewController: UICollectionViewController {
         flowLayout.itemSize = sizeForProjectCell()
     }
     
+    static let minimumColumnWidth: CGFloat = 160.0
+    
     private func sizeForProjectCell() -> CGSize {
         // how much space do we have to play with?
         let fixedHorizontalSpacing = collectionView.contentInset.left + collectionView.contentInset.right + flowLayout.sectionInset.left + flowLayout.sectionInset.right
         let widthForItems = collectionView.bounds.size.width - fixedHorizontalSpacing
         
         // how many items can we fit in that space with a reasonable width?
-        let numberOfItems = floor(widthForItems / 150.0)
+        let numberOfItems = floor(widthForItems / ProjectListViewController.minimumColumnWidth)
         
-        let targetWidth = (widthForItems - (flowLayout.minimumInteritemSpacing * (numberOfItems - 1.0))) / numberOfItems
+        let totalPadding = flowLayout.minimumInteritemSpacing * (numberOfItems - 1.0)
+        let targetWidth = (widthForItems - totalPadding) / numberOfItems
         
         let prototypeCell = ProjectCollectionViewCell.makePrototype()
         prototypeCell.widthAnchor.constraint(equalToConstant: targetWidth).isActive = true
