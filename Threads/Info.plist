@@ -20,6 +20,12 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>com.mattmoriarity.Threads.ShowMyThreads</string>
+		<string>com.mattmoriarity.Threads.ShowShoppingList</string>
+		<string>com.mattmoriarity.Threads.ShowProjects</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

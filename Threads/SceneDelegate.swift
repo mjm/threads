@@ -14,10 +14,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
+        
+        if let activity = connectionOptions.userActivities.first ?? scene.session.stateRestorationActivity {
+            restoreActivity(activity)
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -50,7 +51,41 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
+    
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        restoreActivity(userActivity)
+    }
 
-
+    func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
+        guard let window = window else { return nil }
+        
+        let tabController = window.rootViewController as! UITabBarController
+        let navController = tabController.selectedViewController as! UINavigationController
+        let displayedController = navController.topViewController
+        return displayedController?.userActivity
+    }
+    
+    private func restoreActivity(_ activity: NSUserActivity) {
+        NSLog("restoring activity \(activity.activityType) \(activity)")
+        
+        switch activity.activityType {
+        case "com.mattmoriarity.Threads.ShowMyThreads":
+            selectTab(type: MyThreadsViewController.self)
+        case "com.mattmoriarity.Threads.ShowShoppingList":
+            selectTab(type: ShoppingListViewController.self)
+        case "com.mattmoriarity.Threads.ShowProjects":
+            selectTab(type: ProjectListViewController.self)
+        default:
+            fatalError("Trying to restore unknown activity type: \(activity.activityType)")
+        }
+    }
+    
+    private func selectTab(type controllerType: UIViewController.Type) {
+        let tabController = window?.rootViewController as! UITabBarController
+        tabController.selectedViewController = tabController.viewControllers?.first { vc in
+            let navController = vc as! UINavigationController
+            return type(of: navController.viewControllers.first!) == controllerType
+        }
+    }
 }
 

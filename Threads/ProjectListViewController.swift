@@ -60,6 +60,13 @@ class ProjectListViewController: UICollectionViewController {
         } catch {
             NSLog("Could not load projects: \(error)")
         }
+        
+        let activity = NSUserActivity(activityType: "com.mattmoriarity.Threads.ShowProjects")
+        activity.title = "My Projects"
+        activity.isEligibleForHandoff = true
+        activity.isEligibleForSearch = true
+        activity.isEligibleForPrediction = true
+        userActivity = activity
     }
 
     func updateSnapshot() {

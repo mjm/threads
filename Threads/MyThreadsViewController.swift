@@ -45,6 +45,13 @@ class MyThreadsViewController: UITableViewController {
         } catch {
             NSLog("Error fetching objects: \(error)")
         }
+        
+        let activity = NSUserActivity(activityType: "com.mattmoriarity.Threads.ShowMyThreads")
+        activity.title = "My Threads"
+        activity.isEligibleForHandoff = true
+        activity.isEligibleForSearch = true
+        activity.isEligibleForPrediction = true
+        userActivity = activity
     }
     
     func updateSnapshot() {
