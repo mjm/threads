@@ -38,6 +38,9 @@ class SwatchView: UIView {
     }
     
     private func createSubviews() {
+        // I think it's probably clear why we don't want thread swatches to be inverted
+        colorView.accessibilityIgnoresInvertColors = true
+        
         colorView.translatesAutoresizingMaskIntoConstraints = false
         colorView.backgroundColor = color
         colorView.layer.cornerRadius = 0
