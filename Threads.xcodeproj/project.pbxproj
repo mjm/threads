@@ -36,6 +36,9 @@
 		C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */; };
 		C94EB3022325E6A900D4CF56 /* ProjectCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */; };
 		C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */; };
+		C97FCDA323296433000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA123296433000B1590 /* ProjectThreadCollectionViewCell.swift */; };
+		C97FCDA423296433000B1590 /* ProjectThreadCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDA223296433000B1590 /* ProjectThreadCollectionViewCell.xib */; };
+		C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA52329A921000B1590 /* SeparatorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +86,9 @@
 		C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCollectionViewCell.swift; sourceTree = "<group>"; };
 		C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectCollectionViewCell.xib; sourceTree = "<group>"; };
 		C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
+		C97FCDA123296433000B1590 /* ProjectThreadCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectThreadCollectionViewCell.swift; sourceTree = "<group>"; };
+		C97FCDA223296433000B1590 /* ProjectThreadCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectThreadCollectionViewCell.xib; sourceTree = "<group>"; };
+		C97FCDA52329A921000B1590 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,7 +149,10 @@
 				C9491E3923235D890031F463 /* ShoppingListThreadTableViewCell.xib */,
 				C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */,
 				C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */,
+				C97FCDA123296433000B1590 /* ProjectThreadCollectionViewCell.swift */,
+				C97FCDA223296433000B1590 /* ProjectThreadCollectionViewCell.xib */,
 				C9491E362320C67A0031F463 /* SwatchView.swift */,
+				C97FCDA52329A921000B1590 /* SeparatorView.swift */,
 				C9491E18231DD7D00031F463 /* Color.swift */,
 				C9491E10231DA9A20031F463 /* DMCThread.swift */,
 				C9491E2E231E0BE00031F463 /* Thread.swift */,
@@ -259,6 +268,7 @@
 			files = (
 				C9491E03231D897C0031F463 /* LaunchScreen.storyboard in Resources */,
 				C94EB3022325E6A900D4CF56 /* ProjectCollectionViewCell.xib in Resources */,
+				C97FCDA423296433000B1590 /* ProjectThreadCollectionViewCell.xib in Resources */,
 				C9491E3C23235E210031F463 /* ShoppingListThreadTableViewCell.xib in Resources */,
 				C9491E00231D897C0031F463 /* Assets.xcassets in Resources */,
 				C9491DFB231D897B0031F463 /* Main.storyboard in Resources */,
@@ -281,9 +291,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */,
 				C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */,
 				C9491E2F231E0BE00031F463 /* Thread.swift in Sources */,
 				C9491E3E23235FBF0031F463 /* ThreadTableViewCell.swift in Sources */,
+				C97FCDA323296433000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */,
 				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
 				C9491E4023246AC80031F463 /* Partition.swift in Sources */,
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,

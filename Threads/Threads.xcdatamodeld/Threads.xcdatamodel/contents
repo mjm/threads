@@ -5,6 +5,7 @@
         <relationship name="threads" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectThread" inverseName="project" inverseEntity="ProjectThread"/>
     </entity>
     <entity name="ProjectThread" representedClassName="ProjectThread" syncable="YES" codeGenerationType="class">
+        <attribute name="amount" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="threads" inverseEntity="Project"/>
         <relationship name="thread" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Thread" inverseName="projects" inverseEntity="Thread"/>
     </entity>
@@ -23,6 +24,6 @@
     <elements>
         <element name="Project" positionX="-36" positionY="81" width="128" height="73"/>
         <element name="Thread" positionX="-54" positionY="-9" width="128" height="193"/>
-        <element name="ProjectThread" positionX="-45" positionY="63" width="128" height="73"/>
+        <element name="ProjectThread" positionX="-45" positionY="63" width="128" height="88"/>
     </elements>
 </model>

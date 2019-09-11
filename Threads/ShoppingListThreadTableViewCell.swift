@@ -46,8 +46,6 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell {
         }
     }
 
-    var isChecked = false
-
     @IBAction func checkButtonPressed() {
         onCheckTapped()
     }

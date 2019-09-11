@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class ProjectDetailViewController: UITableViewController {
+class ProjectDetailViewController: UICollectionViewController {
     enum Section: CaseIterable {
         case threads
     }
@@ -25,13 +25,14 @@ class ProjectDetailViewController: UITableViewController {
             }
         }
         
-        func populate(cell: UITableViewCell, project: Project) {
+        func populate(cell: UICollectionViewCell, project: Project) {
             switch self {
             case let .thread(thread):
-                (cell as! CollectionThreadTableViewCell).populate(thread)
+                // TODO this is wrong
+                let projectThread = thread.projects!.anyObject() as! ProjectThread
+                (cell as! ProjectThreadCollectionViewCell).populate(projectThread)
             case .add:
-                cell.textLabel!.text = "Add Thread to Project"
-                cell.imageView!.image = UIImage(systemName: "plus.circle")
+                return
             }
         }
     }
@@ -39,7 +40,7 @@ class ProjectDetailViewController: UITableViewController {
     let project: Project
 
     private var fetchedResultsController: NSFetchedResultsController<Thread>!
-    private var dataSource: TableViewDiffableDataSource<Section, Cell>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
     
     init?(coder: NSCoder, project: Project) {
         self.project = project
@@ -62,27 +63,30 @@ class ProjectDetailViewController: UITableViewController {
                                        cacheName: nil)
         fetchedResultsController.delegate = self
         
-        tableView.register(CollectionThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Add")
-        dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: item.cellIdentifier, for: indexPath)
+        collectionView.register(ProjectThreadCollectionViewCell.nib, forCellWithReuseIdentifier: "Thread")
+        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: item.cellIdentifier, for: indexPath)
             item.populate(cell: cell, project: self.project)
             return cell
         }
         
-        dataSource.canEditRow = { _, _, item in
-            item != .add
-        }
-        
-        dataSource.sectionTitle = { [weak self] _, _, section in
-            switch section {
-            case .threads:
-                guard let items = self?.fetchedResultsController.fetchedObjects?.count else {
-                    return "Threads"
-                }
-                return "\(items) Thread\(items == 1 ? "" : "s")"
+        dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
+            guard let section = self?.dataSource.snapshot().sectionIdentifiers[indexPath.section] else {
+                return nil
+            }
+            
+            switch (kind, section) {
+            case (UICollectionView.elementKindSectionHeader, .threads):
+                NSLog("index path = \(indexPath)")
+                let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath) as! SectionHeaderLabelView
+                view.textLabel.text = self?.threadsSectionHeaderText()
+                return view
+            default:
+                return nil
             }
         }
+        
+        collectionView.collectionViewLayout = createLayout()
         
         do {
             try fetchedResultsController.performFetch()
@@ -102,10 +106,36 @@ class ProjectDetailViewController: UITableViewController {
         
         // update the threads section header if needed
         if let threadSectionIndex = snapshot.indexOfSection(.threads),
-            let sectionHeader = tableView.headerView(forSection: threadSectionIndex) {
-            sectionHeader.textLabel?.text = dataSource.sectionTitle(tableView, threadSectionIndex, .threads)?.uppercased()
+            let sectionHeader = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: threadSectionIndex)) as? SectionHeaderLabelView {
+            sectionHeader.textLabel.text = threadsSectionHeaderText()
             sectionHeader.setNeedsLayout()
         }
+    }
+    
+    func createLayout() -> UICollectionViewLayout {
+        UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                  heightDimension: .estimated(60))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                   heightDimension: .estimated(60))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            
+            let section = NSCollectionLayoutSection(group: group)
+            let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                         heightDimension: .estimated(44))
+            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: headerFooterSize,
+                elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+            section.boundarySupplementaryItems = [sectionHeader]
+            return section
+        }
+    }
+    
+    private func threadsSectionHeaderText() -> String {
+        let items = self.fetchedResultsController.fetchedObjects?.count ?? 0
+        return items == 0 ? "THREADS" : "\(items) THREAD\(items == 1 ? "" : "S")"
     }
 
     @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
@@ -141,19 +171,19 @@ class ProjectDetailViewController: UITableViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let item = dataSource.itemIdentifier(for: indexPath)
-        return item == .add ? indexPath : nil
+        return item == .add
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath) else {
             return
         }
         
         if item == .add {
             performSegue(withIdentifier: "AddThread", sender: nil)
-            tableView.deselectRow(at: indexPath, animated: true)
+            collectionView.deselectItem(at: indexPath, animated: true)
         }
     }
 }
@@ -162,4 +192,9 @@ extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updateSnapshot()
     }
+}
+
+
+class SectionHeaderLabelView: UICollectionReusableView {
+    @IBOutlet var textLabel: UILabel!
 }
