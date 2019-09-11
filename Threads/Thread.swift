@@ -86,6 +86,45 @@ public class Thread: NSManagedObject {
             _ = Thread(dmcThread: item, context: context)
         }
     }
+    
+    class func mergeThreads(context: NSManagedObjectContext) throws -> Int {
+        let threads = try context.fetch(sortedByNumberFetchRequest())
+        
+        var currentThread: Thread?
+        var mergedThreads = 0
+        
+        for thread in threads {
+            if let currentThread = currentThread, thread.number == currentThread.number {
+                // if we have multiple threads with the same number, merge all properties
+                // and relationships into the first one and delete the extras
+                
+                currentThread.merge(thread)
+                context.delete(thread)
+                
+                mergedThreads += 1
+            } else {
+                currentThread = thread
+            }
+        }
+        
+        return mergedThreads
+    }
+    
+    func merge(_ other: Thread) {
+        amountInCollection += other.amountInCollection
+        inCollection = inCollection || other.inCollection
+        onBobbin = onBobbin || other.onBobbin
+
+        amountInShoppingList += other.amountInShoppingList
+        inShoppingList = inShoppingList || other.inShoppingList
+        purchased = purchased || other.purchased
+        
+        let otherProjectThreads = (other.projects?.allObjects ?? []) as! [ProjectThread]
+        for projectThread in otherProjectThreads {
+            guard let project = projectThread.project else { continue }
+            add(to: project)
+        }
+    }
 
     func addToCollection() {
         amountInCollection = 1

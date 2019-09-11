@@ -42,6 +42,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             container.performBackgroundTask { context in
                 do {
+                    let numMerged = try Thread.mergeThreads(context: context)
+                    try context.save()
+                    NSLog("Merged \(numMerged) threads")
+                } catch {
+                    NSLog("Error merging duplicate threads: \(error)")
+                }
+                
+                do {
                     try Thread.importThreads(DMCThread.all, context: context)
                     try context.save()
                     NSLog("Imported threads")
