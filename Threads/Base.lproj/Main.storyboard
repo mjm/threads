@@ -125,6 +125,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="Zbh-Dz-3uX"/>
+                    <connections>
+                        <segue destination="ksf-sk-euA" kind="presentation" identifier="AddThread" id="INr-He-S2w"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q15-B8-sMW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -174,7 +177,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <connections>
                             <outlet property="dataSource" destination="JPm-i1-y3d" id="hS6-3g-SUA"/>
                             <outlet property="delegate" destination="JPm-i1-y3d" id="ePM-rx-dJ8"/>
@@ -412,6 +414,6 @@
         <image name="tray.full.fill" catalog="system" width="64" height="44"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="H6j-Tt-FZU"/>
+        <segue reference="INr-He-S2w"/>
     </inferredMetricsTieBreakers>
 </document>

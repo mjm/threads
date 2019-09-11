@@ -121,4 +121,14 @@ public class Thread: NSManagedObject {
 
         purchased = !purchased
     }
+    
+    func add(to project: Project) {
+        guard let projects = projects, !projects.contains(where: { ($0 as! ProjectThread).project == project }) else {
+            return
+        }
+        
+        let projectThread = ProjectThread(context: managedObjectContext!)
+        projectThread.project = project
+        addToProjects(projectThread)
+    }
 }

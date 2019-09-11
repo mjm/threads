@@ -99,6 +99,46 @@ class ProjectDetailViewController: UITableViewController {
         snapshot.appendItems(objects.map { Cell.thread($0) }, toSection: .threads)
         snapshot.appendItems([.add], toSection: .threads)
         dataSource.apply(snapshot)
+        
+        // update the threads section header if needed
+        if let threadSectionIndex = snapshot.indexOfSection(.threads),
+            let sectionHeader = tableView.headerView(forSection: threadSectionIndex) {
+            sectionHeader.textLabel?.text = dataSource.sectionTitle(tableView, threadSectionIndex, .threads)?.uppercased()
+            sectionHeader.setNeedsLayout()
+        }
+    }
+
+    @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
+    }
+    
+    @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
+        let addViewController = segue.source as! AddThreadViewController
+        for thread in addViewController.selectedThreads {
+            thread.add(to: project)
+        }
+        AppDelegate.save()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let navController = segue.destination as? UINavigationController {
+            if let addController = navController.viewControllers.first as? AddThreadViewController {
+                // only choose from threads that aren't already in the shopping list
+                let threads: [Thread]
+                do {
+                    let existingThreads = fetchedResultsController.fetchedObjects ?? []
+                    let request = Thread.sortedByNumberFetchRequest()
+                    
+                    // Not ideal, but I haven't figured out a way in Core Data to get all the threads that
+                    // aren't in a particular project. Many-to-many relationships are hard.
+                    threads = try project.managedObjectContext!.fetch(request).filter { !existingThreads.contains($0) }
+                } catch {
+                    NSLog("Could not fetch threads to search from")
+                    threads = []
+                }
+                
+                addController.choices = threads
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -112,7 +152,8 @@ class ProjectDetailViewController: UITableViewController {
         }
         
         if item == .add {
-            NSLog("Adding a thread to a project")
+            performSegue(withIdentifier: "AddThread", sender: nil)
+            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
 }
