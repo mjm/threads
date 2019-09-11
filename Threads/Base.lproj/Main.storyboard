@@ -113,7 +113,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Add" id="D1i-bW-URo">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Add" id="D1i-bW-URo" customClass="AddThreadCollectionViewCell" customModule="Threads" customModuleProvider="target">
                                 <rect key="frame" x="34" y="43" width="346" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Imy-c1-QRi">
@@ -140,7 +140,6 @@
                                                     <directionalEdgeInsets key="directionalLayoutMargins" top="10" leading="15" bottom="10" trailing="15"/>
                                                 </stackView>
                                             </subviews>
-                                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                             <constraints>
                                                 <constraint firstItem="o7L-Rl-Cuy" firstAttribute="leading" secondItem="UBY-rG-iBp" secondAttribute="leading" id="GJ7-Fv-TOv"/>
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="Sru-KY-efq"/>
@@ -154,6 +153,7 @@
                                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         </view>
                                     </subviews>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                     <constraints>
                                         <constraint firstItem="jd4-b9-n4P" firstAttribute="leading" secondItem="Imy-c1-QRi" secondAttribute="leading" id="0Ph-oQ-nAe"/>
                                         <constraint firstItem="UBY-rG-iBp" firstAttribute="leading" secondItem="Imy-c1-QRi" secondAttribute="leading" id="494-D7-7Ja"/>

@@ -198,3 +198,21 @@ extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
 class SectionHeaderLabelView: UICollectionReusableView {
     @IBOutlet var textLabel: UILabel!
 }
+
+class AddThreadCollectionViewCell: UICollectionViewCell {
+    override var isSelected: Bool {
+        didSet {
+            updateBackground()
+        }
+    }
+    
+    override var isHighlighted: Bool {
+        didSet {
+            updateBackground()
+        }
+    }
+    
+    private func updateBackground() {
+        contentView.backgroundColor = (isSelected || isHighlighted) ? .opaqueSeparator : .systemBackground
+    }
+}
