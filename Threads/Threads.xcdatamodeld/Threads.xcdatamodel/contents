@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14897.2" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14903" systemVersion="18G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Project" representedClassName="Project" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="threads" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectThread" inverseName="project" inverseEntity="ProjectThread"/>
+    </entity>
+    <entity name="ProjectThread" representedClassName="ProjectThread" syncable="YES" codeGenerationType="class">
+        <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="threads" inverseEntity="Project"/>
+        <relationship name="thread" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Thread" inverseName="projects" inverseEntity="Thread"/>
     </entity>
     <entity name="Thread" representedClassName=".Thread" syncable="YES" codeGenerationType="category">
         <attribute name="amountInCollection" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -13,9 +18,11 @@
         <attribute name="number" optional="YES" attributeType="String"/>
         <attribute name="onBobbin" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="purchased" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <relationship name="projects" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectThread" inverseName="thread" inverseEntity="ProjectThread"/>
     </entity>
     <elements>
-        <element name="Thread" positionX="-54" positionY="-9" width="128" height="178"/>
-        <element name="Project" positionX="-36" positionY="81" width="128" height="58"/>
+        <element name="Project" positionX="-36" positionY="81" width="128" height="73"/>
+        <element name="Thread" positionX="-54" positionY="-9" width="128" height="193"/>
+        <element name="ProjectThread" positionX="-45" positionY="63" width="128" height="73"/>
     </elements>
 </model>

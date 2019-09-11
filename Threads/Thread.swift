@@ -40,6 +40,12 @@ public class Thread: NSManagedObject {
         return request
     }
     
+    class func fetchRequest(for project: Project) -> NSFetchRequest<Thread> {
+        let request = sortedByNumberFetchRequest()
+        request.predicate = NSPredicate(format: "%@ IN projects.project", project)
+        return request
+    }
+    
     class func sortedByNumberFetchRequest() -> NSFetchRequest<Thread> {
         let request: NSFetchRequest<Thread> = fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "number", ascending: true)]

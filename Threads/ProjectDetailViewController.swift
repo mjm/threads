@@ -7,9 +7,39 @@
 //
 
 import UIKit
+import CoreData
 
 class ProjectDetailViewController: UITableViewController {
+    enum Section: CaseIterable {
+        case threads
+    }
+    
+    enum Cell: Hashable {
+        case thread(Thread)
+        case add
+        
+        var cellIdentifier: String {
+            switch self {
+            case .thread: return "Thread"
+            case .add: return "Add"
+            }
+        }
+        
+        func populate(cell: UITableViewCell, project: Project) {
+            switch self {
+            case let .thread(thread):
+                (cell as! CollectionThreadTableViewCell).populate(thread)
+            case .add:
+                cell.textLabel!.text = "Add Thread to Project"
+                cell.imageView!.image = UIImage(systemName: "plus.circle")
+            }
+        }
+    }
+    
     let project: Project
+
+    private var fetchedResultsController: NSFetchedResultsController<Thread>!
+    private var dataSource: UITableViewDiffableDataSource<Section, Cell>!
     
     init?(coder: NSCoder, project: Project) {
         self.project = project
@@ -24,5 +54,57 @@ class ProjectDetailViewController: UITableViewController {
         super.viewDidLoad()
         
         navigationItem.title = project.name
+        
+        fetchedResultsController =
+            NSFetchedResultsController(fetchRequest: Thread.fetchRequest(for: project),
+                                       managedObjectContext: project.managedObjectContext!,
+                                       sectionNameKeyPath: nil,
+                                       cacheName: nil)
+        fetchedResultsController.delegate = self
+        
+        tableView.register(CollectionThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Add")
+        dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
+            let cell = tableView.dequeueReusableCell(withIdentifier: item.cellIdentifier, for: indexPath)
+            item.populate(cell: cell, project: self.project)
+            return cell
+        }
+        
+        do {
+            try fetchedResultsController.performFetch()
+            updateSnapshot()
+        } catch {
+            NSLog("Could not load project threads: \(error)")
+        }
+    }
+    
+    func updateSnapshot() {
+        let objects = fetchedResultsController.fetchedObjects ?? []
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
+        snapshot.appendSections(Section.allCases)
+        snapshot.appendItems(objects.map { Cell.thread($0) }, toSection: .threads)
+        snapshot.appendItems([.add], toSection: .threads)
+        dataSource.apply(snapshot)
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        let item = dataSource.itemIdentifier(for: indexPath)
+        return item == .add ? indexPath : nil
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let item = dataSource.itemIdentifier(for: indexPath) else {
+            return
+        }
+        
+        if item == .add {
+            NSLog("Adding a thread to a project")
+        }
+    }
+}
+
+extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        updateSnapshot()
     }
 }
