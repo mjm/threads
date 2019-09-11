@@ -20,7 +20,7 @@ class AddThreadViewController: UITableViewController {
     private var resultsViewController: ThreadResultsViewController!
     
     private(set) var selectedThreads: [Thread] = []
-    private var dataSource: UITableViewDiffableDataSource<Section, Thread>!
+    private var dataSource: TableViewDiffableDataSource<Section, Thread>!
     
     @IBOutlet var keyboardAccessoryView: UIToolbar!
 
@@ -48,6 +48,9 @@ class AddThreadViewController: UITableViewController {
             cell.populate(item)
             return cell
         }
+        
+        dataSource.canEditRow = { _, _, _ in true }
+        
         updateSnapshot()
     }
     

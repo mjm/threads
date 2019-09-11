@@ -39,7 +39,7 @@ class ProjectDetailViewController: UITableViewController {
     let project: Project
 
     private var fetchedResultsController: NSFetchedResultsController<Thread>!
-    private var dataSource: UITableViewDiffableDataSource<Section, Cell>!
+    private var dataSource: TableViewDiffableDataSource<Section, Cell>!
     
     init?(coder: NSCoder, project: Project) {
         self.project = project
@@ -68,6 +68,20 @@ class ProjectDetailViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: item.cellIdentifier, for: indexPath)
             item.populate(cell: cell, project: self.project)
             return cell
+        }
+        
+        dataSource.canEditRow = { _, _, item in
+            item != .add
+        }
+        
+        dataSource.sectionTitle = { [weak self] _, _, section in
+            switch section {
+            case .threads:
+                guard let items = self?.fetchedResultsController.fetchedObjects?.count else {
+                    return "Threads"
+                }
+                return "\(items) Thread\(items == 1 ? "" : "s")"
+            }
         }
         
         do {

@@ -20,7 +20,7 @@ class MyThreadsViewController: UITableViewController {
     }
     
     private var fetchedResultsController: NSFetchedResultsController<Thread>!
-    private var dataSource: UITableViewDiffableDataSource<Section, Thread>!
+    private var dataSource: TableViewDiffableDataSource<Section, Thread>!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +38,8 @@ class MyThreadsViewController: UITableViewController {
             cell.populate(item)
             return cell
         }
+        
+        dataSource.canEditRow = { _, _, _ in true }
         
         do {
             try fetchedResultsController.performFetch()

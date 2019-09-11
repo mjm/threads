@@ -8,10 +8,22 @@
 
 import UIKit
 
-class TableViewDiffableDataSource<S: Hashable, I: Hashable>: UITableViewDiffableDataSource<S, I> {
-    var isEditable = true
+class TableViewDiffableDataSource<SectionIdentifierType: Hashable, ItemIdentifierType: Hashable>: UITableViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType> {
+    typealias CanEditProvider = (UITableView, IndexPath, ItemIdentifierType) -> Bool
+    
+    var canEditRow: CanEditProvider = { (_, _, _) in false }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return isEditable
+        guard let item = itemIdentifier(for: indexPath) else { return false }
+        return canEditRow(tableView, indexPath, item)
+    }
+    
+    typealias SectionTitleProvider = (UITableView, Int, SectionIdentifierType) -> String?
+    
+    var sectionTitle: SectionTitleProvider = { (_, _, _) in nil }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let sectionIdentifier = snapshot().sectionIdentifiers[section]
+        return sectionTitle(tableView, section, sectionIdentifier)
     }
 }
