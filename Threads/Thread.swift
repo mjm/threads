@@ -122,7 +122,15 @@ public class Thread: NSManagedObject {
         let otherProjectThreads = (other.projects?.allObjects ?? []) as! [ProjectThread]
         for projectThread in otherProjectThreads {
             guard let project = projectThread.project else { continue }
-            add(to: project)
+            if let myProjectThread = inProject(project) {
+                // if both threads are in the project, combine their amounts.
+                // the ProjectThread for `other` should be deleted when `other` is deleted.
+                myProjectThread.amount += projectThread.amount
+            } else {
+                // if `self` is not in the project, just steal the ProjectThread from `other`
+                // and make it ours.
+                projectThread.thread = self
+            }
         }
     }
 
@@ -161,13 +169,19 @@ public class Thread: NSManagedObject {
         purchased = !purchased
     }
     
-    func add(to project: Project) {
-        guard let projects = projects, !projects.contains(where: { ($0 as! ProjectThread).project == project }) else {
-            return
+    @discardableResult func add(to project: Project) -> ProjectThread {
+        if let projectThread = inProject(project) {
+            return projectThread
         }
         
         let projectThread = ProjectThread(context: managedObjectContext!)
         projectThread.project = project
+        projectThread.amount = 1
         addToProjects(projectThread)
+        return projectThread
+    }
+    
+    func inProject(_ project: Project) -> ProjectThread? {
+        return projects?.first(where: { ($0 as! ProjectThread).project == project }) as? ProjectThread
     }
 }

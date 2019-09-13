@@ -30,7 +30,21 @@ class ProjectDetailViewController: UICollectionViewController {
             case let .thread(thread):
                 // TODO this is wrong
                 let projectThread = thread.projects!.anyObject() as! ProjectThread
-                (cell as! ProjectThreadCollectionViewCell).populate(projectThread)
+                
+                let cell = cell as! ProjectThreadCollectionViewCell
+                cell.populate(projectThread)
+                cell.onDecreaseQuantity = {
+                    if projectThread.amount == 1 {
+                        projectThread.managedObjectContext?.delete(projectThread)
+                    } else {
+                        projectThread.amount -= 1
+                    }
+                    AppDelegate.save()
+                }
+                cell.onIncreaseQuantity = {
+                    projectThread.amount += 1
+                    AppDelegate.save()
+                }
             case .add:
                 return
             }
@@ -190,6 +204,25 @@ class ProjectDetailViewController: UICollectionViewController {
 extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updateSnapshot()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .update:
+            let thread = anObject as! Thread
+
+            guard let indexPath = dataSource.indexPath(for: .thread(thread)) else {
+                return
+            }
+
+            if let cell = collectionView.cellForItem(at: indexPath) as? ProjectThreadCollectionViewCell {
+                // TODO this is wrong
+                let projectThread = thread.projects!.anyObject() as! ProjectThread
+                cell.populate(projectThread)
+            }
+        default:
+            break
+        }
     }
 }
 
