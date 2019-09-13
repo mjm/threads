@@ -139,6 +139,7 @@ class ProjectDetailViewController: UICollectionViewController {
                 layoutSize: headerFooterSize,
                 elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
             section.boundarySupplementaryItems = [sectionHeader]
+            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 44, trailing: 0)
             return section
         }
     }
