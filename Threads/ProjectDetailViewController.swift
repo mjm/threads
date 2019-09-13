@@ -77,7 +77,6 @@ class ProjectDetailViewController: UICollectionViewController {
             
             switch (kind, section) {
             case (UICollectionView.elementKindSectionHeader, .threads):
-                NSLog("index path = \(indexPath)")
                 let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath) as! SectionHeaderLabelView
                 view.textLabel.text = self?.threadsSectionHeaderText()
                 return view
