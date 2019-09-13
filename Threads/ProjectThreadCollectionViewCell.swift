@@ -31,13 +31,8 @@ class ProjectThreadCollectionViewCell: UICollectionViewCell {
         }
         labelLabel.text = thread.label ?? ""
 
-//        numberLabel.textColor = UIColor.label
-//        labelLabel.textColor = UIColor.label
-//        backgroundColor = .systemBackground
-
         let amount = projectThread.amount
         quantityLabel.text = "\(amount)"
-//        quantityLabel.textColor = .label
 
         decreaseButton.setImage(UIImage(systemName: amount == 1 ? "trash" : "minus.square"), for: .normal)
     }

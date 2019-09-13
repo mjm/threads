@@ -15,7 +15,7 @@ class ProjectDetailViewController: UICollectionViewController {
     }
     
     enum Cell: Hashable {
-        case thread(Thread)
+        case thread(ProjectThread)
         case add
         
         var cellIdentifier: String {
@@ -27,10 +27,7 @@ class ProjectDetailViewController: UICollectionViewController {
         
         func populate(cell: UICollectionViewCell, project: Project) {
             switch self {
-            case let .thread(thread):
-                // TODO this is wrong
-                let projectThread = thread.projects!.anyObject() as! ProjectThread
-                
+            case let .thread(projectThread):
                 let cell = cell as! ProjectThreadCollectionViewCell
                 cell.populate(projectThread)
                 cell.onDecreaseQuantity = {
@@ -53,7 +50,7 @@ class ProjectDetailViewController: UICollectionViewController {
     
     let project: Project
 
-    private var fetchedResultsController: NSFetchedResultsController<Thread>!
+    private var fetchedResultsController: NSFetchedResultsController<ProjectThread>!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
     
     init?(coder: NSCoder, project: Project) {
@@ -71,7 +68,7 @@ class ProjectDetailViewController: UICollectionViewController {
         navigationItem.title = project.name
         
         fetchedResultsController =
-            NSFetchedResultsController(fetchRequest: Thread.fetchRequest(for: project),
+            NSFetchedResultsController(fetchRequest: ProjectThread.fetchRequest(for: project),
                                        managedObjectContext: project.managedObjectContext!,
                                        sectionNameKeyPath: nil,
                                        cacheName: nil)
@@ -168,7 +165,7 @@ class ProjectDetailViewController: UICollectionViewController {
                 // only choose from threads that aren't already in the shopping list
                 let threads: [Thread]
                 do {
-                    let existingThreads = fetchedResultsController.fetchedObjects ?? []
+                    let existingThreads = (fetchedResultsController.fetchedObjects ?? []).compactMap { $0.thread }
                     let request = Thread.sortedByNumberFetchRequest()
                     
                     // Not ideal, but I haven't figured out a way in Core Data to get all the threads that
@@ -209,16 +206,14 @@ extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .update:
-            let thread = anObject as! Thread
+            let thread = anObject as! ProjectThread
 
             guard let indexPath = dataSource.indexPath(for: .thread(thread)) else {
                 return
             }
 
             if let cell = collectionView.cellForItem(at: indexPath) as? ProjectThreadCollectionViewCell {
-                // TODO this is wrong
-                let projectThread = thread.projects!.anyObject() as! ProjectThread
-                cell.populate(projectThread)
+                cell.populate(thread)
             }
         default:
             break

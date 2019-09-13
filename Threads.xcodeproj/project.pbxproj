@@ -39,6 +39,7 @@
 		C97FCDA323296433000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA123296433000B1590 /* ProjectThreadCollectionViewCell.swift */; };
 		C97FCDA423296433000B1590 /* ProjectThreadCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDA223296433000B1590 /* ProjectThreadCollectionViewCell.xib */; };
 		C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA52329A921000B1590 /* SeparatorView.swift */; };
+		C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		C97FCDA123296433000B1590 /* ProjectThreadCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectThreadCollectionViewCell.swift; sourceTree = "<group>"; };
 		C97FCDA223296433000B1590 /* ProjectThreadCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectThreadCollectionViewCell.xib; sourceTree = "<group>"; };
 		C97FCDA52329A921000B1590 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
+		C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectThread.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +159,7 @@
 				C9491E10231DA9A20031F463 /* DMCThread.swift */,
 				C9491E2E231E0BE00031F463 /* Thread.swift */,
 				C9491E43232491D90031F463 /* Project.swift */,
+				C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */,
 				C9491E3F23246AC80031F463 /* Partition.swift */,
 				C9491E12231DAA5D0031F463 /* AllThreads.json */,
 				C9491DF9231D897B0031F463 /* Main.storyboard */,
@@ -297,6 +300,7 @@
 				C9491E3E23235FBF0031F463 /* ThreadTableViewCell.swift in Sources */,
 				C97FCDA323296433000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */,
 				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
+				C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */,
 				C9491E4023246AC80031F463 /* Partition.swift in Sources */,
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,
 				C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */,
