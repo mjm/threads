@@ -94,15 +94,15 @@ class ThreadDetailViewController: UITableViewController {
             return cell
         }
         
-        updateSnapshot()
+        updateSnapshot(animated: false)
     }
     
-    func updateSnapshot() {
+    func updateSnapshot(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems([.label, .collection, .bobbin, .colorBar], toSection: .details)
         snapshot.appendItems([.delete], toSection: .actions)
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: animated)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

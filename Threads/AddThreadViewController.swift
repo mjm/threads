@@ -169,7 +169,7 @@ class ThreadResultsViewController: UITableViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems(items, toSection: .threads)
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     func thread(at indexPath: IndexPath) -> Thread? {

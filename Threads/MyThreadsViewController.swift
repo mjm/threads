@@ -43,7 +43,7 @@ class MyThreadsViewController: UITableViewController {
         
         do {
             try fetchedResultsController.performFetch()
-            updateSnapshot()
+            updateSnapshot(animated: false)
         } catch {
             NSLog("Error fetching objects: \(error)")
         }
@@ -56,13 +56,13 @@ class MyThreadsViewController: UITableViewController {
         userActivity = activity
     }
     
-    func updateSnapshot() {
+    func updateSnapshot(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()
         snapshot.appendSections([.threads])
         let objects = fetchedResultsController.fetchedObjects ?? []
         NSLog("updating snapshot with objects: \(objects)")
         snapshot.appendItems(objects, toSection: .threads)
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: animated)
     }
     
     @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {

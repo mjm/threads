@@ -58,7 +58,7 @@ class ProjectListViewController: UICollectionViewController {
         
         do {
             try fetchedResultsController.performFetch()
-            updateSnapshot()
+            updateSnapshot(animated: false)
         } catch {
             NSLog("Could not load projects: \(error)")
         }
@@ -71,12 +71,12 @@ class ProjectListViewController: UICollectionViewController {
         userActivity = activity
     }
 
-    func updateSnapshot() {
+    func updateSnapshot(animated: Bool = true) {
         let objects = fetchedResultsController.fetchedObjects ?? []
         var snapshot = NSDiffableDataSourceSnapshot<Section, Project>()
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems(objects, toSection: .projects)
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: animated)
     }
     
     func createLayout() -> UICollectionViewLayout {

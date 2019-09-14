@@ -109,7 +109,7 @@ class ProjectDetailViewController: UICollectionViewController {
         
         do {
             try fetchedResultsController.performFetch()
-            updateSnapshot()
+            updateSnapshot(animated: false)
         } catch {
             NSLog("Could not load project threads: \(error)")
         }
@@ -117,13 +117,13 @@ class ProjectDetailViewController: UICollectionViewController {
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        updateSnapshot()
+        updateSnapshot(animated: animated)
 
         navigationItem.setRightBarButtonItems(editing ? [editButtonItem] : [editButtonItem, shareButtonItem],
                                               animated: animated)
     }
     
-    func updateSnapshot() {
+    func updateSnapshot(animated: Bool = true) {
         let objects = fetchedResultsController.fetchedObjects ?? []
         var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
         snapshot.appendSections(Section.allCases)
@@ -141,7 +141,7 @@ class ProjectDetailViewController: UICollectionViewController {
             snapshot.appendItems([.add], toSection: .threads)
         }
         
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: animated)
         
         // update the threads section header if needed
         if let threadSectionIndex = snapshot.indexOfSection(.threads),

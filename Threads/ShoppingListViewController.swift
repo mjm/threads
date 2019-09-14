@@ -60,7 +60,7 @@ class ShoppingListViewController: UITableViewController {
         
         do {
             try fetchedResultsController.performFetch()
-            updateSnapshot()
+            updateSnapshot(animated: false)
         } catch {
             NSLog("Error fetching objects: \(error)")
         }
@@ -73,7 +73,7 @@ class ShoppingListViewController: UITableViewController {
         userActivity = activity
     }
     
-    func updateSnapshot() {
+    func updateSnapshot(animated: Bool = true) {
         // update the rows of the table
         let objects = fetchedResultsController.fetchedObjects ?? []
         var partitioned = objects
@@ -83,7 +83,7 @@ class ShoppingListViewController: UITableViewController {
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems(Array(partitioned[..<p]), toSection: .unpurchased)
         snapshot.appendItems(Array(partitioned[p...]), toSection: .purchased)
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: animated)
 
         // animate in/out the "Add Checked to Collection" button
         let anyChecked = !objects.filter { $0.purchased }.isEmpty
@@ -91,13 +91,19 @@ class ShoppingListViewController: UITableViewController {
         let height = anyChecked
             ? header.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
             : 0.0
-
-        let animator = UIViewPropertyAnimator(duration: 0.2, dampingRatio: 0.3) {
+        
+        let changeHeight = {
             header.frame.size.height = height
             header.isHidden = !anyChecked
             header.layoutIfNeeded()
         }
-        animator.startAnimation()
+
+        if animated {
+            let animator = UIViewPropertyAnimator(duration: 0.2, dampingRatio: 0.3, animations: changeHeight)
+            animator.startAnimation()
+        } else {
+            changeHeight()
+        }
     }
 
     @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
