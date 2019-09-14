@@ -120,10 +120,14 @@ class ThreadDetailViewController: UITableViewController {
             self.tableView.deselectRow(at: indexPath, animated: true)
         })
         alert.addAction(UIAlertAction(title: "Remove", style: .destructive) { _ in
-            self.thread.removeFromCollection()
-            AppDelegate.save()
+            self.userActivity = nil
             
+            self.thread.removeFromCollection()
             self.performSegue(withIdentifier: "DeleteThread", sender: nil)
+            
+            UserActivity.showThread(self.thread).delete {
+                AppDelegate.save()
+            }
         })
         
         present(alert, animated: true)

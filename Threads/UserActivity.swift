@@ -77,6 +77,10 @@ enum UserActivity {
         activity.isEligibleForHandoff = true
         activity.isEligibleForSearch = true
         activity.isEligibleForPrediction = true
+        if let identifier = persistentIdentifier {
+            NSLog("creating user activity with persistent identifier \(identifier)")
+            activity.persistentIdentifier = identifier
+        }
         
         switch self {
         case .showMyThreads:
@@ -90,15 +94,33 @@ enum UserActivity {
             activity.title = "DMC \(thread.number ?? "Unknown")"
             activity.userInfo = [threadURLKey: threadURL]
             activity.requiredUserInfoKeys = [threadURLKey]
-            activity.persistentIdentifier = threadURL.absoluteString
         case let .showProject(project):
             let projectURL = project.objectID.uriRepresentation()
             activity.title = project.name ?? "Untitled Project"
             activity.userInfo = [projectURLKey: projectURL]
             activity.requiredUserInfoKeys = [projectURLKey]
-            activity.persistentIdentifier = projectURL.absoluteString
         }
         
         return activity
+    }
+    
+    var persistentIdentifier: String? {
+        switch self {
+        case let .showThread(thread):
+            return thread.objectID.uriRepresentation().absoluteString
+        case let .showProject(project):
+            return project.objectID.uriRepresentation().absoluteString
+        default:
+            return nil
+        }
+    }
+    
+    func delete(completion: @escaping () -> Void = {}) {
+        if let identifier = persistentIdentifier {
+            NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [identifier]) {
+                NSLog("Deleted user activity with identifier \(identifier)")
+                DispatchQueue.main.async(execute: completion)
+            }
+        }
     }
 }
