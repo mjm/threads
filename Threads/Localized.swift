@@ -27,6 +27,7 @@ struct Localized {
     static let remove = NSLocalizedString("Remove", comment: "")
     
     static let addThreadUndoAction = NSLocalizedString("AddThreadUndoAction", comment: "Add Thread or Add {num} Threads")
+    static let addToCollection = NSLocalizedString("Add to Collection", comment: "")
     
     static let myThreads = NSLocalizedString("My Threads", comment: "")
     static let shoppingList = NSLocalizedString("Shopping List", comment: "")
@@ -47,4 +48,8 @@ struct Localized {
     static let projectName = NSLocalizedString("Project Name", comment: "")
     
     static let threadsSectionHeader = NSLocalizedString("ThreadsSectionHeader", comment: "THREADS or 1 THREAD or 2 THREADS")
+    
+    static let changePurchased = NSLocalizedString("Change Purchased", comment: "")
+    static let changeQuantity = NSLocalizedString("Change Quantity", comment: "")
+    static let removeFromShoppingList = NSLocalizedString("Remove from Shopping List", comment: "")
 }

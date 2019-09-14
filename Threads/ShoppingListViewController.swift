@@ -21,6 +21,9 @@ class ShoppingListViewController: UITableViewController {
     
     private var fetchedResultsController: NSFetchedResultsController<Thread>!
     private var dataSource: UITableViewDiffableDataSource<Section, Thread>!
+    
+    private var purchaseDelayTimer: Timer?
+    private var pendingPurchases = Set<Thread>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,23 +40,13 @@ class ShoppingListViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ShoppingListThreadTableViewCell
             cell.populate(item)
             cell.onCheckTapped = {
-                item.togglePurchased()
-                self.delayPurchase(item)
-                AppDelegate.save()
+                self.toggleThreadChecked(item)
             }
             cell.onIncreaseQuantity = {
-                self.resetDelayedPurchaseTimer()
-                item.amountInShoppingList += 1
-                AppDelegate.save()
+                self.increaseQuantity(item)
             }
             cell.onDecreaseQuantity = {
-                self.resetDelayedPurchaseTimer()
-                if item.amountInShoppingList == 1 {
-                    item.removeFromShoppingList()
-                } else {
-                    item.amountInShoppingList -= 1
-                }
-                AppDelegate.save()
+                self.decreaseQuantity(item)
             }
             return cell
         }
@@ -66,6 +59,24 @@ class ShoppingListViewController: UITableViewController {
         }
         
         userActivity = UserActivity.showShoppingList.userActivity
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        becomeFirstResponder()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        resignFirstResponder()
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        true
+    }
+
+    override var undoManager: UndoManager? {
+        managedObjectContext.undoManager
     }
     
     func updateSnapshot(animated: Bool = true) {
@@ -106,6 +117,10 @@ class ShoppingListViewController: UITableViewController {
     
     @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
         let addViewController = segue.source as! AddThreadViewController
+        
+        let threadCount = addViewController.selectedThreads.count
+        undoManager?.setActionName(String.localizedStringWithFormat(Localized.addThreadUndoAction, threadCount))
+        
         for thread in addViewController.selectedThreads {
             thread.addToShoppingList()
         }
@@ -129,10 +144,14 @@ class ShoppingListViewController: UITableViewController {
             }
         }
     }
+}
 
+// MARK: - Actions
+extension ShoppingListViewController {
     @IBAction func addCheckedToCollection() {
         let request = Thread.purchasedFetchRequest()
         do {
+            undoManager?.setActionName(Localized.addToCollection)
             let threads = try managedObjectContext.fetch(request)
             for thread in threads {
                 thread.removeFromShoppingList()
@@ -143,10 +162,36 @@ class ShoppingListViewController: UITableViewController {
             NSLog("Could not load purchased threads: \(error)")
         }
     }
+    
+    func toggleThreadChecked(_ thread: Thread) {
+        undoManager?.setActionName(Localized.changePurchased)
+        thread.togglePurchased()
+        delayPurchase(thread)
+        AppDelegate.save()
+    }
+    
+    func increaseQuantity(_ thread: Thread) {
+        undoManager?.setActionName(Localized.changeQuantity)
+        resetDelayedPurchaseTimer()
+        thread.amountInShoppingList += 1
+        AppDelegate.save()
+    }
+    
+    func decreaseQuantity(_ thread: Thread) {
+        resetDelayedPurchaseTimer()
+        if thread.amountInShoppingList == 1 {
+            undoManager?.setActionName(Localized.removeFromShoppingList)
+            thread.removeFromShoppingList()
+        } else {
+            undoManager?.setActionName(Localized.changeQuantity)
+            thread.amountInShoppingList -= 1
+        }
+        AppDelegate.save()
+    }
+}
 
-    private var purchaseDelayTimer: Timer?
-    private var pendingPurchases = Set<Thread>()
-
+// MARK: - Purchase Delay
+extension ShoppingListViewController {
     private func delayPurchase(_ thread: Thread) {
         if thread.purchased {
             pendingPurchases.insert(thread)
@@ -169,6 +214,7 @@ class ShoppingListViewController: UITableViewController {
     }
 }
 
+// MARK: - Fetched Results Controller Delegate
 extension ShoppingListViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updateSnapshot()

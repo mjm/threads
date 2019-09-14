@@ -125,38 +125,38 @@ class MyThreadsViewController: UITableViewController {
 // MARK: - Actions
 extension MyThreadsViewController {
     func markOffBobbin(_ thread: Thread) {
-        self.undoManager?.setActionName(Localized.markOffBobbin)
+        undoManager?.setActionName(Localized.markOffBobbin)
         thread.onBobbin = false
         AppDelegate.save()
     }
     
     func markOnBobbin(_ thread: Thread) {
-        self.undoManager?.setActionName(Localized.markOnBobbin)
+        undoManager?.setActionName(Localized.markOnBobbin)
         thread.onBobbin = true
         AppDelegate.save()
     }
     
     func markInStock(_ thread: Thread) {
-        self.undoManager?.setActionName(Localized.markInStock)
+        undoManager?.setActionName(Localized.markInStock)
         thread.amountInCollection = 1
         AppDelegate.save()
     }
     
     func markOutOfStock(_ thread: Thread) {
-        self.undoManager?.setActionName(Localized.markOutOfStock)
+        undoManager?.setActionName(Localized.markOutOfStock)
         thread.amountInCollection = 0
         thread.onBobbin = false
         AppDelegate.save()
     }
     
     func addToShoppingList(_ thread: Thread) {
-        self.undoManager?.setActionName(Localized.addToShoppingList)
+        undoManager?.setActionName(Localized.addToShoppingList)
         thread.addToShoppingList()
         AppDelegate.save()
     }
     
     func removeFromCollection(_ thread: Thread) {
-        self.undoManager?.setActionName(Localized.removeThread)
+        undoManager?.setActionName(Localized.removeThread)
         thread.removeFromCollection()
         UserActivity.showThread(thread).delete {
             AppDelegate.save()
