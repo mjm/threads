@@ -58,11 +58,9 @@ class ProjectDetailViewController: UICollectionViewController {
                     } else {
                         projectThread.amount -= 1
                     }
-                    AppDelegate.save()
                 }
                 cell.onIncreaseQuantity = {
                     projectThread.amount += 1
-                    AppDelegate.save()
                 }
 
             case .add:
@@ -142,6 +140,24 @@ class ProjectDetailViewController: UICollectionViewController {
         userActivity = UserActivity.showProject(project).userActivity
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        becomeFirstResponder()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        resignFirstResponder()
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        true
+    }
+
+    override var undoManager: UndoManager? {
+        project.managedObjectContext?.undoManager
+    }
+    
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         updateSnapshot(animated: animated)
@@ -149,8 +165,15 @@ class ProjectDetailViewController: UICollectionViewController {
         navigationItem.largeTitleDisplayMode = editing ? .never : .automatic
         navigationItem.setRightBarButtonItems(editing ? [editButtonItem] : [editButtonItem, shareButtonItem],
                                               animated: animated)
-        
-        AppDelegate.save()
+
+        if editing {
+            AppDelegate.save()
+            undoManager?.beginUndoGrouping()
+            undoManager?.setActionName(Localized.changeProject)
+        } else {
+            undoManager?.endUndoGrouping()
+            AppDelegate.save()
+        }
     }
     
     func updateSnapshot(animated: Bool = true) {

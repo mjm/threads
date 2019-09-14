@@ -46,6 +46,7 @@ struct Localized {
     static let delete = NSLocalizedString("Delete", comment: "")
     
     static let projectName = NSLocalizedString("Project Name", comment: "")
+    static let changeProject = NSLocalizedString("Change Project", comment: "")
     
     static let threadsSectionHeader = NSLocalizedString("ThreadsSectionHeader", comment: "THREADS or 1 THREAD or 2 THREADS")
     
