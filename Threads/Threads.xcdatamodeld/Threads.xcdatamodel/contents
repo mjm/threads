@@ -2,6 +2,7 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14903" systemVersion="18G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Project" representedClassName="Project" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="Transformable" customClassName="NSAttributedString"/>
         <relationship name="threads" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectThread" inverseName="project" inverseEntity="ProjectThread"/>
     </entity>
     <entity name="ProjectThread" representedClassName="ProjectThread" syncable="YES" codeGenerationType="class">
@@ -22,7 +23,7 @@
         <relationship name="projects" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectThread" inverseName="thread" inverseEntity="ProjectThread"/>
     </entity>
     <elements>
-        <element name="Project" positionX="-36" positionY="81" width="128" height="73"/>
+        <element name="Project" positionX="-36" positionY="81" width="128" height="88"/>
         <element name="Thread" positionX="-54" positionY="-9" width="128" height="193"/>
         <element name="ProjectThread" positionX="-45" positionY="63" width="128" height="88"/>
     </elements>

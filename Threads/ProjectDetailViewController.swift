@@ -12,27 +12,39 @@ import CoreData
 class ProjectDetailViewController: UICollectionViewController {
     enum Section: CaseIterable {
         case details
+        case notes
         case threads
     }
     
     enum Cell: Hashable {
+        case viewNotes
         case viewThread(ProjectThread, isLast: Bool)
         
         case editName
+        case editNotes
         case editThread(ProjectThread)
         case add
         
         var cellIdentifier: String {
             switch self {
+            case .viewNotes: return "TextView"
             case .viewThread: return "Thread"
             case .editName: return "TextInput"
+            case .editNotes: return "TextView"
             case .editThread: return "EditThread"
             case .add: return "Add"
             }
         }
         
-        func populate(cell: UICollectionViewCell, project: Project) {
+        func populate(cell: UICollectionViewCell, project: Project, controller: ProjectDetailViewController) {
             switch self {
+                
+            case .viewNotes:
+                let cell = cell as! TextViewCollectionViewCell
+                cell.textView.isEditable = false
+                cell.textView.dataDetectorTypes = .all
+                cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body))
+                cell.onChange = { _ in }
 
             case let .viewThread(projectThread, isLast: isLast):
                 let cell = cell as! ViewProjectThreadCollectionViewCell
@@ -47,6 +59,16 @@ class ProjectDetailViewController: UICollectionViewController {
                 }
                 cell.onReturn = { [unowned cell] in
                     cell.textField.resignFirstResponder()
+                }
+                
+            case .editNotes:
+                let cell = cell as! TextViewCollectionViewCell
+                cell.textView.isEditable = true
+                cell.textView.dataDetectorTypes = []
+                cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body))
+                cell.onChange = { [weak controller] newText in
+                    project.notes = newText.replacing(font: .preferredFont(forTextStyle: .body))
+                    controller?.updateSnapshot()
                 }
 
             case let .editThread(projectThread):
@@ -107,9 +129,14 @@ class ProjectDetailViewController: UICollectionViewController {
         collectionView.register(ViewProjectThreadCollectionViewCell.nib, forCellWithReuseIdentifier: "Thread")
         collectionView.register(EditProjectThreadCollectionViewCell.nib, forCellWithReuseIdentifier: "EditThread")
         collectionView.register(TextInputCollectionViewCell.nib, forCellWithReuseIdentifier: "TextInput")
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
+        collectionView.register(TextViewCollectionViewCell.nib, forCellWithReuseIdentifier: "TextView")
+        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: item.cellIdentifier, for: indexPath)
-            item.populate(cell: cell, project: self.project)
+            
+            if let self = self {
+                item.populate(cell: cell, project: self.project, controller: self)
+            }
+            
             return cell
         }
         
@@ -122,6 +149,14 @@ class ProjectDetailViewController: UICollectionViewController {
             case (UICollectionView.elementKindSectionHeader, .threads):
                 let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath) as! SectionHeaderLabelView
                 view.textLabel.text = self?.threadsSectionHeaderText()
+                return view
+            case (UICollectionView.elementKindSectionHeader, .details):
+                let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath) as! SectionHeaderLabelView
+                view.textLabel.text = nil
+                return view
+            case (UICollectionView.elementKindSectionHeader, .notes):
+                let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath) as! SectionHeaderLabelView
+                view.textLabel.text = Localized.notesSectionHeader
                 return view
             default:
                 return nil
@@ -182,7 +217,12 @@ class ProjectDetailViewController: UICollectionViewController {
         
         if isEditing {
             snapshot.appendSections([.details])
-            snapshot.appendItems([.editName], toSection: .details)
+            snapshot.appendItems([.editName, .editNotes], toSection: .details)
+        } else {
+            if let notes = project.notes, notes.length > 0 {
+                snapshot.appendSections([.notes])
+                snapshot.appendItems([.viewNotes], toSection: .notes)
+            }
         }
         
         snapshot.appendSections([.threads])
@@ -214,6 +254,24 @@ class ProjectDetailViewController: UICollectionViewController {
             let sectionType = self!.dataSource.snapshot().sectionIdentifiers[sectionIndex]
             
             switch sectionType {
+            case .notes:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                      heightDimension: .estimated(88))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .estimated(88))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                
+                let section = NSCollectionLayoutSection(group: group)
+                let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                             heightDimension: .estimated(44))
+                let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: headerFooterSize,
+                    elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                section.boundarySupplementaryItems = [sectionHeader]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0)
+                return section
             case .details:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                       heightDimension: .estimated(44))
@@ -224,7 +282,13 @@ class ProjectDetailViewController: UICollectionViewController {
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 34, leading: 0, bottom: 15, trailing: 0)
+                let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                              heightDimension: .absolute(34))
+                let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: headerFooterSize,
+                    elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                section.boundarySupplementaryItems = [sectionHeader]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0)
                 return section
             case .threads:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),

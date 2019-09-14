@@ -28,13 +28,20 @@
                             <outlet property="delegate" destination="TDa-uV-5R8" id="5XX-ae-nYn"/>
                         </connections>
                     </textField>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S1k-oF-niB" customClass="SeparatorView" customModule="Threads" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="48.5" width="286" height="0.5"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    </view>
                 </subviews>
                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                 <constraints>
+                    <constraint firstAttribute="bottom" secondItem="S1k-oF-niB" secondAttribute="bottom" id="AKo-pn-CoA"/>
                     <constraint firstItem="27A-FQ-RVr" firstAttribute="leading" secondItem="SXy-o9-5Zm" secondAttribute="leading" constant="16" id="LNc-mR-sS7"/>
                     <constraint firstItem="27A-FQ-RVr" firstAttribute="top" secondItem="SXy-o9-5Zm" secondAttribute="top" id="Nlo-HX-LIt"/>
                     <constraint firstAttribute="trailing" secondItem="27A-FQ-RVr" secondAttribute="trailing" constant="16" id="RJc-i8-3zf"/>
                     <constraint firstAttribute="bottom" secondItem="27A-FQ-RVr" secondAttribute="bottom" id="f9s-te-7qm"/>
+                    <constraint firstAttribute="trailing" secondItem="S1k-oF-niB" secondAttribute="trailing" id="kBC-hc-RPT"/>
+                    <constraint firstItem="S1k-oF-niB" firstAttribute="leading" secondItem="SXy-o9-5Zm" secondAttribute="leading" id="rZi-k2-HRF"/>
                 </constraints>
             </collectionViewCellContentView>
             <size key="customSize" width="286" height="49"/>

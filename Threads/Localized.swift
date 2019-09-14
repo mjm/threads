@@ -49,6 +49,7 @@ struct Localized {
     static let changeProject = NSLocalizedString("Change Project", comment: "")
     
     static let threadsSectionHeader = NSLocalizedString("ThreadsSectionHeader", comment: "THREADS or 1 THREAD or 2 THREADS")
+    static let notesSectionHeader = NSLocalizedString("NOTES", comment: "")
     
     static let changePurchased = NSLocalizedString("Change Purchased", comment: "")
     static let changeQuantity = NSLocalizedString("Change Quantity", comment: "")
