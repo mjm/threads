@@ -33,7 +33,7 @@ class AddThreadViewController: UITableViewController {
         searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.searchResultsUpdater = self
         searchController.searchBar.autocapitalizationType = .none
-        searchController.searchBar.placeholder = "Search for new threads"
+        searchController.searchBar.placeholder = Localized.searchForNewThreads
         searchController.searchBar.keyboardType = .asciiCapableNumberPad
         searchController.searchBar.inputAccessoryView = keyboardAccessoryView
         
@@ -68,13 +68,8 @@ class AddThreadViewController: UITableViewController {
         
         // Also update the add button to reflect the quantity
         if let addButton = navigationItem.rightBarButtonItems?.first {
-            if selectedThreads.isEmpty {
-                addButton.title = "Add"
-                addButton.isEnabled = false
-            } else {
-                addButton.title = "Add (\(selectedThreads.count))"
-                addButton.isEnabled = true
-            }
+            addButton.title = String.localizedStringWithFormat(Localized.addBatchButton, selectedThreads.count)
+            addButton.isEnabled = !selectedThreads.isEmpty
         }
     }
     
@@ -106,7 +101,7 @@ class AddThreadViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if tableView == self.tableView {
-            let delete = UIContextualAction(style: .destructive, title: "Don't Add") { action, view, completionHandler in
+            let delete = UIContextualAction(style: .destructive, title: Localized.dontAdd) { action, view, completionHandler in
                 self.selectedThreads.remove(at: indexPath.row)
                 self.updateSnapshot()
                 completionHandler(true)

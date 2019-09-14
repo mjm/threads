@@ -85,7 +85,7 @@ class MyThreadsViewController: UITableViewController {
         let addViewController = segue.source as! AddThreadViewController
         
         let threadCount = addViewController.selectedThreads.count
-        undoManager?.setActionName(threadCount == 1 ? "Add Thread" : "Add \(threadCount) Threads")
+        undoManager?.setActionName(String.localizedStringWithFormat(Localized.addThreadUndoAction, threadCount))
         for thread in addViewController.selectedThreads {
             thread.addToCollection()
         }
@@ -134,15 +134,15 @@ class MyThreadsViewController: UITableViewController {
         
         let bobbin: UIContextualAction
         if thread.onBobbin {
-            bobbin = UIContextualAction(style: .normal, title: "Off Bobbin") { action, view, completionHandler in
-                self.undoManager?.setActionName("Mark Off Bobbin")
+            bobbin = UIContextualAction(style: .normal, title: Localized.offBobbin) { action, view, completionHandler in
+                self.undoManager?.setActionName(Localized.markOffBobbin)
                 thread.onBobbin = false
                 AppDelegate.save()
                 completionHandler(true)
             }
         } else {
-            bobbin = UIContextualAction(style: .normal, title: "On Bobbin") { action, view, completionHandler in
-                self.undoManager?.setActionName("Mark On Bobbin")
+            bobbin = UIContextualAction(style: .normal, title: Localized.onBobbin) { action, view, completionHandler in
+                self.undoManager?.setActionName(Localized.markOffBobbin)
                 thread.onBobbin = true
                 AppDelegate.save()
                 completionHandler(true)
@@ -160,14 +160,14 @@ class MyThreadsViewController: UITableViewController {
         
         let stock: UIContextualAction
         if thread.amountInCollection == 0 {
-            stock = UIContextualAction(style: .normal, title: "In Stock") { action, view, completionHandler in
+            stock = UIContextualAction(style: .normal, title: Localized.inStock) { action, view, completionHandler in
                 thread.amountInCollection = 1
                 AppDelegate.save()
                 completionHandler(true)
             }
             stock.backgroundColor = UIColor(named: "InStockSwipe")
         } else {
-            stock = UIContextualAction(style: .destructive, title: "Out of Stock") { action, view, completionHandler in
+            stock = UIContextualAction(style: .destructive, title: Localized.outOfStock) { action, view, completionHandler in
                 thread.amountInCollection = 0
                 thread.onBobbin = false
                 AppDelegate.save()
@@ -193,24 +193,24 @@ class MyThreadsViewController: UITableViewController {
             var markActions: [UIMenuElement] = []
             
             if thread.amountInCollection == 0 {
-                markActions.append(UIAction(title: "Mark In Stock") { _ in
+                markActions.append(UIAction(title: Localized.markInStock) { _ in
                     thread.amountInCollection = 1
                     AppDelegate.save()
                 })
             } else {
                 if thread.onBobbin {
-                    markActions.append(UIAction(title: "Mark Off Bobbin") { _ in
+                    markActions.append(UIAction(title: Localized.markOffBobbin) { _ in
                         thread.onBobbin = false
                         AppDelegate.save()
                     })
                 } else {
-                    markActions.append(UIAction(title: "Mark On Bobbin") { _ in
+                    markActions.append(UIAction(title: Localized.markOnBobbin) { _ in
                         thread.onBobbin = true
                         AppDelegate.save()
                     })
                 }
                 
-                markActions.append(UIAction(title: "Mark Out of Stock") { _ in
+                markActions.append(UIAction(title: Localized.markOutOfStock) { _ in
                     thread.amountInCollection = 0
                     thread.onBobbin = false
                     AppDelegate.save()
@@ -218,13 +218,13 @@ class MyThreadsViewController: UITableViewController {
             }
             
             return UIMenu(title: "", children: [
-                UIAction(title: "Add to Shopping List",
+                UIAction(title: Localized.addToShoppingList,
                          image: UIImage(systemName: "cart.badge.plus"),
                          attributes: thread.inShoppingList ? .disabled : []) { _ in
                     thread.addToShoppingList()
                 },
-                UIMenu(title: "Mark", options: .displayInline, children: markActions),
-                UIAction(title: "Remove from Collection", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                UIMenu(title: "", options: .displayInline, children: markActions),
+                UIAction(title: Localized.removeFromCollection, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
                     thread.removeFromCollection()
                     UserActivity.showThread(thread).delete {
                         AppDelegate.save()

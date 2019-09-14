@@ -10,12 +10,12 @@ import UIKit
 
 extension Project: UIActivityItemSource {
     public func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
-        return name ?? "Untitled Project"
+        return name ?? Localized.unnamedProject
     }
     
     public func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
         NSLog("activityType = \(String(describing: activityType))")
-        return name ?? "Untitled Project"
+        return name ?? Localized.unnamedProject
     }
     
     public func activityViewController(_ activityViewController: UIActivityViewController, thumbnailImageForActivityType activityType: UIActivity.ActivityType?, suggestedSize size: CGSize) -> UIImage? {

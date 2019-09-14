@@ -133,10 +133,10 @@ class ProjectListViewController: UICollectionViewController {
             }
         }) { suggestedActions in
             UIMenu(title: "", children: [
-                UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { _ in
+                UIAction(title: Localized.share, image: UIImage(systemName: "square.and.arrow.up")) { _ in
                     NSLog("share!")
                 },
-                UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                UIAction(title: Localized.delete, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
                     NSLog("delete!")
                 }
             ])

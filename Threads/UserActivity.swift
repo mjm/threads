@@ -84,19 +84,23 @@ enum UserActivity {
         
         switch self {
         case .showMyThreads:
-            activity.title = "My Threads"
+            activity.title = Localized.myThreads
         case .showShoppingList:
-            activity.title = "Shopping List"
+            activity.title = Localized.shoppingList
         case .showProjects:
-            activity.title = "My Projects"
+            activity.title = Localized.myProjects
         case let .showThread(thread):
             let threadURL = thread.objectID.uriRepresentation()
-            activity.title = "DMC \(thread.number ?? "Unknown")"
+            if let number = thread.number {
+                activity.title = String(format: Localized.dmcNumber, number)
+            } else {
+                activity.title = Localized.dmcNumberUnknown
+            }
             activity.userInfo = [threadURLKey: threadURL]
             activity.requiredUserInfoKeys = [threadURLKey]
         case let .showProject(project):
             let projectURL = project.objectID.uriRepresentation()
-            activity.title = project.name ?? "Untitled Project"
+            activity.title = project.name ?? Localized.unnamedProject
             activity.userInfo = [projectURLKey: projectURL]
             activity.requiredUserInfoKeys = [projectURLKey]
         }

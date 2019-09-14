@@ -22,10 +22,10 @@ class CollectionThreadTableViewCell: ThreadTableViewCell {
         if thread.inCollection {
             if thread.onBobbin {
                 statusLabel.isHidden = false
-                statusLabel.text = "On Bobbin"
+                statusLabel.text = Localized.onBobbin
             } else if thread.amountInCollection == 0 {
                 statusLabel.isHidden = false
-                statusLabel.text = "Out of Stock"
+                statusLabel.text = Localized.outOfStock
                 
                 numberLabel.textColor = UIColor.secondaryLabel
                 labelLabel.textColor = UIColor.secondaryLabel

@@ -17,9 +17,9 @@ class ThreadTableViewCell: UITableViewCell {
         colorView.color = thread.color ?? .systemBackground
 
         if let number = thread.number {
-            numberLabel.text = "DMC \(number)"
+            numberLabel.text = String(format: Localized.dmcNumber, number)
         } else {
-            numberLabel.text = ""
+            numberLabel.text = Localized.dmcNumberUnknown
         }
         labelLabel.text = thread.label ?? ""
 

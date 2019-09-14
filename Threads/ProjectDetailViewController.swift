@@ -40,7 +40,7 @@ class ProjectDetailViewController: UICollectionViewController {
                 
             case .editName:
                 let cell = cell as! TextInputCollectionViewCell
-                cell.textField.placeholder = "Project Name"
+                cell.textField.placeholder = Localized.projectName
                 cell.textField.text = project.name
                 cell.onChange = { newText in
                     project.name = newText
@@ -227,7 +227,7 @@ class ProjectDetailViewController: UICollectionViewController {
     
     private func threadsSectionHeaderText() -> String {
         let items = self.fetchedResultsController.fetchedObjects?.count ?? 0
-        return items == 0 ? "THREADS" : "\(items) THREAD\(items == 1 ? "" : "S")"
+        return String.localizedStringWithFormat(Localized.threadsSectionHeader, items)
     }
     
     @IBAction func shareProject() {

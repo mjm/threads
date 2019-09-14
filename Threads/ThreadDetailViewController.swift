@@ -38,24 +38,24 @@ class ThreadDetailViewController: UITableViewController {
                 cell.textLabel!.text = thread.label
             case .collection:
                 if thread.amountInCollection > 0 {
-                    cell.textLabel!.text = "In Stock"
+                    cell.textLabel!.text = Localized.inStock
                     cell.textLabel!.textColor = UIColor.label
                     cell.imageView!.image = UIImage(systemName: "tray.full")
                     cell.imageView!.tintColor = UIColor.label
                 } else {
-                    cell.textLabel!.text = "Out of Stock"
+                    cell.textLabel!.text = Localized.outOfStock
                     cell.textLabel!.textColor = UIColor.secondaryLabel
                     cell.imageView!.image = UIImage(systemName: "tray")
                     cell.imageView!.tintColor = UIColor.secondaryLabel
                 }
             case .bobbin:
                 if thread.onBobbin {
-                    cell.textLabel!.text = "On Bobbin"
+                    cell.textLabel!.text = Localized.onBobbin
                     cell.textLabel!.textColor = UIColor.label
                     cell.imageView!.image = UIImage(systemName: "checkmark.circle")
                     cell.imageView!.tintColor = UIColor.label
                 } else {
-                    cell.textLabel!.text = "Not On Bobbin"
+                    cell.textLabel!.text = Localized.offBobbin
                     cell.textLabel!.textColor = UIColor.secondaryLabel
                     cell.imageView!.image = UIImage(systemName: "circle")
                     cell.imageView!.tintColor = UIColor.secondaryLabel
@@ -64,7 +64,7 @@ class ThreadDetailViewController: UITableViewController {
                 cell.backgroundColor = thread.color
                 
             case .delete:
-                cell.textLabel!.text = "Remove from Collection"
+                cell.textLabel!.text = Localized.removeFromCollection
                 cell.textLabel!.textColor = UIColor.systemRed
             }
         }
@@ -86,7 +86,7 @@ class ThreadDetailViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = "DMC \(thread.number!)"
+        navigationItem.title = String(format: Localized.dmcNumber, thread.number!)
         
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: item.cellIdentifier, for: indexPath)
@@ -133,14 +133,16 @@ class ThreadDetailViewController: UITableViewController {
     }
     
     func deleteThread(indexPath: IndexPath) {
-        let alert = UIAlertController(title: "Remove Thread", message: "Are you sure you want to remove this thread from your collection?", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        let alert = UIAlertController(title: Localized.removeThread,
+                                      message: Localized.removeThreadPrompt,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: Localized.cancel, style: .cancel) { _ in
             self.tableView.deselectRow(at: indexPath, animated: true)
         })
-        alert.addAction(UIAlertAction(title: "Remove", style: .destructive) { _ in
+        alert.addAction(UIAlertAction(title: Localized.remove, style: .destructive) { _ in
             self.userActivity = nil
             
-            self.undoManager?.setActionName("Remove Thread")
+            self.undoManager?.setActionName(Localized.removeThread)
             self.thread.removeFromCollection()
             self.performSegue(withIdentifier: "DeleteThread", sender: nil)
             
