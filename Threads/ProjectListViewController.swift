@@ -121,6 +121,34 @@ class ProjectListViewController: UICollectionViewController {
         let project = dataSource.itemIdentifier(for: indexPath)!
         showDetail(for: project)
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let project = dataSource.itemIdentifier(for: indexPath) else {
+            return nil
+        }
+        
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: { () -> UIViewController? in
+            self.storyboard!.instantiateViewController(identifier: "ProjectDetail") { coder in
+                self.makeDetailController(coder: coder, sender: project)
+            }
+        }) { suggestedActions in
+            UIMenu(title: "", children: [
+                UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { _ in
+                    NSLog("share!")
+                },
+                UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                    NSLog("delete!")
+                }
+            ])
+        }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        let vc = animator.previewViewController!
+        animator.addAnimations {
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
 }
 
 extension ProjectListViewController: NSFetchedResultsControllerDelegate {
