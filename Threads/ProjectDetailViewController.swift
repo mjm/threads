@@ -15,20 +15,25 @@ class ProjectDetailViewController: UICollectionViewController {
     }
     
     enum Cell: Hashable {
-        case thread(ProjectThread)
+        case viewThread(ProjectThread, isLast: Bool)
+        case editThread(ProjectThread)
         case add
         
         var cellIdentifier: String {
             switch self {
-            case .thread: return "Thread"
+            case .viewThread: return "Thread"
+            case .editThread: return "EditThread"
             case .add: return "Add"
             }
         }
         
         func populate(cell: UICollectionViewCell, project: Project) {
             switch self {
-            case let .thread(projectThread):
-                let cell = cell as! ProjectThreadCollectionViewCell
+            case let .viewThread(projectThread, isLast: isLast):
+                let cell = cell as! ViewProjectThreadCollectionViewCell
+                cell.populate(projectThread, isLastItem: isLast)
+            case let .editThread(projectThread):
+                let cell = cell as! EditProjectThreadCollectionViewCell
                 cell.populate(projectThread)
                 cell.onDecreaseQuantity = {
                     if projectThread.amount == 1 {
@@ -66,6 +71,7 @@ class ProjectDetailViewController: UICollectionViewController {
         super.viewDidLoad()
         
         navigationItem.title = project.name
+        navigationItem.rightBarButtonItems = [editButtonItem]
         
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: ProjectThread.fetchRequest(for: project),
@@ -74,7 +80,8 @@ class ProjectDetailViewController: UICollectionViewController {
                                        cacheName: nil)
         fetchedResultsController.delegate = self
         
-        collectionView.register(ProjectThreadCollectionViewCell.nib, forCellWithReuseIdentifier: "Thread")
+        collectionView.register(ViewProjectThreadCollectionViewCell.nib, forCellWithReuseIdentifier: "Thread")
+        collectionView.register(EditProjectThreadCollectionViewCell.nib, forCellWithReuseIdentifier: "EditThread")
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: item.cellIdentifier, for: indexPath)
             item.populate(cell: cell, project: self.project)
@@ -106,12 +113,29 @@ class ProjectDetailViewController: UICollectionViewController {
         }
     }
     
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        updateSnapshot()
+    }
+    
     func updateSnapshot() {
         let objects = fetchedResultsController.fetchedObjects ?? []
         var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
         snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(objects.map { Cell.thread($0) }, toSection: .threads)
-        snapshot.appendItems([.add], toSection: .threads)
+        
+        snapshot.appendItems(objects.enumerated().map { (index, item) in
+            if isEditing {
+                return Cell.editThread(item)
+            } else {
+                let isLast = objects.index(after: index) == objects.endIndex
+                return Cell.viewThread(item, isLast: isLast)
+            }
+        }, toSection: .threads)
+        
+        if isEditing {
+            snapshot.appendItems([.add], toSection: .threads)
+        }
+        
         dataSource.apply(snapshot)
         
         // update the threads section header if needed
@@ -125,11 +149,11 @@ class ProjectDetailViewController: UICollectionViewController {
     func createLayout() -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .estimated(60))
+                                                  heightDimension: .estimated(44))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .estimated(60))
+                                                   heightDimension: .estimated(44))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
             
             let section = NSCollectionLayoutSection(group: group)
@@ -209,11 +233,14 @@ extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
         case .update:
             let thread = anObject as! ProjectThread
 
-            guard let indexPath = dataSource.indexPath(for: .thread(thread)) else {
-                return
-            }
-
-            if let cell = collectionView.cellForItem(at: indexPath) as? ProjectThreadCollectionViewCell {
+            if let indexPath = dataSource.indexPath(for: .viewThread(thread, isLast: false)),
+                let cell = collectionView.cellForItem(at: indexPath) as? ViewProjectThreadCollectionViewCell {
+                cell.populate(thread)
+            } else if let indexPath = dataSource.indexPath(for: .viewThread(thread, isLast: true)),
+                let cell = collectionView.cellForItem(at: indexPath) as? ViewProjectThreadCollectionViewCell {
+                cell.populate(thread, isLastItem: true)
+            } else if let indexPath = dataSource.indexPath(for: .editThread(thread)),
+                let cell = collectionView.cellForItem(at: indexPath) as? EditProjectThreadCollectionViewCell {
                 cell.populate(thread)
             }
         default:

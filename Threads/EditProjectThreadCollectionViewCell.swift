@@ -1,5 +1,5 @@
 //
-//  ProjectThreadCollectionViewCell.swift
+//  EditProjectThreadCollectionViewCell.swift
 //  Threads
 //
 //  Created by Matt Moriarity on 9/11/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProjectThreadCollectionViewCell: UICollectionViewCell {
+class EditProjectThreadCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet var colorView: SwatchView!
     @IBOutlet var labelLabel: UILabel!
@@ -45,6 +45,6 @@ class ProjectThreadCollectionViewCell: UICollectionViewCell {
         onDecreaseQuantity()
     }
     
-    static var nib = UINib(nibName: "ProjectThreadCollectionViewCell", bundle: nil)
+    static var nib = UINib(nibName: "EditProjectThreadCollectionViewCell", bundle: nil)
 
 }
