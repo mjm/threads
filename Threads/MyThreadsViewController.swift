@@ -167,7 +167,47 @@ class MyThreadsViewController: UITableViewController {
                 self.makeDetailController(coder: coder, sender: thread)
             }
         }) { suggestedActions in
-            UIMenu(title: "", children: suggestedActions)
+            var markActions: [UIMenuElement] = []
+            
+            if thread.amountInCollection == 0 {
+                markActions.append(UIAction(title: "Mark In Stock") { _ in
+                    thread.amountInCollection = 1
+                    AppDelegate.save()
+                })
+            } else {
+                if thread.onBobbin {
+                    markActions.append(UIAction(title: "Mark Off Bobbin") { _ in
+                        thread.onBobbin = false
+                        AppDelegate.save()
+                    })
+                } else {
+                    markActions.append(UIAction(title: "Mark On Bobbin") { _ in
+                        thread.onBobbin = true
+                        AppDelegate.save()
+                    })
+                }
+                
+                markActions.append(UIAction(title: "Mark Out of Stock") { _ in
+                    thread.amountInCollection = 0
+                    thread.onBobbin = false
+                    AppDelegate.save()
+                })
+            }
+            
+            return UIMenu(title: "", children: [
+                UIAction(title: "Add to Shopping List",
+                         image: UIImage(systemName: "cart.badge.plus"),
+                         attributes: thread.inShoppingList ? .disabled : []) { _ in
+                    thread.addToShoppingList()
+                },
+                UIMenu(title: "Mark", options: .displayInline, children: markActions),
+                UIAction(title: "Remove from Collection", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                    thread.removeFromCollection()
+                    UserActivity.showThread(thread).delete {
+                        AppDelegate.save()
+                    }
+                }
+            ])
         }
     }
     
