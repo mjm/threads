@@ -346,7 +346,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Action" textLabel="zyz-0c-m9t" style="IBUITableViewCellStyleDefault" id="JR5-V6-ovI">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Action" textLabel="zyz-0c-m9t" rowHeight="44" style="IBUITableViewCellStyleDefault" id="JR5-V6-ovI">
                                 <rect key="frame" x="0.0" y="168.5" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JR5-V6-ovI" id="p63-br-3eh">
@@ -360,10 +360,19 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ox2-ni-34M">
-                                            <rect key="frame" x="20" y="43" width="394" height="0.0"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                            <color key="backgroundColor" systemColor="separatorColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <view contentMode="scaleToFill" id="Bge-uH-IUn">
+                                            <rect key="frame" x="0.0" y="-2" width="414" height="44"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ox2-ni-34M" customClass="SeparatorView" customModule="Threads" customModuleProvider="target">
+                                                    <rect key="frame" x="15" y="43.5" width="384" height="0.5"/>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="ox2-ni-34M" secondAttribute="bottom" id="ROm-Xg-oC3"/>
+                                                <constraint firstItem="ox2-ni-34M" firstAttribute="leading" secondItem="Bge-uH-IUn" secondAttribute="leading" constant="15" id="UGh-SH-KmV"/>
+                                                <constraint firstAttribute="trailing" secondItem="ox2-ni-34M" secondAttribute="trailing" constant="15" id="hQ3-Vz-tji"/>
+                                            </constraints>
                                         </view>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -382,7 +391,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="93B-t7-4bX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="dpG-mb-lrJ" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2625" y="447"/>
+            <point key="canvasLocation" x="2624.6376811594205" y="446.65178571428567"/>
         </scene>
         <!--Collection-->
         <scene sceneID="swQ-Ox-NyJ">
