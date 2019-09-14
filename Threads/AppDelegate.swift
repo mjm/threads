@@ -9,6 +9,13 @@
 import UIKit
 import CoreData
 
+func printResponderChain(_ responder: UIResponder?) {
+    guard let responder = responder else { return }
+
+    print(responder)
+    printResponderChain(responder.next)
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -59,6 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
+        container.viewContext.undoManager = UndoManager()
         return container
     }()
 
@@ -66,6 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func saveContext () {
         let context = persistentContainer.viewContext
+        context.processPendingChanges()
         if context.hasChanges {
             do {
                 try context.save()

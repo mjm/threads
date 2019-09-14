@@ -99,6 +99,24 @@ class ThreadDetailViewController: UITableViewController {
         userActivity = UserActivity.showThread(thread).userActivity
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        becomeFirstResponder()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        resignFirstResponder()
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        true
+    }
+
+    override var undoManager: UndoManager? {
+        thread.managedObjectContext?.undoManager
+    }
+    
     func updateSnapshot(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
         snapshot.appendSections(Section.allCases)
@@ -122,6 +140,7 @@ class ThreadDetailViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "Remove", style: .destructive) { _ in
             self.userActivity = nil
             
+            self.undoManager?.setActionName("Remove Thread")
             self.thread.removeFromCollection()
             self.performSegue(withIdentifier: "DeleteThread", sender: nil)
             

@@ -51,6 +51,24 @@ class MyThreadsViewController: UITableViewController {
         userActivity = UserActivity.showMyThreads.userActivity
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        becomeFirstResponder()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        resignFirstResponder()
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        true
+    }
+
+    override var undoManager: UndoManager? {
+        managedObjectContext.undoManager
+    }
+    
     func updateSnapshot(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()
         snapshot.appendSections([.threads])
@@ -65,6 +83,9 @@ class MyThreadsViewController: UITableViewController {
     
     @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
         let addViewController = segue.source as! AddThreadViewController
+        
+        let threadCount = addViewController.selectedThreads.count
+        undoManager?.setActionName(threadCount == 1 ? "Add Thread" : "Add \(threadCount) Threads")
         for thread in addViewController.selectedThreads {
             thread.addToCollection()
         }
@@ -114,12 +135,14 @@ class MyThreadsViewController: UITableViewController {
         let bobbin: UIContextualAction
         if thread.onBobbin {
             bobbin = UIContextualAction(style: .normal, title: "Off Bobbin") { action, view, completionHandler in
+                self.undoManager?.setActionName("Mark Off Bobbin")
                 thread.onBobbin = false
                 AppDelegate.save()
                 completionHandler(true)
             }
         } else {
             bobbin = UIContextualAction(style: .normal, title: "On Bobbin") { action, view, completionHandler in
+                self.undoManager?.setActionName("Mark On Bobbin")
                 thread.onBobbin = true
                 AppDelegate.save()
                 completionHandler(true)
