@@ -211,8 +211,15 @@
                             <outlet property="delegate" destination="ddd-5F-HI4" id="ZAd-cH-D4p"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="jLk-vi-ZwX"/>
+                    <navigationItem key="navigationItem" id="jLk-vi-ZwX">
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="bOB-qK-pwA">
+                            <connections>
+                                <action selector="shareProject" destination="ddd-5F-HI4" id="6O8-D4-THp"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="shareButtonItem" destination="bOB-qK-pwA" id="tzP-m4-Gis"/>
                         <segue destination="ksf-sk-euA" kind="presentation" identifier="AddThread" id="coa-7c-n63"/>
                     </connections>
                 </collectionViewController>

@@ -58,6 +58,8 @@ class ProjectDetailViewController: UICollectionViewController {
     private var fetchedResultsController: NSFetchedResultsController<ProjectThread>!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
     
+    @IBOutlet var shareButtonItem: UIBarButtonItem!
+    
     init?(coder: NSCoder, project: Project) {
         self.project = project
         super.init(coder: coder)
@@ -71,7 +73,7 @@ class ProjectDetailViewController: UICollectionViewController {
         super.viewDidLoad()
         
         navigationItem.title = project.name
-        navigationItem.rightBarButtonItems = [editButtonItem]
+        navigationItem.rightBarButtonItems = [editButtonItem, shareButtonItem]
         
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: ProjectThread.fetchRequest(for: project),
@@ -116,6 +118,9 @@ class ProjectDetailViewController: UICollectionViewController {
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         updateSnapshot()
+
+        navigationItem.setRightBarButtonItems(editing ? [editButtonItem] : [editButtonItem, shareButtonItem],
+                                              animated: animated)
     }
     
     func updateSnapshot() {
@@ -171,6 +176,12 @@ class ProjectDetailViewController: UICollectionViewController {
     private func threadsSectionHeaderText() -> String {
         let items = self.fetchedResultsController.fetchedObjects?.count ?? 0
         return items == 0 ? "THREADS" : "\(items) THREAD\(items == 1 ? "" : "S")"
+    }
+    
+    @IBAction func shareProject() {
+        let activityController = UIActivityViewController(activityItems: [project],
+                                                          applicationActivities: nil)
+        present(activityController, animated: true)
     }
 
     @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {

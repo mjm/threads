@@ -42,6 +42,7 @@
 		C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */; };
 		C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */; };
 		C97FCDAC232C7848000B1590 /* ViewProjectThreadCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */; };
+		C97FCDAE232C8796000B1590 /* Project+UIActivityItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectThread.swift; sourceTree = "<group>"; };
 		C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewProjectThreadCollectionViewCell.xib; sourceTree = "<group>"; };
 		C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewProjectThreadCollectionViewCell.swift; sourceTree = "<group>"; };
+		C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Project+UIActivityItemSource.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +167,7 @@
 				C9491E10231DA9A20031F463 /* DMCThread.swift */,
 				C9491E2E231E0BE00031F463 /* Thread.swift */,
 				C9491E43232491D90031F463 /* Project.swift */,
+				C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */,
 				C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */,
 				C9491E3F23246AC80031F463 /* Partition.swift */,
 				C9491E12231DAA5D0031F463 /* AllThreads.json */,
@@ -317,6 +320,7 @@
 				C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */,
 				C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */,
 				C9491E372320C67A0031F463 /* SwatchView.swift in Sources */,
+				C97FCDAE232C8796000B1590 /* Project+UIActivityItemSource.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,
 				C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */,
 				C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */,
