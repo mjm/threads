@@ -156,6 +156,27 @@ class MyThreadsViewController: UITableViewController {
         config.performsFirstActionWithFullSwipe = true
         return config
     }
+    
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let thread = dataSource.itemIdentifier(for: indexPath) else {
+            return nil
+        }
+        
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: {
+            self.storyboard!.instantiateViewController(identifier: "ThreadDetail") { coder in
+                self.makeDetailController(coder: coder, sender: thread)
+            }
+        }) { suggestedActions in
+            UIMenu(title: "", children: suggestedActions)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        let vc = animator.previewViewController!
+        animator.addAnimations {
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
 }
 
 extension MyThreadsViewController: NSFetchedResultsControllerDelegate {
