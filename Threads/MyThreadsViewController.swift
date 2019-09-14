@@ -120,7 +120,52 @@ class MyThreadsViewController: UITableViewController {
     func showDetail(for thread: Thread) {
         performSegue(withIdentifier: "ThreadDetail", sender: thread)
     }
+}
+
+// MARK: - Actions
+extension MyThreadsViewController {
+    func markOffBobbin(_ thread: Thread) {
+        self.undoManager?.setActionName(Localized.markOffBobbin)
+        thread.onBobbin = false
+        AppDelegate.save()
+    }
     
+    func markOnBobbin(_ thread: Thread) {
+        self.undoManager?.setActionName(Localized.markOnBobbin)
+        thread.onBobbin = true
+        AppDelegate.save()
+    }
+    
+    func markInStock(_ thread: Thread) {
+        self.undoManager?.setActionName(Localized.markInStock)
+        thread.amountInCollection = 1
+        AppDelegate.save()
+    }
+    
+    func markOutOfStock(_ thread: Thread) {
+        self.undoManager?.setActionName(Localized.markOutOfStock)
+        thread.amountInCollection = 0
+        thread.onBobbin = false
+        AppDelegate.save()
+    }
+    
+    func addToShoppingList(_ thread: Thread) {
+        self.undoManager?.setActionName(Localized.addToShoppingList)
+        thread.addToShoppingList()
+        AppDelegate.save()
+    }
+    
+    func removeFromCollection(_ thread: Thread) {
+        self.undoManager?.setActionName(Localized.removeThread)
+        thread.removeFromCollection()
+        UserActivity.showThread(thread).delete {
+            AppDelegate.save()
+        }
+    }
+}
+
+// MARK: - Table View Delegate
+extension MyThreadsViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let thread = dataSource.itemIdentifier(for: indexPath)!
         showDetail(for: thread)
@@ -135,16 +180,12 @@ class MyThreadsViewController: UITableViewController {
         let bobbin: UIContextualAction
         if thread.onBobbin {
             bobbin = UIContextualAction(style: .normal, title: Localized.offBobbin) { action, view, completionHandler in
-                self.undoManager?.setActionName(Localized.markOffBobbin)
-                thread.onBobbin = false
-                AppDelegate.save()
+                self.markOffBobbin(thread)
                 completionHandler(true)
             }
         } else {
             bobbin = UIContextualAction(style: .normal, title: Localized.onBobbin) { action, view, completionHandler in
-                self.undoManager?.setActionName(Localized.markOffBobbin)
-                thread.onBobbin = true
-                AppDelegate.save()
+                self.markOnBobbin(thread)
                 completionHandler(true)
             }
         }
@@ -161,16 +202,13 @@ class MyThreadsViewController: UITableViewController {
         let stock: UIContextualAction
         if thread.amountInCollection == 0 {
             stock = UIContextualAction(style: .normal, title: Localized.inStock) { action, view, completionHandler in
-                thread.amountInCollection = 1
-                AppDelegate.save()
+                self.markInStock(thread)
                 completionHandler(true)
             }
             stock.backgroundColor = UIColor(named: "InStockSwipe")
         } else {
             stock = UIContextualAction(style: .destructive, title: Localized.outOfStock) { action, view, completionHandler in
-                thread.amountInCollection = 0
-                thread.onBobbin = false
-                AppDelegate.save()
+                self.markOutOfStock(thread)
                 completionHandler(true)
             }
         }
@@ -194,41 +232,34 @@ class MyThreadsViewController: UITableViewController {
             
             if thread.amountInCollection == 0 {
                 markActions.append(UIAction(title: Localized.markInStock) { _ in
-                    thread.amountInCollection = 1
-                    AppDelegate.save()
+                    self.markInStock(thread)
                 })
             } else {
                 if thread.onBobbin {
                     markActions.append(UIAction(title: Localized.markOffBobbin) { _ in
-                        thread.onBobbin = false
-                        AppDelegate.save()
+                        self.markOffBobbin(thread)
                     })
                 } else {
                     markActions.append(UIAction(title: Localized.markOnBobbin) { _ in
-                        thread.onBobbin = true
-                        AppDelegate.save()
+                        self.markOnBobbin(thread)
                     })
                 }
                 
                 markActions.append(UIAction(title: Localized.markOutOfStock) { _ in
-                    thread.amountInCollection = 0
-                    thread.onBobbin = false
-                    AppDelegate.save()
+                    self.markOutOfStock(thread)
                 })
             }
             
             return UIMenu(title: "", children: [
                 UIAction(title: Localized.addToShoppingList,
                          image: UIImage(systemName: "cart.badge.plus"),
-                         attributes: thread.inShoppingList ? .disabled : []) { _ in
-                    thread.addToShoppingList()
+                         attributes: thread.inShoppingList ? .disabled : [])
+                { _ in
+                    self.addToShoppingList(thread)
                 },
                 UIMenu(title: "", options: .displayInline, children: markActions),
                 UIAction(title: Localized.removeFromCollection, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-                    thread.removeFromCollection()
-                    UserActivity.showThread(thread).delete {
-                        AppDelegate.save()
-                    }
+                    self.removeFromCollection(thread)
                 }
             ])
         }
@@ -242,6 +273,7 @@ class MyThreadsViewController: UITableViewController {
     }
 }
 
+// MARK: - Fetched Results Controller Delegate
 extension MyThreadsViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updateSnapshot()
