@@ -17,7 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let _ = (scene as? UIWindowScene) else { return }
         
         if let activity = connectionOptions.userActivities.first ?? scene.session.stateRestorationActivity {
-            restoreActivity(activity)
+            NSLog("connecting to scene with user activity \(activity.activityType) \(activity)")
+            restoreActivity(activity, animated: false)
         }
     }
 
@@ -53,7 +54,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        restoreActivity(userActivity)
+        NSLog("continuing user activity \(userActivity.activityType) \(userActivity)")
+        restoreActivity(userActivity, animated: scene.activationState == .foregroundActive)
     }
 
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
@@ -62,30 +64,73 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tabController = window.rootViewController as! UITabBarController
         let navController = tabController.selectedViewController as! UINavigationController
         let displayedController = navController.topViewController
-        return displayedController?.userActivity
+        let activity = displayedController?.userActivity
+        
+        NSLog("storing user activity \(activity?.activityType ?? "") \(String(describing: activity))")
+        
+        return activity
     }
     
-    private func restoreActivity(_ activity: NSUserActivity) {
-        NSLog("restoring activity \(activity.activityType) \(activity)")
+    private func restoreActivity(_ activity: NSUserActivity, animated: Bool) {
+        NSLog("restoring user activity \(activity.activityType) \(activity)")
         
-        switch activity.activityType {
-        case "com.mattmoriarity.Threads.ShowMyThreads":
+        // get the context so we can rehydrate objects from the activity
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        
+        switch UserActivity(userActivity: activity, context: context) {
+        case .showMyThreads:
             selectTab(type: MyThreadsViewController.self)
-        case "com.mattmoriarity.Threads.ShowShoppingList":
+        case .showShoppingList:
             selectTab(type: ShoppingListViewController.self)
-        case "com.mattmoriarity.Threads.ShowProjects":
+        case .showProjects:
             selectTab(type: ProjectListViewController.self)
-        default:
-            fatalError("Trying to restore unknown activity type: \(activity.activityType)")
+        case let .showThread(thread):
+            let myThreadsController = selectTab(type: MyThreadsViewController.self)
+            if let threadDetailController = topViewController as? ThreadDetailViewController,
+                threadDetailController.thread == thread {
+                NSLog("already viewing the right thread, doing nothing")
+            } else {
+                navigationController.popToRootViewController(animated: animated)
+                let detailViewController = myThreadsController.storyboard!.instantiateViewController(identifier: "ThreadDetail") { coder in
+                    myThreadsController.makeDetailController(coder: coder, sender: thread)
+                }
+                navigationController.pushViewController(detailViewController, animated: animated)
+            }
+        case let .showProject(project):
+            let projectListController = selectTab(type: ProjectListViewController.self)
+            if let projectDetailController = topViewController as? ProjectDetailViewController,
+                projectDetailController.project == project {
+                NSLog("already viewing the right project, doing nothing")
+            } else {
+                navigationController.popToRootViewController(animated: animated)
+                let detailViewController = projectListController.storyboard!.instantiateViewController(identifier: "ProjectDetail") { coder in
+                    projectListController.makeDetailController(coder: coder, sender: project)
+                }
+                navigationController.pushViewController(detailViewController, animated: animated)
+            }
+        case .none:
+            NSLog("Was not able to load the activity. It may have referenced an object that no longer exists, or it may be a new activity type handed off to us from a newer version of the app (though I'm not sure the system will let that last one happen).")
         }
     }
     
-    private func selectTab(type controllerType: UIViewController.Type) {
-        let tabController = window?.rootViewController as! UITabBarController
-        tabController.selectedViewController = tabController.viewControllers?.first { vc in
+    @discardableResult private func selectTab<T: UIViewController>(type controllerType: T.Type) -> T {
+        tabBarController.selectedViewController = tabBarController.viewControllers?.first { vc in
             let navController = vc as! UINavigationController
             return type(of: navController.viewControllers.first!) == controllerType
         }
+        return (tabBarController.selectedViewController as! UINavigationController).viewControllers.first as! T
+    }
+    
+    private var tabBarController: UITabBarController {
+        return window!.rootViewController as! UITabBarController
+    }
+    
+    private var navigationController: UINavigationController {
+        return tabBarController.selectedViewController as! UINavigationController
+    }
+    
+    private var topViewController: UIViewController {
+        return navigationController.topViewController!
     }
 }
 

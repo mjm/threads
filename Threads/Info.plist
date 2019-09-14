@@ -25,6 +25,8 @@
 		<string>com.mattmoriarity.Threads.ShowMyThreads</string>
 		<string>com.mattmoriarity.Threads.ShowShoppingList</string>
 		<string>com.mattmoriarity.Threads.ShowProjects</string>
+		<string>com.mattmoriarity.Threads.ShowThread</string>
+		<string>com.mattmoriarity.Threads.ShowProject</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

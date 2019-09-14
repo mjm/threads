@@ -113,6 +113,8 @@ class ProjectDetailViewController: UICollectionViewController {
         } catch {
             NSLog("Could not load project threads: \(error)")
         }
+        
+        userActivity = UserActivity.showProject(project).userActivity
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {

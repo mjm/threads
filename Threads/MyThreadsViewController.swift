@@ -48,12 +48,7 @@ class MyThreadsViewController: UITableViewController {
             NSLog("Error fetching objects: \(error)")
         }
         
-        let activity = NSUserActivity(activityType: "com.mattmoriarity.Threads.ShowMyThreads")
-        activity.title = "My Threads"
-        activity.isEligibleForHandoff = true
-        activity.isEligibleForSearch = true
-        activity.isEligibleForPrediction = true
-        userActivity = activity
+        userActivity = UserActivity.showMyThreads.userActivity
     }
     
     func updateSnapshot(animated: Bool = true) {
@@ -97,13 +92,17 @@ class MyThreadsViewController: UITableViewController {
         }
     }
     
-    @IBSegueAction func makeDetailController(coder: NSCoder, sender: IndexPath) -> ThreadDetailViewController? {
-        let thread = dataSource.itemIdentifier(for: sender)
-        return ThreadDetailViewController(coder: coder, thread: thread!)
+    @IBSegueAction func makeDetailController(coder: NSCoder, sender: Thread) -> ThreadDetailViewController? {
+        return ThreadDetailViewController(coder: coder, thread: sender)
+    }
+    
+    func showDetail(for thread: Thread) {
+        performSegue(withIdentifier: "ThreadDetail", sender: thread)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "ThreadDetail", sender: indexPath)
+        let thread = dataSource.itemIdentifier(for: indexPath)!
+        showDetail(for: thread)
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

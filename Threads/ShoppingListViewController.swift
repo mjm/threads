@@ -65,12 +65,7 @@ class ShoppingListViewController: UITableViewController {
             NSLog("Error fetching objects: \(error)")
         }
         
-        let activity = NSUserActivity(activityType: "com.mattmoriarity.Threads.ShowShoppingList")
-        activity.title = "Shopping List"
-        activity.isEligibleForHandoff = true
-        activity.isEligibleForSearch = true
-        activity.isEligibleForPrediction = true
-        userActivity = activity
+        userActivity = UserActivity.showShoppingList.userActivity
     }
     
     func updateSnapshot(animated: Bool = true) {

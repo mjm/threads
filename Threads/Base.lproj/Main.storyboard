@@ -101,7 +101,7 @@
         <!--Project Detail View Controller-->
         <scene sceneID="hT5-wj-kND">
             <objects>
-                <collectionViewController id="ddd-5F-HI4" customClass="ProjectDetailViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="ProjectDetail" id="ddd-5F-HI4" customClass="ProjectDetailViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="7K9-hC-Ger">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -295,7 +295,7 @@
         <!--Thread Detail View Controller-->
         <scene sceneID="7aa-ah-mso">
             <objects>
-                <tableViewController id="r11-En-RXD" customClass="ThreadDetailViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="ThreadDetail" id="r11-En-RXD" customClass="ThreadDetailViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="m2T-82-AFf">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -95,6 +95,8 @@ class ThreadDetailViewController: UITableViewController {
         }
         
         updateSnapshot(animated: false)
+        
+        userActivity = UserActivity.showThread(thread).userActivity
     }
     
     func updateSnapshot(animated: Bool = true) {

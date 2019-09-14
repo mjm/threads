@@ -63,12 +63,7 @@ class ProjectListViewController: UICollectionViewController {
             NSLog("Could not load projects: \(error)")
         }
         
-        let activity = NSUserActivity(activityType: "com.mattmoriarity.Threads.ShowProjects")
-        activity.title = "My Projects"
-        activity.isEligibleForHandoff = true
-        activity.isEligibleForSearch = true
-        activity.isEligibleForPrediction = true
-        userActivity = activity
+        userActivity = UserActivity.showProjects.userActivity
     }
 
     func updateSnapshot(animated: Bool = true) {
@@ -115,13 +110,17 @@ class ProjectListViewController: UICollectionViewController {
         }
     }
     
-    @IBSegueAction func makeDetailController(coder: NSCoder, sender: IndexPath) -> ProjectDetailViewController? {
-        let project = dataSource.itemIdentifier(for: sender)!
-        return ProjectDetailViewController(coder: coder, project: project)
+    @IBSegueAction func makeDetailController(coder: NSCoder, sender: Project) -> ProjectDetailViewController? {
+        return ProjectDetailViewController(coder: coder, project: sender)
+    }
+    
+    func showDetail(for project: Project) {
+        performSegue(withIdentifier: "ProjectDetail", sender: project)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "ProjectDetail", sender: indexPath)
+        let project = dataSource.itemIdentifier(for: indexPath)!
+        showDetail(for: project)
     }
 }
 

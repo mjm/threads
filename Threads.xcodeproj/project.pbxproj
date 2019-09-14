@@ -43,6 +43,7 @@
 		C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */; };
 		C97FCDAC232C7848000B1590 /* ViewProjectThreadCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */; };
 		C97FCDAE232C8796000B1590 /* Project+UIActivityItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */; };
+		C97FCDB0232C8ED7000B1590 /* UserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDAF232C8ED7000B1590 /* UserActivity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +98,7 @@
 		C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewProjectThreadCollectionViewCell.xib; sourceTree = "<group>"; };
 		C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewProjectThreadCollectionViewCell.swift; sourceTree = "<group>"; };
 		C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Project+UIActivityItemSource.swift"; sourceTree = "<group>"; };
+		C97FCDAF232C8ED7000B1590 /* UserActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActivity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +145,7 @@
 				C9491E0A231D8A1E0031F463 /* Threads.entitlements */,
 				C9491DF3231D897B0031F463 /* AppDelegate.swift */,
 				C9491DF5231D897B0031F463 /* SceneDelegate.swift */,
+				C97FCDAF232C8ED7000B1590 /* UserActivity.swift */,
 				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
 				C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */,
 				C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */,
@@ -313,6 +316,7 @@
 				C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */,
 				C9491E4023246AC80031F463 /* Partition.swift in Sources */,
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,
+				C97FCDB0232C8ED7000B1590 /* UserActivity.swift in Sources */,
 				C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */,
 				C9491E4223248B940031F463 /* ProjectListViewController.swift in Sources */,
 				C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */,
