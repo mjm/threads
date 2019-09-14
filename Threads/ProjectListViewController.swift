@@ -49,8 +49,7 @@ class ProjectListViewController: UICollectionViewController {
         collectionView.register(ProjectCollectionViewCell.nib, forCellWithReuseIdentifier: "Project")
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Project", for: indexPath) as! ProjectCollectionViewCell
-            cell.nameLabel.text = item.name
-            cell.colorView.backgroundColor = .systemOrange
+            cell.populate(item)
             return cell
         }
         
@@ -127,5 +126,18 @@ class ProjectListViewController: UICollectionViewController {
 extension ProjectListViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updateSnapshot()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .update:
+            let project = anObject as! Project
+            if let indexPath = dataSource.indexPath(for: project),
+                let cell = collectionView.cellForItem(at: indexPath) as? ProjectCollectionViewCell {
+                cell.populate(project)
+            }
+        default:
+            return
+        }
     }
 }

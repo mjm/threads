@@ -44,6 +44,8 @@
 		C97FCDAC232C7848000B1590 /* ViewProjectThreadCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */; };
 		C97FCDAE232C8796000B1590 /* Project+UIActivityItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */; };
 		C97FCDB0232C8ED7000B1590 /* UserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDAF232C8ED7000B1590 /* UserActivity.swift */; };
+		C97FCDB3232CAD4E000B1590 /* TextInputCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDB1232CAD4E000B1590 /* TextInputCollectionViewCell.swift */; };
+		C97FCDB4232CAD4E000B1590 /* TextInputCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDB2232CAD4E000B1590 /* TextInputCollectionViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +101,8 @@
 		C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewProjectThreadCollectionViewCell.swift; sourceTree = "<group>"; };
 		C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Project+UIActivityItemSource.swift"; sourceTree = "<group>"; };
 		C97FCDAF232C8ED7000B1590 /* UserActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActivity.swift; sourceTree = "<group>"; };
+		C97FCDB1232CAD4E000B1590 /* TextInputCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputCollectionViewCell.swift; sourceTree = "<group>"; };
+		C97FCDB2232CAD4E000B1590 /* TextInputCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextInputCollectionViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +168,8 @@
 				C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */,
 				C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */,
 				C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */,
+				C97FCDB1232CAD4E000B1590 /* TextInputCollectionViewCell.swift */,
+				C97FCDB2232CAD4E000B1590 /* TextInputCollectionViewCell.xib */,
 				C9491E362320C67A0031F463 /* SwatchView.swift */,
 				C97FCDA52329A921000B1590 /* SeparatorView.swift */,
 				C9491E18231DD7D00031F463 /* Color.swift */,
@@ -289,6 +295,7 @@
 				C9491E00231D897C0031F463 /* Assets.xcassets in Resources */,
 				C9491DFB231D897B0031F463 /* Main.storyboard in Resources */,
 				C9491E13231DAA5D0031F463 /* AllThreads.json in Resources */,
+				C97FCDB4232CAD4E000B1590 /* TextInputCollectionViewCell.xib in Resources */,
 				C9491E2D231DE0070031F463 /* CollectionThreadTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -322,6 +329,7 @@
 				C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
 				C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */,
+				C97FCDB3232CAD4E000B1590 /* TextInputCollectionViewCell.swift in Sources */,
 				C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */,
 				C9491E372320C67A0031F463 /* SwatchView.swift in Sources */,
 				C97FCDAE232C8796000B1590 /* Project+UIActivityItemSource.swift in Sources */,

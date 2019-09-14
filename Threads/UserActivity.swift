@@ -115,6 +115,19 @@ enum UserActivity {
         }
     }
     
+    func update(_ activity: NSUserActivity) {
+        guard activity.activityType == userActivityType.rawValue,
+            activity.persistentIdentifier == persistentIdentifier else {
+            return
+        }
+        
+        let newActivity = userActivity
+        activity.title = newActivity.title
+        if let userInfo = newActivity.userInfo {
+            activity.addUserInfoEntries(from: userInfo)
+        }
+    }
+    
     func delete(completion: @escaping () -> Void = {}) {
         if let identifier = persistentIdentifier {
             NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [identifier]) {

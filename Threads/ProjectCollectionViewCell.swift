@@ -19,6 +19,11 @@ class ProjectCollectionViewCell: UICollectionViewCell {
         colorView.layer.cornerRadius = 10
     }
     
+    func populate(_ project: Project) {
+        nameLabel.text = project.name
+        colorView.backgroundColor = .systemOrange
+    }
+    
     static var nib = UINib(nibName: "ProjectCollectionViewCell", bundle: nil)
     
     class func makePrototype() -> ProjectCollectionViewCell {

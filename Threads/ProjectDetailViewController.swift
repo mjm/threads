@@ -11,17 +11,21 @@ import CoreData
 
 class ProjectDetailViewController: UICollectionViewController {
     enum Section: CaseIterable {
+        case details
         case threads
     }
     
     enum Cell: Hashable {
         case viewThread(ProjectThread, isLast: Bool)
+        
+        case editName
         case editThread(ProjectThread)
         case add
         
         var cellIdentifier: String {
             switch self {
             case .viewThread: return "Thread"
+            case .editName: return "TextInput"
             case .editThread: return "EditThread"
             case .add: return "Add"
             }
@@ -29,9 +33,22 @@ class ProjectDetailViewController: UICollectionViewController {
         
         func populate(cell: UICollectionViewCell, project: Project) {
             switch self {
+
             case let .viewThread(projectThread, isLast: isLast):
                 let cell = cell as! ViewProjectThreadCollectionViewCell
                 cell.populate(projectThread, isLastItem: isLast)
+                
+            case .editName:
+                let cell = cell as! TextInputCollectionViewCell
+                cell.textField.placeholder = "Project Name"
+                cell.textField.text = project.name
+                cell.onChange = { newText in
+                    project.name = newText
+                }
+                cell.onReturn = { [unowned cell] in
+                    cell.textField.resignFirstResponder()
+                }
+
             case let .editThread(projectThread):
                 let cell = cell as! EditProjectThreadCollectionViewCell
                 cell.populate(projectThread)
@@ -47,6 +64,7 @@ class ProjectDetailViewController: UICollectionViewController {
                     projectThread.amount += 1
                     AppDelegate.save()
                 }
+
             case .add:
                 return
             }
@@ -59,6 +77,8 @@ class ProjectDetailViewController: UICollectionViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
     
     @IBOutlet var shareButtonItem: UIBarButtonItem!
+    
+    private var projectNameObserver: NSKeyValueObservation?
     
     init?(coder: NSCoder, project: Project) {
         self.project = project
@@ -75,6 +95,10 @@ class ProjectDetailViewController: UICollectionViewController {
         navigationItem.title = project.name
         navigationItem.rightBarButtonItems = [editButtonItem, shareButtonItem]
         
+        projectNameObserver = project.observe(\.name) { [weak self] project, change in
+            self?.navigationItem.title = project.name
+        }
+        
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: ProjectThread.fetchRequest(for: project),
                                        managedObjectContext: project.managedObjectContext!,
@@ -84,6 +108,7 @@ class ProjectDetailViewController: UICollectionViewController {
         
         collectionView.register(ViewProjectThreadCollectionViewCell.nib, forCellWithReuseIdentifier: "Thread")
         collectionView.register(EditProjectThreadCollectionViewCell.nib, forCellWithReuseIdentifier: "EditThread")
+        collectionView.register(TextInputCollectionViewCell.nib, forCellWithReuseIdentifier: "TextInput")
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: item.cellIdentifier, for: indexPath)
             item.populate(cell: cell, project: self.project)
@@ -121,15 +146,23 @@ class ProjectDetailViewController: UICollectionViewController {
         super.setEditing(editing, animated: animated)
         updateSnapshot(animated: animated)
 
+        navigationItem.largeTitleDisplayMode = editing ? .never : .automatic
         navigationItem.setRightBarButtonItems(editing ? [editButtonItem] : [editButtonItem, shareButtonItem],
                                               animated: animated)
+        
+        AppDelegate.save()
     }
     
     func updateSnapshot(animated: Bool = true) {
         let objects = fetchedResultsController.fetchedObjects ?? []
         var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
-        snapshot.appendSections(Section.allCases)
         
+        if isEditing {
+            snapshot.appendSections([.details])
+            snapshot.appendItems([.editName], toSection: .details)
+        }
+        
+        snapshot.appendSections([.threads])
         snapshot.appendItems(objects.enumerated().map { (index, item) in
             if isEditing {
                 return Cell.editThread(item)
@@ -154,24 +187,41 @@ class ProjectDetailViewController: UICollectionViewController {
     }
     
     func createLayout() -> UICollectionViewLayout {
-        UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .estimated(44))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        UICollectionViewCompositionalLayout { [weak self] sectionIndex, layoutEnvironment in
+            let sectionType = self!.dataSource.snapshot().sectionIdentifiers[sectionIndex]
             
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .estimated(44))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            
-            let section = NSCollectionLayoutSection(group: group)
-            let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                         heightDimension: .estimated(44))
-            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: headerFooterSize,
-                elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-            section.boundarySupplementaryItems = [sectionHeader]
-            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 44, trailing: 0)
-            return section
+            switch sectionType {
+            case .details:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                      heightDimension: .estimated(44))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .estimated(44))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 34, leading: 0, bottom: 15, trailing: 0)
+                return section
+            case .threads:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                      heightDimension: .estimated(44))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .estimated(44))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                
+                let section = NSCollectionLayoutSection(group: group)
+                let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                             heightDimension: .estimated(44))
+                let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: headerFooterSize,
+                    elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                section.boundarySupplementaryItems = [sectionHeader]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 44, trailing: 0)
+                return section
+            }
         }
     }
     
@@ -233,6 +283,10 @@ class ProjectDetailViewController: UICollectionViewController {
             performSegue(withIdentifier: "AddThread", sender: nil)
             collectionView.deselectItem(at: indexPath, animated: true)
         }
+    }
+    
+    override func updateUserActivityState(_ activity: NSUserActivity) {
+        UserActivity.showProject(project).update(activity)
     }
 }
 

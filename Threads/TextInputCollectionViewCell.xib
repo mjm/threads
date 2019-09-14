@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="TDa-uV-5R8" customClass="TextInputCollectionViewCell" customModule="Threads" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="286" height="49"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="SXy-o9-5Zm">
+                <rect key="frame" x="0.0" y="0.0" width="286" height="49"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Placeholder" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="27A-FQ-RVr">
+                        <rect key="frame" x="16" y="0.0" width="254" height="49"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="jEa-xl-nMA"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done" textContentType="name"/>
+                        <connections>
+                            <action selector="textChanged" destination="TDa-uV-5R8" eventType="editingChanged" id="71W-kd-QWq"/>
+                            <outlet property="delegate" destination="TDa-uV-5R8" id="5XX-ae-nYn"/>
+                        </connections>
+                    </textField>
+                </subviews>
+                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                <constraints>
+                    <constraint firstItem="27A-FQ-RVr" firstAttribute="leading" secondItem="SXy-o9-5Zm" secondAttribute="leading" constant="16" id="LNc-mR-sS7"/>
+                    <constraint firstItem="27A-FQ-RVr" firstAttribute="top" secondItem="SXy-o9-5Zm" secondAttribute="top" id="Nlo-HX-LIt"/>
+                    <constraint firstAttribute="trailing" secondItem="27A-FQ-RVr" secondAttribute="trailing" constant="16" id="RJc-i8-3zf"/>
+                    <constraint firstAttribute="bottom" secondItem="27A-FQ-RVr" secondAttribute="bottom" id="f9s-te-7qm"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <size key="customSize" width="286" height="49"/>
+            <connections>
+                <outlet property="textField" destination="27A-FQ-RVr" id="ccN-fQ-E8f"/>
+            </connections>
+            <point key="canvasLocation" x="260.86956521739131" y="70.647321428571431"/>
+        </collectionViewCell>
+    </objects>
+</document>
