@@ -112,4 +112,5 @@
         <image name="rectangle.3.offgrid.fill" catalog="system" width="64" height="40"/>
         <image name="tray.full.fill" catalog="system" width="64" height="44"/>
     </resources>
+    <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
