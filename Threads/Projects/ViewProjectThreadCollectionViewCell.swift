@@ -8,27 +8,11 @@
 
 import UIKit
 
-class ViewProjectThreadCollectionViewCell: UICollectionViewCell {
-    
-    @IBOutlet var colorView: SwatchView!
-    @IBOutlet var labelLabel: UILabel!
-    @IBOutlet var numberLabel: UILabel!
-    @IBOutlet var quantityLabel: UILabel!
+class ViewProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
     @IBOutlet var separatorLeadingConstraint: NSLayoutConstraint!
 
     func populate(_ projectThread: ProjectThread, isLastItem: Bool = false) {
-        let thread = projectThread.thread!
-        colorView.color = thread.color ?? .systemBackground
-
-        if let number = thread.number {
-            numberLabel.text = String(format: Localized.dmcNumber, number)
-        } else {
-            numberLabel.text = Localized.dmcNumberUnknown
-        }
-        labelLabel.text = thread.label ?? ""
-
-        let amount = projectThread.amount
-        quantityLabel.text = "\(amount)"
+        super.populate(projectThread)
         
         separatorLeadingConstraint.constant = isLastItem ? 0 : 15
     }

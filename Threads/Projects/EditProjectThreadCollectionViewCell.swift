@@ -8,33 +8,17 @@
 
 import UIKit
 
-class EditProjectThreadCollectionViewCell: UICollectionViewCell {
-    
-    @IBOutlet var colorView: SwatchView!
-    @IBOutlet var labelLabel: UILabel!
-    @IBOutlet var numberLabel: UILabel!
-    @IBOutlet var quantityLabel: UILabel!
+class EditProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
     @IBOutlet var decreaseButton: UIButton!
     @IBOutlet var increaseButton: UIButton!
 
     var onDecreaseQuantity: () -> Void = { }
     var onIncreaseQuantity: () -> Void = { }
 
-    func populate(_ projectThread: ProjectThread) {
-        let thread = projectThread.thread!
-        colorView.color = thread.color ?? .systemBackground
+    override func populate(_ projectThread: ProjectThread) {
+        super.populate(projectThread)
 
-        if let number = thread.number {
-            numberLabel.text = String(format: Localized.dmcNumber, number)
-        } else {
-            numberLabel.text = Localized.dmcNumberUnknown
-        }
-        labelLabel.text = thread.label ?? ""
-
-        let amount = projectThread.amount
-        quantityLabel.text = "\(amount)"
-
-        decreaseButton.setImage(UIImage(systemName: amount == 1 ? "trash" : "minus.square"), for: .normal)
+        decreaseButton.setImage(UIImage(systemName: projectThread.amount == 1 ? "trash" : "minus.square"), for: .normal)
     }
 
     @IBAction func increaseQuantity() {
