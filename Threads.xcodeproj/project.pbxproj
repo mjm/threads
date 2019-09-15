@@ -59,6 +59,9 @@
 		C97FCDEA232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDE9232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift */; };
 		C97FCDEC232E014D000B1590 /* NSManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */; };
 		C97FCDEE232E941D000B1590 /* Cells.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDED232E941D000B1590 /* Cells.swift */; };
+		C97FCDF1232EA234000B1590 /* ProjectImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDF0232EA234000B1590 /* ProjectImage.swift */; };
+		C97FCDF4232EA845000B1590 /* EditImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDF2232EA845000B1590 /* EditImageCollectionViewCell.swift */; };
+		C97FCDF5232EA845000B1590 /* EditImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +138,9 @@
 		C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContext.swift; sourceTree = "<group>"; };
 		C97FCDED232E941D000B1590 /* Cells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cells.swift; sourceTree = "<group>"; };
 		C97FCDEF232E9AFE000B1590 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		C97FCDF0232EA234000B1590 /* ProjectImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectImage.swift; sourceTree = "<group>"; };
+		C97FCDF2232EA845000B1590 /* EditImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditImageCollectionViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,6 +239,7 @@
 				C9491E2E231E0BE00031F463 /* Thread.swift */,
 				C9491E43232491D90031F463 /* Project.swift */,
 				C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */,
+				C97FCDF0232EA234000B1590 /* ProjectImage.swift */,
 				C9491E3F23246AC80031F463 /* Partition.swift */,
 				C97FCDC2232DA92E000B1590 /* NSAttributedString.swift */,
 				C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */,
@@ -278,6 +285,8 @@
 				C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */,
 				C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */,
 				C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */,
+				C97FCDF2232EA845000B1590 /* EditImageCollectionViewCell.swift */,
+				C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */,
 				C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */,
 			);
 			path = Projects;
@@ -380,6 +389,7 @@
 				C97FCDD8232DCE6B000B1590 /* Projects.storyboard in Resources */,
 				C97FCDCE232DCE0F000B1590 /* MyThreads.storyboard in Resources */,
 				C9491E3C23235E210031F463 /* ShoppingListThreadTableViewCell.xib in Resources */,
+				C97FCDF5232EA845000B1590 /* EditImageCollectionViewCell.xib in Resources */,
 				C97FCDAC232C7848000B1590 /* ViewProjectThreadCollectionViewCell.xib in Resources */,
 				C97FCDC1232D9FF5000B1590 /* TextViewCollectionViewCell.xib in Resources */,
 				C9491E00231D897C0031F463 /* Assets.xcassets in Resources */,
@@ -409,6 +419,7 @@
 				C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */,
 				C97FCDEC232E014D000B1590 /* NSManagedObjectContext.swift in Sources */,
 				C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */,
+				C97FCDF1232EA234000B1590 /* ProjectImage.swift in Sources */,
 				C9491E2F231E0BE00031F463 /* Thread.swift in Sources */,
 				C9491E3E23235FBF0031F463 /* ThreadTableViewCell.swift in Sources */,
 				C97FCDA323296433000B1590 /* EditProjectThreadCollectionViewCell.swift in Sources */,
@@ -421,6 +432,7 @@
 				C97FCDB0232C8ED7000B1590 /* UserActivity.swift in Sources */,
 				C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */,
 				C9491E4223248B940031F463 /* ProjectListViewController.swift in Sources */,
+				C97FCDF4232EA845000B1590 /* EditImageCollectionViewCell.swift in Sources */,
 				C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */,
 				C97FCDEA232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,

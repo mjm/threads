@@ -57,4 +57,6 @@ struct Localized {
     
     static let numberInShoppingList = NSLocalizedString("%lu in Shopping List", comment: "2 in Shopping List")
     static let usedInProjects = NSLocalizedString("UsedInProjects", comment: "Used in {num} Projects")
+
+    static let addImage = NSLocalizedString("Add Image", comment: "")
 }

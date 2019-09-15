@@ -8,18 +8,24 @@
 
 import UIKit
 import CoreData
+import CoreServices
 
 class ProjectDetailViewController: UICollectionViewController {
     enum Section: CaseIterable {
+        case viewImages
+        case editImages
         case details
         case notes
         case threads
     }
     
     enum Cell: Hashable {
+        case viewImage(ProjectImage)
         case viewNotes
         case viewThread(ProjectThread, isLast: Bool)
         
+        case editImage(ProjectImage)
+        case imagePlaceholder
         case editName
         case editNotes
         case editThread(ProjectThread)
@@ -27,8 +33,10 @@ class ProjectDetailViewController: UICollectionViewController {
         
         var cellIdentifier: String {
             switch self {
+            case .viewImage: return "Image"
             case .viewNotes: return "TextView"
             case .viewThread: return "Thread"
+            case .editImage, .imagePlaceholder: return "EditImage"
             case .editName: return "TextInput"
             case .editNotes: return "TextView"
             case .editThread: return "EditThread"
@@ -38,6 +46,9 @@ class ProjectDetailViewController: UICollectionViewController {
         
         func populate(cell: UICollectionViewCell, project: Project, controller: ProjectDetailViewController) {
             switch self {
+                
+            case .viewImage:
+                return
                 
             case .viewNotes:
                 let cell = cell as! TextViewCollectionViewCell
@@ -49,6 +60,16 @@ class ProjectDetailViewController: UICollectionViewController {
             case let .viewThread(projectThread, isLast: isLast):
                 let cell = cell as! ViewProjectThreadCollectionViewCell
                 cell.populate(projectThread, isLastItem: isLast)
+                
+            case let .editImage(image):
+                let cell = cell as! EditImageCollectionViewCell
+                cell.populate(image)
+                return
+                
+            case .imagePlaceholder:
+                let cell = cell as! EditImageCollectionViewCell
+                cell.showPlaceholder()
+                return
                 
             case .editName:
                 let cell = cell as! TextInputCollectionViewCell
@@ -93,7 +114,8 @@ class ProjectDetailViewController: UICollectionViewController {
     
     let project: Project
 
-    private var fetchedResultsController: NSFetchedResultsController<ProjectThread>!
+    private var threadsFetchedResultsController: NSFetchedResultsController<ProjectThread>!
+    private var imagesFetchedResultsController: NSFetchedResultsController<ProjectImage>!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
     
     @IBOutlet var shareButtonItem: UIBarButtonItem!
@@ -129,13 +151,21 @@ class ProjectDetailViewController: UICollectionViewController {
             }
         }
         
-        fetchedResultsController =
+        threadsFetchedResultsController =
             NSFetchedResultsController(fetchRequest: ProjectThread.fetchRequest(for: project),
                                        managedObjectContext: project.managedObjectContext!,
                                        sectionNameKeyPath: nil,
                                        cacheName: nil)
-        fetchedResultsController.delegate = self
-        
+        threadsFetchedResultsController.delegate = self
+
+        imagesFetchedResultsController =
+            NSFetchedResultsController(fetchRequest: ProjectImage.fetchRequest(for: project),
+                                       managedObjectContext: project.managedObjectContext!,
+                                       sectionNameKeyPath: nil,
+                                       cacheName: nil)
+        imagesFetchedResultsController.delegate = self
+
+        EditImageCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "EditImage")
         ViewProjectThreadCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "Thread")
         EditProjectThreadCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "EditThread")
         TextInputCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "TextInput")
@@ -176,11 +206,18 @@ class ProjectDetailViewController: UICollectionViewController {
         collectionView.collectionViewLayout = createLayout()
         
         do {
-            try fetchedResultsController.performFetch()
-            updateSnapshot(animated: false)
+            try threadsFetchedResultsController.performFetch()
         } catch {
             NSLog("Could not load project threads: \(error)")
         }
+
+        do {
+            try imagesFetchedResultsController.performFetch()
+        } catch {
+            NSLog("Could not load project images: \(error)")
+        }
+
+        updateSnapshot(animated: false)
         
         userActivity = UserActivity.showProject(project).userActivity
     }
@@ -225,13 +262,20 @@ class ProjectDetailViewController: UICollectionViewController {
     }
     
     func updateSnapshot(animated: Bool = true) {
-        let objects = fetchedResultsController.fetchedObjects ?? []
+        let images = imagesFetchedResultsController.fetchedObjects ?? []
+        let threads = threadsFetchedResultsController.fetchedObjects ?? []
         var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
         
         if isEditing {
-            snapshot.appendSections([.details])
+            snapshot.appendSections([.editImages, .details])
+            snapshot.appendItems(images.map { .editImage($0) }, toSection: .editImages)
+            snapshot.appendItems([.imagePlaceholder], toSection: .editImages)
             snapshot.appendItems([.editName, .editNotes], toSection: .details)
         } else {
+//            if images.count > 0 {
+//                snapshot.appendSections([.viewImages])
+//                snapshot.appendItems(images.map { .viewImage($0) }, toSection: .viewImages)
+//            }
             if let notes = project.notes, notes.length > 0 {
                 snapshot.appendSections([.notes])
                 snapshot.appendItems([.viewNotes], toSection: .notes)
@@ -239,11 +283,11 @@ class ProjectDetailViewController: UICollectionViewController {
         }
         
         snapshot.appendSections([.threads])
-        snapshot.appendItems(objects.enumerated().map { (index, item) in
+        snapshot.appendItems(threads.enumerated().map { (index, item) in
             if isEditing {
                 return Cell.editThread(item)
             } else {
-                let isLast = objects.index(after: index) == objects.endIndex
+                let isLast = threads.index(after: index) == threads.endIndex
                 return Cell.viewThread(item, isLast: isLast)
             }
         }, toSection: .threads)
@@ -267,6 +311,33 @@ class ProjectDetailViewController: UICollectionViewController {
             let sectionType = self!.dataSource.snapshot().sectionIdentifiers[sectionIndex]
             
             switch sectionType {
+            case .viewImages:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                      heightDimension: .fractionalHeight(1.0))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.85),
+                                                       heightDimension: .fractionalWidth(0.85))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+                let section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .groupPagingCentered
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0)
+                return section
+                
+            case .editImages:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                     heightDimension: .fractionalHeight(1.0))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .fractionalWidth(0.33))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
+                group.interItemSpacing = .fixed(1)
+
+                let section = NSCollectionLayoutSection(group: group)
+                return section
+                
             case .notes:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                       heightDimension: .estimated(88))
@@ -285,6 +356,7 @@ class ProjectDetailViewController: UICollectionViewController {
                 section.boundarySupplementaryItems = [sectionHeader]
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0)
                 return section
+
             case .details:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                       heightDimension: .estimated(44))
@@ -303,6 +375,7 @@ class ProjectDetailViewController: UICollectionViewController {
                 section.boundarySupplementaryItems = [sectionHeader]
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0)
                 return section
+
             case .threads:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                       heightDimension: .estimated(44))
@@ -326,20 +399,8 @@ class ProjectDetailViewController: UICollectionViewController {
     }
     
     private func threadsSectionHeaderText() -> String {
-        let items = self.fetchedResultsController.fetchedObjects?.count ?? 0
+        let items = self.threadsFetchedResultsController.fetchedObjects?.count ?? 0
         return String.localizedStringWithFormat(Localized.threadsSectionHeader, items)
-    }
-    
-    @IBAction func shareProject() {
-        let activityController = UIActivityViewController(activityItems: [project],
-                                                          applicationActivities: nil)
-        present(activityController, animated: true)
-    }
-    
-    @IBAction func addToShoppingList() {
-        project.act(Localized.addToShoppingList) {
-            project.addToShoppingList()
-        }
     }
 
     @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
@@ -364,7 +425,7 @@ class ProjectDetailViewController: UICollectionViewController {
                 // only choose from threads that aren't already in the shopping list
                 let threads: [Thread]
                 do {
-                    let existingThreads = (fetchedResultsController.fetchedObjects ?? []).compactMap { $0.thread }
+                    let existingThreads = (threadsFetchedResultsController.fetchedObjects ?? []).compactMap { $0.thread }
                     let request = Thread.sortedByNumberFetchRequest()
                     
                     // Not ideal, but I haven't figured out a way in Core Data to get all the threads that
@@ -379,10 +440,49 @@ class ProjectDetailViewController: UICollectionViewController {
             }
         }
     }
-    
+
+    override func updateUserActivityState(_ activity: NSUserActivity) {
+        UserActivity.showProject(project).update(activity)
+    }
+
+    private func cell(for item: Cell) -> UICollectionViewCell? {
+        if let indexPath = dataSource.indexPath(for: item) {
+            return collectionView.cellForItem(at: indexPath)
+        }
+
+        return nil
+    }
+}
+
+// MARK: - Actions
+extension ProjectDetailViewController {
+    @IBAction func shareProject() {
+        let activityController = UIActivityViewController(activityItems: [project],
+                                                          applicationActivities: nil)
+        present(activityController, animated: true)
+    }
+
+    @IBAction func addToShoppingList() {
+        project.act(Localized.addToShoppingList) {
+            project.addToShoppingList()
+        }
+    }
+
+    func selectNewPhoto() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        imagePickerController.mediaTypes = [kUTTypeImage as String]
+
+        present(imagePickerController, animated: true)
+    }
+}
+
+// MARK: - Collection View Delegate
+extension ProjectDetailViewController {
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let item = dataSource.itemIdentifier(for: indexPath)
-        return item == .add
+        return item == .add || item == .imagePlaceholder
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -390,25 +490,23 @@ class ProjectDetailViewController: UICollectionViewController {
             return
         }
         
-        if item == .add {
+        switch item {
+
+        case .add:
             performSegue(withIdentifier: "AddThread", sender: nil)
             collectionView.deselectItem(at: indexPath, animated: true)
+
+        case .imagePlaceholder:
+            selectNewPhoto()
+            collectionView.deselectItem(at: indexPath, animated: true)
+
+        default:
+            assertionFailure("Got didSelectItemAt: with an unexpected item: \(item)")
         }
-    }
-    
-    override func updateUserActivityState(_ activity: NSUserActivity) {
-        UserActivity.showProject(project).update(activity)
-    }
-    
-    private func cell(for item: Cell) -> UICollectionViewCell? {
-        if let indexPath = dataSource.indexPath(for: item) {
-            return collectionView.cellForItem(at: indexPath)
-        }
-        
-        return nil
     }
 }
 
+// MARK: - Fetched Results Controller Delegate
 extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updateSnapshot()
@@ -417,18 +515,46 @@ extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .update:
-            let thread = anObject as! ProjectThread
+            if controller == threadsFetchedResultsController {
+                let thread = anObject as! ProjectThread
 
-            if let cell = self.cell(for: .viewThread(thread, isLast: false)) as? ViewProjectThreadCollectionViewCell {
-                cell.populate(thread)
-            } else if let cell = self.cell(for: .viewThread(thread, isLast: true)) as? ViewProjectThreadCollectionViewCell {
-                cell.populate(thread, isLastItem: true)
-            } else if let cell = self.cell(for: .editThread(thread)) as? EditProjectThreadCollectionViewCell {
-                cell.populate(thread)
+                if let cell = self.cell(for: .viewThread(thread, isLast: false)) as? ViewProjectThreadCollectionViewCell {
+                    cell.populate(thread)
+                } else if let cell = self.cell(for: .viewThread(thread, isLast: true)) as? ViewProjectThreadCollectionViewCell {
+                    cell.populate(thread, isLastItem: true)
+                } else if let cell = self.cell(for: .editThread(thread)) as? EditProjectThreadCollectionViewCell {
+                    cell.populate(thread)
+                }
+            } else if controller == imagesFetchedResultsController {
+                // TODO
             }
         default:
             break
         }
+    }
+}
+
+// MARK: - Image Picker Controller Delegate
+extension ProjectDetailViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        NSLog("media info = \(info)")
+        if let url = info[.imageURL] as? URL {
+            do {
+                let data = try Data(contentsOf: url)
+                project.act(Localized.addImage) {
+                    project.addImage(data)
+                }
+            } catch {
+                NSLog("Error saving image data: \(error)")
+            }
+        } else {
+            NSLog("Did not get an original image URL for the chosen media")
+        }
+        dismiss(animated: true, completion: nil)
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
 }
 
