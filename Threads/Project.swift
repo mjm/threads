@@ -15,4 +15,11 @@ extension Project {
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         return request
     }
+    
+    func addToShoppingList() {
+        let projectThreads = (threads?.allObjects ?? []) as! [ProjectThread]
+        for projectThread in projectThreads {
+            projectThread.thread?.addToShoppingList(quantity: projectThread.amount)
+        }
+    }
 }

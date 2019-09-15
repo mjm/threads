@@ -212,13 +212,21 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" id="jLk-vi-ZwX">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="bOB-qK-pwA">
-                            <connections>
-                                <action selector="shareProject" destination="ddd-5F-HI4" id="6O8-D4-THp"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="action" id="bOB-qK-pwA">
+                                <connections>
+                                    <action selector="shareProject" destination="ddd-5F-HI4" id="6O8-D4-THp"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="cart.badge.plus" catalog="system" id="WUC-WL-7nz">
+                                <connections>
+                                    <action selector="addToShoppingList" destination="ddd-5F-HI4" id="LAn-5r-3t0"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="addToShoppingListButtonItem" destination="WUC-WL-7nz" id="b4B-xl-f6G"/>
                         <outlet property="shareButtonItem" destination="bOB-qK-pwA" id="tzP-m4-Gis"/>
                         <segue destination="ksf-sk-euA" kind="presentation" identifier="AddThread" id="coa-7c-n63"/>
                     </connections>
@@ -510,6 +518,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="cart.badge.plus" catalog="system" width="64" height="48"/>
         <image name="cart.fill" catalog="system" width="64" height="52"/>
         <image name="plus" catalog="system" width="64" height="58"/>
         <image name="plus.circle" catalog="system" width="64" height="62"/>

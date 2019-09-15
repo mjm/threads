@@ -64,6 +64,24 @@ class ProjectListViewController: UICollectionViewController {
         
         userActivity = UserActivity.showProjects.userActivity
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        becomeFirstResponder()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        resignFirstResponder()
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        true
+    }
+
+    override var undoManager: UndoManager? {
+        managedObjectContext.undoManager
+    }
 
     func updateSnapshot(animated: Bool = true) {
         let objects = fetchedResultsController.fetchedObjects ?? []
@@ -116,7 +134,19 @@ class ProjectListViewController: UICollectionViewController {
     func showDetail(for project: Project) {
         performSegue(withIdentifier: "ProjectDetail", sender: project)
     }
-    
+}
+
+// MARK: - Actions
+extension ProjectListViewController {
+    func addToShoppingList(_ project: Project) {
+        undoManager?.setActionName(Localized.addToShoppingList)
+        project.addToShoppingList()
+        AppDelegate.save()
+    }
+}
+
+// MARK: - Collection View Delegate
+extension ProjectListViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let project = dataSource.itemIdentifier(for: indexPath)!
         showDetail(for: project)
@@ -133,6 +163,9 @@ class ProjectListViewController: UICollectionViewController {
             }
         }) { suggestedActions in
             UIMenu(title: "", children: [
+                UIAction(title: Localized.addToShoppingList, image: UIImage(systemName: "cart.badge.plus")) { _ in
+                    self.addToShoppingList(project)
+                },
                 UIAction(title: Localized.share, image: UIImage(systemName: "square.and.arrow.up")) { _ in
                     NSLog("share!")
                 },

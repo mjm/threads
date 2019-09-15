@@ -151,10 +151,17 @@ public class Thread: NSManagedObject {
         onBobbin = false
     }
 
-    func addToShoppingList() {
-        inShoppingList = true
-        amountInShoppingList = 1
-        purchased = false
+    func addToShoppingList(quantity: Int64 = 1) {
+        if !inShoppingList {
+            inShoppingList = true
+            purchased = false
+            amountInShoppingList = quantity
+        } else {
+            // TODO: there's a weird edge case here if you've already marked the thread as purchased.
+            // it doesn't really make sense to just add more quantity here, since it'll be like
+            // you already bought those skeins.
+            amountInShoppingList += quantity
+        }
     }
 
     func removeFromShoppingList() {

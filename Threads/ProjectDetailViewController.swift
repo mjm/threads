@@ -97,6 +97,7 @@ class ProjectDetailViewController: UICollectionViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
     
     @IBOutlet var shareButtonItem: UIBarButtonItem!
+    @IBOutlet var addToShoppingListButtonItem: UIBarButtonItem!
     
     private var projectNameObserver: NSKeyValueObservation?
     
@@ -112,8 +113,10 @@ class ProjectDetailViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        addToShoppingListButtonItem.width = 30
+        
         navigationItem.title = project.name
-        navigationItem.rightBarButtonItems = [editButtonItem, shareButtonItem]
+        navigationItem.rightBarButtonItems = [editButtonItem, shareButtonItem, addToShoppingListButtonItem]
         
         projectNameObserver = project.observe(\.name) { [weak self] project, change in
             self?.navigationItem.title = project.name
@@ -198,8 +201,11 @@ class ProjectDetailViewController: UICollectionViewController {
         updateSnapshot(animated: animated)
 
         navigationItem.largeTitleDisplayMode = editing ? .never : .automatic
-        navigationItem.setRightBarButtonItems(editing ? [editButtonItem] : [editButtonItem, shareButtonItem],
-                                              animated: animated)
+        navigationItem.setRightBarButtonItems(
+            editing ? [editButtonItem] : [editButtonItem,
+                                          shareButtonItem,
+                                          addToShoppingListButtonItem],
+            animated: animated)
 
         if editing {
             AppDelegate.save()
@@ -321,6 +327,12 @@ class ProjectDetailViewController: UICollectionViewController {
         let activityController = UIActivityViewController(activityItems: [project],
                                                           applicationActivities: nil)
         present(activityController, animated: true)
+    }
+    
+    @IBAction func addToShoppingList() {
+        undoManager?.setActionName(Localized.addToShoppingList)
+        project.addToShoppingList()
+        AppDelegate.save()
     }
 
     @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
