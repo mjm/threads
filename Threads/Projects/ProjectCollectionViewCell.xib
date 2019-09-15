@@ -9,7 +9,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gTV-IL-0wX" customClass="ProjectCollectionViewCell" customModule="Threads" customModuleProvider="target">
+        <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gTV-IL-0wX" customClass="ProjectCollectionViewCell" customModule="Threads" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="200" height="227"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                 <rect key="frame" x="0.0" y="0.0" width="200" height="227"/>
@@ -22,15 +22,37 @@
                             <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="JwE-a6-Cy8">
                                 <rect key="frame" x="0.0" y="0.0" width="200" height="227"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="dJn-6F-UxT">
-                                        <rect key="frame" x="0.0" y="4" width="200" height="193"/>
-                                        <color key="backgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="tintColor" white="0.0" alpha="0.41557548415492956" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LA3-PN-2vq">
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h6J-cd-2yZ">
+                                                <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1" verticalHuggingPriority="1" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="dJn-6F-UxT">
+                                                        <rect key="frame" x="0.0" y="4" width="200" height="193"/>
+                                                        <color key="tintColor" white="0.0" alpha="0.41557548415492956" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="45"/>
+                                                    </imageView>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="bottom" secondItem="dJn-6F-UxT" secondAttribute="bottom" id="8e5-6v-dcZ"/>
+                                                    <constraint firstAttribute="trailing" secondItem="dJn-6F-UxT" secondAttribute="trailing" id="Iz8-py-Fn5"/>
+                                                    <constraint firstItem="dJn-6F-UxT" firstAttribute="top" secondItem="h6J-cd-2yZ" secondAttribute="top" id="sxf-iy-k1j"/>
+                                                    <constraint firstAttribute="width" secondItem="h6J-cd-2yZ" secondAttribute="height" multiplier="1:1" id="xPB-9f-r7E"/>
+                                                    <constraint firstItem="dJn-6F-UxT" firstAttribute="leading" secondItem="h6J-cd-2yZ" secondAttribute="leading" id="z97-vQ-G9f"/>
+                                                </constraints>
+                                                <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="dJn-6F-UxT" secondAttribute="height" multiplier="1:1" id="3gF-7r-9MB"/>
+                                            <constraint firstAttribute="trailing" secondItem="h6J-cd-2yZ" secondAttribute="trailing" id="3UE-CB-uCz"/>
+                                            <constraint firstAttribute="bottom" secondItem="h6J-cd-2yZ" secondAttribute="bottom" id="5F6-0k-PfU"/>
+                                            <constraint firstItem="h6J-cd-2yZ" firstAttribute="top" secondItem="LA3-PN-2vq" secondAttribute="top" id="MQ3-N6-hYo"/>
+                                            <constraint firstItem="h6J-cd-2yZ" firstAttribute="leading" secondItem="LA3-PN-2vq" secondAttribute="leading" id="py7-wP-HfM"/>
                                         </constraints>
-                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="45"/>
-                                    </imageView>
+                                    </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5AR-Az-LlA">
                                         <rect key="frame" x="0.0" y="208" width="200" height="19"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
@@ -54,6 +76,8 @@
             <connections>
                 <outlet property="imageView" destination="dJn-6F-UxT" id="sx1-5s-V62"/>
                 <outlet property="nameLabel" destination="5AR-Az-LlA" id="sd7-dI-JoT"/>
+                <outlet property="roundedView" destination="h6J-cd-2yZ" id="Ej9-ZN-B7N"/>
+                <outlet property="shadowView" destination="LA3-PN-2vq" id="Kud-EP-Kud"/>
             </connections>
             <point key="canvasLocation" x="246.37681159420291" y="155.69196428571428"/>
         </collectionViewCell>
