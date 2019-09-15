@@ -134,6 +134,7 @@
 		C97FCDE9232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectThreadCollectionViewCell.swift; sourceTree = "<group>"; };
 		C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContext.swift; sourceTree = "<group>"; };
 		C97FCDED232E941D000B1590 /* Cells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cells.swift; sourceTree = "<group>"; };
+		C97FCDEF232E9AFE000B1590 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +159,7 @@
 		C9491DE7231D897A0031F463 = {
 			isa = PBXGroup;
 			children = (
+				C97FCDEF232E9AFE000B1590 /* README.md */,
 				C9491DF2231D897B0031F463 /* Threads */,
 				C9491E1F231DDBB70031F463 /* ThreadsTests */,
 				C9491DF1231D897B0031F463 /* Products */,
