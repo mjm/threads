@@ -1,0 +1,9 @@
+
+/* Class = "UINavigationItem"; title = "Shopping List"; ObjectID = "cYa-8m-UDw"; */
+"cYa-8m-UDw.title" = "Shopping List";
+
+/* Class = "UIButton"; normalTitle = "Add Checked To Collection"; ObjectID = "lio-bN-JyQ"; */
+"lio-bN-JyQ.normalTitle" = "Add Checked To Collection";
+
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "un2-9w-Eav"; */
+"un2-9w-Eav.title" = "Item";

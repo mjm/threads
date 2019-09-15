@@ -1,0 +1,12 @@
+
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "MrK-bZ-vix"; */
+"MrK-bZ-vix.title" = "Item";
+
+/* Class = "UINavigationItem"; title = "Projects"; ObjectID = "OSs-BO-3l8"; */
+"OSs-BO-3l8.title" = "Projects";
+
+/* Class = "UILabel"; text = "Add Thread to Project"; ObjectID = "ZPB-bh-31f"; */
+"ZPB-bh-31f.text" = "Add Thread to Project";
+
+/* Class = "UILabel"; text = "2 THREADS"; ObjectID = "o2v-m7-ZyR"; */
+"o2v-m7-ZyR.text" = "2 THREADS";

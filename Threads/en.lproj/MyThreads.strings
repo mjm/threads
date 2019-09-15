@@ -1,0 +1,18 @@
+
+/* Class = "UITabBarItem"; title = "Item"; ObjectID = "0kP-ev-aHc"; */
+"0kP-ev-aHc.title" = "Item";
+
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "7H5-Pg-JAI"; */
+"7H5-Pg-JAI.title" = "Item";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "8Zh-su-oah"; */
+"8Zh-su-oah.text" = "Title";
+
+/* Class = "UINavigationItem"; title = "My Threads"; ObjectID = "Jdq-jQ-2S2"; */
+"Jdq-jQ-2S2.title" = "My Threads";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "kek-vT-GQs"; */
+"kek-vT-GQs.text" = "Title";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "l20-mM-aqM"; */
+"l20-mM-aqM.text" = "Title";

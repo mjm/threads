@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zu9-Rd-SPw">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="t47-fL-Os0">
+            <objects>
+                <navigationController id="Zu9-Rd-SPw" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="q0P-TY-EYh">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="UPr-OV-mSa" kind="relationship" relationship="rootViewController" id="Usb-Fn-KBc"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LjU-u5-RRE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2626" y="-227"/>
+        </scene>
+        <!--Add Threads-->
+        <scene sceneID="rfK-do-nGH">
+            <objects>
+                <tableViewController id="UPr-OV-mSa" customClass="AddThreadViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ALd-db-jr3">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Thread" textLabel="Kg5-jD-GG9" style="IBUITableViewCellStyleDefault" id="csD-Pg-gLs">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="csD-Pg-gLs" id="cjj-dU-sRT">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Kg5-jD-GG9">
+                                            <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="UPr-OV-mSa" id="KJC-dF-7C3"/>
+                            <outlet property="delegate" destination="UPr-OV-mSa" id="jSw-wm-xjC"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Add Threads" id="0lo-Kj-ydB">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="XFb-gS-Duh">
+                            <connections>
+                                <segue destination="W4o-mi-Dxd" kind="unwind" unwindAction="unwindCancelAddWithSegue:" id="Q5T-Pz-pcb"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Add" id="LF8-Ec-mZg">
+                            <connections>
+                                <segue destination="W4o-mi-Dxd" kind="unwind" unwindAction="unwindAddThreadWithSegue:" id="qan-r1-dcS"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="keyboardAccessoryView" destination="hR2-6R-oaO" id="orh-jo-2PD"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2rI-HD-z3J" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="hR2-6R-oaO">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <items>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="PWR-IE-09j"/>
+                        <barButtonItem title="Ecru" id="a61-Za-ea8">
+                            <connections>
+                                <action selector="tapKeyboardShortcutWithSender:" destination="UPr-OV-mSa" id="6L2-tK-RPw"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="Blanc" id="eqP-nn-JBO">
+                            <connections>
+                                <action selector="tapKeyboardShortcutWithSender:" destination="UPr-OV-mSa" id="Ot3-t4-VTC"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="B5200" id="9y1-h7-cCJ">
+                            <connections>
+                                <action selector="tapKeyboardShortcutWithSender:" destination="UPr-OV-mSa" id="45O-dn-4xg"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="White" id="PR6-wo-cFB">
+                            <connections>
+                                <action selector="tapKeyboardShortcutWithSender:" destination="UPr-OV-mSa" id="LvS-5e-eC7"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="uki-FH-zUn"/>
+                    </items>
+                </toolbar>
+                <exit id="W4o-mi-Dxd" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="3451" y="-227"/>
+        </scene>
+    </scenes>
+</document>
