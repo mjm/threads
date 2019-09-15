@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -43,6 +44,157 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hRS-fx-87J" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1796" y="447"/>
+        </scene>
+        <!--Thread Preview View Controller-->
+        <scene sceneID="ZNb-Z1-Xg0">
+            <objects>
+                <viewController storyboardIdentifier="ThreadPreview" id="P70-Dv-o5j" customClass="ThreadPreviewViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jaK-BI-rsF">
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="zK5-Ks-N8J">
+                                <rect key="frame" x="20" y="171" width="360" height="209"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DMC 123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w9Z-SE-2O9">
+                                        <rect key="frame" x="0.0" y="0.0" width="123" height="36"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Blue Violet Very Dark" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="onO-yH-TMf">
+                                        <rect key="frame" x="0.0" y="44" width="181.5" height="24"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="X9p-aA-0zw">
+                                        <rect key="frame" x="0.0" y="76" width="189" height="133"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="6Eb-LE-fB5">
+                                                <rect key="frame" x="0.0" y="16" width="189" height="20.5"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="249" verticalCompressionResistancePriority="250" image="Bobbin" translatesAutoresizingMaskIntoConstraints="NO" id="zJP-yw-gbP">
+                                                        <rect key="frame" x="0.0" y="0.0" width="20.5" height="20.5"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="zJP-yw-gbP" secondAttribute="height" multiplier="1:1" id="L80-kC-3hf"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="On Bobbin" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XRY-tj-OcP">
+                                                        <rect key="frame" x="28.5" y="0.0" width="160.5" height="20.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="zJP-yw-gbP" firstAttribute="height" secondItem="XRY-tj-OcP" secondAttribute="height" id="mu3-hZ-UAd"/>
+                                                </constraints>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Qbv-i1-sVf">
+                                                <rect key="frame" x="0.0" y="48.5" width="189" height="20"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="249" verticalCompressionResistancePriority="250" image="nosign" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="yY0-lK-X7S">
+                                                        <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="yY0-lK-X7S" secondAttribute="height" multiplier="1:1" id="goG-s4-kw9"/>
+                                                        </constraints>
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="semibold"/>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Out of Stock" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Syv-sM-w4k">
+                                                        <rect key="frame" x="28" y="0.0" width="161" height="20"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="yY0-lK-X7S" firstAttribute="height" secondItem="Syv-sM-w4k" secondAttribute="height" id="mnO-Bo-zLe"/>
+                                                </constraints>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="NmI-BC-Fk6">
+                                                <rect key="frame" x="0.0" y="80.5" width="189" height="20.5"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="249" verticalCompressionResistancePriority="250" image="cart.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ekf-fz-gvn">
+                                                        <rect key="frame" x="0.0" y="-1" width="20.5" height="24.5"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="ekf-fz-gvn" secondAttribute="height" multiplier="1:1" id="mvo-Ho-Oj8"/>
+                                                        </constraints>
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="semibold"/>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="1 in Shopping List" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gy0-xt-4yc">
+                                                        <rect key="frame" x="28.5" y="0.0" width="160.5" height="20.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="ekf-fz-gvn" firstAttribute="height" secondItem="gy0-xt-4yc" secondAttribute="height" id="O5E-8g-xPz"/>
+                                                </constraints>
+                                                <viewLayoutGuide key="safeArea" id="lD8-ym-ZXo"/>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="oOg-03-35A">
+                                                <rect key="frame" x="0.0" y="113" width="189" height="20"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="249" verticalCompressionResistancePriority="250" image="rectangle.3.offgrid.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ofx-I9-5ve">
+                                                        <rect key="frame" x="0.0" y="-0.5" width="20" height="22"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="ofx-I9-5ve" secondAttribute="height" multiplier="1:1" id="poZ-ai-6EO"/>
+                                                        </constraints>
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Used in 3 Projects" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jtW-hF-Enc">
+                                                        <rect key="frame" x="28" y="0.0" width="161" height="20"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="ofx-I9-5ve" firstAttribute="height" secondItem="jtW-hF-Enc" secondAttribute="height" id="xv6-N0-hZj"/>
+                                                </constraints>
+                                                <viewLayoutGuide key="safeArea" id="YHz-py-eWz"/>
+                                            </stackView>
+                                        </subviews>
+                                        <directionalEdgeInsets key="directionalLayoutMargins" top="16" leading="0.0" bottom="0.0" trailing="0.0"/>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.4402637784793908" green="0.78205041272497144" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="zK5-Ks-N8J" firstAttribute="top" relation="greaterThanOrEqual" secondItem="heC-xb-C0v" secondAttribute="top" constant="20" id="2eQ-U1-H0f"/>
+                            <constraint firstItem="heC-xb-C0v" firstAttribute="trailing" secondItem="zK5-Ks-N8J" secondAttribute="trailing" constant="20" id="915-on-NRC"/>
+                            <constraint firstItem="heC-xb-C0v" firstAttribute="bottom" secondItem="zK5-Ks-N8J" secondAttribute="bottom" constant="20" id="Ous-dD-frT"/>
+                            <constraint firstItem="zK5-Ks-N8J" firstAttribute="leading" secondItem="heC-xb-C0v" secondAttribute="leading" constant="20" id="RlE-bn-dqe"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="heC-xb-C0v"/>
+                    </view>
+                    <size key="freeformSize" width="400" height="400"/>
+                    <connections>
+                        <outlet property="labelLabel" destination="onO-yH-TMf" id="TBF-GR-A2h"/>
+                        <outlet property="numberLabel" destination="w9Z-SE-2O9" id="dpg-Oc-eNC"/>
+                        <outlet property="onBobbinImageView" destination="zJP-yw-gbP" id="2oA-U3-GEr"/>
+                        <outlet property="onBobbinLabel" destination="XRY-tj-OcP" id="TQz-Sd-kJv"/>
+                        <outlet property="onBobbinStackView" destination="6Eb-LE-fB5" id="gy7-3a-gyz"/>
+                        <outlet property="outOfStockImageView" destination="yY0-lK-X7S" id="tlZ-aU-XNK"/>
+                        <outlet property="outOfStockLabel" destination="Syv-sM-w4k" id="SJe-XB-spZ"/>
+                        <outlet property="outOfStockStackView" destination="Qbv-i1-sVf" id="nTE-o8-u8Z"/>
+                        <outlet property="projectsImageView" destination="ofx-I9-5ve" id="pDx-eg-W9L"/>
+                        <outlet property="projectsLabel" destination="jtW-hF-Enc" id="W7m-Fs-C5l"/>
+                        <outlet property="projectsStackView" destination="oOg-03-35A" id="ZCT-6O-8aS"/>
+                        <outlet property="shoppingListImageView" destination="ekf-fz-gvn" id="RyR-Xd-k7J"/>
+                        <outlet property="shoppingListLabel" destination="gy0-xt-4yc" id="ayo-zl-6d4"/>
+                        <outlet property="shoppingListStackView" destination="NmI-BC-Fk6" id="ao1-he-FSh"/>
+                        <outlet property="statusStackView" destination="X9p-aA-0zw" id="EYN-2U-EJ9"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2S1-uA-ZL9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2660.8695652173915" y="-232.36607142857142"/>
         </scene>
         <!--Thread Detail View Controller-->
         <scene sceneID="861-Xs-e98">
@@ -149,6 +301,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Bobbin" width="100" height="100"/>
+        <image name="cart.fill" catalog="system" width="64" height="52"/>
+        <image name="nosign" catalog="system" width="64" height="62"/>
         <image name="plus" catalog="system" width="64" height="58"/>
+        <image name="rectangle.3.offgrid.fill" catalog="system" width="64" height="40"/>
     </resources>
 </document>

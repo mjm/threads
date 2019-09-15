@@ -223,9 +223,9 @@ extension MyThreadsViewController {
             return nil
         }
         
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: {
-            self.storyboard!.instantiateViewController(identifier: "ThreadDetail") { coder in
-                self.makeDetailController(coder: coder, sender: thread)
+        return UIContextMenuConfiguration(identifier: thread.objectID, previewProvider: {
+            self.storyboard!.instantiateViewController(identifier: "ThreadPreview") { coder in
+                ThreadPreviewViewController(coder: coder, thread: thread)
             }
         }) { suggestedActions in
             var markActions: [UIMenuElement] = []
@@ -266,9 +266,9 @@ extension MyThreadsViewController {
     }
     
     override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
-        let vc = animator.previewViewController!
+        let thread = managedObjectContext.object(with: configuration.identifier as! NSManagedObjectID) as! Thread
         animator.addAnimations {
-            self.navigationController?.pushViewController(vc, animated: true)
+            self.showDetail(for: thread)
         }
     }
 }

@@ -37,6 +37,42 @@ extension UIColor {
         
         return String(format: "#%02X%02X%02X", red.colorValue, green.colorValue, blue.colorValue)
     }
+    
+    // source: https://stackoverflow.com/a/3943023
+    //
+    // This will return black or white, whichever would be higher contrast against
+    // the provided background.
+    func label(againstBackground background: UIColor) -> UIColor {
+        if background.luminance > 0.179 {
+            return .black
+        } else {
+            return .white
+        }
+    }
+    
+    var luminance: CGFloat {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        
+        if !getRed(&red, green: &green, blue: &blue, alpha: nil) {
+            fatalError("Could not get color components")
+        }
+        
+        func normalize(_ value: inout CGFloat) {
+            if value <= 0.03928 {
+                value = value / 12.92
+            } else {
+                value = pow((value + 0.055) / 1.055, 2.4)
+            }
+        }
+        
+        normalize(&red)
+        normalize(&green)
+        normalize(&blue)
+        
+        return (0.2126 * red) + (0.7152 * green) + (0.0722 * blue)
+    }
 }
 
 extension CGFloat {

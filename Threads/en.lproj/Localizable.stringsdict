@@ -52,5 +52,21 @@
 			<string>%lu THREAD</string>
 		</dict>
 	</dict>
+	<key>UsedInProjects</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Used in %#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>other</key>
+			<string>%lu Projects</string>
+			<key>one</key>
+			<string>%lu Project</string>
+		</dict>
+	</dict>
 </dict>
 </plist>
