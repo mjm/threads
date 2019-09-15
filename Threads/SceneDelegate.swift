@@ -19,6 +19,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             NSLog("connecting to scene with user activity \(activity.activityType) \(activity)")
             restoreActivity(activity, animated: false)
         }
+        
+        // Force shopping list to load so it can set its badge value
+        let shoppingListController = getTab(type: ShoppingListViewController.self)
+        shoppingListController.loadViewIfNeeded()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -113,11 +117,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     @discardableResult private func selectTab<T: UIViewController>(type controllerType: T.Type) -> T {
-        tabBarController.selectedViewController = tabBarController.viewControllers?.first { vc in
+        let rootViewController = getTab(type: controllerType)
+        tabBarController.selectedViewController = rootViewController.navigationController
+        return rootViewController
+    }
+    
+    private func getTab<T: UIViewController>(type: T.Type) -> T {
+        for vc in tabBarController.viewControllers ?? [] {
             let navController = vc as! UINavigationController
-            return type(of: navController.viewControllers.first!) == controllerType
+            if let rootController = navController.viewControllers.first as? T {
+                return rootController
+            }
         }
-        return (tabBarController.selectedViewController as! UINavigationController).viewControllers.first as! T
+        
+        fatalError("Could not find a tab whose root view controller was \(type)")
     }
     
     private var tabBarController: UITabBarController {

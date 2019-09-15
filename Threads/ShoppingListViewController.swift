@@ -110,6 +110,10 @@ class ShoppingListViewController: UITableViewController {
         } else {
             changeHeight()
         }
+        
+        // update the tab bar badge
+        let unpurchasedItems = objects.filter { !$0.purchased }.count
+        navigationController!.tabBarItem.badgeValue = unpurchasedItems > 0 ? "\(unpurchasedItems)" : nil
     }
 
     @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
