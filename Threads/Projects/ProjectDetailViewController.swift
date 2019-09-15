@@ -100,6 +100,7 @@ class ProjectDetailViewController: UICollectionViewController {
     @IBOutlet var addToShoppingListButtonItem: UIBarButtonItem!
     
     private var projectNameObserver: NSKeyValueObservation?
+    private var projectNotesObserver: NSKeyValueObservation?
     
     init?(coder: NSCoder, project: Project) {
         self.project = project
@@ -120,6 +121,12 @@ class ProjectDetailViewController: UICollectionViewController {
         
         projectNameObserver = project.observe(\.name) { [weak self] project, change in
             self?.navigationItem.title = project.name
+        }
+        
+        projectNotesObserver = project.observe(\.notes) { [weak self] project, change in
+            if let cell = self?.cell(for: .viewNotes) as? TextViewCollectionViewCell {
+                cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
+            }
         }
         
         fetchedResultsController =
@@ -392,6 +399,14 @@ class ProjectDetailViewController: UICollectionViewController {
     override func updateUserActivityState(_ activity: NSUserActivity) {
         UserActivity.showProject(project).update(activity)
     }
+    
+    private func cell(for item: Cell) -> UICollectionViewCell? {
+        if let indexPath = dataSource.indexPath(for: item) {
+            return collectionView.cellForItem(at: indexPath)
+        }
+        
+        return nil
+    }
 }
 
 extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
@@ -404,14 +419,11 @@ extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
         case .update:
             let thread = anObject as! ProjectThread
 
-            if let indexPath = dataSource.indexPath(for: .viewThread(thread, isLast: false)),
-                let cell = collectionView.cellForItem(at: indexPath) as? ViewProjectThreadCollectionViewCell {
+            if let cell = self.cell(for: .viewThread(thread, isLast: false)) as? ViewProjectThreadCollectionViewCell {
                 cell.populate(thread)
-            } else if let indexPath = dataSource.indexPath(for: .viewThread(thread, isLast: true)),
-                let cell = collectionView.cellForItem(at: indexPath) as? ViewProjectThreadCollectionViewCell {
+            } else if let cell = self.cell(for: .viewThread(thread, isLast: true)) as? ViewProjectThreadCollectionViewCell {
                 cell.populate(thread, isLastItem: true)
-            } else if let indexPath = dataSource.indexPath(for: .editThread(thread)),
-                let cell = collectionView.cellForItem(at: indexPath) as? EditProjectThreadCollectionViewCell {
+            } else if let cell = self.cell(for: .editThread(thread)) as? EditProjectThreadCollectionViewCell {
                 cell.populate(thread)
             }
         default:
