@@ -171,55 +171,18 @@
 		C9491DF2231D897B0031F463 /* Threads */ = {
 			isa = PBXGroup;
 			children = (
-				C9491E0A231D8A1E0031F463 /* Threads.entitlements */,
-				C9491DF3231D897B0031F463 /* AppDelegate.swift */,
-				C9491DF5231D897B0031F463 /* SceneDelegate.swift */,
-				C97FCDAF232C8ED7000B1590 /* UserActivity.swift */,
-				C97FCDBC232D79E7000B1590 /* Localized.swift */,
-				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
-				C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */,
-				C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */,
-				C97FCDE2232DD3D2000B1590 /* ThreadPreviewViewController.swift */,
-				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
-				C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */,
-				C9491E4123248B940031F463 /* ProjectListViewController.swift */,
-				C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */,
-				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
-				C9491E2A231DE0070031F463 /* CollectionThreadTableViewCell.swift */,
-				C9491E2B231DE0070031F463 /* CollectionThreadTableViewCell.xib */,
-				C9491E3823235D880031F463 /* ShoppingListThreadTableViewCell.swift */,
-				C9491E3923235D890031F463 /* ShoppingListThreadTableViewCell.xib */,
-				C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */,
-				C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */,
-				C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */,
-				C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */,
-				C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */,
-				C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */,
-				C97FCDB1232CAD4E000B1590 /* TextInputCollectionViewCell.swift */,
-				C97FCDB2232CAD4E000B1590 /* TextInputCollectionViewCell.xib */,
-				C97FCDBE232D9FD0000B1590 /* TextViewCollectionViewCell.swift */,
-				C97FCDC0232D9FE1000B1590 /* TextViewCollectionViewCell.xib */,
-				C9491E362320C67A0031F463 /* SwatchView.swift */,
-				C97FCDA52329A921000B1590 /* SeparatorView.swift */,
-				C9491E18231DD7D00031F463 /* Color.swift */,
-				C9491E10231DA9A20031F463 /* DMCThread.swift */,
-				C9491E2E231E0BE00031F463 /* Thread.swift */,
-				C9491E43232491D90031F463 /* Project.swift */,
-				C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */,
-				C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */,
-				C9491E3F23246AC80031F463 /* Partition.swift */,
-				C97FCDC2232DA92E000B1590 /* NSAttributedString.swift */,
+				C97FCDE4232DFBE9000B1590 /* Common */,
+				C97FCDE5232DFC03000B1590 /* My Threads */,
+				C97FCDE6232DFC5F000B1590 /* Shopping List */,
+				C97FCDE7232DFC7E000B1590 /* Projects */,
+				C97FCDE8232DFCB2000B1590 /* Add Thread */,
 				C9491E12231DAA5D0031F463 /* AllThreads.json */,
-				C9491DF9231D897B0031F463 /* Main.storyboard */,
-				C97FCDD0232DCE0F000B1590 /* MyThreads.storyboard */,
-				C97FCDD5232DCE43000B1590 /* ShoppingList.storyboard */,
-				C97FCDDA232DCE6B000B1590 /* Projects.storyboard */,
-				C97FCDDF232DCE86000B1590 /* AddThread.storyboard */,
 				C9491DFF231D897C0031F463 /* Assets.xcassets */,
+				C9491DF9231D897B0031F463 /* Main.storyboard */,
 				C9491E01231D897C0031F463 /* LaunchScreen.storyboard */,
 				C9491E04231D897C0031F463 /* Info.plist */,
+				C9491E0A231D8A1E0031F463 /* Threads.entitlements */,
 				C9491DFC231D897B0031F463 /* Threads.xcdatamodeld */,
-				C97FCDBB232D78AA000B1590 /* Localizable.stringsdict */,
 			);
 			path = Threads;
 			sourceTree = "<group>";
@@ -239,6 +202,83 @@
 				C9491E28231DDBC60031F463 /* ColorTests.swift */,
 			);
 			path = ThreadsTests;
+			sourceTree = "<group>";
+		};
+		C97FCDE4232DFBE9000B1590 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				C9491DF3231D897B0031F463 /* AppDelegate.swift */,
+				C9491DF5231D897B0031F463 /* SceneDelegate.swift */,
+				C97FCDAF232C8ED7000B1590 /* UserActivity.swift */,
+				C97FCDBC232D79E7000B1590 /* Localized.swift */,
+				C97FCDBB232D78AA000B1590 /* Localizable.stringsdict */,
+				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
+				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
+				C9491E362320C67A0031F463 /* SwatchView.swift */,
+				C97FCDA52329A921000B1590 /* SeparatorView.swift */,
+				C97FCDB1232CAD4E000B1590 /* TextInputCollectionViewCell.swift */,
+				C97FCDB2232CAD4E000B1590 /* TextInputCollectionViewCell.xib */,
+				C97FCDBE232D9FD0000B1590 /* TextViewCollectionViewCell.swift */,
+				C97FCDC0232D9FE1000B1590 /* TextViewCollectionViewCell.xib */,
+				C9491E18231DD7D00031F463 /* Color.swift */,
+				C9491E10231DA9A20031F463 /* DMCThread.swift */,
+				C9491E2E231E0BE00031F463 /* Thread.swift */,
+				C9491E43232491D90031F463 /* Project.swift */,
+				C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */,
+				C9491E3F23246AC80031F463 /* Partition.swift */,
+				C97FCDC2232DA92E000B1590 /* NSAttributedString.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		C97FCDE5232DFC03000B1590 /* My Threads */ = {
+			isa = PBXGroup;
+			children = (
+				C97FCDD0232DCE0F000B1590 /* MyThreads.storyboard */,
+				C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */,
+				C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */,
+				C97FCDE2232DD3D2000B1590 /* ThreadPreviewViewController.swift */,
+				C9491E2A231DE0070031F463 /* CollectionThreadTableViewCell.swift */,
+				C9491E2B231DE0070031F463 /* CollectionThreadTableViewCell.xib */,
+			);
+			path = "My Threads";
+			sourceTree = "<group>";
+		};
+		C97FCDE6232DFC5F000B1590 /* Shopping List */ = {
+			isa = PBXGroup;
+			children = (
+				C97FCDD5232DCE43000B1590 /* ShoppingList.storyboard */,
+				C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */,
+				C9491E3823235D880031F463 /* ShoppingListThreadTableViewCell.swift */,
+				C9491E3923235D890031F463 /* ShoppingListThreadTableViewCell.xib */,
+			);
+			path = "Shopping List";
+			sourceTree = "<group>";
+		};
+		C97FCDE7232DFC7E000B1590 /* Projects */ = {
+			isa = PBXGroup;
+			children = (
+				C97FCDDA232DCE6B000B1590 /* Projects.storyboard */,
+				C9491E4123248B940031F463 /* ProjectListViewController.swift */,
+				C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */,
+				C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */,
+				C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */,
+				C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */,
+				C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */,
+				C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */,
+				C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */,
+				C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */,
+			);
+			path = Projects;
+			sourceTree = "<group>";
+		};
+		C97FCDE8232DFCB2000B1590 /* Add Thread */ = {
+			isa = PBXGroup;
+			children = (
+				C97FCDDF232DCE86000B1590 /* AddThread.storyboard */,
+				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
+			);
+			path = "Add Thread";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
