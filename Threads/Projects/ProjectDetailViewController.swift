@@ -47,8 +47,9 @@ class ProjectDetailViewController: UICollectionViewController {
         func populate(cell: UICollectionViewCell, project: Project, controller: ProjectDetailViewController) {
             switch self {
                 
-            case .viewImage:
-                return
+            case let .viewImage(image):
+                let cell = cell as! ViewImageCollectionViewCell
+                cell.populate(image)
                 
             case .viewNotes:
                 let cell = cell as! TextViewCollectionViewCell
@@ -165,6 +166,7 @@ class ProjectDetailViewController: UICollectionViewController {
                                        cacheName: nil)
         imagesFetchedResultsController.delegate = self
 
+        ViewImageCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "Image")
         EditImageCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "EditImage")
         ViewProjectThreadCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "Thread")
         EditProjectThreadCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "EditThread")
@@ -272,10 +274,10 @@ class ProjectDetailViewController: UICollectionViewController {
             snapshot.appendItems([.imagePlaceholder], toSection: .editImages)
             snapshot.appendItems([.editName, .editNotes], toSection: .details)
         } else {
-//            if images.count > 0 {
-//                snapshot.appendSections([.viewImages])
-//                snapshot.appendItems(images.map { .viewImage($0) }, toSection: .viewImages)
-//            }
+            if images.count > 0 {
+                snapshot.appendSections([.viewImages])
+                snapshot.appendItems(images.map { .viewImage($0) }, toSection: .viewImages)
+            }
             if let notes = project.notes, notes.length > 0 {
                 snapshot.appendSections([.notes])
                 snapshot.appendItems([.viewNotes], toSection: .notes)
@@ -316,13 +318,18 @@ class ProjectDetailViewController: UICollectionViewController {
                                                       heightDimension: .fractionalHeight(1.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.85),
-                                                       heightDimension: .fractionalWidth(0.85))
+                let traitCollection = layoutEnvironment.traitCollection
+                let showMultipleImages = traitCollection.verticalSizeClass == .compact || traitCollection.horizontalSizeClass == .regular
+                let dimension: NSCollectionLayoutDimension = showMultipleImages ? .fractionalHeight(0.4) : .fractionalWidth(0.8)
+                let groupSize = NSCollectionLayoutSize(widthDimension: dimension,
+                                                       heightDimension: dimension)
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
                 let section = NSCollectionLayoutSection(group: group)
-                section.orthogonalScrollingBehavior = .groupPagingCentered
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0)
+                section.orthogonalScrollingBehavior = showMultipleImages ? .groupPaging : .groupPagingCentered
+                let horizontalInset: CGFloat = showMultipleImages ? 15 : 0
+                section.contentInsets = NSDirectionalEdgeInsets(top: 15, leading: horizontalInset, bottom: 15, trailing: horizontalInset)
+                section.interGroupSpacing = 20
                 return section
                 
             case .editImages:
@@ -396,6 +403,12 @@ class ProjectDetailViewController: UICollectionViewController {
                 return section
             }
         }
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        collectionView.collectionViewLayout.invalidateLayout()
     }
     
     private func threadsSectionHeaderText() -> String {

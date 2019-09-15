@@ -62,6 +62,8 @@
 		C97FCDF1232EA234000B1590 /* ProjectImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDF0232EA234000B1590 /* ProjectImage.swift */; };
 		C97FCDF4232EA845000B1590 /* EditImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDF2232EA845000B1590 /* EditImageCollectionViewCell.swift */; };
 		C97FCDF5232EA845000B1590 /* EditImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */; };
+		C97FCDF8232EB846000B1590 /* ViewImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDF6232EB846000B1590 /* ViewImageCollectionViewCell.swift */; };
+		C97FCDF9232EB846000B1590 /* ViewImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDF7232EB846000B1590 /* ViewImageCollectionViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +143,8 @@
 		C97FCDF0232EA234000B1590 /* ProjectImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectImage.swift; sourceTree = "<group>"; };
 		C97FCDF2232EA845000B1590 /* EditImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditImageCollectionViewCell.xib; sourceTree = "<group>"; };
+		C97FCDF6232EB846000B1590 /* ViewImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		C97FCDF7232EB846000B1590 /* ViewImageCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewImageCollectionViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -287,6 +291,8 @@
 				C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */,
 				C97FCDF2232EA845000B1590 /* EditImageCollectionViewCell.swift */,
 				C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */,
+				C97FCDF6232EB846000B1590 /* ViewImageCollectionViewCell.swift */,
+				C97FCDF7232EB846000B1590 /* ViewImageCollectionViewCell.xib */,
 				C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */,
 			);
 			path = Projects;
@@ -385,6 +391,7 @@
 				C9491E03231D897C0031F463 /* LaunchScreen.storyboard in Resources */,
 				C94EB3022325E6A900D4CF56 /* ProjectCollectionViewCell.xib in Resources */,
 				C97FCDA423296433000B1590 /* EditProjectThreadCollectionViewCell.xib in Resources */,
+				C97FCDF9232EB846000B1590 /* ViewImageCollectionViewCell.xib in Resources */,
 				C97FCDB9232D78AA000B1590 /* Localizable.stringsdict in Resources */,
 				C97FCDD8232DCE6B000B1590 /* Projects.storyboard in Resources */,
 				C97FCDCE232DCE0F000B1590 /* MyThreads.storyboard in Resources */,
@@ -430,6 +437,7 @@
 				C9491E4023246AC80031F463 /* Partition.swift in Sources */,
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,
 				C97FCDB0232C8ED7000B1590 /* UserActivity.swift in Sources */,
+				C97FCDF8232EB846000B1590 /* ViewImageCollectionViewCell.swift in Sources */,
 				C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */,
 				C9491E4223248B940031F463 /* ProjectListViewController.swift in Sources */,
 				C97FCDF4232EA845000B1590 /* EditImageCollectionViewCell.swift in Sources */,
