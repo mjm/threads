@@ -127,12 +127,13 @@ class ShoppingListViewController: UITableViewController {
         let addViewController = segue.source as! AddThreadViewController
         
         let threadCount = addViewController.selectedThreads.count
-        undoManager?.setActionName(String.localizedStringWithFormat(Localized.addThreadUndoAction, threadCount))
+        let name = String.localizedStringWithFormat(Localized.addThreadUndoAction, threadCount)
         
-        for thread in addViewController.selectedThreads {
-            thread.addToShoppingList()
+        managedObjectContext.act(name) {
+            for thread in addViewController.selectedThreads {
+                thread.addToShoppingList()
+            }
         }
-        AppDelegate.save()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -158,43 +159,47 @@ class ShoppingListViewController: UITableViewController {
 extension ShoppingListViewController {
     @IBAction func addCheckedToCollection() {
         let request = Thread.purchasedFetchRequest()
+        let threads: [Thread]
         do {
-            undoManager?.setActionName(Localized.addToCollection)
-            let threads = try managedObjectContext.fetch(request)
+            threads = try managedObjectContext.fetch(request)
+        } catch {
+            NSLog("Could not load purchased threads: \(error)")
+            return
+        }
+
+        managedObjectContext.act(Localized.addToCollection) {
             for thread in threads {
                 thread.removeFromShoppingList()
                 thread.addToCollection()
             }
-            AppDelegate.save()
-        } catch {
-            NSLog("Could not load purchased threads: \(error)")
         }
     }
     
     func toggleThreadChecked(_ thread: Thread) {
-        undoManager?.setActionName(Localized.changePurchased)
-        thread.togglePurchased()
-        delayPurchase(thread)
-        AppDelegate.save()
+        thread.act(Localized.changePurchased) {
+            thread.togglePurchased()
+            delayPurchase(thread)
+        }
     }
     
     func increaseQuantity(_ thread: Thread) {
-        undoManager?.setActionName(Localized.changeQuantity)
-        resetDelayedPurchaseTimer()
-        thread.amountInShoppingList += 1
-        AppDelegate.save()
+        thread.act(Localized.changeQuantity) {
+            resetDelayedPurchaseTimer()
+            thread.amountInShoppingList += 1
+        }
     }
     
     func decreaseQuantity(_ thread: Thread) {
         resetDelayedPurchaseTimer()
         if thread.amountInShoppingList == 1 {
-            undoManager?.setActionName(Localized.removeFromShoppingList)
-            thread.removeFromShoppingList()
+            thread.act(Localized.removeFromShoppingList) {
+                thread.removeFromShoppingList()
+            }
         } else {
-            undoManager?.setActionName(Localized.changeQuantity)
-            thread.amountInShoppingList -= 1
+            thread.act(Localized.changeQuantity) {
+                thread.amountInShoppingList -= 1
+            }
         }
-        AppDelegate.save()
     }
 }
 

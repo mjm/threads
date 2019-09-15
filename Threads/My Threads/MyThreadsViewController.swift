@@ -85,11 +85,13 @@ class MyThreadsViewController: UITableViewController {
         let addViewController = segue.source as! AddThreadViewController
         
         let threadCount = addViewController.selectedThreads.count
-        undoManager?.setActionName(String.localizedStringWithFormat(Localized.addThreadUndoAction, threadCount))
-        for thread in addViewController.selectedThreads {
-            thread.addToCollection()
+        let name = String.localizedStringWithFormat(Localized.addThreadUndoAction, threadCount)
+        
+        managedObjectContext.act(name) {
+            for thread in addViewController.selectedThreads {
+                thread.addToCollection()
+            }
         }
-        AppDelegate.save()
     }
     
     @IBAction func unwindDeleteThread(segue: UIStoryboardSegue) {
@@ -125,41 +127,41 @@ class MyThreadsViewController: UITableViewController {
 // MARK: - Actions
 extension MyThreadsViewController {
     func markOffBobbin(_ thread: Thread) {
-        undoManager?.setActionName(Localized.markOffBobbin)
-        thread.onBobbin = false
-        AppDelegate.save()
+        thread.act(Localized.markOffBobbin) {
+            thread.onBobbin = false
+        }
     }
     
     func markOnBobbin(_ thread: Thread) {
-        undoManager?.setActionName(Localized.markOnBobbin)
-        thread.onBobbin = true
-        AppDelegate.save()
+        thread.act(Localized.markOnBobbin) {
+            thread.onBobbin = true
+        }
     }
     
     func markInStock(_ thread: Thread) {
-        undoManager?.setActionName(Localized.markInStock)
-        thread.amountInCollection = 1
-        AppDelegate.save()
+        thread.act(Localized.markInStock) {
+            thread.amountInCollection = 1
+        }
     }
     
     func markOutOfStock(_ thread: Thread) {
-        undoManager?.setActionName(Localized.markOutOfStock)
-        thread.amountInCollection = 0
-        thread.onBobbin = false
-        AppDelegate.save()
+        thread.act(Localized.markOutOfStock) {
+            thread.amountInCollection = 0
+            thread.onBobbin = false
+        }
     }
     
     func addToShoppingList(_ thread: Thread) {
-        undoManager?.setActionName(Localized.addToShoppingList)
-        thread.addToShoppingList()
-        AppDelegate.save()
+        thread.act(Localized.addToShoppingList) {
+            thread.addToShoppingList()
+        }
     }
     
     func removeFromCollection(_ thread: Thread) {
-        undoManager?.setActionName(Localized.removeThread)
-        thread.removeFromCollection()
         UserActivity.showThread(thread).delete {
-            AppDelegate.save()
+            thread.act(Localized.removeThread) {
+                thread.removeFromCollection()
+            }
         }
     }
 }

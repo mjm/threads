@@ -57,6 +57,7 @@
 		C97FCDDD232DCE86000B1590 /* AddThread.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDDF232DCE86000B1590 /* AddThread.storyboard */; };
 		C97FCDE3232DD3D2000B1590 /* ThreadPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDE2232DD3D2000B1590 /* ThreadPreviewViewController.swift */; };
 		C97FCDEA232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDE9232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift */; };
+		C97FCDEC232E014D000B1590 /* NSManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,7 @@
 		C97FCDE1232DCE8A000B1590 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AddThread.strings; sourceTree = "<group>"; };
 		C97FCDE2232DD3D2000B1590 /* ThreadPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadPreviewViewController.swift; sourceTree = "<group>"; };
 		C97FCDE9232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectThreadCollectionViewCell.swift; sourceTree = "<group>"; };
+		C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContext.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,6 +231,7 @@
 				C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */,
 				C9491E3F23246AC80031F463 /* Partition.swift */,
 				C97FCDC2232DA92E000B1590 /* NSAttributedString.swift */,
+				C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -399,6 +402,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */,
+				C97FCDEC232E014D000B1590 /* NSManagedObjectContext.swift in Sources */,
 				C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */,
 				C9491E2F231E0BE00031F463 /* Thread.swift in Sources */,
 				C9491E3E23235FBF0031F463 /* ThreadTableViewCell.swift in Sources */,

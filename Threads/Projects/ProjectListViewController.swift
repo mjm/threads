@@ -37,7 +37,7 @@ class ProjectListViewController: UICollectionViewController {
 //        project = Project(context: managedObjectContext)
 //        project.name = "Stardew Chicken"
 //
-//        AppDelegate.save()
+//        managedObjectContext.commit()
 
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: Project.allProjectsFetchRequest(),
@@ -139,9 +139,9 @@ class ProjectListViewController: UICollectionViewController {
 // MARK: - Actions
 extension ProjectListViewController {
     func addToShoppingList(_ project: Project) {
-        undoManager?.setActionName(Localized.addToShoppingList)
-        project.addToShoppingList()
-        AppDelegate.save()
+        project.act(Localized.addToShoppingList) {
+            project.addToShoppingList()
+        }
     }
 }
 

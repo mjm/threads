@@ -142,12 +142,12 @@ class ThreadDetailViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: Localized.remove, style: .destructive) { _ in
             self.userActivity = nil
             
-            self.undoManager?.setActionName(Localized.removeThread)
-            self.thread.removeFromCollection()
-            self.performSegue(withIdentifier: "DeleteThread", sender: nil)
-            
             UserActivity.showThread(self.thread).delete {
-                AppDelegate.save()
+                self.thread.act(Localized.removeThread) {
+                    self.thread.removeFromCollection()
+                }
+                
+                self.performSegue(withIdentifier: "DeleteThread", sender: nil)
             }
         })
         

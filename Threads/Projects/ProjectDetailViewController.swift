@@ -208,12 +208,12 @@ class ProjectDetailViewController: UICollectionViewController {
             animated: animated)
 
         if editing {
-            AppDelegate.save()
+            project.managedObjectContext!.commit()
             undoManager?.beginUndoGrouping()
             undoManager?.setActionName(Localized.changeProject)
         } else {
             undoManager?.endUndoGrouping()
-            AppDelegate.save()
+            project.managedObjectContext!.commit()
         }
     }
     
@@ -330,9 +330,9 @@ class ProjectDetailViewController: UICollectionViewController {
     }
     
     @IBAction func addToShoppingList() {
-        undoManager?.setActionName(Localized.addToShoppingList)
-        project.addToShoppingList()
-        AppDelegate.save()
+        project.act(Localized.addToShoppingList) {
+            project.addToShoppingList()
+        }
     }
 
     @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
@@ -340,10 +340,15 @@ class ProjectDetailViewController: UICollectionViewController {
     
     @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
         let addViewController = segue.source as! AddThreadViewController
-        for thread in addViewController.selectedThreads {
-            thread.add(to: project)
+        
+        let threadCount = addViewController.selectedThreads.count
+        let name = String.localizedStringWithFormat(Localized.addThreadUndoAction, threadCount)
+        
+        project.act(name) {
+            for thread in addViewController.selectedThreads {
+                thread.add(to: project)
+            }
         }
-        AppDelegate.save()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
