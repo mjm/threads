@@ -28,7 +28,4 @@ class EditProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
     @IBAction func decreaseQuantity() {
         onDecreaseQuantity()
     }
-    
-    static var nib = UINib(nibName: "EditProjectThreadCollectionViewCell", bundle: nil)
-
 }

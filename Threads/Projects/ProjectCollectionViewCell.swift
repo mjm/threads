@@ -23,10 +23,4 @@ class ProjectCollectionViewCell: UICollectionViewCell {
         nameLabel.text = project.name
         colorView.backgroundColor = .systemOrange
     }
-    
-    static var nib = UINib(nibName: "ProjectCollectionViewCell", bundle: nil)
-    
-    class func makePrototype() -> ProjectCollectionViewCell {
-        return nib.instantiate(withOwner: nil, options: nil).first as! ProjectCollectionViewCell
-    }
 }

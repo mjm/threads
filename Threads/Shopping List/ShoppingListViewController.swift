@@ -39,7 +39,7 @@ class ShoppingListViewController: UITableViewController {
                                        cacheName: nil)
         fetchedResultsController.delegate = self
         
-        tableView.register(ShoppingListThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
+        ShoppingListThreadTableViewCell.registerNib(on: tableView, reuseIdentifier: "Thread")
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ShoppingListThreadTableViewCell
             cell.populate(item)

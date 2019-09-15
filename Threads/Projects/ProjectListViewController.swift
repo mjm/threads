@@ -46,7 +46,7 @@ class ProjectListViewController: UICollectionViewController {
                                        cacheName: nil)
         fetchedResultsController.delegate = self
 
-        collectionView.register(ProjectCollectionViewCell.nib, forCellWithReuseIdentifier: "Project")
+        ProjectCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "Project")
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Project", for: indexPath) as! ProjectCollectionViewCell
             cell.populate(item)

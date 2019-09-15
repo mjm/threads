@@ -11,10 +11,7 @@ import UIKit
 class TextViewCollectionViewCell: UICollectionViewCell {
     @IBOutlet var textView: UITextView!
     
-//    var onReturn: () -> Void = {}
     var onChange: (NSAttributedString) -> Void = { _ in }
-
-    static let nib = UINib(nibName: "TextViewCollectionViewCell", bundle: nil)
 }
 
 extension TextViewCollectionViewCell: UITextViewDelegate {

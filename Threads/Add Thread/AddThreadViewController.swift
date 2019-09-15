@@ -42,7 +42,7 @@ class AddThreadViewController: UITableViewController {
         
         definesPresentationContext = true
         
-        tableView.register(CollectionThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
+        CollectionThreadTableViewCell.registerNib(on: tableView, reuseIdentifier: "Thread")
         dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! CollectionThreadTableViewCell
             cell.populate(item)
@@ -144,7 +144,7 @@ class ThreadResultsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(CollectionThreadTableViewCell.nib, forCellReuseIdentifier: "Thread")
+        CollectionThreadTableViewCell.registerNib(on: tableView, reuseIdentifier: "Thread")
         
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! CollectionThreadTableViewCell

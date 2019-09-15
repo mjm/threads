@@ -34,6 +34,4 @@ class CollectionThreadTableViewCell: ThreadTableViewCell {
             }
         }
     }
-    
-    static var nib = UINib(nibName: "CollectionThreadTableViewCell", bundle: nil)
 }

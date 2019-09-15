@@ -57,6 +57,4 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell {
     @IBAction func decreaseQuantity() {
         onDecreaseQuantity()
     }
-    
-    static var nib = UINib(nibName: "ShoppingListThreadTableViewCell", bundle: nil)
 }

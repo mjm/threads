@@ -136,10 +136,10 @@ class ProjectDetailViewController: UICollectionViewController {
                                        cacheName: nil)
         fetchedResultsController.delegate = self
         
-        collectionView.register(ViewProjectThreadCollectionViewCell.nib, forCellWithReuseIdentifier: "Thread")
-        collectionView.register(EditProjectThreadCollectionViewCell.nib, forCellWithReuseIdentifier: "EditThread")
-        collectionView.register(TextInputCollectionViewCell.nib, forCellWithReuseIdentifier: "TextInput")
-        collectionView.register(TextViewCollectionViewCell.nib, forCellWithReuseIdentifier: "TextView")
+        ViewProjectThreadCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "Thread")
+        EditProjectThreadCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "EditThread")
+        TextInputCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "TextInput")
+        TextViewCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "TextView")
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: item.cellIdentifier, for: indexPath)
             

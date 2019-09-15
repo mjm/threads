@@ -17,8 +17,6 @@ class TextInputCollectionViewCell: UICollectionViewCell {
     @IBAction func textChanged() {
         onChange(textField.text ?? "")
     }
-
-    static let nib = UINib(nibName: "TextInputCollectionViewCell", bundle: nil)
 }
 
 extension TextInputCollectionViewCell: UITextFieldDelegate {

@@ -16,6 +16,4 @@ class ViewProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
         
         separatorLeadingConstraint.constant = isLastItem ? 0 : 15
     }
-    
-    static var nib = UINib(nibName: "ViewProjectThreadCollectionViewCell", bundle: nil)
 }
