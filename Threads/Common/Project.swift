@@ -28,10 +28,6 @@ extension Project {
         image.order = Int64(allImages.count) // it matters that this one comes before the next line
         image.project = self
         image.data = data
-
-        if image.order == 0 {
-            image.isPrimary = true
-        }
     }
     
     var allImages: Set<ProjectImage> {
@@ -56,17 +52,6 @@ extension Project {
     }
     
     var primaryImage: ProjectImage? {
-        get {
-            allImages.first { $0.isPrimary } ?? orderedImages.first
-        }
-        set {
-            if let image = newValue {
-                image.project = self
-            }
-            
-            for image in allImages {
-                image.isPrimary = image == newValue
-            }
-        }
+        orderedImages.first
     }
 }

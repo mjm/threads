@@ -59,4 +59,5 @@ struct Localized {
     static let usedInProjects = NSLocalizedString("UsedInProjects", comment: "Used in {num} Projects")
 
     static let addImage = NSLocalizedString("Add Image", comment: "")
+    static let moveImage = NSLocalizedString("Move Image", comment: "")
 }

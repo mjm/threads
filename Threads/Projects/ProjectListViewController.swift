@@ -25,6 +25,8 @@ class ProjectListViewController: UICollectionViewController {
         return collectionView.collectionViewLayout as! UICollectionViewFlowLayout
     }
 
+    private var imagesObserver: Any!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,6 +40,29 @@ class ProjectListViewController: UICollectionViewController {
 //        project.name = "Stardew Chicken"
 //
 //        managedObjectContext.commit()
+
+        // Ensure we update the project image correctly.
+        //
+        // Watch all Core Data object changes, and whenever anything changes about a project image, update the cell for the affected project.
+        imagesObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: managedObjectContext, queue: OperationQueue.main) { [weak self] note in
+            guard let userInfo = note.userInfo else {
+                return
+            }
+
+            var changedObjects = Set<NSManagedObject>()
+            changedObjects.formUnion(userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject> ?? [])
+            changedObjects.formUnion(userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject> ?? [])
+            changedObjects.formUnion(userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> ?? [])
+
+            let affectedProjects = Set(changedObjects.compactMap { ($0 as? ProjectImage)?.project })
+
+            for project in affectedProjects {
+                if let indexPath = self?.dataSource.indexPath(for: project),
+                    let cell = self?.collectionView.cellForItem(at: indexPath) as? ProjectCollectionViewCell {
+                    cell.populate(project)
+                }
+            }
+        }
 
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: Project.allProjectsFetchRequest(),
@@ -63,6 +88,12 @@ class ProjectListViewController: UICollectionViewController {
         }
         
         userActivity = UserActivity.showProjects.userActivity
+    }
+
+    deinit {
+        if let observer = imagesObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

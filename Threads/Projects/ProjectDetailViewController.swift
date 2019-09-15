@@ -166,6 +166,10 @@ class ProjectDetailViewController: UICollectionViewController {
                                        cacheName: nil)
         imagesFetchedResultsController.delegate = self
 
+        collectionView.dragInteractionEnabled = true
+        collectionView.dragDelegate = self
+        collectionView.dropDelegate = self
+
         ViewImageCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "Image")
         EditImageCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "EditImage")
         ViewProjectThreadCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "Thread")
@@ -515,6 +519,80 @@ extension ProjectDetailViewController {
 
         default:
             assertionFailure("Got didSelectItemAt: with an unexpected item: \(item)")
+        }
+    }
+}
+
+// MARK: - Collection View Drag Delegate
+extension ProjectDetailViewController: UICollectionViewDragDelegate {
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        guard case let .editImage(image) = dataSource.itemIdentifier(for: indexPath),
+            let data = image.data else {
+            return []
+        }
+
+        let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeImage as String)
+        let item = UIDragItem(itemProvider: itemProvider)
+        item.localObject = image
+        return [item]
+    }
+
+    func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+        self.collectionView(collectionView, itemsForBeginning: session, at: indexPath)
+    }
+}
+
+// MARK: - Collection View Drop Delegate
+extension ProjectDetailViewController: UICollectionViewDropDelegate {
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        guard let indexPath = destinationIndexPath else {
+            return UICollectionViewDropProposal(operation: .cancel)
+        }
+
+        let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
+        guard section == .editImages else {
+            return UICollectionViewDropProposal(operation: .cancel)
+        }
+
+        let imageCount = imagesFetchedResultsController.fetchedObjects?.count ?? 0
+        if indexPath.item >= imageCount {
+            return UICollectionViewDropProposal(operation: .forbidden)
+        }
+
+        if collectionView.hasActiveDrag {
+            return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        } else {
+            return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        guard let indexPath = coordinator.destinationIndexPath else {
+            // we don't currently support drops with no index path
+            return
+        }
+
+        var images = project.orderedImages
+        if coordinator.proposal.operation == .move {
+            // remove images from their existing locations
+            for item in coordinator.items {
+                if let sourceIndexPath = item.sourceIndexPath {
+                    images.remove(at: sourceIndexPath.item)
+                }
+            }
+
+            let newImages = coordinator.items.map { $0.dragItem.localObject as! ProjectImage }
+            images.insert(contentsOf: newImages, at: indexPath.item)
+
+            project.act(Localized.moveImage) {
+                project.orderedImages = images
+            }
+
+            for (i, item) in coordinator.items.enumerated() {
+                coordinator.drop(item.dragItem, toItemAt: IndexPath(item: indexPath.item + i, section: indexPath.section))
+            }
+        } else if coordinator.proposal.operation == .copy {
+            assertionFailure("Copying items from another app has not been implemented yet!")
         }
     }
 }

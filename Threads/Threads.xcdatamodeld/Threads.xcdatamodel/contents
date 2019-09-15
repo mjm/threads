@@ -8,7 +8,6 @@
     </entity>
     <entity name="ProjectImage" representedClassName="ProjectImage" syncable="YES" codeGenerationType="class">
         <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
-        <attribute name="isPrimary" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="order" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="images" inverseEntity="Project"/>
     </entity>
@@ -31,8 +30,8 @@
     </entity>
     <elements>
         <element name="Project" positionX="-36" positionY="81" width="128" height="103"/>
+        <element name="ProjectImage" positionX="-36" positionY="81" width="128" height="88"/>
         <element name="ProjectThread" positionX="-45" positionY="63" width="128" height="88"/>
         <element name="Thread" positionX="-54" positionY="-9" width="128" height="193"/>
-        <element name="ProjectImage" positionX="-36" positionY="81" width="128" height="103"/>
     </elements>
 </model>
