@@ -43,7 +43,7 @@ class ProjectDetailViewController: UICollectionViewController {
                 let cell = cell as! TextViewCollectionViewCell
                 cell.textView.isEditable = false
                 cell.textView.dataDetectorTypes = .all
-                cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body))
+                cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
                 cell.onChange = { _ in }
 
             case let .viewThread(projectThread, isLast: isLast):
@@ -65,9 +65,9 @@ class ProjectDetailViewController: UICollectionViewController {
                 let cell = cell as! TextViewCollectionViewCell
                 cell.textView.isEditable = true
                 cell.textView.dataDetectorTypes = []
-                cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body))
+                cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
                 cell.onChange = { [weak controller] newText in
-                    project.notes = newText.replacing(font: .preferredFont(forTextStyle: .body))
+                    project.notes = newText
                     controller?.updateSnapshot()
                 }
 
