@@ -25,8 +25,12 @@ class ShoppingListViewController: UITableViewController {
     private var purchaseDelayTimer: Timer?
     private var pendingPurchases = Set<Thread>()
 
+    @IBOutlet var addCheckedButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        addCheckedButton.imageView?.tintColor = .white
         
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: Thread.inShoppingListFetchRequest(),
@@ -105,7 +109,7 @@ class ShoppingListViewController: UITableViewController {
         }
 
         if animated {
-            let animator = UIViewPropertyAnimator(duration: 0.2, dampingRatio: 0.3, animations: changeHeight)
+            let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.3, animations: changeHeight)
             animator.startAnimation()
         } else {
             changeHeight()
