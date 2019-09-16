@@ -50,6 +50,12 @@ extension Project {
             }
         }
     }
+
+    func reorderImages() {
+        for (i, image) in orderedImages.enumerated() {
+            image.order = Int64(i)
+        }
+    }
     
     var primaryImage: ProjectImage? {
         orderedImages.first

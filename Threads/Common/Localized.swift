@@ -60,4 +60,5 @@ struct Localized {
 
     static let addImage = NSLocalizedString("Add Image", comment: "")
     static let moveImage = NSLocalizedString("Move Image", comment: "")
+    static let deleteImage = NSLocalizedString("Delete Image", comment: "")
 }

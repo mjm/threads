@@ -26,4 +26,14 @@ extension ProjectImage {
             data = newValue?.jpegData(compressionQuality: 1.0)
         }
     }
+
+    func delete() {
+        let project = self.project
+
+        managedObjectContext!.delete(self)
+
+        if let project = project {
+            project.reorderImages()
+        }
+    }
 }

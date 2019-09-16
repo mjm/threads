@@ -521,6 +521,22 @@ extension ProjectDetailViewController {
             assertionFailure("Got didSelectItemAt: with an unexpected item: \(item)")
         }
     }
+
+    override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard case let .editImage(image) = dataSource.itemIdentifier(for: indexPath) else {
+            return nil
+        }
+
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
+            UIMenu(title: "", children: [
+                UIAction(title: Localized.delete, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                    self.project.act(Localized.deleteImage) {
+                        image.delete()
+                    }
+                }
+            ])
+        }
+    }
 }
 
 // MARK: - Collection View Drag Delegate
