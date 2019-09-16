@@ -7,7 +7,10 @@
 //
 
 import Foundation
+import UIKit
 import CoreData
+import CoreSpotlight
+import CoreServices
 
 private let threadURLKey = "ThreadURL"
 private let projectURLKey = "ProjectURL"
@@ -101,6 +104,12 @@ enum UserActivity {
         case let .showProject(project):
             let projectURL = project.objectID.uriRepresentation()
             activity.title = project.name ?? Localized.unnamedProject
+            let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
+            if let image = project.primaryImage?.image,
+                let data = image.resized(to: CGSize(width: 180, height: 270)).jpegData(compressionQuality: 0.7) {
+                attributes.thumbnailData = data
+            }
+            activity.contentAttributeSet = attributes
             activity.userInfo = [projectURLKey: projectURL]
             activity.requiredUserInfoKeys = [projectURLKey]
         }

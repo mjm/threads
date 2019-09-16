@@ -64,6 +64,7 @@
 		C97FCDF5232EA845000B1590 /* EditImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */; };
 		C97FCDF8232EB846000B1590 /* ViewImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDF6232EB846000B1590 /* ViewImageCollectionViewCell.swift */; };
 		C97FCDF9232EB846000B1590 /* ViewImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDF7232EB846000B1590 /* ViewImageCollectionViewCell.xib */; };
+		C97FCDFB232F3BC3000B1590 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDFA232F3BC3000B1590 /* Image.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,6 +146,7 @@
 		C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditImageCollectionViewCell.xib; sourceTree = "<group>"; };
 		C97FCDF6232EB846000B1590 /* ViewImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		C97FCDF7232EB846000B1590 /* ViewImageCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewImageCollectionViewCell.xib; sourceTree = "<group>"; };
+		C97FCDFA232F3BC3000B1590 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,6 +241,7 @@
 				C97FCDBE232D9FD0000B1590 /* TextViewCollectionViewCell.swift */,
 				C97FCDC0232D9FE1000B1590 /* TextViewCollectionViewCell.xib */,
 				C9491E18231DD7D00031F463 /* Color.swift */,
+				C97FCDFA232F3BC3000B1590 /* Image.swift */,
 				C9491E10231DA9A20031F463 /* DMCThread.swift */,
 				C9491E2E231E0BE00031F463 /* Thread.swift */,
 				C9491E43232491D90031F463 /* Project.swift */,
@@ -436,6 +439,7 @@
 				C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */,
 				C9491E4023246AC80031F463 /* Partition.swift in Sources */,
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,
+				C97FCDFB232F3BC3000B1590 /* Image.swift in Sources */,
 				C97FCDB0232C8ED7000B1590 /* UserActivity.swift in Sources */,
 				C97FCDF8232EB846000B1590 /* ViewImageCollectionViewCell.swift in Sources */,
 				C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */,
