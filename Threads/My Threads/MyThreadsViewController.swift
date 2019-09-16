@@ -22,8 +22,12 @@ class MyThreadsViewController: UITableViewController {
     private var fetchedResultsController: NSFetchedResultsController<Thread>!
     private var dataSource: TableViewDiffableDataSource<Section, Thread>!
 
+    private var actionRunner: UserActionRunner!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
         
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: Thread.inCollectionFetchRequest(),
@@ -126,18 +130,6 @@ class MyThreadsViewController: UITableViewController {
 
 // MARK: - Actions
 extension MyThreadsViewController {
-    func markOffBobbin(_ thread: Thread) {
-        thread.act(Localized.markOffBobbin) {
-            thread.onBobbin = false
-        }
-    }
-    
-    func markOnBobbin(_ thread: Thread) {
-        thread.act(Localized.markOnBobbin) {
-            thread.onBobbin = true
-        }
-    }
-    
     func markInStock(_ thread: Thread) {
         thread.act(Localized.markInStock) {
             thread.amountInCollection = 1
@@ -156,14 +148,6 @@ extension MyThreadsViewController {
             thread.addToShoppingList()
         }
     }
-    
-    func removeFromCollection(_ thread: Thread) {
-        UserActivity.showThread(thread).delete {
-            thread.act(Localized.removeThread) {
-                thread.removeFromCollection()
-            }
-        }
-    }
 }
 
 // MARK: - Table View Delegate
@@ -178,18 +162,12 @@ extension MyThreadsViewController {
         if thread.amountInCollection == 0 {
             return nil
         }
-        
+
         let bobbin: UIContextualAction
         if thread.onBobbin {
-            bobbin = UIContextualAction(style: .normal, title: Localized.offBobbin) { action, view, completionHandler in
-                self.markOffBobbin(thread)
-                completionHandler(true)
-            }
+            bobbin = actionRunner.contextualAction(MarkOffBobbinAction(thread: thread), title: Localized.offBobbin)
         } else {
-            bobbin = UIContextualAction(style: .normal, title: Localized.onBobbin) { action, view, completionHandler in
-                self.markOnBobbin(thread)
-                completionHandler(true)
-            }
+            bobbin = actionRunner.contextualAction(MarkOnBobbinAction(thread: thread), title: Localized.onBobbin)
         }
         bobbin.backgroundColor = UIColor(named: "BobbinSwipe")
         
@@ -203,16 +181,10 @@ extension MyThreadsViewController {
         
         let stock: UIContextualAction
         if thread.amountInCollection == 0 {
-            stock = UIContextualAction(style: .normal, title: Localized.inStock) { action, view, completionHandler in
-                self.markInStock(thread)
-                completionHandler(true)
-            }
+            stock = actionRunner.contextualAction(MarkInStockAction(thread: thread), title: Localized.inStock)
             stock.backgroundColor = UIColor(named: "InStockSwipe")
         } else {
-            stock = UIContextualAction(style: .destructive, title: Localized.outOfStock) { action, view, completionHandler in
-                self.markOutOfStock(thread)
-                completionHandler(true)
-            }
+            stock = actionRunner.contextualAction(MarkOutOfStockAction(thread: thread), title: Localized.outOfStock, style: .destructive)
         }
         
         let config = UISwipeActionsConfiguration(actions: [stock])
@@ -235,31 +207,28 @@ extension MyThreadsViewController {
             var markActions: [UIMenuElement] = []
             
             if thread.amountInCollection == 0 {
-                markActions.append(UIAction(title: Localized.markInStock) { _ in
-                    self.markInStock(thread)
-                })
+                markActions.append(self.actionRunner.menuAction(MarkInStockAction(thread: thread),
+                                                                title: Localized.markInStock))
             } else {
                 if thread.onBobbin {
-                    markActions.append(UIAction(title: Localized.markOffBobbin) { _ in
-                        self.markOffBobbin(thread)
-                    })
+                    markActions.append(self.actionRunner.menuAction(MarkOffBobbinAction(thread: thread),
+                                                                    title: Localized.markOffBobbin))
                 } else {
-                    markActions.append(UIAction(title: Localized.markOnBobbin) { _ in
-                        self.markOnBobbin(thread)
-                    })
+                    markActions.append(self.actionRunner.menuAction(MarkOnBobbinAction(thread: thread),
+                                                                    title: Localized.markOnBobbin))
                 }
-                
-                markActions.append(UIAction(title: Localized.markOutOfStock) { _ in
-                    self.markOutOfStock(thread)
-                })
+
+                markActions.append(self.actionRunner.menuAction(MarkOutOfStockAction(thread: thread),
+                                                                title: Localized.markOutOfStock))
             }
+            let markMenu = UIMenu(title: "", options: .displayInline, children: markActions)
 
             // Load projects for submenu
-            let addToProject: UIMenuElement
+            let addToProjectMenu: UIMenuElement
             do {
                 let request = Project.allProjectsFetchRequest()
                 let projects = try self.managedObjectContext.fetch(request)
-                addToProject = UIMenu(title: Localized.addToProject, image: UIImage(systemName: "rectangle.3.offgrid"), children: projects.map { project in
+                addToProjectMenu = UIMenu(title: Localized.addToProject, image: UIImage(systemName: "rectangle.3.offgrid"), children: projects.map { project in
                     let inProject = threadProjects.contains(project)
                     return UIAction(title: project.name ?? Localized.unnamedProject,
                              attributes: inProject ? .disabled : [],
@@ -273,7 +242,7 @@ extension MyThreadsViewController {
                 })
             } catch {
                 NSLog("Error fetching projects for context menu: \(error)")
-                addToProject = UIAction(title: Localized.addToProject, image: UIImage(systemName: "rectangle.3.offgrid"), attributes: .disabled) { _ in }
+                addToProjectMenu = UIAction(title: Localized.addToProject, image: UIImage(systemName: "rectangle.3.offgrid"), attributes: .disabled) { _ in }
             }
             
             return UIMenu(title: "", children: [
@@ -283,11 +252,12 @@ extension MyThreadsViewController {
                 { _ in
                     self.addToShoppingList(thread)
                 },
-                addToProject,
-                UIMenu(title: "", options: .displayInline, children: markActions),
-                UIAction(title: Localized.removeFromCollection, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-                    self.removeFromCollection(thread)
-                }
+                addToProjectMenu,
+                markMenu,
+                self.actionRunner.menuAction(RemoveThreadAction(thread: thread),
+                                             title: Localized.removeFromCollection,
+                                             image: UIImage(systemName: "trash"),
+                                             attributes: .destructive)
             ])
         }
     }

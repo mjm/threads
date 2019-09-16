@@ -65,6 +65,10 @@
 		C97FCDF8232EB846000B1590 /* ViewImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDF6232EB846000B1590 /* ViewImageCollectionViewCell.swift */; };
 		C97FCDF9232EB846000B1590 /* ViewImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDF7232EB846000B1590 /* ViewImageCollectionViewCell.xib */; };
 		C97FCDFB232F3BC3000B1590 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDFA232F3BC3000B1590 /* Image.swift */; };
+		C97FCDFE232F495F000B1590 /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDFD232F495F000B1590 /* UserAction.swift */; };
+		C97FCE00232F4C9F000B1590 /* UserActionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDFF232F4C9F000B1590 /* UserActionContext.swift */; };
+		C97FCE02232F4CB3000B1590 /* UserActionRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */; };
+		C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE03232F4E13000B1590 /* ThreadActions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -147,6 +151,10 @@
 		C97FCDF6232EB846000B1590 /* ViewImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		C97FCDF7232EB846000B1590 /* ViewImageCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewImageCollectionViewCell.xib; sourceTree = "<group>"; };
 		C97FCDFA232F3BC3000B1590 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		C97FCDFD232F495F000B1590 /* UserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAction.swift; sourceTree = "<group>"; };
+		C97FCDFF232F4C9F000B1590 /* UserActionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionContext.swift; sourceTree = "<group>"; };
+		C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionRunner.swift; sourceTree = "<group>"; };
+		C97FCE03232F4E13000B1590 /* ThreadActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadActions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,6 +259,7 @@
 				C97FCDC2232DA92E000B1590 /* NSAttributedString.swift */,
 				C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */,
 				C97FCDED232E941D000B1590 /* Cells.swift */,
+				C97FCDFC232F4945000B1590 /* Actions */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -308,6 +317,17 @@
 				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
 			);
 			path = "Add Thread";
+			sourceTree = "<group>";
+		};
+		C97FCDFC232F4945000B1590 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				C97FCDFD232F495F000B1590 /* UserAction.swift */,
+				C97FCDFF232F4C9F000B1590 /* UserActionContext.swift */,
+				C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */,
+				C97FCE03232F4E13000B1590 /* ThreadActions.swift */,
+			);
+			path = Actions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -436,7 +456,9 @@
 				C97FCDBD232D79E7000B1590 /* Localized.swift in Sources */,
 				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
 				C97FCDC3232DA92E000B1590 /* NSAttributedString.swift in Sources */,
+				C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */,
 				C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */,
+				C97FCE02232F4CB3000B1590 /* UserActionRunner.swift in Sources */,
 				C9491E4023246AC80031F463 /* Partition.swift in Sources */,
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,
 				C97FCDFB232F3BC3000B1590 /* Image.swift in Sources */,
@@ -454,6 +476,7 @@
 				C9491E372320C67A0031F463 /* SwatchView.swift in Sources */,
 				C97FCDE3232DD3D2000B1590 /* ThreadPreviewViewController.swift in Sources */,
 				C97FCDEE232E941D000B1590 /* Cells.swift in Sources */,
+				C97FCDFE232F495F000B1590 /* UserAction.swift in Sources */,
 				C97FCDAE232C8796000B1590 /* Project+UIActivityItemSource.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,
 				C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */,
@@ -461,6 +484,7 @@
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
+				C97FCE00232F4C9F000B1590 /* UserActionContext.swift in Sources */,
 				C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */,
 				C9491E44232491D90031F463 /* Project.swift in Sources */,
 				C97FCDBF232D9FD0000B1590 /* TextViewCollectionViewCell.swift in Sources */,
