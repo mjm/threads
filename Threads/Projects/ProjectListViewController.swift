@@ -157,6 +157,9 @@ class ProjectListViewController: UICollectionViewController {
             return section
         }
     }
+
+    @IBAction func unwindDeleteProject(segue: UIStoryboardSegue) {
+    }
     
     @IBSegueAction func makeDetailController(coder: NSCoder, sender: Project) -> ProjectDetailViewController? {
         return ProjectDetailViewController(coder: coder, project: sender)
@@ -172,6 +175,14 @@ extension ProjectListViewController {
     func addToShoppingList(_ project: Project) {
         project.act(Localized.addToShoppingList) {
             project.addToShoppingList()
+        }
+    }
+
+    func delete(_ project: Project) {
+        UserActivity.showProject(project).delete {
+            project.act(Localized.deleteProject) {
+                self.managedObjectContext.delete(project)
+            }
         }
     }
 }
@@ -201,7 +212,7 @@ extension ProjectListViewController {
                     NSLog("share!")
                 },
                 UIAction(title: Localized.delete, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-                    NSLog("delete!")
+                    self.delete(project)
                 }
             ])
         }

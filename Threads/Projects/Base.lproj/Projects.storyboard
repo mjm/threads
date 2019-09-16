@@ -158,9 +158,11 @@
                     <connections>
                         <outlet property="actionsButtonItem" destination="gl7-gz-JYk" id="dGi-XD-YOV"/>
                         <segue destination="hNp-Jv-Lf8" kind="presentation" identifier="AddThread" id="jcn-TS-gdb"/>
+                        <segue destination="VWg-gc-hzL" kind="unwind" identifier="DeleteProject" unwindAction="unwindDeleteProjectWithSegue:" id="Njx-aN-b7p"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UIq-ZU-AyK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="VWg-gc-hzL" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2622" y="1776"/>
         </scene>

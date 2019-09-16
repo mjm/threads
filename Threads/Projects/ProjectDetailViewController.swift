@@ -480,6 +480,9 @@ extension ProjectDetailViewController {
         sheet.addAction(UIAlertAction(title: Localized.addToShoppingList, style: .default) { _ in
             self.addToShoppingList()
         })
+        sheet.addAction(UIAlertAction(title: Localized.delete, style: .destructive) { _ in
+            self.deleteProject()
+        })
 
         sheet.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
 
@@ -490,6 +493,17 @@ extension ProjectDetailViewController {
         let activityController = UIActivityViewController(activityItems: [project],
                                                           applicationActivities: nil)
         present(activityController, animated: true)
+    }
+
+    @IBAction func deleteProject() {
+        userActivity = nil
+
+        UserActivity.showProject(project).delete {
+            self.project.act(Localized.deleteProject) {
+                self.project.managedObjectContext?.delete(self.project)
+            }
+            self.performSegue(withIdentifier: "DeleteProject", sender: nil)
+        }
     }
 
     @IBAction func addToShoppingList() {
