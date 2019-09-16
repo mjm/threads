@@ -119,9 +119,8 @@ class ProjectDetailViewController: UICollectionViewController {
     private var imagesFetchedResultsController: NSFetchedResultsController<ProjectImage>!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
     
-    @IBOutlet var shareButtonItem: UIBarButtonItem!
-    @IBOutlet var addToShoppingListButtonItem: UIBarButtonItem!
-    
+    @IBOutlet var actionsButtonItem: UIBarButtonItem!
+
     private var projectNameObserver: NSKeyValueObservation?
     private var projectNotesObserver: NSKeyValueObservation?
     
@@ -137,10 +136,8 @@ class ProjectDetailViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addToShoppingListButtonItem.width = 30
-        
         navigationItem.title = project.name
-        navigationItem.rightBarButtonItems = [editButtonItem, shareButtonItem, addToShoppingListButtonItem]
+        navigationItem.rightBarButtonItems = [actionsButtonItem]
         
         projectNameObserver = project.observe(\.name) { [weak self] project, change in
             self?.navigationItem.title = project.name
@@ -252,9 +249,7 @@ class ProjectDetailViewController: UICollectionViewController {
 
         navigationItem.largeTitleDisplayMode = editing ? .never : .automatic
         navigationItem.setRightBarButtonItems(
-            editing ? [editButtonItem] : [editButtonItem,
-                                          shareButtonItem,
-                                          addToShoppingListButtonItem],
+            editing ? [editButtonItem] : [actionsButtonItem],
             animated: animated)
 
         if editing {
@@ -473,6 +468,24 @@ class ProjectDetailViewController: UICollectionViewController {
 
 // MARK: - Actions
 extension ProjectDetailViewController {
+    @IBAction func showActions() {
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        sheet.addAction(UIAlertAction(title: Localized.edit, style: .default) { _ in
+            self.setEditing(true, animated: true)
+        })
+        sheet.addAction(UIAlertAction(title: Localized.share, style: .default) { _ in
+            self.shareProject()
+        })
+        sheet.addAction(UIAlertAction(title: Localized.addToShoppingList, style: .default) { _ in
+            self.addToShoppingList()
+        })
+
+        sheet.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
+
+        present(sheet, animated: true)
+    }
+
     @IBAction func shareProject() {
         let activityController = UIActivityViewController(activityItems: [project],
                                                           applicationActivities: nil)

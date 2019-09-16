@@ -149,22 +149,14 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" id="5l3-em-DrN">
-                        <rightBarButtonItems>
-                            <barButtonItem systemItem="action" id="j0h-6P-WWX">
-                                <connections>
-                                    <action selector="shareProject" destination="iqB-oV-bCG" id="3u1-0s-jZ9"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem image="cart.badge.plus" catalog="system" id="F5W-TO-wuA">
-                                <connections>
-                                    <action selector="addToShoppingList" destination="iqB-oV-bCG" id="l9p-Js-ruV"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" image="ellipsis.circle.fill" catalog="system" id="gl7-gz-JYk">
+                            <connections>
+                                <action selector="showActions" destination="iqB-oV-bCG" id="gfL-ey-Wyf"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="addToShoppingListButtonItem" destination="F5W-TO-wuA" id="qcB-va-XkV"/>
-                        <outlet property="shareButtonItem" destination="j0h-6P-WWX" id="urg-bF-6zp"/>
+                        <outlet property="actionsButtonItem" destination="gl7-gz-JYk" id="dGi-XD-YOV"/>
                         <segue destination="hNp-Jv-Lf8" kind="presentation" identifier="AddThread" id="jcn-TS-gdb"/>
                     </connections>
                 </collectionViewController>
@@ -182,7 +174,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="cart.badge.plus" catalog="system" width="64" height="48"/>
+        <image name="ellipsis.circle.fill" catalog="system" width="64" height="62"/>
         <image name="plus" catalog="system" width="64" height="58"/>
         <image name="plus.circle" catalog="system" width="64" height="62"/>
     </resources>
