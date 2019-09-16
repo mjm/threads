@@ -224,6 +224,8 @@ extension MyThreadsViewController {
         guard let thread = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
+
+        let threadProjects = Set((thread.projects as? Set<ProjectThread> ?? []).compactMap { $0.project })
         
         return UIContextMenuConfiguration(identifier: thread.objectID, previewProvider: {
             self.storyboard!.instantiateViewController(identifier: "ThreadPreview") { coder in
@@ -251,6 +253,28 @@ extension MyThreadsViewController {
                     self.markOutOfStock(thread)
                 })
             }
+
+            // Load projects for submenu
+            let addToProject: UIMenuElement
+            do {
+                let request = Project.allProjectsFetchRequest()
+                let projects = try self.managedObjectContext.fetch(request)
+                addToProject = UIMenu(title: Localized.addToProject, image: UIImage(systemName: "rectangle.3.offgrid"), children: projects.map { project in
+                    let inProject = threadProjects.contains(project)
+                    return UIAction(title: project.name ?? Localized.unnamedProject,
+                             attributes: inProject ? .disabled : [],
+                             state: inProject ? .on : .off)
+                    { _ in
+                        let name = String.localizedStringWithFormat(Localized.addThreadUndoAction, 1)
+                        thread.act(name) {
+                            thread.add(to: project)
+                        }
+                    }
+                })
+            } catch {
+                NSLog("Error fetching projects for context menu: \(error)")
+                addToProject = UIAction(title: Localized.addToProject, image: UIImage(systemName: "rectangle.3.offgrid"), attributes: .disabled) { _ in }
+            }
             
             return UIMenu(title: "", children: [
                 UIAction(title: Localized.addToShoppingList,
@@ -259,6 +283,7 @@ extension MyThreadsViewController {
                 { _ in
                     self.addToShoppingList(thread)
                 },
+                addToProject,
                 UIMenu(title: "", options: .displayInline, children: markActions),
                 UIAction(title: Localized.removeFromCollection, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
                     self.removeFromCollection(thread)
