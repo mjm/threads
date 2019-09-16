@@ -28,6 +28,11 @@ protocol UserAction {
     /// to signal when it has finished its work.
     var isAsynchronous: Bool { get }
 
+    /// Whether the action is currently valid to perform.
+    ///
+    /// This will be used to automatically disable contextual menu actions. If not implemented, it defaults to true.
+    var canPerform: Bool { get }
+
     /// Do the action's work.
     ///
     /// This will always be called on the main queue.
@@ -39,6 +44,7 @@ protocol UserAction {
 extension UserAction {
     var saveAfterComplete: Bool { true }
     var isAsynchronous: Bool { false }
+    var canPerform: Bool { true }
 }
 
 protocol DestructiveUserAction: UserAction {

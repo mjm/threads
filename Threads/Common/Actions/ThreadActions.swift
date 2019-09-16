@@ -46,6 +46,63 @@ class MarkOutOfStockAction: ThreadAction, UserAction {
     }
 }
 
+class AddToCollectionAction: UserAction {
+    let threads: [Thread]
+    init(threads: [Thread]) { self.threads = threads }
+
+    let undoActionName: String? = Localized.addToCollection
+
+    func perform(_ context: UserActionContext) throws {
+        for thread in threads {
+            thread.addToCollection()
+        }
+    }
+}
+
+class AddToShoppingListAction: ThreadAction, UserAction {
+    let undoActionName: String? = Localized.addToShoppingList
+
+    var canPerform: Bool {
+        !thread.inShoppingList
+    }
+
+    func perform(_ context: UserActionContext) throws {
+        thread.addToShoppingList()
+    }
+}
+
+class AddToProjectAction: UserAction {
+    let threads: [Thread]
+    let project: Project
+    init(threads: [Thread], project: Project) {
+        assert(threads.count > 0)
+
+        self.threads = threads
+        self.project = project
+    }
+
+    convenience init(thread: Thread, project: Project) {
+        self.init(threads: [thread], project: project)
+    }
+
+    let undoActionName: String? = Localized.addToProject
+
+    lazy var canPerform: Bool = {
+        if threads.count > 1 {
+            return true
+        } else {
+            let projectThreads = threads[0].projects as? Set<ProjectThread> ?? []
+            return projectThreads.allSatisfy { $0.project != project }
+        }
+    }()
+
+    func perform(_ context: UserActionContext) throws {
+        for thread in threads {
+            thread.add(to: project)
+        }
+    }
+}
+
 class RemoveThreadAction: ThreadAction, DestructiveUserAction {
     let undoActionName: String? = Localized.removeThread
 

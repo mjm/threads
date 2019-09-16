@@ -87,15 +87,9 @@ class MyThreadsViewController: UITableViewController {
     
     @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
         let addViewController = segue.source as! AddThreadViewController
-        
-        let threadCount = addViewController.selectedThreads.count
-        let name = String.localizedStringWithFormat(Localized.addThreadUndoAction, threadCount)
-        
-        managedObjectContext.act(name) {
-            for thread in addViewController.selectedThreads {
-                thread.addToCollection()
-            }
-        }
+
+        let action = AddToCollectionAction(threads: addViewController.selectedThreads)
+        actionRunner.perform(action)
     }
     
     @IBAction func unwindDeleteThread(segue: UIStoryboardSegue) {
@@ -125,28 +119,6 @@ class MyThreadsViewController: UITableViewController {
     
     func showDetail(for thread: Thread) {
         performSegue(withIdentifier: "ThreadDetail", sender: thread)
-    }
-}
-
-// MARK: - Actions
-extension MyThreadsViewController {
-    func markInStock(_ thread: Thread) {
-        thread.act(Localized.markInStock) {
-            thread.amountInCollection = 1
-        }
-    }
-    
-    func markOutOfStock(_ thread: Thread) {
-        thread.act(Localized.markOutOfStock) {
-            thread.amountInCollection = 0
-            thread.onBobbin = false
-        }
-    }
-    
-    func addToShoppingList(_ thread: Thread) {
-        thread.act(Localized.addToShoppingList) {
-            thread.addToShoppingList()
-        }
     }
 }
 
@@ -196,8 +168,6 @@ extension MyThreadsViewController {
         guard let thread = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
-
-        let threadProjects = Set((thread.projects as? Set<ProjectThread> ?? []).compactMap { $0.project })
         
         return UIContextMenuConfiguration(identifier: thread.objectID, previewProvider: {
             self.storyboard!.instantiateViewController(identifier: "ThreadPreview") { coder in
@@ -207,19 +177,15 @@ extension MyThreadsViewController {
             var markActions: [UIMenuElement] = []
             
             if thread.amountInCollection == 0 {
-                markActions.append(self.actionRunner.menuAction(MarkInStockAction(thread: thread),
-                                                                title: Localized.markInStock))
+                markActions.append(self.actionRunner.menuAction(MarkInStockAction(thread: thread)))
             } else {
                 if thread.onBobbin {
-                    markActions.append(self.actionRunner.menuAction(MarkOffBobbinAction(thread: thread),
-                                                                    title: Localized.markOffBobbin))
+                    markActions.append(self.actionRunner.menuAction(MarkOffBobbinAction(thread: thread)))
                 } else {
-                    markActions.append(self.actionRunner.menuAction(MarkOnBobbinAction(thread: thread),
-                                                                    title: Localized.markOnBobbin))
+                    markActions.append(self.actionRunner.menuAction(MarkOnBobbinAction(thread: thread)))
                 }
 
-                markActions.append(self.actionRunner.menuAction(MarkOutOfStockAction(thread: thread),
-                                                                title: Localized.markOutOfStock))
+                markActions.append(self.actionRunner.menuAction(MarkOutOfStockAction(thread: thread)))
             }
             let markMenu = UIMenu(title: "", options: .displayInline, children: markActions)
 
@@ -228,30 +194,20 @@ extension MyThreadsViewController {
             do {
                 let request = Project.allProjectsFetchRequest()
                 let projects = try self.managedObjectContext.fetch(request)
-                addToProjectMenu = UIMenu(title: Localized.addToProject, image: UIImage(systemName: "rectangle.3.offgrid"), children: projects.map { project in
-                    let inProject = threadProjects.contains(project)
-                    return UIAction(title: project.name ?? Localized.unnamedProject,
-                             attributes: inProject ? .disabled : [],
-                             state: inProject ? .on : .off)
-                    { _ in
-                        let name = String.localizedStringWithFormat(Localized.addThreadUndoAction, 1)
-                        thread.act(name) {
-                            thread.add(to: project)
-                        }
-                    }
+                addToProjectMenu = UIMenu(title: Localized.addToProjectMenu, image: UIImage(systemName: "rectangle.3.offgrid"), children: projects.map { project in
+                    let action = AddToProjectAction(thread: thread, project: project)
+                    return self.actionRunner.menuAction(action,
+                                                        title: project.name ?? Localized.unnamedProject,
+                                                        state: action.canPerform ? .off : .on)
                 })
             } catch {
                 NSLog("Error fetching projects for context menu: \(error)")
-                addToProjectMenu = UIAction(title: Localized.addToProject, image: UIImage(systemName: "rectangle.3.offgrid"), attributes: .disabled) { _ in }
+                addToProjectMenu = UIAction(title: Localized.addToProjectMenu, image: UIImage(systemName: "rectangle.3.offgrid"), attributes: .disabled) { _ in }
             }
             
             return UIMenu(title: "", children: [
-                UIAction(title: Localized.addToShoppingList,
-                         image: UIImage(systemName: "cart.badge.plus"),
-                         attributes: thread.inShoppingList ? .disabled : [])
-                { _ in
-                    self.addToShoppingList(thread)
-                },
+                self.actionRunner.menuAction(AddToShoppingListAction(thread: thread),
+                                             image: UIImage(systemName: "cart.badge.plus")),
                 addToProjectMenu,
                 markMenu,
                 self.actionRunner.menuAction(RemoveThreadAction(thread: thread),
