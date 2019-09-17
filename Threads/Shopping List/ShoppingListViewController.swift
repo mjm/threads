@@ -21,6 +21,7 @@ class ShoppingListViewController: UITableViewController {
     
     private var fetchedResultsController: NSFetchedResultsController<Thread>!
     private var dataSource: UITableViewDiffableDataSource<Section, Thread>!
+    private var actionRunner: UserActionRunner!
     
     private var purchaseDelayTimer: Timer?
     private var pendingPurchases = Set<Thread>()
@@ -31,6 +32,8 @@ class ShoppingListViewController: UITableViewController {
         super.viewDidLoad()
         
         addCheckedButton.imageView?.tintColor = .white
+
+        actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
         
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: Thread.inShoppingListFetchRequest(),
@@ -44,13 +47,19 @@ class ShoppingListViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ShoppingListThreadTableViewCell
             cell.populate(item)
             cell.onCheckTapped = {
-                self.toggleThreadChecked(item)
+                self.actionRunner.perform(TogglePurchasedAction(thread: item), willPerform: { [weak self] in
+                    self?.delayPurchase(item)
+                })
             }
             cell.onIncreaseQuantity = {
-                self.increaseQuantity(item)
+                self.actionRunner.perform(ChangeShoppingListAmountAction(thread: item, change: .increment), willPerform: { [weak self] in
+                    self?.resetDelayedPurchaseTimer()
+                })
             }
             cell.onDecreaseQuantity = {
-                self.decreaseQuantity(item)
+                self.actionRunner.perform(ChangeShoppingListAmountAction(thread: item, change: .decrement), willPerform: { [weak self] in
+                    self?.resetDelayedPurchaseTimer()
+                })
             }
             return cell
         }
@@ -125,15 +134,9 @@ class ShoppingListViewController: UITableViewController {
     
     @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
         let addViewController = segue.source as! AddThreadViewController
-        
-        let threadCount = addViewController.selectedThreads.count
-        let name = String.localizedStringWithFormat(Localized.addThreadUndoAction, threadCount)
-        
-        managedObjectContext.act(name) {
-            for thread in addViewController.selectedThreads {
-                thread.addToShoppingList()
-            }
-        }
+
+        let action = AddToShoppingListAction(threads: addViewController.selectedThreads)
+        actionRunner.perform(action)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -158,55 +161,15 @@ class ShoppingListViewController: UITableViewController {
 // MARK: - Actions
 extension ShoppingListViewController {
     @IBAction func addCheckedToCollection() {
-        let request = Thread.purchasedFetchRequest()
-        let threads: [Thread]
-        do {
-            threads = try managedObjectContext.fetch(request)
-        } catch {
-            NSLog("Could not load purchased threads: \(error)")
-            return
-        }
-
-        managedObjectContext.act(Localized.addToCollection) {
-            for thread in threads {
-                thread.removeFromShoppingList()
-                thread.addToCollection()
-            }
-        }
-    }
-    
-    func toggleThreadChecked(_ thread: Thread) {
-        thread.act(Localized.changePurchased) {
-            thread.togglePurchased()
-            delayPurchase(thread)
-        }
-    }
-    
-    func increaseQuantity(_ thread: Thread) {
-        thread.act(Localized.changeQuantity) {
-            resetDelayedPurchaseTimer()
-            thread.amountInShoppingList += 1
-        }
-    }
-    
-    func decreaseQuantity(_ thread: Thread) {
-        resetDelayedPurchaseTimer()
-        if thread.amountInShoppingList == 1 {
-            thread.act(Localized.removeFromShoppingList) {
-                thread.removeFromShoppingList()
-            }
-        } else {
-            thread.act(Localized.changeQuantity) {
-                thread.amountInShoppingList -= 1
-            }
-        }
+        actionRunner.perform(AddPurchasedToCollectionAction())
     }
 }
 
 // MARK: - Purchase Delay
 extension ShoppingListViewController {
     private func delayPurchase(_ thread: Thread) {
-        if thread.purchased {
+        // Delaying will happen before `purchased` is toggled, so we're checking the start state, not the end state.
+        if !thread.purchased {
             pendingPurchases.insert(thread)
         }
 

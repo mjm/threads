@@ -12,15 +12,22 @@ import CoreData
 class UserActionContext {
     let runner: UserActionRunner
     let action: UserAction
+    let willPerformHandler: () -> Void
     let completionHandler: () -> Void
 
-    init(runner: UserActionRunner,
-         action: UserAction,
-         completion: @escaping () -> Void) {
+    init(
+        runner: UserActionRunner,
+        action: UserAction,
+        willPerform: @escaping () -> Void,
+        completion: @escaping () -> Void
+    ) {
         self.runner = runner
         self.action = action
+        self.willPerformHandler = willPerform
         self.completionHandler = completion
     }
+
+    var managedObjectContext: NSManagedObjectContext { runner.managedObjectContext }
 
     func complete(_ error: Error? = nil) {
         if action.isAsynchronous {

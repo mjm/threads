@@ -59,18 +59,6 @@ class AddToCollectionAction: UserAction {
     }
 }
 
-class AddToShoppingListAction: ThreadAction, UserAction {
-    let undoActionName: String? = Localized.addToShoppingList
-
-    var canPerform: Bool {
-        !thread.inShoppingList
-    }
-
-    func perform(_ context: UserActionContext) throws {
-        thread.addToShoppingList()
-    }
-}
-
 class AddToProjectAction: UserAction {
     let threads: [Thread]
     let project: Project

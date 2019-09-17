@@ -19,9 +19,10 @@ class UserActionRunner {
         self.managedObjectContext = managedObjectContext
     }
 
-    func perform(_ action: UserAction, completion: @escaping () -> Void = {}) {
+    func perform(_ action: UserAction, willPerform: @escaping () -> Void = {}, completion: @escaping () -> Void = {}) {
         let context = UserActionContext(runner: self,
                                         action: action,
+                                        willPerform: willPerform,
                                         completion: completion)
 
         if let destructiveAction = action as? DestructiveUserAction {
@@ -46,6 +47,8 @@ class UserActionRunner {
     }
 
     private func reallyPerform(_ action: UserAction, context: UserActionContext) {
+        context.willPerformHandler()
+
         if let undoActionName = action.undoActionName {
             managedObjectContext.undoManager?.setActionName(undoActionName)
             NSLog("Performing action \"\(undoActionName)\": \(action)")
