@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct AddToProjectAction: UserAction {
+struct AddToProjectAction: SyncUserAction {
     let threads: [Thread]
     let project: Project
     init(threads: [Thread], project: Project) {
@@ -40,7 +40,7 @@ struct AddToProjectAction: UserAction {
     }
 }
 
-struct AddProjectToShoppingListAction: UserAction {
+struct AddProjectToShoppingListAction: SyncUserAction {
     let project: Project
 
     let undoActionName: String? = Localized.addToShoppingList
@@ -67,7 +67,7 @@ struct DeleteProjectAction: DestructiveUserAction {
     }
 }
 
-struct ShareProjectAction: UserAction {
+struct ShareProjectAction: SyncUserAction {
     let project: Project
 
     // There's not really anything you can do to undo a share, since it leaves the

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct AddToShoppingListAction: UserAction {
+struct AddToShoppingListAction: SyncUserAction {
     let threads: [Thread]
     init(threads: [Thread]) {
         assert(threads.count > 0)
@@ -36,7 +36,7 @@ struct AddToShoppingListAction: UserAction {
     }
 }
 
-struct AddPurchasedToCollectionAction: UserAction {
+struct AddPurchasedToCollectionAction: SyncUserAction {
     let undoActionName: String? = Localized.addToCollection
 
     func perform(_ context: UserActionContext<AddPurchasedToCollectionAction>) throws {
@@ -50,7 +50,7 @@ struct AddPurchasedToCollectionAction: UserAction {
     }
 }
 
-struct TogglePurchasedAction: UserAction {
+struct TogglePurchasedAction: SyncUserAction {
     let thread: Thread
 
     let undoActionName: String? = Localized.changePurchased
@@ -60,7 +60,7 @@ struct TogglePurchasedAction: UserAction {
     }
 }
 
-struct ChangeShoppingListAmountAction: UserAction {
+struct ChangeShoppingListAmountAction: SyncUserAction {
     enum Change {
         case increment
         case decrement

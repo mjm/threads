@@ -29,14 +29,13 @@ protocol UserAction {
     /// This will be used to automatically disable contextual menu actions. If not implemented, it defaults to true.
     var canPerform: Bool { get }
 
-    /// Do the action's work.
+    /// Do the action's work, possibly asynchronously.
+    ///
+    /// The action must at some point let the context know it's finished its work by calling one of its `complete`
+    /// methods. If the work will always be done immediately on the same thread, the action should probably
+    /// conform to `SyncUserAction` instead.
     ///
     /// This will always be called on the main queue.
-    ///
-    /// Any error thrown or reported to the context will be presented in an alert.
-    func perform(_ context: UserActionContext<Self>) throws -> ResultType
-
-    /// Do the action's work, but asynchronously.
     func performAsync(_ context: UserActionContext<Self>)
 
     /// Runs this action through the given runner.
@@ -51,24 +50,28 @@ extension UserAction {
     var saveAfterComplete: Bool { true }
     var canPerform: Bool { true }
 
-    func perform(_ context: UserActionContext<Self>) throws -> ResultType {
-        fatalError("Synchronous actions must implement perform(_:)")
+    func run(on runner: UserActionRunner, context: UserActionContext<Self>) {
+        runner.reallyPerform(self, context: context)
     }
+}
 
+protocol SyncUserAction: UserAction {
+    /// Do the action's work.
+    ///
+    /// This will always be called on the main queue.
+    ///
+    /// Any error thrown or reported to the context will be presented in an alert.
+    func perform(_ context: UserActionContext<Self>) throws -> ResultType
+}
+
+extension SyncUserAction {
     func performAsync(_ context: UserActionContext<Self>) {
-        // Default implementation delegates to `perform(_:)`, so we can use this as the one
-        // entrypoint for both kinds of actions.
-
         do {
             let result = try perform(context)
             context.complete(result)
         } catch {
             context.complete(error: error)
         }
-    }
-
-    func run(on runner: UserActionRunner, context: UserActionContext<Self>) {
-        runner.reallyPerform(self, context: context)
     }
 }
 

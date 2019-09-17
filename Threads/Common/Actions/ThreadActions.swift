@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MarkOffBobbinAction: UserAction {
+struct MarkOffBobbinAction: SyncUserAction {
     let thread: Thread
 
     let undoActionName: String? = Localized.markOffBobbin
@@ -18,7 +18,7 @@ struct MarkOffBobbinAction: UserAction {
     }
 }
 
-struct MarkOnBobbinAction: UserAction {
+struct MarkOnBobbinAction: SyncUserAction {
     let thread: Thread
 
     let undoActionName: String? = Localized.markOnBobbin
@@ -28,7 +28,7 @@ struct MarkOnBobbinAction: UserAction {
     }
 }
 
-struct MarkInStockAction: UserAction {
+struct MarkInStockAction: SyncUserAction {
     let thread: Thread
 
     let undoActionName: String? = Localized.markInStock
@@ -38,7 +38,7 @@ struct MarkInStockAction: UserAction {
     }
 }
 
-struct MarkOutOfStockAction: UserAction {
+struct MarkOutOfStockAction: SyncUserAction {
     let thread: Thread
 
     let undoActionName: String? = Localized.markOutOfStock
@@ -49,7 +49,7 @@ struct MarkOutOfStockAction: UserAction {
     }
 }
 
-struct AddToCollectionAction: UserAction {
+struct AddToCollectionAction: SyncUserAction {
     let threads: [Thread]
 
     let undoActionName: String? = Localized.addToCollection
