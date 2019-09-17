@@ -165,11 +165,24 @@ class ProjectListViewController: UICollectionViewController {
     }
     
     @IBSegueAction func makeDetailController(coder: NSCoder, sender: Project) -> ProjectDetailViewController? {
-        return ProjectDetailViewController(coder: coder, project: sender)
+        ProjectDetailViewController(coder: coder, project: sender)
+    }
+
+    @IBSegueAction func makeNewProjectController(coder: NSCoder, sender: Project) -> ProjectDetailViewController? {
+        ProjectDetailViewController(coder: coder, project: sender, editing: true)
     }
     
     func showDetail(for project: Project) {
         performSegue(withIdentifier: "ProjectDetail", sender: project)
+    }
+}
+
+// MARK: - Actions
+extension ProjectListViewController {
+    @IBAction func createProject() {
+        actionRunner.perform(CreateProjectAction()) { project in
+            self.performSegue(withIdentifier: "NewProject", sender: project)
+        }
     }
 }
 

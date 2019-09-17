@@ -114,6 +114,7 @@ class ProjectDetailViewController: UICollectionViewController {
     }
     
     let project: Project
+    var forceEditMode: Bool
 
     private var threadsFetchedResultsController: NSFetchedResultsController<ProjectThread>!
     private var imagesFetchedResultsController: NSFetchedResultsController<ProjectImage>!
@@ -125,8 +126,9 @@ class ProjectDetailViewController: UICollectionViewController {
     private var projectNameObserver: NSKeyValueObservation?
     private var projectNotesObserver: NSKeyValueObservation?
     
-    init?(coder: NSCoder, project: Project) {
+    init?(coder: NSCoder, project: Project, editing: Bool = false) {
         self.project = project
+        self.forceEditMode = editing
         super.init(coder: coder)
     }
     
@@ -224,6 +226,9 @@ class ProjectDetailViewController: UICollectionViewController {
         }
 
         updateSnapshot(animated: false)
+        if forceEditMode {
+            setEditing(true, animated: false)
+        }
         
         userActivity = UserActivity.showProject(project).userActivity
     }
@@ -231,6 +236,17 @@ class ProjectDetailViewController: UICollectionViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         becomeFirstResponder()
+
+        if forceEditMode {
+            // focus the project name text field
+            if let indexPath = dataSource.indexPath(for: .editName),
+                let cell = collectionView.cellForItem(at: indexPath) as? TextInputCollectionViewCell {
+                cell.textField.becomeFirstResponder()
+            }
+
+            // don't do this again if the view disappears and reappears
+            forceEditMode = false
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

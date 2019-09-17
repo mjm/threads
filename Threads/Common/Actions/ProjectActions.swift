@@ -8,6 +8,16 @@
 
 import UIKit
 
+struct CreateProjectAction: SyncUserAction {
+    typealias ResultType = Project
+
+    let undoActionName: String? = Localized.newProject
+
+    func perform(_ context: UserActionContext<CreateProjectAction>) throws -> Project {
+        return Project(context: context.managedObjectContext)
+    }
+}
+
 struct AddToProjectAction: SyncUserAction {
     let threads: [Thread]
     let project: Project
