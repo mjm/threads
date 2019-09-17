@@ -547,11 +547,10 @@ extension ProjectDetailViewController {
 
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
             UIMenu(title: "", children: [
-                UIAction(title: Localized.delete, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-                    self.project.act(Localized.deleteImage) {
-                        image.delete()
-                    }
-                }
+                self.actionRunner.menuAction(DeleteProjectImageAction(image: image),
+                                             title: Localized.delete,
+                                             image: UIImage(systemName: "trash"),
+                                             attributes: .destructive)
             ])
         }
     }

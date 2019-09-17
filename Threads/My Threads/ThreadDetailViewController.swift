@@ -72,7 +72,8 @@ class ThreadDetailViewController: UITableViewController {
     
     let thread: Thread
     
-    var dataSource: UITableViewDiffableDataSource<Section, Cell>!
+    private var dataSource: UITableViewDiffableDataSource<Section, Cell>!
+    private var actionRunner: UserActionRunner!
     
     init?(coder: NSCoder, thread: Thread) {
         self.thread = thread
@@ -87,6 +88,8 @@ class ThreadDetailViewController: UITableViewController {
         super.viewDidLoad()
         
         navigationItem.title = String(format: Localized.dmcNumber, thread.number!)
+
+        actionRunner = UserActionRunner(viewController: self, managedObjectContext: thread.managedObjectContext!)
         
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: item.cellIdentifier, for: indexPath)
@@ -128,29 +131,12 @@ class ThreadDetailViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let identifier = dataSource.itemIdentifier(for: indexPath)
         if identifier == .delete {
-            deleteThread(indexPath: indexPath)
-        }
-    }
-    
-    func deleteThread(indexPath: IndexPath) {
-        let alert = UIAlertController(title: Localized.removeThread,
-                                      message: Localized.removeThreadPrompt,
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Localized.cancel, style: .cancel) { _ in
-            self.tableView.deselectRow(at: indexPath, animated: true)
-        })
-        alert.addAction(UIAlertAction(title: Localized.remove, style: .destructive) { _ in
-            self.userActivity = nil
-            
-            UserActivity.showThread(self.thread).delete {
-                self.thread.act(Localized.removeThread) {
-                    self.thread.removeFromCollection()
-                }
-                
+            tableView.deselectRow(at: indexPath, animated: true)
+            actionRunner.perform(RemoveThreadAction(thread: thread), willPerform: {
+                self.userActivity = nil
+            }) {
                 self.performSegue(withIdentifier: "DeleteThread", sender: nil)
             }
-        })
-        
-        present(alert, animated: true)
+        }
     }
 }

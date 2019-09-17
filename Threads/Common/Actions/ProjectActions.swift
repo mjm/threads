@@ -90,3 +90,13 @@ struct ShareProjectAction: SyncUserAction {
         context.present(activityController)
     }
 }
+
+struct DeleteProjectImageAction: SyncUserAction {
+    let image: ProjectImage
+
+    let undoActionName: String? = Localized.deleteImage
+
+    func perform(_ context: UserActionContext<DeleteProjectImageAction>) throws {
+        image.delete()
+    }
+}
