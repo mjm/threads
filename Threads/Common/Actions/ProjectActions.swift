@@ -24,14 +24,14 @@ struct AddToProjectAction: SyncUserAction {
 
     let undoActionName: String? = Localized.addToProject
 
-    lazy var canPerform: Bool = {
+    var canPerform: Bool {
         if threads.count > 1 {
             return true
         } else {
             let projectThreads = threads[0].projects as? Set<ProjectThread> ?? []
             return projectThreads.allSatisfy { $0.project != project }
         }
-    }()
+    }
 
     func perform(_ context: UserActionContext<AddToProjectAction>) throws {
         for thread in threads {
