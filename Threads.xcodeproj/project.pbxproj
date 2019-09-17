@@ -70,6 +70,7 @@
 		C97FCE02232F4CB3000B1590 /* UserActionRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */; };
 		C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE03232F4E13000B1590 /* ThreadActions.swift */; };
 		C97FCE06233068C0000B1590 /* ShoppingListActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE05233068C0000B1590 /* ShoppingListActions.swift */; };
+		C97FCE08233073AA000B1590 /* ProjectActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE07233073AA000B1590 /* ProjectActions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -157,6 +158,7 @@
 		C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionRunner.swift; sourceTree = "<group>"; };
 		C97FCE03232F4E13000B1590 /* ThreadActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadActions.swift; sourceTree = "<group>"; };
 		C97FCE05233068C0000B1590 /* ShoppingListActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActions.swift; sourceTree = "<group>"; };
+		C97FCE07233073AA000B1590 /* ProjectActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectActions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -329,6 +331,7 @@
 				C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */,
 				C97FCE03232F4E13000B1590 /* ThreadActions.swift */,
 				C97FCE05233068C0000B1590 /* ShoppingListActions.swift */,
+				C97FCE07233073AA000B1590 /* ProjectActions.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -476,6 +479,7 @@
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
 				C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */,
 				C97FCDB3232CAD4E000B1590 /* TextInputCollectionViewCell.swift in Sources */,
+				C97FCE08233073AA000B1590 /* ProjectActions.swift in Sources */,
 				C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */,
 				C9491E372320C67A0031F463 /* SwatchView.swift in Sources */,
 				C97FCDE3232DD3D2000B1590 /* ThreadPreviewViewController.swift in Sources */,

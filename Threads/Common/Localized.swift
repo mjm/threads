@@ -51,6 +51,8 @@ struct Localized {
     static let projectName = NSLocalizedString("Project Name", comment: "")
     static let changeProject = NSLocalizedString("Change Project", comment: "")
     static let deleteProject = NSLocalizedString("Delete Project", comment: "")
+
+    static let deleteProjectPrompt = NSLocalizedString("Are you sure you want to delete this project?", comment: "")
     
     static let threadsSectionHeader = NSLocalizedString("ThreadsSectionHeader", comment: "THREADS or 1 THREAD or 2 THREADS")
     static let notesSectionHeader = NSLocalizedString("NOTES", comment: "")

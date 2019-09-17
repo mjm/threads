@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class UserActionRunner {
-    let viewController: UIViewController
+    weak var viewController: UIViewController?
     let managedObjectContext: NSManagedObjectContext
 
     init(viewController: UIViewController,
@@ -33,6 +33,8 @@ class UserActionRunner {
     }
 
     private func performDestructiveAction(_ action: DestructiveUserAction, context: UserActionContext) {
+        guard let viewController = viewController else { return }
+
         // TODO this should check a setting for whether confirmation is desired
 
         let alert = UIAlertController(title: action.confirmationTitle,
@@ -67,6 +69,8 @@ class UserActionRunner {
     }
 
     func presentError(_ error: Error) {
+        guard let viewController = viewController else { return }
+
         let alert = UIAlertController(title: Localized.errorOccurred,
                                       message: error.localizedDescription,
                                       preferredStyle: .alert)
@@ -113,6 +117,22 @@ class UserActionRunner {
         let extraAttributes: UIMenuElement.Attributes = action.canPerform ? [] : .disabled
         return UIAction(title: title, image: image, attributes: attributes.union(extraAttributes), state: state) { _ in
             self.perform(action, completion: completion)
+        }
+    }
+
+    func alertAction(
+        _ action: UserAction,
+        title: String? = nil,
+        style: UIAlertAction.Style = .default,
+        willPerform: @escaping () -> Void = {},
+        completion: @escaping () -> Void = {}
+    ) -> UIAlertAction {
+        guard let title = title ?? action.undoActionName else {
+            preconditionFailure("Could not find a title for alert action for \(action). Either pass a title: argument or set the undoActionName on the action.")
+        }
+
+        return UIAlertAction(title: title, style: style) { _ in
+            self.perform(action, willPerform: willPerform, completion: completion)
         }
     }
 }

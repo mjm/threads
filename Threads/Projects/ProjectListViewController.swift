@@ -20,6 +20,7 @@ class ProjectListViewController: UICollectionViewController {
 
     private var fetchedResultsController: NSFetchedResultsController<Project>!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Project>!
+    private var actionRunner: UserActionRunner!
     
     private var flowLayout: UICollectionViewFlowLayout {
         return collectionView.collectionViewLayout as! UICollectionViewFlowLayout
@@ -63,6 +64,8 @@ class ProjectListViewController: UICollectionViewController {
                 }
             }
         }
+
+        actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
 
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: Project.allProjectsFetchRequest(),
@@ -170,23 +173,6 @@ class ProjectListViewController: UICollectionViewController {
     }
 }
 
-// MARK: - Actions
-extension ProjectListViewController {
-    func addToShoppingList(_ project: Project) {
-        project.act(Localized.addToShoppingList) {
-            project.addToShoppingList()
-        }
-    }
-
-    func delete(_ project: Project) {
-        UserActivity.showProject(project).delete {
-            project.act(Localized.deleteProject) {
-                self.managedObjectContext.delete(project)
-            }
-        }
-    }
-}
-
 // MARK: - Collection View Delegate
 extension ProjectListViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -205,15 +191,15 @@ extension ProjectListViewController {
             }
         }) { suggestedActions in
             UIMenu(title: "", children: [
-                UIAction(title: Localized.addToShoppingList, image: UIImage(systemName: "cart.badge.plus")) { _ in
-                    self.addToShoppingList(project)
-                },
-                UIAction(title: Localized.share, image: UIImage(systemName: "square.and.arrow.up")) { _ in
-                    NSLog("share!")
-                },
-                UIAction(title: Localized.delete, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-                    self.delete(project)
-                }
+                self.actionRunner.menuAction(AddProjectToShoppingListAction(project: project),
+                                             image: UIImage(systemName: "cart.badge.plus")),
+                self.actionRunner.menuAction(ShareProjectAction(project: project),
+                                             title: Localized.share,
+                                             image: UIImage(systemName: "square.and.arrow.up")),
+                self.actionRunner.menuAction(DeleteProjectAction(project: project),
+                                             title: Localized.delete,
+                                             image: UIImage(systemName: "trash"),
+                                             attributes: .destructive)
             ])
         }
     }

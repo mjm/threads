@@ -6,7 +6,7 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import CoreData
 
 class UserActionContext {
@@ -47,5 +47,9 @@ class UserActionContext {
         } else {
             runner.complete(action, completion: completionHandler)
         }
+    }
+
+    func present(_ viewController: UIViewController) {
+        runner.viewController?.present(viewController, animated: true)
     }
 }

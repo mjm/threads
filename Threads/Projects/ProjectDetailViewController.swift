@@ -118,6 +118,7 @@ class ProjectDetailViewController: UICollectionViewController {
     private var threadsFetchedResultsController: NSFetchedResultsController<ProjectThread>!
     private var imagesFetchedResultsController: NSFetchedResultsController<ProjectImage>!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
+    private var actionRunner: UserActionRunner!
     
     @IBOutlet var actionsButtonItem: UIBarButtonItem!
 
@@ -148,6 +149,8 @@ class ProjectDetailViewController: UICollectionViewController {
                 cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
             }
         }
+
+        actionRunner = UserActionRunner(viewController: self, managedObjectContext: project.managedObjectContext!)
         
         threadsFetchedResultsController =
             NSFetchedResultsController(fetchRequest: ProjectThread.fetchRequest(for: project),
@@ -420,15 +423,9 @@ class ProjectDetailViewController: UICollectionViewController {
     
     @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
         let addViewController = segue.source as! AddThreadViewController
-        
-        let threadCount = addViewController.selectedThreads.count
-        let name = String.localizedStringWithFormat(Localized.addThreadUndoAction, threadCount)
-        
-        project.act(name) {
-            for thread in addViewController.selectedThreads {
-                thread.add(to: project)
-            }
-        }
+
+        let action = AddToProjectAction(threads: addViewController.selectedThreads, project: project)
+        actionRunner.perform(action)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -474,42 +471,20 @@ extension ProjectDetailViewController {
         sheet.addAction(UIAlertAction(title: Localized.edit, style: .default) { _ in
             self.setEditing(true, animated: true)
         })
-        sheet.addAction(UIAlertAction(title: Localized.share, style: .default) { _ in
-            self.shareProject()
-        })
-        sheet.addAction(UIAlertAction(title: Localized.addToShoppingList, style: .default) { _ in
-            self.addToShoppingList()
-        })
-        sheet.addAction(UIAlertAction(title: Localized.delete, style: .destructive) { _ in
-            self.deleteProject()
-        })
+        sheet.addAction(actionRunner.alertAction(ShareProjectAction(project: project),
+                                                 title: Localized.share))
+        sheet.addAction(actionRunner.alertAction(AddProjectToShoppingListAction(project: project)))
+
+        let deleteAction = actionRunner.alertAction(DeleteProjectAction(project: project), title: Localized.delete, style: .destructive, willPerform: {
+            self.userActivity = nil
+        }) {
+            self.performSegue(withIdentifier: "DeleteProject", sender: nil)
+        }
+        sheet.addAction(deleteAction)
 
         sheet.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
 
         present(sheet, animated: true)
-    }
-
-    @IBAction func shareProject() {
-        let activityController = UIActivityViewController(activityItems: [project],
-                                                          applicationActivities: nil)
-        present(activityController, animated: true)
-    }
-
-    @IBAction func deleteProject() {
-        userActivity = nil
-
-        UserActivity.showProject(project).delete {
-            self.project.act(Localized.deleteProject) {
-                self.project.managedObjectContext?.delete(self.project)
-            }
-            self.performSegue(withIdentifier: "DeleteProject", sender: nil)
-        }
-    }
-
-    @IBAction func addToShoppingList() {
-        project.act(Localized.addToShoppingList) {
-            project.addToShoppingList()
-        }
     }
 
     func selectNewPhoto() {
