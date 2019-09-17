@@ -19,36 +19,24 @@ class UserActionRunner {
         self.managedObjectContext = managedObjectContext
     }
 
-    func perform(_ action: UserAction, willPerform: @escaping () -> Void = {}, completion: @escaping () -> Void = {}) {
+    func perform<Action: UserAction>(_ action: Action,
+                                     willPerform: @escaping () -> Void = {},
+                                     completion: @escaping (Action.ResultType) -> Void = { _ in }) {
         let context = UserActionContext(runner: self,
                                         action: action,
                                         willPerform: willPerform,
                                         completion: completion)
 
-        if let destructiveAction = action as? DestructiveUserAction {
-            performDestructiveAction(destructiveAction, context: context)
-        } else {
-            reallyPerform(action, context: context)
-        }
+        // The goal here is to get dynamic dispatch, so that destructive actions can do their confirmation
+        // behavior. So we ask the action to run itself, though it delegates most of the real work by calling
+        // back to `reallyPerform(_:context:)`.
+        //
+        // Concrete action types shouldn't override `run(on:context:)`, it should only be implemented in a
+        // protocol extension.
+        action.run(on: self, context: context)
     }
 
-    private func performDestructiveAction(_ action: DestructiveUserAction, context: UserActionContext) {
-        guard let viewController = viewController else { return }
-
-        // TODO this should check a setting for whether confirmation is desired
-
-        let alert = UIAlertController(title: action.confirmationTitle,
-                                      message: action.confirmationMessage,
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
-        alert.addAction(UIAlertAction(title: action.confirmationButtonTitle, style: .destructive) { _ in
-            self.reallyPerform(action, context: context)
-        })
-
-        viewController.present(alert, animated: true)
-    }
-
-    private func reallyPerform(_ action: UserAction, context: UserActionContext) {
+    func reallyPerform<Action: UserAction>(_ action: Action, context: UserActionContext<Action>) {
         context.willPerformHandler()
 
         if let undoActionName = action.undoActionName {
@@ -58,14 +46,7 @@ class UserActionRunner {
             NSLog("Performing action: \(action)")
         }
 
-        do {
-            try action.perform(context)
-            if !action.isAsynchronous {
-                context.complete()
-            }
-        } catch {
-            context.complete(error)
-        }
+        action.performAsync(context)
     }
 
     func presentError(_ error: Error) {
@@ -79,36 +60,37 @@ class UserActionRunner {
         viewController.present(alert, animated: true)
     }
 
-    func complete(_ action: UserAction, completion: () -> Void) {
+    func complete<Action: UserAction>(_ action: Action) {
         if action.saveAfterComplete {
             managedObjectContext.commit()
         }
 
         NSLog("Completed action: \(action)")
-        completion()
     }
 
-    func contextualAction(
-        _ action: UserAction,
+    func contextualAction<Action: UserAction>(
+        _ action: Action,
         title: String? = nil,
         style: UIContextualAction.Style = .normal,
-        completion: @escaping () -> Void = {}
+        willPerform: @escaping () -> Void = {},
+        completion: @escaping (Action.ResultType) -> Void = { _ in }
     ) -> UIContextualAction {
         UIContextualAction(style: style, title: title) { _, _, contextualActionCompletion in
-            self.perform(action) {
-                completion()
+            self.perform(action) { result in
+                completion(result)
                 contextualActionCompletion(true)
             }
         }
     }
 
-    func menuAction(
-        _ action: UserAction,
+    func menuAction<Action: UserAction>(
+        _ action: Action,
         title: String? = nil,
         image: UIImage? = nil,
         attributes: UIMenuElement.Attributes = [],
         state: UIMenuElement.State = .off,
-        completion: @escaping () -> Void = {}
+        willPerform: @escaping () -> Void = {},
+        completion: @escaping (Action.ResultType) -> Void = { _ in }
     ) -> UIAction {
         guard let title = title ?? action.undoActionName else {
             preconditionFailure("Could not find a title for menu action for \(action). Either pass a title: argument or set the undoActionName on the action.")
@@ -120,12 +102,12 @@ class UserActionRunner {
         }
     }
 
-    func alertAction(
-        _ action: UserAction,
+    func alertAction<Action: UserAction>(
+        _ action: Action,
         title: String? = nil,
         style: UIAlertAction.Style = .default,
         willPerform: @escaping () -> Void = {},
-        completion: @escaping () -> Void = {}
+        completion: @escaping (Action.ResultType) -> Void = { _ in }
     ) -> UIAlertAction {
         guard let title = title ?? action.undoActionName else {
             preconditionFailure("Could not find a title for alert action for \(action). Either pass a title: argument or set the undoActionName on the action.")

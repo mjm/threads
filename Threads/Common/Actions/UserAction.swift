@@ -6,9 +6,14 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol UserAction {
+    /// The type of value this action returns when it completes successfully.
+    ///
+    /// If an action type doesn't specify this, it defaults to `Void`.
+    associatedtype ResultType = Void
+
     /// The name to describe this action in undo alerts.
     ///
     /// If nil, no action name will be set. This is strongly discouraged.
@@ -18,15 +23,6 @@ protocol UserAction {
     ///
     /// If not implemented, it defaults to true. It's probably to best to leave it that way.
     var saveAfterComplete: Bool { get }
-
-    /// Whether the action has to wait for asynchronous work before it can be considered complete.
-    ///
-    /// If not implemented, it defaults to false, meaning that the action will be considered complete as
-    /// soon as the `perform(_:)` method returns.
-    ///
-    /// If `isAsynchronous` returns true, then the perform method will need to call `context.complete(_:)`
-    /// to signal when it has finished its work.
-    var isAsynchronous: Bool { get }
 
     /// Whether the action is currently valid to perform.
     ///
@@ -38,13 +34,42 @@ protocol UserAction {
     /// This will always be called on the main queue.
     ///
     /// Any error thrown or reported to the context will be presented in an alert.
-    func perform(_ context: UserActionContext) throws
+    func perform(_ context: UserActionContext<Self>) throws -> ResultType
+
+    /// Do the action's work, but asynchronously.
+    func performAsync(_ context: UserActionContext<Self>)
+
+    /// Runs this action through the given runner.
+    ///
+    /// This should not be implemented by concrete action types. It's a hook for subprotocols of `UserAction`
+    /// to be able to add custom behavior to how they are performed. This is used by `DestructiveUserAction`
+    /// to first present an alert confirming that the action should be run.
+    func run(on runner: UserActionRunner, context: UserActionContext<Self>)
 }
 
 extension UserAction {
     var saveAfterComplete: Bool { true }
-    var isAsynchronous: Bool { false }
     var canPerform: Bool { true }
+
+    func perform(_ context: UserActionContext<Self>) throws -> ResultType {
+        fatalError("Synchronous actions must implement perform(_:)")
+    }
+
+    func performAsync(_ context: UserActionContext<Self>) {
+        // Default implementation delegates to `perform(_:)`, so we can use this as the one
+        // entrypoint for both kinds of actions.
+
+        do {
+            let result = try perform(context)
+            context.complete(result)
+        } catch {
+            context.complete(error: error)
+        }
+    }
+
+    func run(on runner: UserActionRunner, context: UserActionContext<Self>) {
+        runner.reallyPerform(self, context: context)
+    }
 }
 
 protocol DestructiveUserAction: UserAction {
@@ -58,4 +83,18 @@ protocol DestructiveUserAction: UserAction {
 
     /// The text of the button in the confirmation alert that the user will hit to perform the action.
     var confirmationButtonTitle: String { get }
+}
+
+extension DestructiveUserAction {
+    func run(on runner: UserActionRunner, context: UserActionContext<Self>) {
+        let alert = UIAlertController(title: confirmationTitle,
+                                      message: confirmationMessage,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
+        alert.addAction(UIAlertAction(title: confirmationButtonTitle, style: .destructive) { _ in
+            runner.reallyPerform(self, context: context)
+        })
+
+        context.present(alert)
+    }
 }

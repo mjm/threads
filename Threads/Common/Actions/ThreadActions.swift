@@ -8,67 +8,69 @@
 
 import Foundation
 
-class ThreadAction {
+struct MarkOffBobbinAction: UserAction {
     let thread: Thread
-    init(thread: Thread) { self.thread = thread }
-}
 
-class MarkOffBobbinAction: ThreadAction, UserAction {
     let undoActionName: String? = Localized.markOffBobbin
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<MarkOffBobbinAction>) throws {
         thread.onBobbin = false
     }
 }
 
-class MarkOnBobbinAction: ThreadAction, UserAction {
+struct MarkOnBobbinAction: UserAction {
+    let thread: Thread
+
     let undoActionName: String? = Localized.markOnBobbin
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<MarkOnBobbinAction>) throws {
         thread.onBobbin = true
     }
 }
 
-class MarkInStockAction: ThreadAction, UserAction {
+struct MarkInStockAction: UserAction {
+    let thread: Thread
+
     let undoActionName: String? = Localized.markInStock
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<MarkInStockAction>) throws {
         thread.amountInCollection = 1
     }
 }
 
-class MarkOutOfStockAction: ThreadAction, UserAction {
+struct MarkOutOfStockAction: UserAction {
+    let thread: Thread
+
     let undoActionName: String? = Localized.markOutOfStock
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<MarkOutOfStockAction>) throws {
         thread.amountInCollection = 0
         thread.onBobbin = false
     }
 }
 
-class AddToCollectionAction: UserAction {
+struct AddToCollectionAction: UserAction {
     let threads: [Thread]
-    init(threads: [Thread]) { self.threads = threads }
 
     let undoActionName: String? = Localized.addToCollection
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<AddToCollectionAction>) throws {
         for thread in threads {
             thread.addToCollection()
         }
     }
 }
 
-class RemoveThreadAction: ThreadAction, DestructiveUserAction {
+struct RemoveThreadAction: DestructiveUserAction {
+    let thread: Thread
+
     let undoActionName: String? = Localized.removeThread
 
     let confirmationTitle = Localized.removeThread
     let confirmationMessage = Localized.removeThreadPrompt
     let confirmationButtonTitle = Localized.remove
 
-    let isAsynchronous = true
-
-    func perform(_ context: UserActionContext) throws {
+    func performAsync(_ context: UserActionContext<RemoveThreadAction>) {
         UserActivity.showThread(thread).delete {
             self.thread.removeFromCollection()
             context.complete()

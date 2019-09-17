@@ -8,12 +8,7 @@
 
 import UIKit
 
-class ProjectAction {
-    let project: Project
-    init(project: Project) { self.project = project }
-}
-
-class AddToProjectAction: UserAction {
+struct AddToProjectAction: UserAction {
     let threads: [Thread]
     let project: Project
     init(threads: [Thread], project: Project) {
@@ -23,7 +18,7 @@ class AddToProjectAction: UserAction {
         self.project = project
     }
 
-    convenience init(thread: Thread, project: Project) {
+    init(thread: Thread, project: Project) {
         self.init(threads: [thread], project: project)
     }
 
@@ -38,31 +33,33 @@ class AddToProjectAction: UserAction {
         }
     }()
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<AddToProjectAction>) throws {
         for thread in threads {
             thread.add(to: project)
         }
     }
 }
 
-class AddProjectToShoppingListAction: ProjectAction, UserAction {
+struct AddProjectToShoppingListAction: UserAction {
+    let project: Project
+
     let undoActionName: String? = Localized.addToShoppingList
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<AddProjectToShoppingListAction>) throws {
         project.addToShoppingList()
     }
 }
 
-class DeleteProjectAction: ProjectAction, DestructiveUserAction {
+struct DeleteProjectAction: DestructiveUserAction {
+    let project: Project
+
     let undoActionName: String? = Localized.deleteProject
 
     let confirmationTitle: String = Localized.deleteProject
     let confirmationMessage: String = Localized.deleteProjectPrompt
     let confirmationButtonTitle: String = Localized.delete
 
-    let isAsynchronous = true
-
-    func perform(_ context: UserActionContext) throws {
+    func performAsync(_ context: UserActionContext<DeleteProjectAction>) {
         UserActivity.showProject(project).delete {
             context.managedObjectContext.delete(self.project)
             context.complete()
@@ -70,12 +67,14 @@ class DeleteProjectAction: ProjectAction, DestructiveUserAction {
     }
 }
 
-class ShareProjectAction: ProjectAction, UserAction {
+struct ShareProjectAction: UserAction {
+    let project: Project
+
     // There's not really anything you can do to undo a share, since it leaves the
     // context of the app.
     let undoActionName: String? = nil
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<ShareProjectAction>) throws {
         let activityController = UIActivityViewController(activityItems: [project],
                                                           applicationActivities: nil)
         context.present(activityController)

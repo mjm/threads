@@ -8,14 +8,14 @@
 
 import Foundation
 
-class AddToShoppingListAction: UserAction {
+struct AddToShoppingListAction: UserAction {
     let threads: [Thread]
     init(threads: [Thread]) {
         assert(threads.count > 0)
         self.threads = threads
     }
 
-    convenience init(thread: Thread) {
+    init(thread: Thread) {
         self.init(threads: [thread])
     }
 
@@ -29,17 +29,17 @@ class AddToShoppingListAction: UserAction {
         }
     }
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<AddToShoppingListAction>) throws {
         for thread in threads {
             thread.addToShoppingList()
         }
     }
 }
 
-class AddPurchasedToCollectionAction: UserAction {
+struct AddPurchasedToCollectionAction: UserAction {
     let undoActionName: String? = Localized.addToCollection
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<AddPurchasedToCollectionAction>) throws {
         let request = Thread.purchasedFetchRequest()
         let threads = try context.managedObjectContext.fetch(request)
 
@@ -50,25 +50,24 @@ class AddPurchasedToCollectionAction: UserAction {
     }
 }
 
-class TogglePurchasedAction: ThreadAction, UserAction {
+struct TogglePurchasedAction: UserAction {
+    let thread: Thread
+
     let undoActionName: String? = Localized.changePurchased
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<TogglePurchasedAction>) throws {
         thread.togglePurchased()
     }
 }
 
-class ChangeShoppingListAmountAction: ThreadAction, UserAction {
+struct ChangeShoppingListAmountAction: UserAction {
     enum Change {
         case increment
         case decrement
     }
 
+    let thread: Thread
     let change: Change
-    init(thread: Thread, change: Change) {
-        self.change = change
-        super.init(thread: thread)
-    }
 
     var isRemoval: Bool {
         change == .decrement && thread.amountInShoppingList == 1
@@ -78,7 +77,7 @@ class ChangeShoppingListAmountAction: ThreadAction, UserAction {
         isRemoval ? Localized.removeFromShoppingList : Localized.changeQuantity
     }
 
-    func perform(_ context: UserActionContext) throws {
+    func perform(_ context: UserActionContext<ChangeShoppingListAmountAction>) throws {
         switch change {
         case .increment:
             thread.amountInShoppingList += 1
