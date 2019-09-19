@@ -30,17 +30,6 @@ class ProjectListViewController: UICollectionViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        var project = Project(context: managedObjectContext)
-//        project.name = "Susie – Undertale"
-//
-//        project = Project(context: managedObjectContext)
-//        project.name = "Good Vibes"
-//
-//        project = Project(context: managedObjectContext)
-//        project.name = "Stardew Chicken"
-//
-//        managedObjectContext.commit()
 
         // Ensure we update the project image correctly.
         //
@@ -198,9 +187,9 @@ extension ProjectListViewController {
             return nil
         }
         
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: { () -> UIViewController? in
-            self.storyboard!.instantiateViewController(identifier: "ProjectDetail") { coder in
-                self.makeDetailController(coder: coder, sender: project)
+        return UIContextMenuConfiguration(identifier: project.objectID, previewProvider: {
+            self.storyboard!.instantiateViewController(identifier: "ProjectPreview") { coder in
+                ProjectPreviewViewController(coder: coder, project: project)
             }
         }) { suggestedActions in
             UIMenu(title: "", children: [
@@ -218,10 +207,11 @@ extension ProjectListViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
-        let vc = animator.previewViewController!
+        let project = managedObjectContext.object(with: configuration.identifier as! NSManagedObjectID) as! Project
         animator.addAnimations {
-            self.navigationController?.pushViewController(vc, animated: true)
+            self.showDetail(for: project)
         }
+
     }
 }
 

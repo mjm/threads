@@ -19,6 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             NSLog("connecting to scene with user activity \(activity.activityType) \(activity)")
             restoreActivity(activity, animated: false)
         }
+
+        window?.tintColor = .systemIndigo
         
         // Force shopping list to load so it can set its badge value
         let shoppingListController = getTab(type: ShoppingListViewController.self)

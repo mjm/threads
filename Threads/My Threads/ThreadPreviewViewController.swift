@@ -33,7 +33,7 @@ class ThreadPreviewViewController: UIViewController {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("ThreadDetailViewController should be created in an IBSegueAction")
+        fatalError("ThreadPreviewViewController should be created in an IBSegueAction")
     }
 
     override func viewDidLoad() {

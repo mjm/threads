@@ -27,6 +27,10 @@ extension ProjectImage {
         }
     }
 
+    var thumbnailImage: UIImage? {
+        image?.croppedToSquare(side: 600)
+    }
+
     func delete() {
         let project = self.project
 

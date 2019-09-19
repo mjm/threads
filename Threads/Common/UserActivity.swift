@@ -106,7 +106,7 @@ enum UserActivity {
             activity.title = project.name ?? Localized.unnamedProject
             let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
             if let image = project.primaryImage?.image,
-                let data = image.resized(to: CGSize(width: 180, height: 270)).jpegData(compressionQuality: 0.7) {
+                let data = image.resized(toFit: CGSize(width: 180, height: 270)).jpegData(compressionQuality: 0.7) {
                 attributes.thumbnailData = data
             }
             activity.contentAttributeSet = attributes
