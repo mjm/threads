@@ -72,6 +72,8 @@
 		C97FCE06233068C0000B1590 /* ShoppingListActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE05233068C0000B1590 /* ShoppingListActions.swift */; };
 		C97FCE08233073AA000B1590 /* ProjectActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE07233073AA000B1590 /* ProjectActions.swift */; };
 		C98F07C82333093800BAB311 /* ProjectPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07C72333093800BAB311 /* ProjectPreviewViewController.swift */; };
+		C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07C92334716F00BAB311 /* RoundedShadowView.swift */; };
+		C98F07CC2334745400BAB311 /* RoundedShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07CB2334745400BAB311 /* RoundedShadowImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -161,6 +163,8 @@
 		C97FCE05233068C0000B1590 /* ShoppingListActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActions.swift; sourceTree = "<group>"; };
 		C97FCE07233073AA000B1590 /* ProjectActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectActions.swift; sourceTree = "<group>"; };
 		C98F07C72333093800BAB311 /* ProjectPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectPreviewViewController.swift; sourceTree = "<group>"; };
+		C98F07C92334716F00BAB311 /* RoundedShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowView.swift; sourceTree = "<group>"; };
+		C98F07CB2334745400BAB311 /* RoundedShadowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,6 +254,8 @@
 				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
 				C9491E362320C67A0031F463 /* SwatchView.swift */,
 				C97FCDA52329A921000B1590 /* SeparatorView.swift */,
+				C98F07C92334716F00BAB311 /* RoundedShadowView.swift */,
+				C98F07CB2334745400BAB311 /* RoundedShadowImageView.swift */,
 				C97FCDB1232CAD4E000B1590 /* TextInputCollectionViewCell.swift */,
 				C97FCDB2232CAD4E000B1590 /* TextInputCollectionViewCell.xib */,
 				C97FCDBE232D9FD0000B1590 /* TextViewCollectionViewCell.swift */,
@@ -457,6 +463,7 @@
 			files = (
 				C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */,
 				C97FCDEC232E014D000B1590 /* NSManagedObjectContext.swift in Sources */,
+				C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */,
 				C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */,
 				C97FCDF1232EA234000B1590 /* ProjectImage.swift in Sources */,
 				C9491E2F231E0BE00031F463 /* Thread.swift in Sources */,
@@ -476,6 +483,7 @@
 				C97FCDF8232EB846000B1590 /* ViewImageCollectionViewCell.swift in Sources */,
 				C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */,
 				C9491E4223248B940031F463 /* ProjectListViewController.swift in Sources */,
+				C98F07CC2334745400BAB311 /* RoundedShadowImageView.swift in Sources */,
 				C97FCDF4232EA845000B1590 /* EditImageCollectionViewCell.swift in Sources */,
 				C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */,
 				C97FCDEA232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */,
