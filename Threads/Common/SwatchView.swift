@@ -9,52 +9,33 @@
 import UIKit
 
 @IBDesignable
-class SwatchView: UIView {
-
+class SwatchView: RoundedShadowView {
     @IBInspectable
     var color: UIColor = .systemBackground {
         didSet {
-            colorView.backgroundColor = color
+            contentView.backgroundColor = color
         }
     }
-    
-    @IBInspectable
-    var cornerRadius: CGFloat = 0 {
-        didSet {
-            colorView.layer.cornerRadius = cornerRadius
-        }
-    }
-    
-    private let colorView = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        createSubviews()
+        configure()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        createSubviews()
+        configure()
     }
     
-    private func createSubviews() {
+    private func configure() {
         // I think it's probably clear why we don't want thread swatches to be inverted
-        colorView.accessibilityIgnoresInvertColors = true
-        
-        colorView.translatesAutoresizingMaskIntoConstraints = false
-        colorView.backgroundColor = color
-        colorView.layer.cornerRadius = 0
-        
-        colorView.layer.shadowColor = UIColor.systemGray.cgColor
-        colorView.layer.shadowOffset = CGSize(width: 0, height: 0)
-        colorView.layer.shadowRadius = 2
-        colorView.layer.shadowOpacity = 0.7
-        
-        addSubview(colorView)
-        
-        topAnchor.constraint(equalTo: colorView.topAnchor).isActive = true
-        bottomAnchor.constraint(equalTo: colorView.bottomAnchor).isActive = true
-        leadingAnchor.constraint(equalTo: colorView.leadingAnchor).isActive = true
-        trailingAnchor.constraint(equalTo: colorView.trailingAnchor).isActive = true
+        accessibilityIgnoresInvertColors = true
+        contentView.accessibilityIgnoresInvertColors = true
+
+        contentView.backgroundColor = color
+
+        shadowOffset = CGSize(width: 0, height: 0)
+        shadowRadius = 3
+        shadowOpacity = 0.8
     }
 }

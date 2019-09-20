@@ -96,7 +96,7 @@ class RoundedShadowView: UIView {
 
     private var shadowColor: CGColor {
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor.systemGray4.cgColor
+            ? UIColor.systemGray3.cgColor
             : UIColor.systemGray.cgColor
     }
 }
