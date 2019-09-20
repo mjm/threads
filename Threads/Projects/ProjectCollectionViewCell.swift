@@ -48,6 +48,9 @@ class ProjectCollectionViewCell: UICollectionViewCell {
             imageView.contentMode = .center
             imageView.image = UIImage(systemName: "photo")
         }
+
+        roundedView.setNeedsLayout()
+        imageView.setNeedsLayout()
     }
 
     override func layoutSublayers(of layer: CALayer) {
