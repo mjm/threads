@@ -10,16 +10,10 @@ import UIKit
 
 @IBDesignable
 class ViewImageCollectionViewCell: UICollectionViewCell {
-    @IBOutlet var imageView: UIImageView!
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-
-        imageView.layer.cornerRadius = 10
-        imageView.layer.cornerCurve = .continuous
-    }
+    @IBOutlet var imageView: RoundedShadowImageView!
 
     func populate(_ image: ProjectImage) {
-        imageView.image = image.image
+        imageView.imageView.contentMode = .scaleAspectFill
+        imageView.imageView.image = image.image
     }
 }
