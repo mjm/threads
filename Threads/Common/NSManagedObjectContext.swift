@@ -23,16 +23,4 @@ extension NSManagedObjectContext {
             }
         }
     }
-    
-    func act(_ name: String, action: () -> Void) {
-        undoManager?.setActionName(name)
-        action()
-        commit()
-    }
-}
-
-extension NSManagedObject {
-    func act(_ name: String, action: () -> Void) {
-        managedObjectContext!.act(name, action: action)
-    }
 }

@@ -30,14 +30,14 @@ class UserActionContext<Action: UserAction> {
     var managedObjectContext: NSManagedObjectContext { runner.managedObjectContext }
 
     func complete(_ result: Action.ResultType) {
-        DispatchQueue.main.async {
+        perform {
             self.runner.complete(self.action)
             self.completionHandler(result)
         }
     }
 
     func complete(error: Error) {
-        DispatchQueue.main.async {
+        perform {
             self.runner.presentError(error)
         }
     }
@@ -58,6 +58,18 @@ class UserActionContext<Action: UserAction> {
 
     func dismiss() {
         runner.viewController?.dismiss(animated: true)
+    }
+
+    private func perform(execute work: @escaping () -> Void) {
+        // It's sometimes important that our completion handlers do not wait for the next tick
+        // of the event loop. So we check if we are already on the main queue and just run the
+        // block immediately if so, otherwise we dispatch it onto the main queue.
+        let isMainQueue = DispatchQueue.getSpecific(key: isMainQueueKey) ?? false
+        if isMainQueue {
+            work()
+        } else {
+            DispatchQueue.main.async(execute: work)
+        }
     }
 }
 

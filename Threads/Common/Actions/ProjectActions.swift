@@ -137,6 +137,23 @@ struct AddImageToProjectAction: UserAction {
     }
 }
 
+struct MoveProjectImageAction: SyncUserAction {
+    let project: Project
+    let sourceIndex: Int
+    let destinationIndex: Int
+
+    let undoActionName: String? = Localized.moveImage
+
+    func perform(_ context: UserActionContext<MoveProjectImageAction>) throws -> () {
+        var images = project.orderedImages
+
+        let image = images.remove(at: sourceIndex)
+        images.insert(image, at: destinationIndex)
+
+        project.orderedImages = images
+    }
+}
+
 struct DeleteProjectImageAction: SyncUserAction {
     let image: ProjectImage
 

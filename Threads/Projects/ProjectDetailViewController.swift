@@ -596,24 +596,18 @@ extension ProjectDetailViewController: UICollectionViewDropDelegate {
             return
         }
 
-        var images = project.orderedImages
         if coordinator.proposal.operation == .move {
-            // remove images from their existing locations
-            for item in coordinator.items {
-                if let sourceIndexPath = item.sourceIndexPath {
-                    images.remove(at: sourceIndexPath.item)
+            // This should only ever be a single item in this case
+            assert(coordinator.items.count == 1)
+
+            let item = coordinator.items[0]
+            if let sourceIndex = item.sourceIndexPath?.item {
+                let action = MoveProjectImageAction(project: project,
+                                                    sourceIndex: sourceIndex,
+                                                    destinationIndex: indexPath.item)
+                actionRunner.perform(action) {
+                    coordinator.drop(item.dragItem, toItemAt: indexPath)
                 }
-            }
-
-            let newImages = coordinator.items.map { $0.dragItem.localObject as! ProjectImage }
-            images.insert(contentsOf: newImages, at: indexPath.item)
-
-            project.act(Localized.moveImage) {
-                project.orderedImages = images
-            }
-
-            for (i, item) in coordinator.items.enumerated() {
-                coordinator.drop(item.dragItem, toItemAt: IndexPath(item: indexPath.item + i, section: indexPath.section))
             }
         } else if coordinator.proposal.operation == .copy {
             assertionFailure("Copying items from another app has not been implemented yet!")

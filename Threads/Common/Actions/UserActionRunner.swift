@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 
+let isMainQueueKey = DispatchSpecificKey<Bool>()
+
 class UserActionRunner {
     weak var viewController: UIViewController?
     let managedObjectContext: NSManagedObjectContext
@@ -17,6 +19,8 @@ class UserActionRunner {
          managedObjectContext: NSManagedObjectContext) {
         self.viewController = viewController
         self.managedObjectContext = managedObjectContext
+
+        DispatchQueue.main.setSpecific(key: isMainQueueKey, value: true)
     }
 
     func perform<Action: UserAction>(_ action: Action,
