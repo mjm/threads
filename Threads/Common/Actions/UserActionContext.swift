@@ -42,13 +42,32 @@ class UserActionContext<Action: UserAction> {
         }
     }
 
+    func completeAndDismiss(_ result: Action.ResultType) {
+        dismiss()
+        complete(result)
+    }
+
+    func completeAndDismiss(error: Error) {
+        dismiss()
+        complete(error: error)
+    }
+
     func present(_ viewController: UIViewController) {
         runner.viewController?.present(viewController, animated: true)
     }
+
+    func dismiss() {
+        runner.viewController?.dismiss(animated: true)
+    }
 }
 
+// Cleaner API to not pass a result when the result type is void
 extension UserActionContext where Action.ResultType == Void {
     func complete() {
         complete(())
+    }
+
+    func completeAndDismiss() {
+        completeAndDismiss(())
     }
 }

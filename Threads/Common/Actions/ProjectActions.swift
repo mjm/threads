@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreServices
 
 struct CreateProjectAction: SyncUserAction {
     typealias ResultType = Project
@@ -88,6 +89,51 @@ struct ShareProjectAction: SyncUserAction {
         let activityController = UIActivityViewController(activityItems: [project],
                                                           applicationActivities: nil)
         context.present(activityController)
+    }
+}
+
+struct AddImageToProjectAction: UserAction {
+    let project: Project
+
+    let coordinator = Coordinator()
+
+    let undoActionName: String? = Localized.addImage
+
+    func performAsync(_ context: UserActionContext<AddImageToProjectAction>) {
+        coordinator.project = project
+        coordinator.context = context
+
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = coordinator
+        imagePickerController.sourceType = .photoLibrary
+        imagePickerController.mediaTypes = [kUTTypeImage as String]
+
+        context.present(imagePickerController)
+    }
+
+    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        var project: Project!
+        var context: UserActionContext<AddImageToProjectAction>!
+
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let url = info[.imageURL] as? URL {
+                do {
+                    let data = try Data(contentsOf: url)
+                    project.addImage(data)
+                } catch {
+                    context.completeAndDismiss(error: error)
+                    return
+                }
+            } else {
+                NSLog("Did not get an original image URL for the chosen media")
+            }
+
+            context.completeAndDismiss()
+        }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            context.completeAndDismiss()
+        }
     }
 }
 

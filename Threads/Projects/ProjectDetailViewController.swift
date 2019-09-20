@@ -502,15 +502,6 @@ extension ProjectDetailViewController {
 
         present(sheet, animated: true)
     }
-
-    func selectNewPhoto() {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .photoLibrary
-        imagePickerController.mediaTypes = [kUTTypeImage as String]
-
-        present(imagePickerController, animated: true)
-    }
 }
 
 // MARK: - Collection View Delegate
@@ -532,7 +523,7 @@ extension ProjectDetailViewController {
             collectionView.deselectItem(at: indexPath, animated: true)
 
         case .imagePlaceholder:
-            selectNewPhoto()
+            actionRunner.perform(AddImageToProjectAction(project: project))
             collectionView.deselectItem(at: indexPath, animated: true)
 
         default:
@@ -655,30 +646,6 @@ extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
         default:
             break
         }
-    }
-}
-
-// MARK: - Image Picker Controller Delegate
-extension ProjectDetailViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        NSLog("media info = \(info)")
-        if let url = info[.imageURL] as? URL {
-            do {
-                let data = try Data(contentsOf: url)
-                project.act(Localized.addImage) {
-                    project.addImage(data)
-                }
-            } catch {
-                NSLog("Error saving image data: \(error)")
-            }
-        } else {
-            NSLog("Did not get an original image URL for the chosen media")
-        }
-        dismiss(animated: true, completion: nil)
-    }
-
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
     }
 }
 
