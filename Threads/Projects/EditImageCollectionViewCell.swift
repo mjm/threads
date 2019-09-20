@@ -20,7 +20,7 @@ class EditImageCollectionViewCell: UICollectionViewCell {
     }
 
     func populate(_ image: ProjectImage) {
-        imageView.image = image.image
+        imageView.image = image.thumbnailImage
         imageView.contentMode = .scaleAspectFill
     }
 

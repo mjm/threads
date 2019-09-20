@@ -14,6 +14,6 @@ class ViewImageCollectionViewCell: UICollectionViewCell {
 
     func populate(_ image: ProjectImage) {
         imageView.imageView.contentMode = .scaleAspectFill
-        imageView.imageView.image = image.image
+        imageView.imageView.image = image.thumbnailImage
     }
 }

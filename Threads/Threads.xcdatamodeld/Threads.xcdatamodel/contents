@@ -6,7 +6,7 @@
         <relationship name="images" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectImage" inverseName="project" inverseEntity="ProjectImage"/>
         <relationship name="threads" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectThread" inverseName="project" inverseEntity="ProjectThread"/>
     </entity>
-    <entity name="ProjectImage" representedClassName="ProjectImage" syncable="YES" codeGenerationType="class">
+    <entity name="ProjectImage" representedClassName="ProjectImage" syncable="YES" codeGenerationType="category">
         <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="order" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="images" inverseEntity="Project"/>

@@ -28,7 +28,7 @@ class ProjectCollectionViewCell: UICollectionViewCell {
     func populate(_ project: Project) {
         nameLabel.text = project.name
 
-        if let image = project.primaryImage?.image {
+        if let image = project.primaryImage?.thumbnailImage {
             imageView.imageView.contentMode = .scaleAspectFill
             imageView.imageView.image = image
         } else {

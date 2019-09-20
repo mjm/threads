@@ -10,7 +10,8 @@ import Foundation
 import UIKit
 import CoreData
 
-extension ProjectImage {
+@objc(ProjectImage)
+public class ProjectImage: NSManagedObject {
     class func fetchRequest(for project: Project) -> NSFetchRequest<ProjectImage> {
         let request: NSFetchRequest<ProjectImage> = fetchRequest()
         request.predicate = NSPredicate(format: "project = %@", project)
@@ -27,9 +28,9 @@ extension ProjectImage {
         }
     }
 
-    var thumbnailImage: UIImage? {
+    lazy var thumbnailImage: UIImage? = {
         image?.croppedToSquare(side: 600)
-    }
+    }()
 
     func delete() {
         let project = self.project
