@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -90,7 +91,7 @@
                                                 <constraint firstAttribute="bottom" secondItem="Euc-YR-JYY" secondAttribute="bottom" id="qoH-Qz-Y6V"/>
                                             </constraints>
                                         </view>
-                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UAf-QU-WBH" customClass="SeparatorView" customModule="Threads" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UAf-QU-WBH" customClass="SeparatorView" customModule="Threads" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="49.5" width="50" height="0.5"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         </view>
@@ -130,7 +131,7 @@
                                         <constraint firstItem="o2v-m7-ZyR" firstAttribute="leading" secondItem="6yP-Pt-AS8" secondAttribute="leading" constant="15" id="vEN-IM-ZdS"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eep-Ze-Tj3" customClass="SeparatorView" customModule="Threads" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eep-Ze-Tj3" customClass="SeparatorView" customModule="Threads" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="42.5" width="414" height="0.5"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 </view>
@@ -191,30 +192,44 @@
                                 <rect key="frame" x="-5" y="0.0" width="385" height="500"/>
                             </imageView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yrj-cS-Kg8">
-                                <rect key="frame" x="0.0" y="405.5" width="375" height="94.5"/>
+                                <rect key="frame" x="0.0" y="369.5" width="375" height="130.5"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgo-yn-2aE">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="94.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>
                                     <subviews>
                                         <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ccs-s0-isp">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="94.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>
                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bas-27-lOd">
-                                                <rect key="frame" x="0.0" y="0.0" width="375" height="94.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="0M4-EG-4Ed">
-                                                        <rect key="frame" x="15" y="15" width="345" height="64.5"/>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" alignment="top" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="0M4-EG-4Ed">
+                                                        <rect key="frame" x="15" y="15" width="345" height="100.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5dc-pI-1c4">
-                                                                <rect key="frame" x="0.0" y="0.0" width="345" height="36"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="71" height="36"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ph-0j-Otv">
-                                                                <rect key="frame" x="0.0" y="44" width="345" height="20.5"/>
+                                                                <rect key="frame" x="0.0" y="44" width="42" height="20.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="JJU-XV-6C9">
+                                                                <rect key="frame" x="0.0" y="72.5" width="20" height="28"/>
+                                                                <subviews>
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lLe-ko-zad" customClass="SwatchView" customModule="Threads" customModuleProvider="target">
+                                                                        <rect key="frame" x="0.0" y="8" width="20" height="20"/>
+                                                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="20" id="JtU-Qh-Wlw"/>
+                                                                            <constraint firstAttribute="width" constant="20" id="gwz-GB-Vkp"/>
+                                                                        </constraints>
+                                                                    </view>
+                                                                </subviews>
+                                                                <directionalEdgeInsets key="directionalLayoutMargins" top="8" leading="0.0" bottom="0.0" trailing="0.0"/>
+                                                            </stackView>
                                                         </subviews>
                                                     </stackView>
                                                 </subviews>
@@ -262,12 +277,14 @@
                             <constraint firstAttribute="trailing" secondItem="YPt-wY-E9A" secondAttribute="trailing" constant="-5" id="rsG-8G-DQM"/>
                             <constraint firstAttribute="bottom" secondItem="YPt-wY-E9A" secondAttribute="bottom" id="swp-jo-z8x"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="z20-7K-4mr"/>
                     </view>
                     <size key="freeformSize" width="375" height="500"/>
                     <connections>
                         <outlet property="backgroundImageView" destination="YPt-wY-E9A" id="5Yj-7j-C93"/>
                         <outlet property="nameLabel" destination="5dc-pI-1c4" id="1sy-pz-OlL"/>
                         <outlet property="notesLabel" destination="3Ph-0j-Otv" id="00U-qA-bfa"/>
+                        <outlet property="swatchesStackView" destination="JJU-XV-6C9" id="Sj3-D9-MZg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yUr-ka-geo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
