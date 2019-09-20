@@ -6,7 +6,7 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct MarkOffBobbinAction: SyncUserAction {
     let thread: Thread
@@ -75,5 +75,34 @@ struct RemoveThreadAction: DestructiveUserAction {
             self.thread.removeFromCollection()
             context.complete()
         }
+    }
+}
+
+struct AddThreadAction<AddAction: UserAction>: UserAction {
+    let choices: [Thread]
+    let actionCreator: ([Thread]) -> AddAction
+
+    // This action won't do the actual undoable work, instead the AddAction will do that.
+    let undoActionName: String? = nil
+
+    func performAsync(_ context: UserActionContext<AddThreadAction<AddAction>>) {
+        let storyboard = UIStoryboard(name: "AddThread", bundle: nil)
+        let navController = storyboard.instantiateInitialViewController() as! UINavigationController
+        let addThreadController = navController.viewControllers[0] as! AddThreadViewController
+
+        let actionCreator = self.actionCreator
+
+        addThreadController.choices = choices
+        addThreadController.onCancel = {
+            context.completeAndDismiss()
+        }
+        addThreadController.onAdd = { threads in
+            let addAction = actionCreator(threads)
+
+            context.completeAndDismiss()
+            context.perform(addAction)
+        }
+
+        context.present(navController)
     }
 }

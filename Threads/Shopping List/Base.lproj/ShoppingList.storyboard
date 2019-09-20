@@ -44,7 +44,7 @@
                     <navigationItem key="navigationItem" title="Shopping List" id="cYa-8m-UDw">
                         <barButtonItem key="rightBarButtonItem" title="Item" image="plus" catalog="system" id="un2-9w-Eav">
                             <connections>
-                                <segue destination="fcY-6h-4bQ" kind="presentation" id="UFM-Jr-7jL"/>
+                                <action selector="addThread" destination="eZf-QS-yfS" id="e7h-cw-Ssg"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -57,14 +57,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7xn-0v-ft9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1796" y="1092"/>
-        </scene>
-        <!--AddThread-->
-        <scene sceneID="vPb-pe-bp4">
-            <objects>
-                <viewControllerPlaceholder storyboardName="AddThread" id="fcY-6h-4bQ" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="EN8-h9-7r7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2389" y="1092"/>
         </scene>
     </scenes>
     <resources>

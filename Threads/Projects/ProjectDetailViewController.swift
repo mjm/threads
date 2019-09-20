@@ -434,38 +434,6 @@ class ProjectDetailViewController: UICollectionViewController {
         return String.localizedStringWithFormat(Localized.threadsSectionHeader, items)
     }
 
-    @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
-    }
-    
-    @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
-        let addViewController = segue.source as! AddThreadViewController
-
-        let action = AddToProjectAction(threads: addViewController.selectedThreads, project: project)
-        actionRunner.perform(action)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let navController = segue.destination as? UINavigationController {
-            if let addController = navController.viewControllers.first as? AddThreadViewController {
-                // only choose from threads that aren't already in the shopping list
-                let threads: [Thread]
-                do {
-                    let existingThreads = (threadsFetchedResultsController.fetchedObjects ?? []).compactMap { $0.thread }
-                    let request = Thread.sortedByNumberFetchRequest()
-                    
-                    // Not ideal, but I haven't figured out a way in Core Data to get all the threads that
-                    // aren't in a particular project. Many-to-many relationships are hard.
-                    threads = try project.managedObjectContext!.fetch(request).filter { !existingThreads.contains($0) }
-                } catch {
-                    NSLog("Could not fetch threads to search from")
-                    threads = []
-                }
-                
-                addController.choices = threads
-            }
-        }
-    }
-
     override func updateUserActivityState(_ activity: NSUserActivity) {
         UserActivity.showProject(project).update(activity)
     }
@@ -502,6 +470,23 @@ extension ProjectDetailViewController {
 
         present(sheet, animated: true)
     }
+
+    func addThread() {
+        let existingThreads = threadsFetchedResultsController.fetchedObjects?.compactMap { $0.thread } ?? []
+        let request = Thread.sortedByNumberFetchRequest()
+
+        // Not ideal, but I haven't figured out a way in Core Data to get all the threads that
+        // aren't in a particular project. Many-to-many relationships are hard.
+        guard let allThreads = try? project.managedObjectContext!.fetch(request) else {
+            NSLog("Could not fetch threads to search from")
+            return
+        }
+
+        let threads = allThreads.filter { !existingThreads.contains($0) }
+
+        let action = AddThreadAction(choices: threads) { AddToProjectAction(threads: $0, project: self.project) }
+        actionRunner.perform(action)
+    }
 }
 
 // MARK: - Collection View Delegate
@@ -519,7 +504,7 @@ extension ProjectDetailViewController {
         switch item {
 
         case .add:
-            performSegue(withIdentifier: "AddThread", sender: nil)
+            addThread()
             collectionView.deselectItem(at: indexPath, animated: true)
 
         case .imagePlaceholder:

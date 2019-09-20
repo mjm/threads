@@ -58,12 +58,12 @@
                     <navigationItem key="navigationItem" title="Add Threads" id="0lo-Kj-ydB">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="XFb-gS-Duh">
                             <connections>
-                                <segue destination="W4o-mi-Dxd" kind="unwind" unwindAction="unwindCancelAddWithSegue:" id="Q5T-Pz-pcb"/>
+                                <action selector="cancel" destination="UPr-OV-mSa" id="UpR-XQ-viG"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Add" id="LF8-Ec-mZg">
                             <connections>
-                                <segue destination="W4o-mi-Dxd" kind="unwind" unwindAction="unwindAddThreadWithSegue:" id="qan-r1-dcS"/>
+                                <action selector="add" destination="UPr-OV-mSa" id="qMb-2d-DFS"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -100,7 +100,6 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="uki-FH-zUn"/>
                     </items>
                 </toolbar>
-                <exit id="W4o-mi-Dxd" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3451" y="-227"/>
         </scene>

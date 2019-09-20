@@ -81,36 +81,19 @@ class MyThreadsViewController: UITableViewController {
         snapshot.appendItems(objects, toSection: .threads)
         dataSource.apply(snapshot, animatingDifferences: animated)
     }
-    
-    @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
-    }
-    
-    @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
-        let addViewController = segue.source as! AddThreadViewController
 
-        let action = AddToCollectionAction(threads: addViewController.selectedThreads)
+    @IBAction func addThread() {
+        let request = Thread.notInCollectionFetchRequest()
+        guard let threads = try? managedObjectContext.fetch(request) else {
+            NSLog("Could not fetch threads to search from")
+            return
+        }
+
+        let action = AddThreadAction(choices: threads) { AddToCollectionAction(threads: $0) }
         actionRunner.perform(action)
     }
     
     @IBAction func unwindDeleteThread(segue: UIStoryboardSegue) {
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let navController = segue.destination as? UINavigationController {
-            if let addController = navController.viewControllers.first as? AddThreadViewController {
-                // only choose from threads that aren't already in the collection
-                let threads: [Thread]
-                do {
-                    let request = Thread.notInCollectionFetchRequest()
-                    threads = try managedObjectContext.fetch(request)
-                } catch {
-                    NSLog("Could not fetch threads to search from")
-                    threads = []
-                }
-                
-                addController.choices = threads
-            }
-        }
     }
     
     @IBSegueAction func makeDetailController(coder: NSCoder, sender: Thread) -> ThreadDetailViewController? {

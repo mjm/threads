@@ -15,11 +15,13 @@ class AddThreadViewController: UITableViewController {
     }
     
     var choices: [Thread] = []
+    var onCancel: (() -> Void)!
+    var onAdd: (([Thread]) -> Void)!
     
     private var searchController: UISearchController!
     private var resultsViewController: ThreadResultsViewController!
     
-    private(set) var selectedThreads: [Thread] = []
+    private var selectedThreads: [Thread] = []
     private var dataSource: TableViewDiffableDataSource<Section, Thread>!
     
     @IBOutlet var keyboardAccessoryView: UIToolbar!
@@ -75,6 +77,14 @@ class AddThreadViewController: UITableViewController {
     
     @IBAction func tapKeyboardShortcut(sender: UIBarButtonItem) {
         searchController.searchBar.text = sender.title!
+    }
+
+    @IBAction func cancel() {
+        onCancel()
+    }
+
+    @IBAction func add() {
+        onAdd(selectedThreads)
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {

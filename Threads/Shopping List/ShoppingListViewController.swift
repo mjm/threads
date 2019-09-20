@@ -128,38 +128,21 @@ class ShoppingListViewController: UITableViewController {
         let unpurchasedItems = objects.filter { !$0.purchased }.count
         navigationController!.tabBarItem.badgeValue = unpurchasedItems > 0 ? "\(unpurchasedItems)" : nil
     }
-
-    @IBAction func unwindCancelAdd(segue: UIStoryboardSegue) {
-    }
-    
-    @IBAction func unwindAddThread(segue: UIStoryboardSegue) {
-        let addViewController = segue.source as! AddThreadViewController
-
-        let action = AddToShoppingListAction(threads: addViewController.selectedThreads)
-        actionRunner.perform(action)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let navController = segue.destination as? UINavigationController {
-            if let addController = navController.viewControllers.first as? AddThreadViewController {
-                // only choose from threads that aren't already in the shopping list
-                let threads: [Thread]
-                do {
-                    let request = Thread.notInShoppingListFetchRequest()
-                    threads = try managedObjectContext.fetch(request)
-                } catch {
-                    NSLog("Could not fetch threads to search from")
-                    threads = []
-                }
-                
-                addController.choices = threads
-            }
-        }
-    }
 }
 
 // MARK: - Actions
 extension ShoppingListViewController {
+    @IBAction func addThread() {
+        let request = Thread.notInShoppingListFetchRequest()
+        guard let threads = try? managedObjectContext.fetch(request) else {
+            NSLog("Could not fetch threads to search from")
+            return
+        }
+
+        let action = AddThreadAction(choices: threads) { AddToShoppingListAction(threads: $0) }
+        actionRunner.perform(action)
+    }
+    
     @IBAction func addCheckedToCollection() {
         actionRunner.perform(AddPurchasedToCollectionAction())
     }
