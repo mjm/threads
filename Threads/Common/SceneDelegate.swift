@@ -109,7 +109,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             } else {
                 navigationController.popToRootViewController(animated: animated)
                 let detailViewController = projectListController.storyboard!.instantiateViewController(identifier: "ProjectDetail") { coder in
-                    projectListController.makeDetailController(coder: coder, sender: project)
+                    projectListController.makeDetailController(coder: coder, sender: ProjectDetail(project: project))
                 }
                 navigationController.pushViewController(detailViewController, animated: animated)
             }

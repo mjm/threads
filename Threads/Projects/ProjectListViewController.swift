@@ -153,16 +153,23 @@ class ProjectListViewController: UICollectionViewController {
     @IBAction func unwindDeleteProject(segue: UIStoryboardSegue) {
     }
     
-    @IBSegueAction func makeDetailController(coder: NSCoder, sender: Project) -> ProjectDetailViewController? {
-        ProjectDetailViewController(coder: coder, project: sender)
-    }
-
-    @IBSegueAction func makeNewProjectController(coder: NSCoder, sender: Project) -> ProjectDetailViewController? {
-        ProjectDetailViewController(coder: coder, project: sender, editing: true)
+    @IBSegueAction func makeDetailController(coder: NSCoder, sender: ProjectDetail) -> ProjectDetailViewController? {
+        ProjectDetailViewController(coder: coder, project: sender.project, editing: sender.isEditing)
     }
     
-    func showDetail(for project: Project) {
-        performSegue(withIdentifier: "ProjectDetail", sender: project)
+    func showDetail(for project: Project, editing: Bool = false) {
+        performSegue(withIdentifier: "ProjectDetail",
+                     sender: ProjectDetail(project: project, isEditing: editing))
+    }
+}
+
+@objc class ProjectDetail: NSObject {
+    let project: Project
+    let isEditing: Bool
+
+    init(project: Project, isEditing: Bool = false) {
+        self.project = project
+        self.isEditing = isEditing
     }
 }
 
@@ -170,7 +177,7 @@ class ProjectListViewController: UICollectionViewController {
 extension ProjectListViewController {
     @IBAction func createProject() {
         actionRunner.perform(CreateProjectAction()) { project in
-            self.performSegue(withIdentifier: "NewProject", sender: project)
+            self.showDetail(for: project, editing: true)
         }
     }
 }
@@ -193,6 +200,9 @@ extension ProjectListViewController {
             }
         }) { suggestedActions in
             UIMenu(title: "", children: [
+                UIAction(title: Localized.edit, image: UIImage(systemName: "pencil")) { _ in
+                    self.showDetail(for: project, editing: true)
+                },
                 self.actionRunner.menuAction(AddProjectToShoppingListAction(project: project),
                                              image: UIImage(systemName: "cart.badge.plus")),
                 self.actionRunner.menuAction(ShareProjectAction(project: project),
