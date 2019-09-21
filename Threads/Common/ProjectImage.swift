@@ -28,9 +28,17 @@ public class ProjectImage: NSManagedObject {
         }
     }
 
-    lazy var thumbnailImage: UIImage? = {
-        image?.croppedToSquare(side: 600)
-    }()
+    var thumbnailImage: UIImage? {
+        if let thumbnailData = thumbnailData {
+            return UIImage(data: thumbnailData)
+        } else if let image = image {
+            let thumbnail = image.croppedToSquare(side: 600)
+            thumbnailData = thumbnail.jpegData(compressionQuality: 1.0)
+            return thumbnail
+        } else {
+            return nil
+        }
+    }
 
     func delete() {
         let project = self.project
