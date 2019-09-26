@@ -22,15 +22,18 @@ struct CreateProjectAction: SyncUserAction {
 struct AddToProjectAction: SyncUserAction {
     let threads: [Thread]
     let project: Project
-    init(threads: [Thread], project: Project) {
+    let showBanner: Bool
+
+    init(threads: [Thread], project: Project, showBanner: Bool = false) {
         assert(threads.count > 0)
 
         self.threads = threads
         self.project = project
+        self.showBanner = showBanner
     }
 
-    init(thread: Thread, project: Project) {
-        self.init(threads: [thread], project: project)
+    init(thread: Thread, project: Project, showBanner: Bool = false) {
+        self.init(threads: [thread], project: project, showBanner: showBanner)
     }
 
     let undoActionName: String? = Localized.addToProject
@@ -48,6 +51,14 @@ struct AddToProjectAction: SyncUserAction {
         for thread in threads {
             thread.add(to: project)
         }
+
+        if showBanner {
+            let projectName = project.name ?? Localized.unnamedProject
+            let message = threads.count == 1
+                ? String(format: Localized.addToProjectBannerNumber, threads[0].number!, projectName)
+                : String(format: Localized.addToProjectBannerCount, threads.count, projectName)
+            context.present(BannerController(message: message))
+        }
     }
 }
 
@@ -58,6 +69,12 @@ struct AddProjectToShoppingListAction: SyncUserAction {
 
     func perform(_ context: UserActionContext<AddProjectToShoppingListAction>) throws {
         project.addToShoppingList()
+
+        let threads = (project.threads as! Set<ProjectThread>).compactMap { $0.thread }
+        let message = threads.count == 1
+            ? String(format: Localized.addToShoppingListBannerNumber, threads[0].number!)
+            : String(format: Localized.addToShoppingListBannerCount, threads.count)
+        context.present(BannerController(message: message))
     }
 }
 

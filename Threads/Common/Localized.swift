@@ -18,8 +18,11 @@ struct Localized {
     static let markOffBobbin = NSLocalizedString("Mark Off Bobbin", comment: "")
     static let markInStock = NSLocalizedString("Mark In Stock", comment: "")
     static let markOutOfStock = NSLocalizedString("Mark Out of Stock", comment: "")
+
     static let addToProject = NSLocalizedString("Add to Project", comment: "")
     static let addToProjectMenu = NSLocalizedString("Add to Project…", comment: "")
+    static let addToProjectBannerNumber = NSLocalizedString("Added DMC %@ to %@.", comment: "Added {thread number} to {project name}.")
+    static let addToProjectBannerCount = NSLocalizedString("Added %lu threads to %@.", comment: "Added {count} threads to {project name}.")
 
     static let addToShoppingList = NSLocalizedString("Add to Shopping List", comment: "")
     static let addToShoppingListBannerNumber = NSLocalizedString("Added DMC %@ to your shopping list.", comment: "Added {thread number} to your shopping list.")

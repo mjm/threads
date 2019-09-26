@@ -178,7 +178,7 @@ extension MyThreadsViewController {
                 let request = Project.allProjectsFetchRequest()
                 let projects = try self.managedObjectContext.fetch(request)
                 addToProjectMenu = UIMenu(title: Localized.addToProjectMenu, image: UIImage(systemName: "rectangle.3.offgrid"), children: projects.map { project in
-                    let action = AddToProjectAction(thread: thread, project: project)
+                    let action = AddToProjectAction(thread: thread, project: project, showBanner: true)
                     return self.actionRunner.menuAction(action,
                                                         title: project.name ?? Localized.unnamedProject,
                                                         state: action.canPerform ? .off : .on)
