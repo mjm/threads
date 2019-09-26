@@ -10,13 +10,16 @@ import Foundation
 
 struct AddToShoppingListAction: SyncUserAction {
     let threads: [Thread]
-    init(threads: [Thread]) {
+    let showBanner: Bool
+
+    init(threads: [Thread], showBanner: Bool = false) {
         assert(threads.count > 0)
         self.threads = threads
+        self.showBanner = showBanner
     }
 
-    init(thread: Thread) {
-        self.init(threads: [thread])
+    init(thread: Thread, showBanner: Bool = false) {
+        self.init(threads: [thread], showBanner: showBanner)
     }
 
     let undoActionName: String? = Localized.addToShoppingList
@@ -32,6 +35,13 @@ struct AddToShoppingListAction: SyncUserAction {
     func perform(_ context: UserActionContext<AddToShoppingListAction>) throws {
         for thread in threads {
             thread.addToShoppingList()
+        }
+
+        if showBanner {
+            let message = threads.count == 1
+                ? String(format: Localized.addToShoppingListBannerNumber, threads[0].number!)
+                : String(format: Localized.addToShoppingListBannerCount, threads.count)
+            context.present(BannerController(message: message))
         }
     }
 }

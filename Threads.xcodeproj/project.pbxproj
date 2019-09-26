@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
 		C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491DF3231D897B0031F463 /* AppDelegate.swift */; };
 		C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491DF5231D897B0031F463 /* SceneDelegate.swift */; };
 		C9491DFB231D897B0031F463 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9491DF9231D897B0031F463 /* Main.storyboard */; };
@@ -87,6 +88,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
 		C9491DF0231D897B0031F463 /* Threads.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Threads.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9491DF3231D897B0031F463 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9491DF5231D897B0031F463 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -186,6 +188,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C942E44B2336C72300987EAB /* Banner */ = {
+			isa = PBXGroup;
+			children = (
+				C942E44C2336C7F400987EAB /* BannerController.swift */,
+			);
+			path = Banner;
+			sourceTree = "<group>";
+		};
 		C9491DE7231D897A0031F463 = {
 			isa = PBXGroup;
 			children = (
@@ -214,6 +224,7 @@
 				C97FCDE6232DFC5F000B1590 /* Shopping List */,
 				C97FCDE7232DFC7E000B1590 /* Projects */,
 				C97FCDE8232DFCB2000B1590 /* Add Thread */,
+				C942E44B2336C72300987EAB /* Banner */,
 				C9491E12231DAA5D0031F463 /* AllThreads.json */,
 				C9491DFF231D897C0031F463 /* Assets.xcassets */,
 				C9491DF9231D897B0031F463 /* Main.storyboard */,
@@ -504,6 +515,7 @@
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
+				C942E44D2336C7F400987EAB /* BannerController.swift in Sources */,
 				C97FCE00232F4C9F000B1590 /* UserActionContext.swift in Sources */,
 				C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */,
 				C9491E44232491D90031F463 /* Project.swift in Sources */,

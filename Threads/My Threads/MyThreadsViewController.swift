@@ -189,7 +189,7 @@ extension MyThreadsViewController {
             }
             
             return UIMenu(title: "", children: [
-                self.actionRunner.menuAction(AddToShoppingListAction(thread: thread),
+                self.actionRunner.menuAction(AddToShoppingListAction(thread: thread, showBanner: true),
                                              image: UIImage(systemName: "cart.badge.plus")),
                 addToProjectMenu,
                 markMenu,
