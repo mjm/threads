@@ -11,17 +11,14 @@ import UIKit
 class ThreadDetailViewController: UITableViewController {
     enum Section: CaseIterable {
         case details
-        case actions
     }
     
     enum Cell {
         case details
-        case delete
         
         var cellIdentifier: String {
             switch self {
             case .details: return "Details"
-            case .delete: return "Action"
             }
         }
         
@@ -30,10 +27,6 @@ class ThreadDetailViewController: UITableViewController {
             case .details:
                 let cell = cell as! ThreadDetailsTableViewCell
                 cell.populate(thread)
-                
-            case .delete:
-                cell.textLabel!.text = Localized.removeFromCollection
-                cell.textLabel!.textColor = UIColor.systemRed
             }
         }
     }
@@ -122,20 +115,25 @@ class ThreadDetailViewController: UITableViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems([.details], toSection: .details)
-        snapshot.appendItems([.delete], toSection: .actions)
         dataSource.apply(snapshot, animatingDifferences: animated)
     }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let identifier = dataSource.itemIdentifier(for: indexPath)
-        if identifier == .delete {
-            tableView.deselectRow(at: indexPath, animated: true)
-            actionRunner.perform(RemoveThreadAction(thread: thread), willPerform: {
-                self.userActivity = nil
-            }) {
-                self.performSegue(withIdentifier: "DeleteThread", sender: nil)
-            }
+}
+
+// MARK: - Actions
+extension ThreadDetailViewController {
+    @IBAction func showActions() {
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        let deleteAction = actionRunner.alertAction(RemoveThreadAction(thread: thread), title: Localized.removeFromCollection, style: .destructive, willPerform: {
+            self.userActivity = nil
+        }) {
+            self.performSegue(withIdentifier: "DeleteThread", sender: nil)
         }
+        sheet.addAction(deleteAction)
+
+        sheet.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
+
+        present(sheet, animated: true)
     }
 }
 
