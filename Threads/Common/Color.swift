@@ -42,8 +42,8 @@ extension UIColor {
     //
     // This will return black or white, whichever would be higher contrast against
     // the provided background.
-    func label(againstBackground background: UIColor) -> UIColor {
-        if background.luminance > 0.179 {
+    var labelColor: UIColor {
+        if luminance > 0.179 {
             return .black
         } else {
             return .white

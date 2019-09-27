@@ -46,7 +46,7 @@ class ThreadPreviewViewController: UIViewController {
         let background = thread.color ?? .systemBackground
         view.backgroundColor = background
         
-        let foreground = background.label(againstBackground: background)
+        let foreground = background.labelColor
         numberLabel.textColor = foreground
         labelLabel.textColor = foreground
         

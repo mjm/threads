@@ -15,53 +15,21 @@ class ThreadDetailViewController: UITableViewController {
     }
     
     enum Cell {
-        case label
-        case collection
-        case bobbin
-        case colorBar
-        
+        case details
         case delete
         
         var cellIdentifier: String {
             switch self {
-            case .label: return "Label"
-            case .collection, .bobbin: return "Status"
-            case .colorBar: return "ColorBar"
-
+            case .details: return "Details"
             case .delete: return "Action"
             }
         }
         
         func populate(cell: UITableViewCell, thread: Thread) {
             switch self {
-            case .label:
-                cell.textLabel!.text = thread.label
-            case .collection:
-                if thread.amountInCollection > 0 {
-                    cell.textLabel!.text = Localized.inStock
-                    cell.textLabel!.textColor = UIColor.label
-                    cell.imageView!.image = UIImage(systemName: "tray.full")
-                    cell.imageView!.tintColor = UIColor.label
-                } else {
-                    cell.textLabel!.text = Localized.outOfStock
-                    cell.textLabel!.textColor = UIColor.secondaryLabel
-                    cell.imageView!.image = UIImage(systemName: "tray")
-                    cell.imageView!.tintColor = UIColor.secondaryLabel
-                }
-            case .bobbin:
-                if thread.onBobbin {
-                    cell.textLabel!.text = Localized.onBobbin
-                    cell.textLabel!.textColor = UIColor.label
-                    cell.imageView!.image = UIImage(systemName: "checkmark.circle")
-                    cell.imageView!.tintColor = UIColor.label
-                } else {
-                    cell.textLabel!.text = Localized.offBobbin
-                    cell.textLabel!.textColor = UIColor.secondaryLabel
-                    cell.imageView!.image = UIImage(systemName: "circle")
-                    cell.imageView!.tintColor = UIColor.secondaryLabel
-                }
-            case .colorBar:
-                cell.backgroundColor = thread.color
+            case .details:
+                let cell = cell as! ThreadDetailsTableViewCell
+                cell.populate(thread)
                 
             case .delete:
                 cell.textLabel!.text = Localized.removeFromCollection
@@ -89,6 +57,21 @@ class ThreadDetailViewController: UITableViewController {
         
         navigationItem.title = String(format: Localized.dmcNumber, thread.number!)
 
+        if let color = thread.color {
+            let textColor = color.labelColor
+
+            let appearance = navigationController!.navigationBar.standardAppearance.copy()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = color
+            appearance.titleTextAttributes[.foregroundColor] = textColor
+            appearance.largeTitleTextAttributes[.foregroundColor] = textColor
+            appearance.buttonAppearance.normal.titleTextAttributes[.foregroundColor] = textColor
+            navigationItem.standardAppearance = appearance.copy()
+
+            appearance.shadowColor = nil
+            navigationItem.scrollEdgeAppearance = appearance.copy()
+        }
+
         actionRunner = UserActionRunner(viewController: self, managedObjectContext: thread.managedObjectContext!)
         
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
@@ -101,6 +84,19 @@ class ThreadDetailViewController: UITableViewController {
         
         userActivity = UserActivity.showThread(thread).userActivity
     }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        if let textColor = thread.color?.labelColor, textColor == .white {
+            return .lightContent
+        } else {
+            return .darkContent
+        }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.tintColor = thread.color?.labelColor
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -110,6 +106,8 @@ class ThreadDetailViewController: UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         resignFirstResponder()
+
+        navigationController?.navigationBar.tintColor = nil
     }
     
     override var canBecomeFirstResponder: Bool {
@@ -123,7 +121,7 @@ class ThreadDetailViewController: UITableViewController {
     func updateSnapshot(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
         snapshot.appendSections(Section.allCases)
-        snapshot.appendItems([.label, .collection, .bobbin, .colorBar], toSection: .details)
+        snapshot.appendItems([.details], toSection: .details)
         snapshot.appendItems([.delete], toSection: .actions)
         dataSource.apply(snapshot, animatingDifferences: animated)
     }
@@ -138,5 +136,54 @@ class ThreadDetailViewController: UITableViewController {
                 self.performSegue(withIdentifier: "DeleteThread", sender: nil)
             }
         }
+    }
+}
+
+class ThreadDetailsTableViewCell: UITableViewCell {
+    @IBOutlet var labelLabel: UILabel!
+    @IBOutlet var statusStackView: UIStackView!
+    @IBOutlet var onBobbinStackView: UIStackView!
+    @IBOutlet var onBobbinImageView: UIImageView!
+    @IBOutlet var onBobbinLabel: UILabel!
+    @IBOutlet var outOfStockStackView: UIStackView!
+    @IBOutlet var outOfStockImageView: UIImageView!
+    @IBOutlet var outOfStockLabel: UILabel!
+    @IBOutlet var shoppingListStackView: UIStackView!
+    @IBOutlet var shoppingListImageView: UIImageView!
+    @IBOutlet var shoppingListLabel: UILabel!
+    @IBOutlet var projectsStackView: UIStackView!
+    @IBOutlet var projectsImageView: UIImageView!
+    @IBOutlet var projectsLabel: UILabel!
+
+    func populate(_ thread: Thread) {
+        labelLabel.text = thread.label
+
+        let background = thread.color ?? .systemBackground
+        backgroundColor = background
+
+        let foreground = background.labelColor
+        labelLabel.textColor = foreground
+
+        onBobbinStackView.isHidden = !thread.onBobbin
+        onBobbinImageView.tintColor = foreground
+        onBobbinLabel.textColor = foreground
+
+        outOfStockStackView.isHidden = thread.amountInCollection > 0
+        outOfStockImageView.tintColor = foreground
+        outOfStockLabel.textColor = foreground
+
+        shoppingListStackView.isHidden = !thread.inShoppingList
+        shoppingListImageView.tintColor = foreground
+        shoppingListLabel.text = String.localizedStringWithFormat(Localized.numberInShoppingList, thread.amountInShoppingList)
+        shoppingListLabel.textColor = foreground
+
+        let projectCount = thread.projects?.count ?? 0
+        projectsStackView.isHidden = projectCount == 0
+        projectsImageView.tintColor = foreground
+        projectsLabel.text = String.localizedStringWithFormat(Localized.usedInProjects, projectCount)
+        projectsLabel.textColor = foreground
+
+        // hide whole stack if none are visible
+        statusStackView.isHidden = statusStackView.arrangedSubviews.allSatisfy { $0.isHidden }
     }
 }
