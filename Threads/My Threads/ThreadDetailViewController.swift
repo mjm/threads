@@ -11,30 +11,54 @@ import UIKit
 class ThreadDetailViewController: UITableViewController {
     enum Section: CaseIterable {
         case details
+        case shoppingList
+        case projects
     }
     
-    enum Cell {
+    enum Cell: Hashable {
         case details
+        case shoppingList
+        case project(ProjectThread)
         
         var cellIdentifier: String {
             switch self {
             case .details: return "Details"
+            case .shoppingList: return "ShoppingList"
+            case .project: return "Project"
             }
         }
         
-        func populate(cell: UITableViewCell, thread: Thread) {
+        func populate(cell: UITableViewCell, thread: Thread, controller: ThreadDetailViewController) {
+            let actionRunner = controller.actionRunner!
+
             switch self {
             case .details:
                 let cell = cell as! ThreadDetailsTableViewCell
                 cell.populate(thread)
+            case .shoppingList:
+                let cell = cell as! ShoppingListThreadTableViewCell
+                cell.populate(thread)
+                cell.onCheckTapped = {
+                    actionRunner.perform(TogglePurchasedAction(thread: thread))
+                }
+                cell.onDecreaseQuantity = {
+                    actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .decrement))
+                }
+                cell.onIncreaseQuantity = {
+                    actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment))
+                }
+            case let .project(projectThread):
+                cell.textLabel?.text = projectThread.project?.name
             }
         }
     }
     
     let thread: Thread
     
-    private var dataSource: UITableViewDiffableDataSource<Section, Cell>!
+    private var dataSource: TableViewDiffableDataSource<Section, Cell>!
     private var actionRunner: UserActionRunner!
+
+    private var observers: [NSKeyValueObservation] = []
     
     init?(coder: NSCoder, thread: Thread) {
         self.thread = thread
@@ -66,14 +90,45 @@ class ThreadDetailViewController: UITableViewController {
         }
 
         actionRunner = UserActionRunner(viewController: self, managedObjectContext: thread.managedObjectContext!)
-        
-        dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
+
+        ShoppingListThreadTableViewCell.registerNib(on: tableView, reuseIdentifier: "ShoppingList")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Project") // TODO maybe use a custom cell?
+        dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: item.cellIdentifier, for: indexPath)
-            item.populate(cell: cell, thread: self.thread)
+            item.populate(cell: cell, thread: self.thread, controller: self)
             return cell
+        }
+
+        dataSource.sectionTitle = { _, _, section in
+            switch section {
+            case .details:
+                return nil
+            case .shoppingList:
+                return Localized.inShoppingList
+            case .projects:
+                return Localized.projects
+            }
         }
         
         updateSnapshot(animated: false)
+
+        observers.append(thread.observe(\.inShoppingList) { [weak self] _, _ in
+            self?.updateSnapshot()
+        })
+
+        let updateShoppingListCell = { [weak self] (thread: Thread, _: Any) in
+            guard let self = self else { return }
+
+            guard let indexPath = self.dataSource.indexPath(for: .shoppingList),
+                let cell = self.tableView.cellForRow(at: indexPath) as? ShoppingListThreadTableViewCell else {
+                return
+            }
+
+            cell.populate(thread)
+        }
+
+        observers.append(thread.observe(\.amountInShoppingList, changeHandler: updateShoppingListCell))
+        observers.append(thread.observe(\.purchased, changeHandler: updateShoppingListCell))
         
         userActivity = UserActivity.showThread(thread).userActivity
     }
@@ -113,8 +168,14 @@ class ThreadDetailViewController: UITableViewController {
     
     func updateSnapshot(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
-        snapshot.appendSections(Section.allCases)
+        snapshot.appendSections([.details])
         snapshot.appendItems([.details], toSection: .details)
+
+        if thread.inShoppingList {
+            snapshot.appendSections([.shoppingList])
+            snapshot.appendItems([.shoppingList], toSection: .shoppingList)
+        }
+
         dataSource.apply(snapshot, animatingDifferences: animated)
     }
 }
@@ -137,6 +198,21 @@ extension ThreadDetailViewController {
     }
 }
 
+// MARK: - Table View Delegate
+extension ThreadDetailViewController {
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        guard let item = dataSource.itemIdentifier(for: indexPath) else {
+            return nil
+        }
+
+        if case .project = item {
+            return indexPath
+        }
+
+        return nil
+    }
+}
+
 class ThreadDetailsTableViewCell: UITableViewCell {
     @IBOutlet var labelLabel: UILabel!
     @IBOutlet var statusStackView: UIStackView!
@@ -146,9 +222,6 @@ class ThreadDetailsTableViewCell: UITableViewCell {
     @IBOutlet var outOfStockStackView: UIStackView!
     @IBOutlet var outOfStockImageView: UIImageView!
     @IBOutlet var outOfStockLabel: UILabel!
-    @IBOutlet var shoppingListStackView: UIStackView!
-    @IBOutlet var shoppingListImageView: UIImageView!
-    @IBOutlet var shoppingListLabel: UILabel!
     @IBOutlet var projectsStackView: UIStackView!
     @IBOutlet var projectsImageView: UIImageView!
     @IBOutlet var projectsLabel: UILabel!
@@ -169,11 +242,6 @@ class ThreadDetailsTableViewCell: UITableViewCell {
         outOfStockStackView.isHidden = thread.amountInCollection > 0
         outOfStockImageView.tintColor = foreground
         outOfStockLabel.textColor = foreground
-
-        shoppingListStackView.isHidden = !thread.inShoppingList
-        shoppingListImageView.tintColor = foreground
-        shoppingListLabel.text = String.localizedStringWithFormat(Localized.numberInShoppingList, thread.amountInShoppingList)
-        shoppingListLabel.textColor = foreground
 
         let projectCount = thread.projects?.count ?? 0
         projectsStackView.isHidden = projectCount == 0
