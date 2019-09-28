@@ -19,7 +19,7 @@ class MyThreadsViewController: UITableViewController {
         return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
     }
     
-    private var fetchedResultsController: NSFetchedResultsController<Thread>!
+    private var threadsList: FetchedObjectList<Thread>!
     private var dataSource: TableViewDiffableDataSource<Section, Thread>!
 
     private var actionRunner: UserActionRunner!
@@ -29,13 +29,6 @@ class MyThreadsViewController: UITableViewController {
 
         actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
         
-        fetchedResultsController =
-            NSFetchedResultsController(fetchRequest: Thread.inCollectionFetchRequest(),
-                                       managedObjectContext: managedObjectContext,
-                                       sectionNameKeyPath: nil,
-                                       cacheName: nil)
-        fetchedResultsController.delegate = self
-        
         CollectionThreadTableViewCell.registerNib(on: tableView, reuseIdentifier: "Thread")
         dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! CollectionThreadTableViewCell
@@ -44,13 +37,19 @@ class MyThreadsViewController: UITableViewController {
         }
         
         dataSource.canEditRow = { _, _, _ in true }
-        
-        do {
-            try fetchedResultsController.performFetch()
-            updateSnapshot(animated: false)
-        } catch {
-            NSLog("Error fetching objects: \(error)")
-        }
+
+        threadsList = FetchedObjectList(
+            fetchRequest: Thread.inCollectionFetchRequest(),
+            managedObjectContext: managedObjectContext,
+            updateSnapshot: { [weak self] in
+                self?.updateSnapshot()
+            },
+            updateCell: { [weak self] thread in
+                self?.updateCell(thread)
+            }
+        )
+
+        updateSnapshot(animated: false)
         
         userActivity = UserActivity.showMyThreads.userActivity
     }
@@ -76,10 +75,20 @@ class MyThreadsViewController: UITableViewController {
     func updateSnapshot(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()
         snapshot.appendSections([.threads])
-        let objects = fetchedResultsController.fetchedObjects ?? []
-        NSLog("updating snapshot with objects: \(objects)")
-        snapshot.appendItems(objects, toSection: .threads)
+        snapshot.appendItems(threadsList.objects, toSection: .threads)
         dataSource.apply(snapshot, animatingDifferences: animated)
+    }
+
+    func updateCell(_ thread: Thread) {
+        cellForThread(thread)?.populate(thread)
+    }
+
+    private func cellForThread(_ thread: Thread) -> CollectionThreadTableViewCell? {
+        guard let indexPath = dataSource.indexPath(for: thread) else {
+            return nil
+        }
+
+        return tableView.cellForRow(at: indexPath) as? CollectionThreadTableViewCell
     }
 
     @IBAction func addThread() {
@@ -113,7 +122,10 @@ extension MyThreadsViewController {
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let thread = self.fetchedResultsController.object(at: indexPath)
+        guard let thread = dataSource.itemIdentifier(for: indexPath) else {
+            return nil
+        }
+
         if thread.amountInCollection == 0 {
             return nil
         }
@@ -132,8 +144,10 @@ extension MyThreadsViewController {
     }
 
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let thread = self.fetchedResultsController.object(at: indexPath)
-        
+        guard let thread = dataSource.itemIdentifier(for: indexPath) else {
+            return nil
+        }
+
         let stock: UIContextualAction
         if thread.amountInCollection == 0 {
             stock = actionRunner.contextualAction(MarkInStockAction(thread: thread), title: Localized.inStock)
@@ -205,25 +219,6 @@ extension MyThreadsViewController {
         let thread = managedObjectContext.object(with: configuration.identifier as! NSManagedObjectID) as! Thread
         animator.addAnimations {
             self.showDetail(for: thread)
-        }
-    }
-}
-
-// MARK: - Fetched Results Controller Delegate
-extension MyThreadsViewController: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        updateSnapshot()
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .update:
-            let thread = anObject as! Thread
-            if let cell = tableView.cellForRow(at: indexPath!) as? CollectionThreadTableViewCell {
-                cell.populate(thread)
-            }
-        default:
-            break
         }
     }
 }

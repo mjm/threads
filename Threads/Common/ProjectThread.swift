@@ -17,4 +17,12 @@ extension ProjectThread {
         request.relationshipKeyPathsForPrefetching = ["thread"]
         return request
     }
+
+    class func fetchRequest(for thread: Thread) -> NSFetchRequest<ProjectThread> {
+        let request: NSFetchRequest<ProjectThread> = fetchRequest()
+        request.predicate = NSPredicate(format: "thread = %@", thread)
+        request.sortDescriptors = [NSSortDescriptor(key: "project.name", ascending: true)]
+        request.relationshipKeyPathsForPrefetching = ["project"]
+        return request
+    }
 }

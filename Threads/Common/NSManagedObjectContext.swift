@@ -23,4 +23,20 @@ extension NSManagedObjectContext {
             }
         }
     }
+
+    func observeChanges<T: NSManagedObject>(type: T.Type, observer: @escaping (Set<T>) -> Void) -> Any {
+        return NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: self, queue: OperationQueue.main) { note in
+            guard let userInfo = note.userInfo else {
+                return
+            }
+
+            var changedObjects = Set<NSManagedObject>()
+            changedObjects.formUnion(userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject> ?? [])
+            changedObjects.formUnion(userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject> ?? [])
+            changedObjects.formUnion(userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> ?? [])
+
+            let interestingObjects = Set(changedObjects.compactMap { $0 as? T })
+            observer(interestingObjects)
+        }
+    }
 }

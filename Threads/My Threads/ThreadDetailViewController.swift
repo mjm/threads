@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class ThreadDetailViewController: UITableViewController {
     enum Section: CaseIterable {
@@ -54,11 +55,12 @@ class ThreadDetailViewController: UITableViewController {
     }
     
     let thread: Thread
-    
+
+    private var projectsList: FetchedObjectList<ProjectThread>!
     private var dataSource: TableViewDiffableDataSource<Section, Cell>!
     private var actionRunner: UserActionRunner!
 
-    private var observers: [NSKeyValueObservation] = []
+    private var observers: [Any] = []
     
     init?(coder: NSCoder, thread: Thread) {
         self.thread = thread
@@ -109,8 +111,38 @@ class ThreadDetailViewController: UITableViewController {
                 return Localized.projects
             }
         }
+
+        projectsList = FetchedObjectList(
+            fetchRequest: ProjectThread.fetchRequest(for: thread),
+            managedObjectContext: thread.managedObjectContext!,
+            updateSnapshot: { [weak self] in
+                self?.updateSnapshot()
+            },
+            updateCell: { [weak self] projectThread in
+                self?.updateCell(projectThread)
+            }
+        )
         
         updateSnapshot(animated: false)
+
+        // Ensure we update the project names correctly.
+        //
+        // Watch all Core Data object changes, and whenever anything changes about a project, update the cell for the affected project thread.
+        observers.append(thread.managedObjectContext!.observeChanges(type: Project.self) { [weak self] affectedProjects in
+            guard let self = self else {
+                return
+            }
+
+            let interestingProjects = Dictionary(uniqueKeysWithValues: self.projectsList.objects.compactMap { projectThread in
+                projectThread.project.flatMap { ($0, projectThread) }
+            })
+
+            for project in affectedProjects {
+                if let projectThread = interestingProjects[project] {
+                    self.updateCell(projectThread)
+                }
+            }
+        })
 
         observers.append(thread.observe(\.inShoppingList) { [weak self] _, _ in
             self?.updateSnapshot()
@@ -176,7 +208,29 @@ class ThreadDetailViewController: UITableViewController {
             snapshot.appendItems([.shoppingList], toSection: .shoppingList)
         }
 
+        let projectThreads = projectsList.objects
+        if !projectThreads.isEmpty {
+            snapshot.appendSections([.projects])
+            snapshot.appendItems(projectThreads.map { .project($0) }, toSection: .projects)
+        }
+
         dataSource.apply(snapshot, animatingDifferences: animated)
+    }
+
+    func updateCell(_ projectThread: ProjectThread) {
+        guard let cell = cellForProjectThread(projectThread) else {
+            return
+        }
+
+        cell.textLabel?.text = projectThread.project?.name
+    }
+
+    private func cellForProjectThread(_ projectThread: ProjectThread) -> UITableViewCell? {
+        guard let indexPath = dataSource.indexPath(for: .project(projectThread)) else {
+            return nil
+        }
+
+        return tableView.cellForRow(at: indexPath)
     }
 }
 

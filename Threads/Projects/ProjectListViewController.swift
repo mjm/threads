@@ -34,21 +34,16 @@ class ProjectListViewController: UICollectionViewController {
         // Ensure we update the project image correctly.
         //
         // Watch all Core Data object changes, and whenever anything changes about a project image, update the cell for the affected project.
-        imagesObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: managedObjectContext, queue: OperationQueue.main) { [weak self] note in
-            guard let userInfo = note.userInfo else {
+        imagesObserver = managedObjectContext.observeChanges(type: ProjectImage.self) { [weak self] affectedImages in
+            guard let self = self else {
                 return
             }
 
-            var changedObjects = Set<NSManagedObject>()
-            changedObjects.formUnion(userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject> ?? [])
-            changedObjects.formUnion(userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject> ?? [])
-            changedObjects.formUnion(userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> ?? [])
-
-            let affectedProjects = Set(changedObjects.compactMap { ($0 as? ProjectImage)?.project })
+            let affectedProjects = Set(affectedImages.compactMap { $0.project })
 
             for project in affectedProjects {
-                if let indexPath = self?.dataSource.indexPath(for: project),
-                    let cell = self?.collectionView.cellForItem(at: indexPath) as? ProjectCollectionViewCell {
+                if let indexPath = self.dataSource.indexPath(for: project),
+                    let cell = self.collectionView.cellForItem(at: indexPath) as? ProjectCollectionViewCell {
                     cell.populate(project)
                 }
             }
