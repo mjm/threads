@@ -60,7 +60,8 @@ class ThreadDetailViewController: UITableViewController {
     private var dataSource: TableViewDiffableDataSource<Section, Cell>!
     private var actionRunner: UserActionRunner!
 
-    private var observers: [Any] = []
+    private var observers: [NSKeyValueObservation] = []
+    private var projectsObserver: Any!
     
     init?(coder: NSCoder, thread: Thread) {
         self.thread = thread
@@ -128,7 +129,7 @@ class ThreadDetailViewController: UITableViewController {
         // Ensure we update the project names correctly.
         //
         // Watch all Core Data object changes, and whenever anything changes about a project, update the cell for the affected project thread.
-        observers.append(thread.managedObjectContext!.observeChanges(type: Project.self) { [weak self] affectedProjects in
+        projectsObserver = thread.managedObjectContext!.observeChanges(type: Project.self) { [weak self] affectedProjects in
             guard let self = self else {
                 return
             }
@@ -142,7 +143,7 @@ class ThreadDetailViewController: UITableViewController {
                     self.updateCell(projectThread)
                 }
             }
-        })
+        }
 
         observers.append(thread.observe(\.inShoppingList) { [weak self] _, _ in
             self?.updateSnapshot()
@@ -163,6 +164,12 @@ class ThreadDetailViewController: UITableViewController {
         observers.append(thread.observe(\.purchased, changeHandler: updateShoppingListCell))
         
         userActivity = UserActivity.showThread(thread).userActivity
+    }
+
+    deinit {
+        if let observer = projectsObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
