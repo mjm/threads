@@ -19,7 +19,7 @@ class ShoppingListViewController: UITableViewController {
         return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
     }
     
-    private var fetchedResultsController: NSFetchedResultsController<Thread>!
+    private var threadsList: FetchedObjectList<Thread>!
     private var dataSource: UITableViewDiffableDataSource<Section, Thread>!
     private var actionRunner: UserActionRunner!
     
@@ -34,13 +34,6 @@ class ShoppingListViewController: UITableViewController {
         addCheckedButton.imageView?.tintColor = .white
 
         actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
-        
-        fetchedResultsController =
-            NSFetchedResultsController(fetchRequest: Thread.inShoppingListFetchRequest(),
-                                       managedObjectContext: managedObjectContext,
-                                       sectionNameKeyPath: nil,
-                                       cacheName: nil)
-        fetchedResultsController.delegate = self
         
         ShoppingListThreadTableViewCell.registerNib(on: tableView, reuseIdentifier: "Thread")
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
@@ -64,12 +57,18 @@ class ShoppingListViewController: UITableViewController {
             return cell
         }
         
-        do {
-            try fetchedResultsController.performFetch()
-            updateSnapshot(animated: false)
-        } catch {
-            NSLog("Error fetching objects: \(error)")
-        }
+        threadsList = FetchedObjectList(
+            fetchRequest: Thread.inShoppingListFetchRequest(),
+            managedObjectContext: managedObjectContext,
+            updateSnapshot: { [weak self] in
+                self?.updateSnapshot()
+            },
+            updateCell: { [weak self] thread in
+                self?.updateCell(thread)
+            }
+        )
+
+        updateSnapshot(animated: false)
         
         userActivity = UserActivity.showShoppingList.userActivity
     }
@@ -94,8 +93,7 @@ class ShoppingListViewController: UITableViewController {
     
     func updateSnapshot(animated: Bool = true) {
         // update the rows of the table
-        let objects = fetchedResultsController.fetchedObjects ?? []
-        var partitioned = objects
+        var partitioned = threadsList.objects
         let p = partitioned.stablePartition { $0.purchased && !pendingPurchases.contains($0) }
 
         var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()
@@ -105,7 +103,7 @@ class ShoppingListViewController: UITableViewController {
         dataSource.apply(snapshot, animatingDifferences: animated)
 
         // animate in/out the "Add Checked to Collection" button
-        let anyChecked = !objects.filter { $0.purchased }.isEmpty
+        let anyChecked = !threadsList.objects.filter { $0.purchased }.isEmpty
         let header = self.tableView.tableHeaderView!
         let height = anyChecked
             ? header.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
@@ -125,8 +123,16 @@ class ShoppingListViewController: UITableViewController {
         }
         
         // update the tab bar badge
-        let unpurchasedItems = objects.filter { !$0.purchased }.count
+        let unpurchasedItems = threadsList.objects.filter { !$0.purchased }.count
         navigationController!.tabBarItem.badgeValue = unpurchasedItems > 0 ? "\(unpurchasedItems)" : nil
+    }
+
+    func updateCell(_ thread: Thread) {
+        cellForThread(thread)?.populate(thread)
+    }
+
+    private func cellForThread(_ thread: Thread) -> ShoppingListThreadTableViewCell? {
+        dataSource.indexPath(for: thread).flatMap { tableView.cellForRow(at: $0) as? ShoppingListThreadTableViewCell }
     }
 }
 
@@ -169,32 +175,6 @@ extension ShoppingListViewController {
             self.pendingPurchases.removeAll()
             self.updateSnapshot()
             self.purchaseDelayTimer = nil
-        }
-    }
-}
-
-// MARK: - Fetched Results Controller Delegate
-extension ShoppingListViewController: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        updateSnapshot()
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .update:
-            let thread = anObject as! Thread
-
-            // we rearrange things in our snapshot, so the fetched results controller lies about the
-            // actual index path of the row
-            guard let indexPath = dataSource.indexPath(for: thread) else {
-                return
-            }
-
-            if let cell = tableView.cellForRow(at: indexPath) as? ShoppingListThreadTableViewCell {
-                cell.populate(thread)
-            }
-        default:
-            break
         }
     }
 }
