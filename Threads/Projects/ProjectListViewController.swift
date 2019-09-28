@@ -18,7 +18,7 @@ class ProjectListViewController: UICollectionViewController {
         return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
     }
 
-    private var fetchedResultsController: NSFetchedResultsController<Project>!
+    private var projectsList: FetchedObjectList<Project>!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Project>!
     private var actionRunner: UserActionRunner!
     
@@ -42,21 +42,11 @@ class ProjectListViewController: UICollectionViewController {
             let affectedProjects = Set(affectedImages.compactMap { $0.project })
 
             for project in affectedProjects {
-                if let indexPath = self.dataSource.indexPath(for: project),
-                    let cell = self.collectionView.cellForItem(at: indexPath) as? ProjectCollectionViewCell {
-                    cell.populate(project)
-                }
+                self.updateCell(project)
             }
         }
 
         actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
-
-        fetchedResultsController =
-            NSFetchedResultsController(fetchRequest: Project.allProjectsFetchRequest(),
-                                       managedObjectContext: managedObjectContext,
-                                       sectionNameKeyPath: nil,
-                                       cacheName: nil)
-        fetchedResultsController.delegate = self
 
         ProjectCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "Project")
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
@@ -66,13 +56,19 @@ class ProjectListViewController: UICollectionViewController {
         }
         
         collectionView.collectionViewLayout = createLayout()
-        
-        do {
-            try fetchedResultsController.performFetch()
-            updateSnapshot(animated: false)
-        } catch {
-            NSLog("Could not load projects: \(error)")
-        }
+
+        projectsList = FetchedObjectList(
+            fetchRequest: Project.allProjectsFetchRequest(),
+            managedObjectContext: managedObjectContext,
+            updateSnapshot: { [weak self] in
+                self?.updateSnapshot()
+            },
+            updateCell: { [weak self] project in
+                self?.updateCell(project)
+            }
+        )
+
+        updateSnapshot(animated: false)
         
         userActivity = UserActivity.showProjects.userActivity
     }
@@ -102,11 +98,18 @@ class ProjectListViewController: UICollectionViewController {
     }
 
     func updateSnapshot(animated: Bool = true) {
-        let objects = fetchedResultsController.fetchedObjects ?? []
         var snapshot = NSDiffableDataSourceSnapshot<Section, Project>()
         snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(objects, toSection: .projects)
+        snapshot.appendItems(projectsList.objects, toSection: .projects)
         dataSource.apply(snapshot, animatingDifferences: animated)
+    }
+
+    func updateCell(_ project: Project) {
+        cellForProject(project)?.populate(project)
+    }
+
+    private func cellForProject(_ project: Project) -> ProjectCollectionViewCell? {
+        dataSource.indexPath(for: project).flatMap { collectionView.cellForItem(at: $0) as? ProjectCollectionViewCell }
     }
     
     func createLayout() -> UICollectionViewLayout {
@@ -217,24 +220,5 @@ extension ProjectListViewController {
             self.showDetail(for: project)
         }
 
-    }
-}
-
-extension ProjectListViewController: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        updateSnapshot()
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .update:
-            let project = anObject as! Project
-            if let indexPath = dataSource.indexPath(for: project),
-                let cell = collectionView.cellForItem(at: indexPath) as? ProjectCollectionViewCell {
-                cell.populate(project)
-            }
-        default:
-            return
-        }
     }
 }
