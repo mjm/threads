@@ -116,8 +116,8 @@ class ProjectDetailViewController: UICollectionViewController {
     let project: Project
     var forceEditMode: Bool
 
-    private var threadsFetchedResultsController: NSFetchedResultsController<ProjectThread>!
-    private var imagesFetchedResultsController: NSFetchedResultsController<ProjectImage>!
+    private var threadsList: FetchedObjectList<ProjectThread>!
+    private var imagesList: FetchedObjectList<ProjectImage>!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
     private var actionRunner: UserActionRunner!
     
@@ -153,20 +153,6 @@ class ProjectDetailViewController: UICollectionViewController {
         }
 
         actionRunner = UserActionRunner(viewController: self, managedObjectContext: project.managedObjectContext!)
-        
-        threadsFetchedResultsController =
-            NSFetchedResultsController(fetchRequest: ProjectThread.fetchRequest(for: project),
-                                       managedObjectContext: project.managedObjectContext!,
-                                       sectionNameKeyPath: nil,
-                                       cacheName: nil)
-        threadsFetchedResultsController.delegate = self
-
-        imagesFetchedResultsController =
-            NSFetchedResultsController(fetchRequest: ProjectImage.fetchRequest(for: project),
-                                       managedObjectContext: project.managedObjectContext!,
-                                       sectionNameKeyPath: nil,
-                                       cacheName: nil)
-        imagesFetchedResultsController.delegate = self
 
         collectionView.dragInteractionEnabled = true
         collectionView.dragDelegate = self
@@ -212,18 +198,28 @@ class ProjectDetailViewController: UICollectionViewController {
         }
         
         collectionView.collectionViewLayout = createLayout()
-        
-        do {
-            try threadsFetchedResultsController.performFetch()
-        } catch {
-            NSLog("Could not load project threads: \(error)")
-        }
 
-        do {
-            try imagesFetchedResultsController.performFetch()
-        } catch {
-            NSLog("Could not load project images: \(error)")
-        }
+        threadsList = FetchedObjectList(
+            fetchRequest: ProjectThread.fetchRequest(for: project),
+            managedObjectContext: project.managedObjectContext!,
+            updateSnapshot: { [weak self] in
+                self?.updateSnapshot()
+            },
+            updateCell: { [weak self] projectThread in
+                self?.updateThreadCell(projectThread)
+            }
+        )
+
+        imagesList = FetchedObjectList(
+            fetchRequest: ProjectImage.fetchRequest(for: project),
+            managedObjectContext: project.managedObjectContext!,
+            updateSnapshot: { [weak self] in
+                self?.updateSnapshot()
+            },
+            updateCell: { [weak self] image in
+                self?.updateImageCell(image)
+            }
+        )
 
         updateSnapshot(animated: false)
         if forceEditMode {
@@ -282,26 +278,25 @@ class ProjectDetailViewController: UICollectionViewController {
     }
     
     func updateSnapshot(animated: Bool = true) {
-        let images = imagesFetchedResultsController.fetchedObjects ?? []
-        let threads = threadsFetchedResultsController.fetchedObjects ?? []
         var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
         
         if isEditing {
             snapshot.appendSections([.editImages, .details])
-            snapshot.appendItems(images.map { .editImage($0) }, toSection: .editImages)
+            snapshot.appendItems(imagesList.objects.map { .editImage($0) }, toSection: .editImages)
             snapshot.appendItems([.imagePlaceholder], toSection: .editImages)
             snapshot.appendItems([.editName, .editNotes], toSection: .details)
         } else {
-            if images.count > 0 {
+            if !imagesList.objects.isEmpty {
                 snapshot.appendSections([.viewImages])
-                snapshot.appendItems(images.map { .viewImage($0) }, toSection: .viewImages)
+                snapshot.appendItems(imagesList.objects.map { .viewImage($0) }, toSection: .viewImages)
             }
             if let notes = project.notes, notes.length > 0 {
                 snapshot.appendSections([.notes])
                 snapshot.appendItems([.viewNotes], toSection: .notes)
             }
         }
-        
+
+        let threads = threadsList.objects
         snapshot.appendSections([.threads])
         snapshot.appendItems(threads.enumerated().map { (index, item) in
             if isEditing {
@@ -324,6 +319,20 @@ class ProjectDetailViewController: UICollectionViewController {
             sectionHeader.textLabel.text = threadsSectionHeaderText()
             sectionHeader.setNeedsLayout()
         }
+    }
+
+    func updateThreadCell(_ thread: ProjectThread) {
+        if let cell = self.cell(for: .viewThread(thread, isLast: false)) as? ViewProjectThreadCollectionViewCell {
+            cell.populate(thread)
+        } else if let cell = self.cell(for: .viewThread(thread, isLast: true)) as? ViewProjectThreadCollectionViewCell {
+            cell.populate(thread, isLastItem: true)
+        } else if let cell = self.cell(for: .editThread(thread)) as? EditProjectThreadCollectionViewCell {
+            cell.populate(thread)
+        }
+    }
+
+    func updateImageCell(_ image: ProjectImage) {
+        // no-op. there's not currently a meaningful way to update a project image in-place
     }
     
     func createLayout() -> UICollectionViewLayout {
@@ -430,7 +439,7 @@ class ProjectDetailViewController: UICollectionViewController {
     }
     
     private func threadsSectionHeaderText() -> String {
-        let items = self.threadsFetchedResultsController.fetchedObjects?.count ?? 0
+        let items = threadsList.objects.count
         return String.localizedStringWithFormat(Localized.threadsSectionHeader, items)
     }
 
@@ -472,7 +481,7 @@ extension ProjectDetailViewController {
     }
 
     func addThread() {
-        let existingThreads = threadsFetchedResultsController.fetchedObjects?.compactMap { $0.thread } ?? []
+        let existingThreads = threadsList.objects.compactMap { $0.thread }
         let request = Thread.sortedByNumberFetchRequest()
 
         // Not ideal, but I haven't figured out a way in Core Data to get all the threads that
@@ -563,7 +572,7 @@ extension ProjectDetailViewController: UICollectionViewDropDelegate {
             return UICollectionViewDropProposal(operation: .cancel)
         }
 
-        let imageCount = imagesFetchedResultsController.fetchedObjects?.count ?? 0
+        let imageCount = imagesList.objects.count
         if indexPath.item >= imageCount {
             return UICollectionViewDropProposal(operation: .forbidden)
         }
@@ -596,34 +605,6 @@ extension ProjectDetailViewController: UICollectionViewDropDelegate {
             }
         } else if coordinator.proposal.operation == .copy {
             assertionFailure("Copying items from another app has not been implemented yet!")
-        }
-    }
-}
-
-// MARK: - Fetched Results Controller Delegate
-extension ProjectDetailViewController: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        updateSnapshot()
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .update:
-            if controller == threadsFetchedResultsController {
-                let thread = anObject as! ProjectThread
-
-                if let cell = self.cell(for: .viewThread(thread, isLast: false)) as? ViewProjectThreadCollectionViewCell {
-                    cell.populate(thread)
-                } else if let cell = self.cell(for: .viewThread(thread, isLast: true)) as? ViewProjectThreadCollectionViewCell {
-                    cell.populate(thread, isLastItem: true)
-                } else if let cell = self.cell(for: .editThread(thread)) as? EditProjectThreadCollectionViewCell {
-                    cell.populate(thread)
-                }
-            } else if controller == imagesFetchedResultsController {
-                // TODO
-            }
-        default:
-            break
         }
     }
 }
