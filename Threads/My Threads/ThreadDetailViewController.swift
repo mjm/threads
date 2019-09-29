@@ -60,6 +60,11 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
             appearance.backgroundColor = color
             appearance.titleTextAttributes[.foregroundColor] = textColor
             appearance.largeTitleTextAttributes[.foregroundColor] = textColor
+            appearance.largeTitleTextAttributes[.font] = {
+                let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .largeTitle)
+                let font = UIFont.systemFont(ofSize: desc.pointSize, weight: .heavy)
+                return UIFontMetrics(forTextStyle: .largeTitle).scaledFont(for: font)
+            }()
             appearance.buttonAppearance.normal.titleTextAttributes[.foregroundColor] = textColor
             navigationItem.standardAppearance = appearance.copy()
 
