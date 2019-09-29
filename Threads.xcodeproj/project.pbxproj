@@ -38,6 +38,7 @@
 		C94EB3022325E6A900D4CF56 /* ProjectCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */; };
 		C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */; };
 		C955EDE6234013DC000ACC39 /* FetchedObjectList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */; };
+		C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE7234028A8000ACC39 /* ViewControllers.swift */; };
 		C97FCDA323296433000B1590 /* EditProjectThreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */; };
 		C97FCDA423296433000B1590 /* EditProjectThreadCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */; };
 		C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA52329A921000B1590 /* SeparatorView.swift */; };
@@ -125,6 +126,7 @@
 		C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectCollectionViewCell.xib; sourceTree = "<group>"; };
 		C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
 		C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedObjectList.swift; sourceTree = "<group>"; };
+		C955EDE7234028A8000ACC39 /* ViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllers.swift; sourceTree = "<group>"; };
 		C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProjectThreadCollectionViewCell.swift; sourceTree = "<group>"; };
 		C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditProjectThreadCollectionViewCell.xib; sourceTree = "<group>"; };
 		C97FCDA52329A921000B1590 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
@@ -265,6 +267,7 @@
 				C97FCDBB232D78AA000B1590 /* Localizable.stringsdict */,
 				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
 				C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */,
+				C955EDE7234028A8000ACC39 /* ViewControllers.swift */,
 				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
 				C9491E362320C67A0031F463 /* SwatchView.swift */,
 				C97FCDA52329A921000B1590 /* SeparatorView.swift */,
@@ -517,6 +520,7 @@
 				C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */,
 				C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */,
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
+				C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */,
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
 				C942E44D2336C7F400987EAB /* BannerController.swift in Sources */,

@@ -9,33 +9,26 @@
 import UIKit
 import CoreData
 
-class MyThreadsViewController: UITableViewController {
-    
+class MyThreadsViewController: TableViewController<MyThreadsViewController.Section, MyThreadsViewController.Cell> {
     enum Section {
         case threads
     }
-    
-    private var managedObjectContext: NSManagedObjectContext {
-        return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
+
+    enum Cell: ReusableCell {
+        case thread(Thread)
+
+        var cellIdentifier: String { "Thread" }
     }
     
     private var threadsList: FetchedObjectList<Thread>!
-    private var dataSource: TableViewDiffableDataSource<Section, Thread>!
-
-    private var actionRunner: UserActionRunner!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        userActivity = UserActivity.showMyThreads.userActivity
+    }
 
-        actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
-        
-        CollectionThreadTableViewCell.registerNib(on: tableView, reuseIdentifier: "Thread")
-        dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! CollectionThreadTableViewCell
-            cell.populate(item)
-            return cell
-        }
-        
+    override func dataSourceWillInitialize() {
         dataSource.canEditRow = { _, _, _ in true }
 
         threadsList = FetchedObjectList(
@@ -48,35 +41,23 @@ class MyThreadsViewController: UITableViewController {
                 self?.updateCell(thread)
             }
         )
-
-        updateSnapshot(animated: false)
-        
-        userActivity = UserActivity.showMyThreads.userActivity
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        becomeFirstResponder()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        resignFirstResponder()
-    }
-    
-    override var canBecomeFirstResponder: Bool {
-        true
     }
 
-    override var undoManager: UndoManager? {
-        managedObjectContext.undoManager
-    }
-    
-    func updateSnapshot(animated: Bool = true) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()
+    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
         snapshot.appendSections([.threads])
-        snapshot.appendItems(threadsList.objects, toSection: .threads)
-        dataSource.apply(snapshot, animatingDifferences: animated)
+        snapshot.appendItems(threadsList.objects.map { .thread($0) }, toSection: .threads)
+    }
+
+    override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {
+        ["Thread": .nib(CollectionThreadTableViewCell.self)]
+    }
+
+    override func populate(cell: UITableViewCell, item: MyThreadsViewController.Cell) {
+        switch item {
+        case let .thread(thread):
+            let cell = cell as! CollectionThreadTableViewCell
+            cell.populate(thread)
+        }
     }
 
     func updateCell(_ thread: Thread) {
@@ -84,7 +65,7 @@ class MyThreadsViewController: UITableViewController {
     }
 
     private func cellForThread(_ thread: Thread) -> CollectionThreadTableViewCell? {
-        guard let indexPath = dataSource.indexPath(for: thread) else {
+        guard let indexPath = dataSource.indexPath(for: .thread(thread)) else {
             return nil
         }
 
@@ -117,12 +98,13 @@ class MyThreadsViewController: UITableViewController {
 // MARK: - Table View Delegate
 extension MyThreadsViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let thread = dataSource.itemIdentifier(for: indexPath)!
-        showDetail(for: thread)
+        if case let .thread(thread) = dataSource.itemIdentifier(for: indexPath)! {
+            showDetail(for: thread)
+        }
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let thread = dataSource.itemIdentifier(for: indexPath) else {
+        guard case let .thread(thread) = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
 
@@ -144,7 +126,7 @@ extension MyThreadsViewController {
     }
 
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let thread = dataSource.itemIdentifier(for: indexPath) else {
+        guard case let .thread(thread) = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
 
@@ -162,7 +144,7 @@ extension MyThreadsViewController {
     }
     
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard let thread = dataSource.itemIdentifier(for: indexPath) else {
+        guard case let .thread(thread) = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
         
