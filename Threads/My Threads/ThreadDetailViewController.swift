@@ -228,6 +228,24 @@ extension ThreadDetailViewController {
     @IBAction func showActions() {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
+        if !thread.inShoppingList {
+            sheet.addAction(actionRunner.alertAction(AddToShoppingListAction(thread: thread)))
+        }
+
+        // TODO add to project
+
+        if thread.amountInCollection == 0 {
+            sheet.addAction(actionRunner.alertAction(MarkInStockAction(thread: thread)))
+        } else {
+            if thread.onBobbin {
+                sheet.addAction(actionRunner.alertAction(MarkOffBobbinAction(thread: thread)))
+            } else {
+                sheet.addAction(actionRunner.alertAction(MarkOnBobbinAction(thread: thread)))
+            }
+
+            sheet.addAction(actionRunner.alertAction(MarkOutOfStockAction(thread: thread)))
+        }
+
         let deleteAction = actionRunner.alertAction(RemoveThreadAction(thread: thread), title: Localized.removeFromCollection, style: .destructive, willPerform: {
             self.userActivity = nil
         }) {
