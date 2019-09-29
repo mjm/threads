@@ -299,4 +299,15 @@ class ThreadDetailsTableViewCell: UITableViewCell {
         // hide whole stack if none are visible
         statusStackView.isHidden = statusStackView.arrangedSubviews.allSatisfy { $0.isHidden }
     }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // hide top separator for this one
+        for view in subviews {
+            if view != contentView && view.frame.origin.y == 0.0 {
+                view.isHidden = true
+            }
+        }
+    }
 }
