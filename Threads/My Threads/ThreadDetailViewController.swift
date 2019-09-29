@@ -9,14 +9,14 @@
 import UIKit
 import CoreData
 
-class ThreadDetailViewController: UITableViewController {
+class ThreadDetailViewController: TableViewController<ThreadDetailViewController.Section, ThreadDetailViewController.Cell> {
     enum Section: CaseIterable {
         case details
         case shoppingList
         case projects
     }
     
-    enum Cell: Hashable {
+    enum Cell: ReusableCell {
         case details
         case shoppingList
         case project(ProjectThread)
@@ -28,37 +28,11 @@ class ThreadDetailViewController: UITableViewController {
             case .project: return "Project"
             }
         }
-        
-        func populate(cell: UITableViewCell, thread: Thread, controller: ThreadDetailViewController) {
-            let actionRunner = controller.actionRunner!
-
-            switch self {
-            case .details:
-                let cell = cell as! ThreadDetailsTableViewCell
-                cell.populate(thread)
-            case .shoppingList:
-                let cell = cell as! ShoppingListThreadTableViewCell
-                cell.populate(thread)
-                cell.onCheckTapped = {
-                    actionRunner.perform(TogglePurchasedAction(thread: thread))
-                }
-                cell.onDecreaseQuantity = {
-                    actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .decrement))
-                }
-                cell.onIncreaseQuantity = {
-                    actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment))
-                }
-            case let .project(projectThread):
-                cell.textLabel?.text = projectThread.project?.name
-            }
-        }
     }
     
     let thread: Thread
 
     private var projectsList: FetchedObjectList<ProjectThread>!
-    private var dataSource: TableViewDiffableDataSource<Section, Cell>!
-    private var actionRunner: UserActionRunner!
 
     private var observers: [NSKeyValueObservation] = []
     private var projectsObserver: Any!
@@ -70,6 +44,10 @@ class ThreadDetailViewController: UITableViewController {
     
     required init?(coder: NSCoder) {
         fatalError("ThreadDetailViewController should be created in an IBSegueAction")
+    }
+
+    override var managedObjectContext: NSManagedObjectContext {
+        thread.managedObjectContext!
     }
     
     override func viewDidLoad() {
@@ -92,44 +70,10 @@ class ThreadDetailViewController: UITableViewController {
             navigationItem.scrollEdgeAppearance = appearance.copy()
         }
 
-        actionRunner = UserActionRunner(viewController: self, managedObjectContext: thread.managedObjectContext!)
-
-        ShoppingListThreadTableViewCell.registerNib(on: tableView, reuseIdentifier: "ShoppingList")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Project") // TODO maybe use a custom cell?
-        dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: item.cellIdentifier, for: indexPath)
-            item.populate(cell: cell, thread: self.thread, controller: self)
-            return cell
-        }
-
-        dataSource.sectionTitle = { _, _, section in
-            switch section {
-            case .details:
-                return nil
-            case .shoppingList:
-                return Localized.inShoppingList
-            case .projects:
-                return Localized.projects
-            }
-        }
-
-        projectsList = FetchedObjectList(
-            fetchRequest: ProjectThread.fetchRequest(for: thread),
-            managedObjectContext: thread.managedObjectContext!,
-            updateSnapshot: { [weak self] in
-                self?.updateSnapshot()
-            },
-            updateCell: { [weak self] projectThread in
-                self?.updateCell(projectThread)
-            }
-        )
-        
-        updateSnapshot(animated: false)
-
         // Ensure we update the project names correctly.
         //
         // Watch all Core Data object changes, and whenever anything changes about a project, update the cell for the affected project thread.
-        projectsObserver = thread.managedObjectContext!.observeChanges(type: Project.self) { [weak self] affectedProjects in
+        projectsObserver = managedObjectContext.observeChanges(type: Project.self) { [weak self] affectedProjects in
             guard let self = self else {
                 return
             }
@@ -162,13 +106,87 @@ class ThreadDetailViewController: UITableViewController {
 
         observers.append(thread.observe(\.amountInShoppingList, changeHandler: updateShoppingListCell))
         observers.append(thread.observe(\.purchased, changeHandler: updateShoppingListCell))
-        
-        userActivity = UserActivity.showThread(thread).userActivity
     }
 
     deinit {
         if let observer = projectsObserver {
             NotificationCenter.default.removeObserver(observer)
+        }
+    }
+
+    override var currentUserActivity: UserActivity? { .showThread(thread) }
+
+    override func dataSourceWillInitialize() {
+        dataSource.sectionTitle = { _, _, section in
+            switch section {
+            case .details:
+                return nil
+            case .shoppingList:
+                return Localized.inShoppingList
+            case .projects:
+                return Localized.projects
+            }
+        }
+
+        projectsList = FetchedObjectList(
+            fetchRequest: ProjectThread.fetchRequest(for: thread),
+            managedObjectContext: thread.managedObjectContext!,
+            updateSnapshot: { [weak self] in
+                self?.updateSnapshot()
+            },
+            updateCell: { [weak self] projectThread in
+                self?.updateCell(projectThread)
+            }
+        )
+    }
+
+    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
+        snapshot.appendSections([.details])
+        snapshot.appendItems([.details], toSection: .details)
+
+        if thread.inShoppingList {
+            snapshot.appendSections([.shoppingList])
+            snapshot.appendItems([.shoppingList], toSection: .shoppingList)
+        }
+
+        let projectThreads = projectsList.objects
+        if !projectThreads.isEmpty {
+            snapshot.appendSections([.projects])
+            snapshot.appendItems(projectThreads.map { .project($0) }, toSection: .projects)
+        }
+    }
+
+    override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {
+        [
+            "ShoppingList": .nib(ShoppingListThreadTableViewCell.self),
+            "Project": .class(UITableViewCell.self),
+        ]
+    }
+
+    override func populate(cell: UITableViewCell, item: ThreadDetailViewController.Cell) {
+        let thread = self.thread
+
+        switch item {
+
+            case .details:
+                let cell = cell as! ThreadDetailsTableViewCell
+                cell.populate(thread)
+
+            case .shoppingList:
+                let cell = cell as! ShoppingListThreadTableViewCell
+                cell.populate(thread)
+                cell.onCheckTapped = { [weak self] in
+                    self?.actionRunner.perform(TogglePurchasedAction(thread: thread))
+                }
+                cell.onDecreaseQuantity = { [weak self] in
+                    self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .decrement))
+                }
+                cell.onIncreaseQuantity = { [weak self] in
+                    self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment))
+                }
+
+            case let .project(projectThread):
+                cell.textLabel?.text = projectThread.project?.name
         }
     }
 
@@ -185,43 +203,9 @@ class ThreadDetailViewController: UITableViewController {
         navigationController?.navigationBar.tintColor = thread.color?.labelColor
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        becomeFirstResponder()
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        resignFirstResponder()
-
         navigationController?.navigationBar.tintColor = nil
-    }
-    
-    override var canBecomeFirstResponder: Bool {
-        true
-    }
-
-    override var undoManager: UndoManager? {
-        thread.managedObjectContext?.undoManager
-    }
-    
-    func updateSnapshot(animated: Bool = true) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
-        snapshot.appendSections([.details])
-        snapshot.appendItems([.details], toSection: .details)
-
-        if thread.inShoppingList {
-            snapshot.appendSections([.shoppingList])
-            snapshot.appendItems([.shoppingList], toSection: .shoppingList)
-        }
-
-        let projectThreads = projectsList.objects
-        if !projectThreads.isEmpty {
-            snapshot.appendSections([.projects])
-            snapshot.appendItems(projectThreads.map { .project($0) }, toSection: .projects)
-        }
-
-        dataSource.apply(snapshot, animatingDifferences: animated)
     }
 
     func updateCell(_ projectThread: ProjectThread) {

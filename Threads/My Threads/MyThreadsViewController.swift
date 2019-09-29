@@ -82,7 +82,7 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
     @IBAction func unwindDeleteThread(segue: UIStoryboardSegue) {
     }
     
-    @IBSegueAction func makeDetailController(coder: NSCoder, sender: Thread) -> ThreadDetailViewController? {
+    @IBSegueAction func makeDetailController(coder: NSCoder, sender: Thread) -> UIViewController? {
         return ThreadDetailViewController(coder: coder, thread: sender)
     }
     
