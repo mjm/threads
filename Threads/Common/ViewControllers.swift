@@ -23,6 +23,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
+
+        userActivity = currentUserActivity?.userActivity
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -43,10 +45,18 @@ class ViewController: UIViewController {
         managedObjectContext.undoManager
     }
 
+    override func updateUserActivityState(_ activity: NSUserActivity) {
+        currentUserActivity?.update(activity)
+    }
+
     // MARK: - Subclasses can override
 
     var managedObjectContext: NSManagedObjectContext {
         return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
+    }
+
+    var currentUserActivity: UserActivity? {
+        return nil
     }
 }
 
@@ -82,6 +92,8 @@ class TableViewController<SectionType: Hashable, CellType: ReusableCell>: UITabl
 
         dataSourceWillInitialize()
         updateSnapshot(animated: false)
+
+        userActivity = currentUserActivity?.userActivity
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -100,6 +112,10 @@ class TableViewController<SectionType: Hashable, CellType: ReusableCell>: UITabl
 
     override var undoManager: UndoManager? {
         managedObjectContext.undoManager
+    }
+
+    override func updateUserActivityState(_ activity: NSUserActivity) {
+        currentUserActivity?.update(activity)
     }
 
     func updateSnapshot(animated: Bool = true) {
@@ -125,6 +141,10 @@ class TableViewController<SectionType: Hashable, CellType: ReusableCell>: UITabl
 
     var managedObjectContext: NSManagedObjectContext {
         return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
+    }
+
+    var currentUserActivity: UserActivity? {
+        return nil
     }
 
     var cellTypes: [String: RegisteredCellType<UITableViewCell>] {

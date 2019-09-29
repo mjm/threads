@@ -22,11 +22,7 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
     
     private var threadsList: FetchedObjectList<Thread>!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        userActivity = UserActivity.showMyThreads.userActivity
-    }
+    override var currentUserActivity: UserActivity? { .showMyThreads }
 
     override func dataSourceWillInitialize() {
         dataSource.canEditRow = { _, _, _ in true }
