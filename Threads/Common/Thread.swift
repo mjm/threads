@@ -6,7 +6,7 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import CoreData
 
 public class Thread: NSManagedObject {
@@ -190,5 +190,17 @@ public class Thread: NSManagedObject {
     
     func inProject(_ project: Project) -> ProjectThread? {
         return projects?.first(where: { ($0 as! ProjectThread).project == project }) as? ProjectThread
+    }
+
+    var colorImage: UIImage? {
+        guard let color = color else {
+            return nil
+        }
+
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 180, height: 180))
+        return renderer.image { context in
+            color.setFill()
+            context.fill(renderer.format.bounds)
+        }
     }
 }

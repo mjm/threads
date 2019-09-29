@@ -99,6 +99,11 @@ enum UserActivity {
             } else {
                 activity.title = Localized.dmcNumberUnknown
             }
+            let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
+            if let image = thread.colorImage, let data = image.pngData() {
+                attributes.thumbnailData = data
+            }
+            activity.contentAttributeSet = attributes
             activity.userInfo = [threadURLKey: threadURL]
             activity.requiredUserInfoKeys = [threadURLKey]
         case let .showProject(project):
