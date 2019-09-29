@@ -9,9 +9,15 @@
 import UIKit
 import CoreData
 
-class AddThreadViewController: UITableViewController {
+class AddThreadViewController: TableViewController<AddThreadViewController.Section, AddThreadViewController.Cell> {
     enum Section: CaseIterable {
         case threads
+    }
+
+    enum Cell: ReusableCell {
+        case thread(Thread)
+
+        var cellIdentifier: String { "Thread" }
     }
     
     var choices: [Thread] = []
@@ -22,7 +28,6 @@ class AddThreadViewController: UITableViewController {
     private var resultsViewController: ThreadResultsViewController!
     
     private var selectedThreads: [Thread] = []
-    private var dataSource: TableViewDiffableDataSource<Section, Thread>!
     
     @IBOutlet var keyboardAccessoryView: UIToolbar!
 
@@ -43,36 +48,41 @@ class AddThreadViewController: UITableViewController {
         navigationItem.hidesSearchBarWhenScrolling = false
         
         definesPresentationContext = true
-        
-        CollectionThreadTableViewCell.registerNib(on: tableView, reuseIdentifier: "Thread")
-        dataSource = TableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! CollectionThreadTableViewCell
-            cell.populate(item)
-            return cell
-        }
-        
+    }
+
+    override func dataSourceWillInitialize() {
         dataSource.canEditRow = { _, _, _ in true }
-        
-        updateSnapshot()
+    }
+
+    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
+        snapshot.appendSections(Section.allCases)
+        snapshot.appendItems(selectedThreads.map { .thread($0) }, toSection: .threads)
+    }
+
+    override func dataSourceDidUpdateSnapshot(animated: Bool) {
+        // Update the add button to reflect the quantity
+        if let addButton = navigationItem.rightBarButtonItems?.first {
+            addButton.title = String.localizedStringWithFormat(Localized.addBatchButton, selectedThreads.count)
+            addButton.isEnabled = !selectedThreads.isEmpty
+        }
+    }
+
+    override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {
+        ["Thread": .nib(CollectionThreadTableViewCell.self)]
+    }
+
+    override func populate(cell: UITableViewCell, item: AddThreadViewController.Cell) {
+        switch item {
+        case let .thread(thread):
+            let cell = cell as! CollectionThreadTableViewCell
+            cell.populate(thread)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         searchController.searchBar.perform(#selector(becomeFirstResponder), with: nil, afterDelay: 0.1)
-    }
-    
-    func updateSnapshot() {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()
-        snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(selectedThreads, toSection: .threads)
-        dataSource.apply(snapshot)
-        
-        // Also update the add button to reflect the quantity
-        if let addButton = navigationItem.rightBarButtonItems?.first {
-            addButton.title = String.localizedStringWithFormat(Localized.addBatchButton, selectedThreads.count)
-            addButton.isEnabled = !selectedThreads.isEmpty
-        }
     }
     
     @IBAction func tapKeyboardShortcut(sender: UIBarButtonItem) {
@@ -134,14 +144,26 @@ extension AddThreadViewController: UISearchResultsUpdating {
     }
 }
 
-class ThreadResultsViewController: UITableViewController {
+class ThreadResultsViewController: TableViewController<ThreadResultsViewController.Section, AddThreadViewController.Cell> {
     enum Section: CaseIterable {
         case threads
     }
     
     let threads: [Thread]
-    var dataSource: UITableViewDiffableDataSource<Section, Thread>!
-    
+    var query = ""
+    var exclusions = Set<Thread>()
+
+    var filteredThreads: [Thread] {
+        if query.isEmpty {
+            return []
+        } else {
+            return threads.filter {
+                return !exclusions.contains($0) &&
+                    $0.number!.lowercased().hasPrefix(query)
+            }
+        }
+    }
+
     init(choices: [Thread]) {
         self.threads = choices
         super.init(style: .plain)
@@ -150,34 +172,40 @@ class ThreadResultsViewController: UITableViewController {
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        CollectionThreadTableViewCell.registerNib(on: tableView, reuseIdentifier: "Thread")
-        
-        dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! CollectionThreadTableViewCell
-            cell.populate(item)
-            return cell
+
+    override var canBecomeFirstResponder: Bool {
+        false
+    }
+
+    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
+        snapshot.appendSections(Section.allCases)
+        snapshot.appendItems(filteredThreads.map { .thread($0) }, toSection: .threads)
+    }
+
+    override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {
+        ["Thread": .nib(CollectionThreadTableViewCell.self)]
+    }
+
+    override func populate(cell: UITableViewCell, item: AddThreadViewController.Cell) {
+        switch item {
+        case let .thread(thread):
+            let cell = cell as! CollectionThreadTableViewCell
+            cell.populate(thread)
         }
     }
     
     func search(_ query: String, excluding: Set<Thread>) {
-        let lowerQuery = query.lowercased()
-        
-        let items = threads.filter {
-            return !excluding.contains($0) &&
-                $0.number!.lowercased().hasPrefix(lowerQuery)
-        }
-        
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()
-        snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(items, toSection: .threads)
-        dataSource.apply(snapshot, animatingDifferences: false)
+        self.query = query.lowercased()
+        self.exclusions = excluding
+
+        updateSnapshot(animated: false)
     }
     
     func thread(at indexPath: IndexPath) -> Thread? {
-        return dataSource.itemIdentifier(for: indexPath)
+        if case let .thread(thread) = dataSource.itemIdentifier(for: indexPath) {
+            return thread
+        }
+
+        return nil
     }
 }
