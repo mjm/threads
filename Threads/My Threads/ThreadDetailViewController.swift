@@ -74,18 +74,7 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
     }
 
     override func createObservers() -> [Any] {
-        let updateShoppingListCell = { [weak self] (thread: Thread, _: Any) in
-            guard let self = self else { return }
-
-            guard let indexPath = self.dataSource.indexPath(for: .shoppingList),
-                let cell = self.tableView.cellForRow(at: indexPath) as? ShoppingListThreadTableViewCell else {
-                return
-            }
-
-            cell.populate(thread)
-        }
-
-        return [
+        [
             // Ensure we update the project names correctly.
             //
             // Watch all Core Data object changes, and whenever anything changes about a project, update the cell for the affected project thread.
@@ -107,8 +96,18 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
             thread.observe(\.inShoppingList) { [weak self] _, _ in
                 self?.updateSnapshot()
             },
-            thread.observe(\.amountInShoppingList, changeHandler: updateShoppingListCell),
-            thread.observe(\.purchased, changeHandler: updateShoppingListCell),
+            thread.observe(\.amountInShoppingList) { [weak self] _, _ in
+                self?.updateShoppingList()
+            },
+            thread.observe(\.purchased) { [weak self] _, _ in
+                self?.updateShoppingList()
+            },
+            thread.observe(\.onBobbin) { [weak self] _, _ in
+                self?.updateDetails()
+            },
+            thread.observe(\.amountInCollection) { [weak self] _, _ in
+                self?.updateDetails()
+            }
         ]
     }
 
@@ -204,6 +203,26 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.tintColor = nil
+    }
+
+    func updateDetails() {
+        guard let cell = dataSource.indexPath(for: .details).flatMap({ tableView.cellForRow(at: $0) as? ThreadDetailsTableViewCell }) else {
+            return
+        }
+
+        cell.populate(thread)
+
+        // Updating the snapshot, even though it hasn't changed, causes the table view
+        // to animate the potential height change in the cell.
+        updateSnapshot()
+    }
+
+    func updateShoppingList() {
+        guard let cell = dataSource.indexPath(for: .shoppingList).flatMap({ tableView.cellForRow(at: $0) as? ShoppingListThreadTableViewCell }) else {
+            return
+        }
+
+        cell.populate(thread)
     }
 
     func updateCell(_ projectThread: ProjectThread) {

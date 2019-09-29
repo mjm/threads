@@ -285,11 +285,11 @@
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Details" rowHeight="200" id="L4h-8A-xXw" customClass="ThreadDetailsTableViewCell" customModule="Threads" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="211.5" width="375" height="200"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="L4h-8A-xXw" id="nzx-u6-WZT">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="L4h-8A-xXw" id="nzx-u6-WZT">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="O8T-lv-YU8">
+                                        <stackView opaque="NO" contentMode="top" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="O8T-lv-YU8">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Blue Violet Very Dark" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lDm-3x-3M2">
@@ -302,7 +302,7 @@
                                                     <rect key="frame" x="16" y="111" width="240" height="0.0"/>
                                                     <variation key="heightClass=compact" hidden="NO"/>
                                                 </view>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="ji2-hf-NFN">
+                                                <stackView opaque="NO" contentMode="top" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="ji2-hf-NFN">
                                                     <rect key="frame" x="16" y="115" width="124.5" height="69"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="SOs-5q-XFZ">
