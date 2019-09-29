@@ -212,6 +212,12 @@ class CollectionViewController<SectionType: Hashable, CellType: ReusableCell>: U
         managedObjectContext.undoManager
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+
     override func updateUserActivityState(_ activity: NSUserActivity) {
         currentUserActivity?.update(activity)
     }

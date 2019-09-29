@@ -128,7 +128,7 @@ class ProjectListViewController: CollectionViewController<ProjectListViewControl
     @IBAction func unwindDeleteProject(segue: UIStoryboardSegue) {
     }
     
-    @IBSegueAction func makeDetailController(coder: NSCoder, sender: ProjectDetail) -> ProjectDetailViewController? {
+    @IBSegueAction func makeDetailController(coder: NSCoder, sender: ProjectDetail) -> UIViewController? {
         ProjectDetailViewController(coder: coder, project: sender.project, editing: sender.isEditing)
     }
     

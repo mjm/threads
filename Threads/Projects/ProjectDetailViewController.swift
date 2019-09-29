@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import CoreServices
 
-class ProjectDetailViewController: UICollectionViewController {
+class ProjectDetailViewController: CollectionViewController<ProjectDetailViewController.Section, ProjectDetailViewController.Cell> {
     enum Section: CaseIterable {
         case viewImages
         case editImages
@@ -19,7 +19,7 @@ class ProjectDetailViewController: UICollectionViewController {
         case threads
     }
     
-    enum Cell: Hashable {
+    enum Cell: ReusableCell {
         case viewImage(ProjectImage)
         case viewNotes
         case viewThread(ProjectThread, isLast: Bool)
@@ -43,74 +43,6 @@ class ProjectDetailViewController: UICollectionViewController {
             case .add: return "Add"
             }
         }
-        
-        func populate(cell: UICollectionViewCell, project: Project, controller: ProjectDetailViewController) {
-            switch self {
-                
-            case let .viewImage(image):
-                let cell = cell as! ViewImageCollectionViewCell
-                cell.populate(image)
-                
-            case .viewNotes:
-                let cell = cell as! TextViewCollectionViewCell
-                cell.textView.isEditable = false
-                cell.textView.dataDetectorTypes = .all
-                cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
-                cell.onChange = { _ in }
-
-            case let .viewThread(projectThread, isLast: isLast):
-                let cell = cell as! ViewProjectThreadCollectionViewCell
-                cell.populate(projectThread, isLastItem: isLast)
-                
-            case let .editImage(image):
-                let cell = cell as! EditImageCollectionViewCell
-                cell.populate(image)
-                return
-                
-            case .imagePlaceholder:
-                let cell = cell as! EditImageCollectionViewCell
-                cell.showPlaceholder()
-                return
-                
-            case .editName:
-                let cell = cell as! TextInputCollectionViewCell
-                cell.textField.placeholder = Localized.projectName
-                cell.textField.text = project.name
-                cell.onChange = { newText in
-                    project.name = newText
-                }
-                cell.onReturn = { [unowned cell] in
-                    cell.textField.resignFirstResponder()
-                }
-                
-            case .editNotes:
-                let cell = cell as! TextViewCollectionViewCell
-                cell.textView.isEditable = true
-                cell.textView.dataDetectorTypes = []
-                cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
-                cell.onChange = { [weak controller] newText in
-                    project.notes = newText
-                    controller?.updateSnapshot()
-                }
-
-            case let .editThread(projectThread):
-                let cell = cell as! EditProjectThreadCollectionViewCell
-                cell.populate(projectThread)
-                cell.onDecreaseQuantity = {
-                    if projectThread.amount == 1 {
-                        projectThread.managedObjectContext?.delete(projectThread)
-                    } else {
-                        projectThread.amount -= 1
-                    }
-                }
-                cell.onIncreaseQuantity = {
-                    projectThread.amount += 1
-                }
-
-            case .add:
-                return
-            }
-        }
     }
     
     let project: Project
@@ -118,8 +50,6 @@ class ProjectDetailViewController: UICollectionViewController {
 
     private var threadsList: FetchedObjectList<ProjectThread>!
     private var imagesList: FetchedObjectList<ProjectImage>!
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
-    private var actionRunner: UserActionRunner!
     
     @IBOutlet var actionsButtonItem: UIBarButtonItem!
 
@@ -136,8 +66,16 @@ class ProjectDetailViewController: UICollectionViewController {
         fatalError("ThreadDetailViewController should be created in an IBSegueAction")
     }
 
+    override var managedObjectContext: NSManagedObjectContext {
+        project.managedObjectContext!
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        if forceEditMode {
+            setEditing(true, animated: false)
+        }
         
         navigationItem.title = project.name
         navigationItem.rightBarButtonItems = [actionsButtonItem]
@@ -151,34 +89,16 @@ class ProjectDetailViewController: UICollectionViewController {
                 cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
             }
         }
+    }
 
-        actionRunner = UserActionRunner(viewController: self, managedObjectContext: project.managedObjectContext!)
+    override var currentUserActivity: UserActivity? { .showProject(project) }
 
-        collectionView.dragInteractionEnabled = true
-        collectionView.dragDelegate = self
-        collectionView.dropDelegate = self
-
-        ViewImageCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "Image")
-        EditImageCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "EditImage")
-        ViewProjectThreadCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "Thread")
-        EditProjectThreadCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "EditThread")
-        TextInputCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "TextInput")
-        TextViewCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "TextView")
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: item.cellIdentifier, for: indexPath)
-            
-            if let self = self {
-                item.populate(cell: cell, project: self.project, controller: self)
-            }
-            
-            return cell
-        }
-        
+    override func dataSourceWillInitialize() {
         dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
             guard let section = self?.dataSource.snapshot().sectionIdentifiers[indexPath.section] else {
                 return nil
             }
-            
+
             switch (kind, section) {
             case (UICollectionView.elementKindSectionHeader, .threads):
                 let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath) as! SectionHeaderLabelView
@@ -196,8 +116,6 @@ class ProjectDetailViewController: UICollectionViewController {
                 return nil
             }
         }
-        
-        collectionView.collectionViewLayout = createLayout()
 
         threadsList = FetchedObjectList(
             fetchRequest: ProjectThread.fetchRequest(for: project),
@@ -221,65 +139,12 @@ class ProjectDetailViewController: UICollectionViewController {
             }
         )
 
-        updateSnapshot(animated: false)
-        if forceEditMode {
-            setEditing(true, animated: false)
-        }
-        
-        userActivity = UserActivity.showProject(project).userActivity
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        becomeFirstResponder()
-
-        if forceEditMode {
-            // focus the project name text field
-            if let indexPath = dataSource.indexPath(for: .editName),
-                let cell = collectionView.cellForItem(at: indexPath) as? TextInputCollectionViewCell {
-                cell.textField.becomeFirstResponder()
-            }
-
-            // don't do this again if the view disappears and reappears
-            forceEditMode = false
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        resignFirstResponder()
-    }
-    
-    override var canBecomeFirstResponder: Bool {
-        true
+        collectionView.dragInteractionEnabled = true
+        collectionView.dragDelegate = self
+        collectionView.dropDelegate = self
     }
 
-    override var undoManager: UndoManager? {
-        project.managedObjectContext?.undoManager
-    }
-    
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        updateSnapshot(animated: animated)
-
-        navigationItem.largeTitleDisplayMode = editing ? .never : .automatic
-        navigationItem.setRightBarButtonItems(
-            editing ? [editButtonItem] : [actionsButtonItem],
-            animated: animated)
-
-        if editing {
-            project.managedObjectContext!.commit()
-            undoManager?.beginUndoGrouping()
-            undoManager?.setActionName(Localized.changeProject)
-        } else {
-            undoManager?.endUndoGrouping()
-            project.managedObjectContext!.commit()
-        }
-    }
-    
-    func updateSnapshot(animated: Bool = true) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
-        
+    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
         if isEditing {
             snapshot.appendSections([.editImages, .details])
             snapshot.appendItems(imagesList.objects.map { .editImage($0) }, toSection: .editImages)
@@ -300,24 +165,141 @@ class ProjectDetailViewController: UICollectionViewController {
         snapshot.appendSections([.threads])
         snapshot.appendItems(threads.enumerated().map { (index, item) in
             if isEditing {
-                return Cell.editThread(item)
+                return .editThread(item)
             } else {
                 let isLast = threads.index(after: index) == threads.endIndex
-                return Cell.viewThread(item, isLast: isLast)
+                return .viewThread(item, isLast: isLast)
             }
         }, toSection: .threads)
-        
+
         if isEditing {
             snapshot.appendItems([.add], toSection: .threads)
         }
-        
-        dataSource.apply(snapshot, animatingDifferences: animated)
-        
+    }
+
+    override func dataSourceDidUpdateSnapshot(animated: Bool) {
         // update the threads section header if needed
-        if let threadSectionIndex = snapshot.indexOfSection(.threads),
+        if let threadSectionIndex = dataSource.snapshot().indexOfSection(.threads),
             let sectionHeader = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: threadSectionIndex)) as? SectionHeaderLabelView {
             sectionHeader.textLabel.text = threadsSectionHeaderText()
             sectionHeader.setNeedsLayout()
+        }
+    }
+
+    override var cellTypes: [String : RegisteredCellType<UICollectionViewCell>] {
+        [
+            "TextInput": .nib(TextInputCollectionViewCell.self),
+            "TextView": .nib(TextViewCollectionViewCell.self),
+
+            "Image": .nib(ViewImageCollectionViewCell.self),
+            "Thread": .nib(ViewProjectThreadCollectionViewCell.self),
+
+            "EditImage": .nib(EditImageCollectionViewCell.self),
+            "EditThread": .nib(EditProjectThreadCollectionViewCell.self),
+        ]
+    }
+
+    override func populate(cell: UICollectionViewCell, item: ProjectDetailViewController.Cell) {
+        let project = self.project
+
+        switch item {
+
+        case let .viewImage(image):
+            let cell = cell as! ViewImageCollectionViewCell
+            cell.populate(image)
+
+        case .viewNotes:
+            let cell = cell as! TextViewCollectionViewCell
+            cell.textView.isEditable = false
+            cell.textView.dataDetectorTypes = .all
+            cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
+            cell.onChange = { _ in }
+
+        case let .viewThread(projectThread, isLast: isLast):
+            let cell = cell as! ViewProjectThreadCollectionViewCell
+            cell.populate(projectThread, isLastItem: isLast)
+
+        case let .editImage(image):
+            let cell = cell as! EditImageCollectionViewCell
+            cell.populate(image)
+            return
+
+        case .imagePlaceholder:
+            let cell = cell as! EditImageCollectionViewCell
+            cell.showPlaceholder()
+            return
+
+        case .editName:
+            let cell = cell as! TextInputCollectionViewCell
+            cell.textField.placeholder = Localized.projectName
+            cell.textField.text = project.name
+            cell.onChange = { newText in
+                project.name = newText
+            }
+            cell.onReturn = { [unowned cell] in
+                cell.textField.resignFirstResponder()
+            }
+
+        case .editNotes:
+            let cell = cell as! TextViewCollectionViewCell
+            cell.textView.isEditable = true
+            cell.textView.dataDetectorTypes = []
+            cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
+            cell.onChange = { [weak self] newText in
+                project.notes = newText
+                self?.updateSnapshot()
+            }
+
+        case let .editThread(projectThread):
+            let cell = cell as! EditProjectThreadCollectionViewCell
+            cell.populate(projectThread)
+            cell.onDecreaseQuantity = {
+                if projectThread.amount == 1 {
+                    projectThread.managedObjectContext?.delete(projectThread)
+                } else {
+                    projectThread.amount -= 1
+                }
+            }
+            cell.onIncreaseQuantity = {
+                projectThread.amount += 1
+            }
+
+        case .add:
+            return
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        if forceEditMode {
+            // focus the project name text field
+            if let indexPath = dataSource.indexPath(for: .editName),
+                let cell = collectionView.cellForItem(at: indexPath) as? TextInputCollectionViewCell {
+                cell.textField.becomeFirstResponder()
+            }
+
+            // don't do this again if the view disappears and reappears
+            forceEditMode = false
+        }
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        updateSnapshot(animated: animated)
+
+        navigationItem.largeTitleDisplayMode = editing ? .never : .automatic
+        navigationItem.setRightBarButtonItems(
+            editing ? [editButtonItem] : [actionsButtonItem],
+            animated: animated)
+
+        if editing {
+            project.managedObjectContext!.commit()
+            undoManager?.beginUndoGrouping()
+            undoManager?.setActionName(Localized.changeProject)
+        } else {
+            undoManager?.endUndoGrouping()
+            project.managedObjectContext!.commit()
         }
     }
 
@@ -335,7 +317,7 @@ class ProjectDetailViewController: UICollectionViewController {
         // no-op. there's not currently a meaningful way to update a project image in-place
     }
     
-    func createLayout() -> UICollectionViewLayout {
+    override func createLayout() -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { [weak self] sectionIndex, layoutEnvironment in
             let sectionType = self!.dataSource.snapshot().sectionIdentifiers[sectionIndex]
             
@@ -431,20 +413,10 @@ class ProjectDetailViewController: UICollectionViewController {
             }
         }
     }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        collectionView.collectionViewLayout.invalidateLayout()
-    }
     
     private func threadsSectionHeaderText() -> String {
         let items = threadsList.objects.count
         return String.localizedStringWithFormat(Localized.threadsSectionHeader, items)
-    }
-
-    override func updateUserActivityState(_ activity: NSUserActivity) {
-        UserActivity.showProject(project).update(activity)
     }
 
     private func cell(for item: Cell) -> UICollectionViewCell? {
