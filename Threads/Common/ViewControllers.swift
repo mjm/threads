@@ -267,3 +267,11 @@ class CollectionViewController<SectionType: Hashable, CellType: ReusableCell>: U
     func dataSourceDidUpdateSnapshot(animated: Bool) {}
     func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {}
 }
+
+// MARK: - Navigation Controller
+
+class NavigationController: UINavigationController {
+    override var childForStatusBarStyle: UIViewController? {
+        topViewController
+    }
+}

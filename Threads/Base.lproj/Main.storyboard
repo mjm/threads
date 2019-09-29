@@ -9,7 +9,7 @@
         <!--Shopping List-->
         <scene sceneID="7B4-2u-6PM">
             <objects>
-                <navigationController id="OBC-aI-n74" sceneMemberID="viewController">
+                <navigationController id="OBC-aI-n74" customClass="NavigationController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Shopping List" image="cart.fill" catalog="system" id="zSy-q9-B6f"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="3mb-y3-g2x">
                         <rect key="frame" x="0.0" y="44" width="414" height="96"/>
@@ -36,7 +36,7 @@
         <!--Projects-->
         <scene sceneID="lgE-iH-mau">
             <objects>
-                <navigationController id="HVA-Vo-ylI" sceneMemberID="viewController">
+                <navigationController id="HVA-Vo-ylI" customClass="NavigationController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Projects" image="rectangle.3.offgrid.fill" catalog="system" id="f6n-aB-aOz"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="h1B-cU-7pt">
                         <rect key="frame" x="0.0" y="44" width="414" height="96"/>
@@ -92,7 +92,7 @@
         <!--Collection-->
         <scene sceneID="swQ-Ox-NyJ">
             <objects>
-                <navigationController id="7Qc-1p-aK9" sceneMemberID="viewController">
+                <navigationController id="7Qc-1p-aK9" customClass="NavigationController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Collection" image="tray.full.fill" catalog="system" selectedImage="tray.full.fill" id="pT0-KO-7s3"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="ITR-WJ-RNg">
                         <rect key="frame" x="0.0" y="44" width="414" height="96"/>
@@ -112,5 +112,5 @@
         <image name="rectangle.3.offgrid.fill" catalog="system" width="64" height="40"/>
         <image name="tray.full.fill" catalog="system" width="64" height="44"/>
     </resources>
-    <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+    <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
