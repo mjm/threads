@@ -123,7 +123,7 @@ class TableViewController<SectionType: Hashable, CellType: ReusableCell>: UITabl
         buildSnapshotForDataSource(&snapshot)
         dataSource.apply(snapshot, animatingDifferences: animated)
 
-        dataSourceDidUpdateSnapshot()
+        dataSourceDidUpdateSnapshot(animated: animated)
     }
 
     private func registerCellTypes() {
@@ -156,7 +156,7 @@ class TableViewController<SectionType: Hashable, CellType: ReusableCell>: UITabl
     }
 
     func dataSourceWillInitialize() {}
-    func dataSourceDidUpdateSnapshot() {}
+    func dataSourceDidUpdateSnapshot(animated: Bool) {}
     func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {}
 }
 

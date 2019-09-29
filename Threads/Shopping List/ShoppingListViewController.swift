@@ -9,19 +9,19 @@
 import UIKit
 import CoreData
 
-class ShoppingListViewController: UITableViewController {
+class ShoppingListViewController: TableViewController<ShoppingListViewController.Section, ShoppingListViewController.Cell> {
     enum Section: CaseIterable {
         case unpurchased
         case purchased
     }
-    
-    private var managedObjectContext: NSManagedObjectContext {
-        return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
+
+    enum Cell: ReusableCell {
+        case thread(Thread)
+
+        var cellIdentifier: String { "Thread" }
     }
     
     private var threadsList: FetchedObjectList<Thread>!
-    private var dataSource: UITableViewDiffableDataSource<Section, Thread>!
-    private var actionRunner: UserActionRunner!
     
     private var purchaseDelayTimer: Timer?
     private var pendingPurchases = Set<Thread>()
@@ -32,31 +32,11 @@ class ShoppingListViewController: UITableViewController {
         super.viewDidLoad()
         
         addCheckedButton.imageView?.tintColor = .white
+    }
 
-        actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
-        
-        ShoppingListThreadTableViewCell.registerNib(on: tableView, reuseIdentifier: "Thread")
-        dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Thread", for: indexPath) as! ShoppingListThreadTableViewCell
-            cell.populate(item)
-            cell.onCheckTapped = {
-                self.actionRunner.perform(TogglePurchasedAction(thread: item), willPerform: { [weak self] in
-                    self?.delayPurchase(item)
-                })
-            }
-            cell.onIncreaseQuantity = {
-                self.actionRunner.perform(ChangeShoppingListAmountAction(thread: item, change: .increment), willPerform: { [weak self] in
-                    self?.resetDelayedPurchaseTimer()
-                })
-            }
-            cell.onDecreaseQuantity = {
-                self.actionRunner.perform(ChangeShoppingListAmountAction(thread: item, change: .decrement), willPerform: { [weak self] in
-                    self?.resetDelayedPurchaseTimer()
-                })
-            }
-            return cell
-        }
-        
+    override var currentUserActivity: UserActivity? { .showShoppingList }
+
+    override func dataSourceWillInitialize() {
         threadsList = FetchedObjectList(
             fetchRequest: Thread.inShoppingListFetchRequest(),
             managedObjectContext: managedObjectContext,
@@ -67,41 +47,18 @@ class ShoppingListViewController: UITableViewController {
                 self?.updateCell(thread)
             }
         )
-
-        updateSnapshot(animated: false)
-        
-        userActivity = UserActivity.showShoppingList.userActivity
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        becomeFirstResponder()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        resignFirstResponder()
-    }
-    
-    override var canBecomeFirstResponder: Bool {
-        true
     }
 
-    override var undoManager: UndoManager? {
-        managedObjectContext.undoManager
-    }
-    
-    func updateSnapshot(animated: Bool = true) {
-        // update the rows of the table
+    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
         var partitioned = threadsList.objects
         let p = partitioned.stablePartition { $0.purchased && !pendingPurchases.contains($0) }
 
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Thread>()
         snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(Array(partitioned[..<p]), toSection: .unpurchased)
-        snapshot.appendItems(Array(partitioned[p...]), toSection: .purchased)
-        dataSource.apply(snapshot, animatingDifferences: animated)
-
+        snapshot.appendItems(partitioned[..<p].map { .thread($0) }, toSection: .unpurchased)
+        snapshot.appendItems(partitioned[p...].map { .thread($0) }, toSection: .purchased)
+    }
+    
+    override func dataSourceDidUpdateSnapshot(animated: Bool) {
         // animate in/out the "Add Checked to Collection" button
         let anyChecked = !threadsList.objects.filter { $0.purchased }.isEmpty
         let header = self.tableView.tableHeaderView!
@@ -127,12 +84,39 @@ class ShoppingListViewController: UITableViewController {
         navigationController!.tabBarItem.badgeValue = unpurchasedItems > 0 ? "\(unpurchasedItems)" : nil
     }
 
+    override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {
+        ["Thread": .nib(ShoppingListThreadTableViewCell.self)]
+    }
+
+    override func populate(cell: UITableViewCell, item: ShoppingListViewController.Cell) {
+        switch item {
+        case let .thread(thread):
+            let cell = cell as! ShoppingListThreadTableViewCell
+            cell.populate(thread)
+            cell.onCheckTapped = { [weak self] in
+                self?.actionRunner.perform(TogglePurchasedAction(thread: thread), willPerform: {
+                    self?.delayPurchase(thread)
+                })
+            }
+            cell.onIncreaseQuantity = { [weak self] in
+                self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment), willPerform: {
+                    self?.resetDelayedPurchaseTimer()
+                })
+            }
+            cell.onDecreaseQuantity = { [weak self] in
+                self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .decrement), willPerform: {
+                    self?.resetDelayedPurchaseTimer()
+                })
+            }
+        }
+    }
+
     func updateCell(_ thread: Thread) {
         cellForThread(thread)?.populate(thread)
     }
 
     private func cellForThread(_ thread: Thread) -> ShoppingListThreadTableViewCell? {
-        dataSource.indexPath(for: thread).flatMap { tableView.cellForRow(at: $0) as? ShoppingListThreadTableViewCell }
+        dataSource.indexPath(for: .thread(thread)).flatMap { tableView.cellForRow(at: $0) as? ShoppingListThreadTableViewCell }
     }
 }
 
