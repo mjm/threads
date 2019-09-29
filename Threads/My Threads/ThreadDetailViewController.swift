@@ -33,9 +33,6 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
     let thread: Thread
 
     private var projectsList: FetchedObjectList<ProjectThread>!
-
-    private var observers: [NSKeyValueObservation] = []
-    private var projectsObserver: Any!
     
     init?(coder: NSCoder, thread: Thread) {
         self.thread = thread
@@ -69,30 +66,9 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
             appearance.shadowColor = nil
             navigationItem.scrollEdgeAppearance = appearance.copy()
         }
+    }
 
-        // Ensure we update the project names correctly.
-        //
-        // Watch all Core Data object changes, and whenever anything changes about a project, update the cell for the affected project thread.
-        projectsObserver = managedObjectContext.observeChanges(type: Project.self) { [weak self] affectedProjects in
-            guard let self = self else {
-                return
-            }
-
-            let interestingProjects = Dictionary(uniqueKeysWithValues: self.projectsList.objects.compactMap { projectThread in
-                projectThread.project.flatMap { ($0, projectThread) }
-            })
-
-            for project in affectedProjects {
-                if let projectThread = interestingProjects[project] {
-                    self.updateCell(projectThread)
-                }
-            }
-        }
-
-        observers.append(thread.observe(\.inShoppingList) { [weak self] _, _ in
-            self?.updateSnapshot()
-        })
-
+    override func createObservers() -> [Any] {
         let updateShoppingListCell = { [weak self] (thread: Thread, _: Any) in
             guard let self = self else { return }
 
@@ -104,14 +80,31 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
             cell.populate(thread)
         }
 
-        observers.append(thread.observe(\.amountInShoppingList, changeHandler: updateShoppingListCell))
-        observers.append(thread.observe(\.purchased, changeHandler: updateShoppingListCell))
-    }
+        return [
+            // Ensure we update the project names correctly.
+            //
+            // Watch all Core Data object changes, and whenever anything changes about a project, update the cell for the affected project thread.
+            managedObjectContext.observeChanges(type: Project.self) { [weak self] affectedProjects in
+                guard let self = self else {
+                    return
+                }
 
-    deinit {
-        if let observer = projectsObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
+                let interestingProjects = Dictionary(uniqueKeysWithValues: self.projectsList.objects.compactMap { projectThread in
+                    projectThread.project.flatMap { ($0, projectThread) }
+                })
+
+                for project in affectedProjects {
+                    if let projectThread = interestingProjects[project] {
+                        self.updateCell(projectThread)
+                    }
+                }
+            },
+            thread.observe(\.inShoppingList) { [weak self] _, _ in
+                self?.updateSnapshot()
+            },
+            thread.observe(\.amountInShoppingList, changeHandler: updateShoppingListCell),
+            thread.observe(\.purchased, changeHandler: updateShoppingListCell),
+        ]
     }
 
     override var currentUserActivity: UserActivity? { .showThread(thread) }
@@ -258,6 +251,7 @@ extension ThreadDetailViewController {
     }
 }
 
+// MARK: -
 class ThreadDetailsTableViewCell: UITableViewCell {
     @IBOutlet var labelLabel: UILabel!
     @IBOutlet var statusStackView: UIStackView!

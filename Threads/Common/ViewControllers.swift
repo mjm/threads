@@ -73,6 +73,8 @@ class TableViewController<SectionType: Hashable, CellType: ReusableCell>: UITabl
     private(set) var actionRunner: UserActionRunner!
     private(set) var dataSource: DataSource!
 
+    private var observers: [Any] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -92,6 +94,8 @@ class TableViewController<SectionType: Hashable, CellType: ReusableCell>: UITabl
 
         dataSourceWillInitialize()
         updateSnapshot(animated: false)
+
+        observers = createObservers()
 
         userActivity = currentUserActivity?.userActivity
     }
@@ -158,6 +162,10 @@ class TableViewController<SectionType: Hashable, CellType: ReusableCell>: UITabl
     func dataSourceWillInitialize() {}
     func dataSourceDidUpdateSnapshot(animated: Bool) {}
     func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {}
+
+    func createObservers() -> [Any] {
+        []
+    }
 }
 
 
@@ -169,6 +177,8 @@ class CollectionViewController<SectionType: Hashable, CellType: ReusableCell>: U
 
     private(set) var actionRunner: UserActionRunner!
     private(set) var dataSource: DataSource!
+
+    private var observers: [Any] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -190,6 +200,8 @@ class CollectionViewController<SectionType: Hashable, CellType: ReusableCell>: U
         dataSourceWillInitialize()
         collectionView.collectionViewLayout = createLayout()
         updateSnapshot(animated: false)
+
+        observers = createObservers()
 
         userActivity = currentUserActivity?.userActivity
     }
@@ -266,6 +278,10 @@ class CollectionViewController<SectionType: Hashable, CellType: ReusableCell>: U
     func dataSourceWillInitialize() {}
     func dataSourceDidUpdateSnapshot(animated: Bool) {}
     func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {}
+
+    func createObservers() -> [Any] {
+        []
+    }
 }
 
 // MARK: - Navigation Controller

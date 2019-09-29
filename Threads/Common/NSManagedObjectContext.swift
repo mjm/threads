@@ -25,7 +25,7 @@ extension NSManagedObjectContext {
     }
 
     func observeChanges<T: NSManagedObject>(type: T.Type, observer: @escaping (Set<T>) -> Void) -> Any {
-        return NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: self, queue: OperationQueue.main) { note in
+        return ObserverBox(NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: self, queue: OperationQueue.main) { note in
             guard let userInfo = note.userInfo else {
                 return
             }
@@ -37,6 +37,18 @@ extension NSManagedObjectContext {
 
             let interestingObjects = Set(changedObjects.compactMap { $0 as? T })
             observer(interestingObjects)
-        }
+        })
+    }
+}
+
+class ObserverBox {
+    let observer: Any
+
+    init(_ observer: Any) {
+        self.observer = observer
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(observer)
     }
 }

@@ -52,9 +52,6 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
     private var imagesList: FetchedObjectList<ProjectImage>!
     
     @IBOutlet var actionsButtonItem: UIBarButtonItem!
-
-    private var projectNameObserver: NSKeyValueObservation?
-    private var projectNotesObserver: NSKeyValueObservation?
     
     init?(coder: NSCoder, project: Project, editing: Bool = false) {
         self.project = project
@@ -73,22 +70,25 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.title = project.name
+        navigationItem.rightBarButtonItems = [actionsButtonItem]
+
         if forceEditMode {
             setEditing(true, animated: false)
         }
-        
-        navigationItem.title = project.name
-        navigationItem.rightBarButtonItems = [actionsButtonItem]
-        
-        projectNameObserver = project.observe(\.name) { [weak self] project, change in
-            self?.navigationItem.title = project.name
-        }
-        
-        projectNotesObserver = project.observe(\.notes) { [weak self] project, change in
-            if let cell = self?.cell(for: .viewNotes) as? TextViewCollectionViewCell {
-                cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
+    }
+
+    override func createObservers() -> [Any] {
+        [
+            project.observe(\.name) { [weak self] project, change in
+                self?.navigationItem.title = project.name
+            },
+            project.observe(\.notes) { [weak self] project, change in
+                if let cell = self?.cell(for: .viewNotes) as? TextViewCollectionViewCell {
+                    cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
+                }
             }
-        }
+        ]
     }
 
     override var currentUserActivity: UserActivity? { .showProject(project) }

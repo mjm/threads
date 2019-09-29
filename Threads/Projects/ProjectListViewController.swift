@@ -22,31 +22,20 @@ class ProjectListViewController: CollectionViewController<ProjectListViewControl
 
     private var projectsList: FetchedObjectList<Project>!
 
-    private var imagesObserver: Any!
+    override func createObservers() -> [Any] {
+        [
+            managedObjectContext.observeChanges(type: ProjectImage.self) { [weak self] affectedImages in
+                guard let self = self else {
+                    return
+                }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+                let affectedProjects = Set(affectedImages.compactMap { $0.project })
 
-        // Ensure we update the project image correctly.
-        //
-        // Watch all Core Data object changes, and whenever anything changes about a project image, update the cell for the affected project.
-        imagesObserver = managedObjectContext.observeChanges(type: ProjectImage.self) { [weak self] affectedImages in
-            guard let self = self else {
-                return
+                for project in affectedProjects {
+                    self.updateCell(project)
+                }
             }
-
-            let affectedProjects = Set(affectedImages.compactMap { $0.project })
-
-            for project in affectedProjects {
-                self.updateCell(project)
-            }
-        }
-    }
-
-    deinit {
-        if let observer = imagesObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
+        ]
     }
 
     override var currentUserActivity: UserActivity? { .showProjects }
