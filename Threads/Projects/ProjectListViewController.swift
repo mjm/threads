@@ -9,47 +9,23 @@
 import UIKit
 import CoreData
 
-class ProjectListViewController: UICollectionViewController {
+class ProjectListViewController: CollectionViewController<ProjectListViewController.Section, ProjectListViewController.Cell> {
     enum Section: CaseIterable {
         case projects
     }
 
-    private var managedObjectContext: NSManagedObjectContext {
-        return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
+    enum Cell: ReusableCell {
+        case project(Project)
+
+        var cellIdentifier: String { "Project" }
     }
 
     private var projectsList: FetchedObjectList<Project>!
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Project>!
-    private var actionRunner: UserActionRunner!
 
     private var imagesObserver: Any!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
-
-        ProjectCollectionViewCell.registerNib(on: collectionView, reuseIdentifier: "Project")
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Project", for: indexPath) as! ProjectCollectionViewCell
-            cell.populate(item)
-            return cell
-        }
-        
-        collectionView.collectionViewLayout = createLayout()
-
-        projectsList = FetchedObjectList(
-            fetchRequest: Project.allProjectsFetchRequest(),
-            managedObjectContext: managedObjectContext,
-            updateSnapshot: { [weak self] in
-                self?.updateSnapshot()
-            },
-            updateCell: { [weak self] project in
-                self?.updateCell(project)
-            }
-        )
-
-        updateSnapshot(animated: false)
 
         // Ensure we update the project image correctly.
         //
@@ -65,8 +41,6 @@ class ProjectListViewController: UICollectionViewController {
                 self.updateCell(project)
             }
         }
-        
-        userActivity = UserActivity.showProjects.userActivity
     }
 
     deinit {
@@ -74,41 +48,40 @@ class ProjectListViewController: UICollectionViewController {
             NotificationCenter.default.removeObserver(observer)
         }
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        becomeFirstResponder()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        resignFirstResponder()
-    }
-    
-    override var canBecomeFirstResponder: Bool {
-        true
+
+    override var currentUserActivity: UserActivity? { .showProjects }
+
+    override func dataSourceWillInitialize() {
+        projectsList = FetchedObjectList(
+            fetchRequest: Project.allProjectsFetchRequest(),
+            managedObjectContext: managedObjectContext,
+            updateSnapshot: { [weak self] in
+                self?.updateSnapshot()
+            },
+            updateCell: { [weak self] project in
+                self?.updateCell(project)
+            }
+        )
     }
 
-    override var undoManager: UndoManager? {
-        managedObjectContext.undoManager
-    }
-
-    func updateSnapshot(animated: Bool = true) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Project>()
+    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
         snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(projectsList.objects, toSection: .projects)
-        dataSource.apply(snapshot, animatingDifferences: animated)
+        snapshot.appendItems(projectsList.objects.map { .project($0) }, toSection: .projects)
     }
 
-    func updateCell(_ project: Project) {
-        cellForProject(project)?.populate(project)
+    override var cellTypes: [String : RegisteredCellType<UICollectionViewCell>] {
+        ["Project": .nib(ProjectCollectionViewCell.self)]
     }
 
-    private func cellForProject(_ project: Project) -> ProjectCollectionViewCell? {
-        dataSource.indexPath(for: project).flatMap { collectionView.cellForItem(at: $0) as? ProjectCollectionViewCell }
+    override func populate(cell: UICollectionViewCell, item: ProjectListViewController.Cell) {
+        switch item {
+        case let .project(project):
+            let cell = cell as! ProjectCollectionViewCell
+            cell.populate(project)
+        }
     }
     
-    func createLayout() -> UICollectionViewLayout {
+    override func createLayout() -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let containerSize = layoutEnvironment.container.effectiveContentSize
             let insets = layoutEnvironment.container.effectiveContentInsets
@@ -142,6 +115,14 @@ class ProjectListViewController: UICollectionViewController {
             section.contentInsets = sectionInsets
             return section
         }
+    }
+
+    func updateCell(_ project: Project) {
+        cellForProject(project)?.populate(project)
+    }
+
+    private func cellForProject(_ project: Project) -> ProjectCollectionViewCell? {
+        dataSource.indexPath(for: .project(project)).flatMap { collectionView.cellForItem(at: $0) as? ProjectCollectionViewCell }
     }
 
     @IBAction func unwindDeleteProject(segue: UIStoryboardSegue) {
@@ -179,12 +160,13 @@ extension ProjectListViewController {
 // MARK: - Collection View Delegate
 extension ProjectListViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let project = dataSource.itemIdentifier(for: indexPath)!
-        showDetail(for: project)
+        if case let .project(project) = dataSource.itemIdentifier(for: indexPath) {
+            showDetail(for: project)
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard let project = dataSource.itemIdentifier(for: indexPath) else {
+        guard case let .project(project) = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
         
@@ -215,6 +197,5 @@ extension ProjectListViewController {
         animator.addAnimations {
             self.showDetail(for: project)
         }
-
     }
 }
