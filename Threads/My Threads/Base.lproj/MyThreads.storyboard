@@ -293,20 +293,20 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Blue Violet Very Dark" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lDm-3x-3M2">
-                                                    <rect key="frame" x="16" y="16" width="181.5" height="58.5"/>
+                                                    <rect key="frame" x="16" y="16" width="181.5" height="91"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view hidden="YES" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="7XE-de-PGf">
-                                                    <rect key="frame" x="16" y="78.5" width="240" height="0.0"/>
+                                                    <rect key="frame" x="16" y="111" width="240" height="0.0"/>
                                                     <variation key="heightClass=compact" hidden="NO"/>
                                                 </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="ji2-hf-NFN">
-                                                    <rect key="frame" x="16" y="82.5" width="189" height="101.5"/>
+                                                    <rect key="frame" x="16" y="115" width="124.5" height="69"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="SOs-5q-XFZ">
-                                                            <rect key="frame" x="0.0" y="16" width="189" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="16" width="124.5" height="20.5"/>
                                                             <subviews>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="249" verticalCompressionResistancePriority="250" image="Bobbin" translatesAutoresizingMaskIntoConstraints="NO" id="J9t-ow-ZCb">
                                                                     <rect key="frame" x="0.0" y="0.0" width="20.5" height="20.5"/>
@@ -315,7 +315,7 @@
                                                                     </constraints>
                                                                 </imageView>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="On Bobbin" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A3k-OW-QOn">
-                                                                    <rect key="frame" x="28.5" y="0.0" width="160.5" height="20.5"/>
+                                                                    <rect key="frame" x="28.5" y="0.0" width="96" height="20.5"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -326,7 +326,7 @@
                                                             </constraints>
                                                         </stackView>
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="IUa-Uk-TbA">
-                                                            <rect key="frame" x="0.0" y="48.5" width="189" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="48.5" width="124.5" height="20.5"/>
                                                             <subviews>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="249" verticalCompressionResistancePriority="250" image="nosign" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="hoM-Cs-HsN">
                                                                     <rect key="frame" x="0.0" y="0.0" width="20.5" height="20.5"/>
@@ -336,7 +336,7 @@
                                                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="semibold"/>
                                                                 </imageView>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Out of Stock" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zY8-32-8oQ">
-                                                                    <rect key="frame" x="28.5" y="0.0" width="160.5" height="20.5"/>
+                                                                    <rect key="frame" x="28.5" y="0.0" width="96" height="20.5"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -345,29 +345,6 @@
                                                             <constraints>
                                                                 <constraint firstItem="hoM-Cs-HsN" firstAttribute="height" secondItem="zY8-32-8oQ" secondAttribute="height" id="8ko-gg-pJX"/>
                                                             </constraints>
-                                                        </stackView>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="CcV-QV-kJr">
-                                                            <rect key="frame" x="0.0" y="81" width="189" height="20.5"/>
-                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <subviews>
-                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="249" verticalCompressionResistancePriority="250" image="rectangle.3.offgrid.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ZRI-nw-SAM">
-                                                                    <rect key="frame" x="0.0" y="-0.5" width="20.5" height="22.5"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="width" secondItem="ZRI-nw-SAM" secondAttribute="height" multiplier="1:1" id="BPE-ds-ZyL"/>
-                                                                    </constraints>
-                                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
-                                                                </imageView>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Used in 3 Projects" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aG5-fg-QCo">
-                                                                    <rect key="frame" x="28.5" y="0.0" width="160.5" height="20.5"/>
-                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                                    <nil key="textColor"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                            </subviews>
-                                                            <constraints>
-                                                                <constraint firstItem="ZRI-nw-SAM" firstAttribute="height" secondItem="aG5-fg-QCo" secondAttribute="height" id="T5e-fE-0Hk"/>
-                                                            </constraints>
-                                                            <viewLayoutGuide key="safeArea" id="XNA-CG-Qbo"/>
                                                         </stackView>
                                                     </subviews>
                                                     <directionalEdgeInsets key="directionalLayoutMargins" top="16" leading="0.0" bottom="0.0" trailing="0.0"/>
@@ -391,9 +368,6 @@
                                     <outlet property="outOfStockImageView" destination="hoM-Cs-HsN" id="GIL-Xj-M4U"/>
                                     <outlet property="outOfStockLabel" destination="zY8-32-8oQ" id="Wmb-TO-fwA"/>
                                     <outlet property="outOfStockStackView" destination="IUa-Uk-TbA" id="APU-aP-4tr"/>
-                                    <outlet property="projectsImageView" destination="ZRI-nw-SAM" id="QD0-46-VcI"/>
-                                    <outlet property="projectsLabel" destination="aG5-fg-QCo" id="W1o-IW-HSD"/>
-                                    <outlet property="projectsStackView" destination="CcV-QV-kJr" id="Z8R-4h-ujC"/>
                                     <outlet property="statusStackView" destination="ji2-hf-NFN" id="pgu-oI-yi5"/>
                                 </connections>
                             </tableViewCell>

@@ -249,6 +249,23 @@ extension ThreadDetailViewController {
 
         return nil
     }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch dataSource.itemIdentifier(for: indexPath) {
+        case let .project(projectThread):
+            guard let project = projectThread.project,
+                let scene = view.window?.windowScene else {
+                return
+            }
+
+            let activity = UserActivity.showProject(project)
+            let sceneDelegate = scene.delegate as! SceneDelegate
+            sceneDelegate.scene(scene, continue: activity.userActivity)
+
+        default:
+            return
+        }
+    }
 }
 
 // MARK: -
@@ -261,9 +278,6 @@ class ThreadDetailsTableViewCell: UITableViewCell {
     @IBOutlet var outOfStockStackView: UIStackView!
     @IBOutlet var outOfStockImageView: UIImageView!
     @IBOutlet var outOfStockLabel: UILabel!
-    @IBOutlet var projectsStackView: UIStackView!
-    @IBOutlet var projectsImageView: UIImageView!
-    @IBOutlet var projectsLabel: UILabel!
 
     func populate(_ thread: Thread) {
         labelLabel.text = thread.label
@@ -281,12 +295,6 @@ class ThreadDetailsTableViewCell: UITableViewCell {
         outOfStockStackView.isHidden = thread.amountInCollection > 0
         outOfStockImageView.tintColor = foreground
         outOfStockLabel.textColor = foreground
-
-        let projectCount = thread.projects?.count ?? 0
-        projectsStackView.isHidden = projectCount == 0
-        projectsImageView.tintColor = foreground
-        projectsLabel.text = String.localizedStringWithFormat(Localized.usedInProjects, projectCount)
-        projectsLabel.textColor = foreground
 
         // hide whole stack if none are visible
         statusStackView.isHidden = statusStackView.arrangedSubviews.allSatisfy { $0.isHidden }
