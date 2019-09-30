@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
+		C946962B2340EF1B00843179 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946962A2340EF1B00843179 /* EmptyView.swift */; };
 		C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491DF3231D897B0031F463 /* AppDelegate.swift */; };
 		C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491DF5231D897B0031F463 /* SceneDelegate.swift */; };
 		C9491DFB231D897B0031F463 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9491DF9231D897B0031F463 /* Main.storyboard */; };
@@ -91,6 +92,7 @@
 
 /* Begin PBXFileReference section */
 		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
+		C946962A2340EF1B00843179 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		C9491DF0231D897B0031F463 /* Threads.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Threads.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9491DF3231D897B0031F463 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9491DF5231D897B0031F463 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 				C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */,
 				C955EDE7234028A8000ACC39 /* ViewControllers.swift */,
 				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
+				C946962A2340EF1B00843179 /* EmptyView.swift */,
 				C9491E362320C67A0031F463 /* SwatchView.swift */,
 				C97FCDA52329A921000B1590 /* SeparatorView.swift */,
 				C98F07C92334716F00BAB311 /* RoundedShadowView.swift */,
@@ -485,6 +488,7 @@
 				C97FCDF1232EA234000B1590 /* ProjectImage.swift in Sources */,
 				C9491E2F231E0BE00031F463 /* Thread.swift in Sources */,
 				C9491E3E23235FBF0031F463 /* ThreadTableViewCell.swift in Sources */,
+				C946962B2340EF1B00843179 /* EmptyView.swift in Sources */,
 				C97FCDA323296433000B1590 /* EditProjectThreadCollectionViewCell.swift in Sources */,
 				C97FCDBD232D79E7000B1590 /* Localized.swift in Sources */,
 				C97FCE06233068C0000B1590 /* ShoppingListActions.swift in Sources */,

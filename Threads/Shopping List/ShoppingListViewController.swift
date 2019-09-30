@@ -82,6 +82,25 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
         // update the tab bar badge
         let unpurchasedItems = threadsList.objects.filter { !$0.purchased }.count
         navigationController!.tabBarItem.badgeValue = unpurchasedItems > 0 ? "\(unpurchasedItems)" : nil
+
+        if threadsList.objects.isEmpty {
+            let emptyView = EmptyView()
+            emptyView.textLabel.text = Localized.emptyShoppingList
+            emptyView.iconView.image = UIImage(named: "Bobbin")
+            tableView.backgroundView = emptyView
+
+            NSLayoutConstraint.activate([
+                emptyView.leadingAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.leadingAnchor),
+                emptyView.trailingAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.trailingAnchor),
+                emptyView.topAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.topAnchor),
+                emptyView.bottomAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.bottomAnchor),
+            ])
+
+            tableView.tableFooterView = UIView() // hides the empty cell separators
+        } else {
+            tableView.backgroundView = nil
+            tableView.tableFooterView = nil
+        }
     }
 
     override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {

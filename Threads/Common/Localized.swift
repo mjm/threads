@@ -67,7 +67,8 @@ struct Localized {
     static let changePurchased = NSLocalizedString("Change Purchased", comment: "")
     static let changeQuantity = NSLocalizedString("Change Quantity", comment: "")
     static let removeFromShoppingList = NSLocalizedString("Remove from Shopping List", comment: "")
-    
+
+    static let emptyShoppingList = NSLocalizedString("Your shopping list doesn't have any threads.", comment: "")
     static let numberInShoppingList = NSLocalizedString("%lu in Shopping List", comment: "2 in Shopping List")
     static let usedInProjects = NSLocalizedString("UsedInProjects", comment: "Used in {num} Projects")
     static let inShoppingList = NSLocalizedString("In Shopping List", comment: "")
