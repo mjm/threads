@@ -44,6 +44,27 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
         snapshot.appendItems(threadsList.objects.map { .thread($0) }, toSection: .threads)
     }
 
+    override func dataSourceDidUpdateSnapshot(animated: Bool) {
+        if threadsList.objects.isEmpty {
+            let emptyView = EmptyView()
+            emptyView.textLabel.text = Localized.emptyCollection
+            emptyView.iconView.image = UIImage(named: "Bobbin")
+            tableView.backgroundView = emptyView
+
+            NSLayoutConstraint.activate([
+                emptyView.leadingAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.leadingAnchor),
+                emptyView.trailingAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.trailingAnchor),
+                emptyView.topAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.topAnchor),
+                emptyView.bottomAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.bottomAnchor),
+            ])
+
+            tableView.tableFooterView = UIView() // hides the empty cell separators
+        } else {
+            tableView.backgroundView = nil
+            tableView.tableFooterView = nil
+        }
+    }
+
     override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {
         ["Thread": .nib(CollectionThreadTableViewCell.self)]
     }

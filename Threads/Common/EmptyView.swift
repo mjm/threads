@@ -34,6 +34,7 @@ class EmptyView: UIView {
         iconView.tintColor = .systemGray2
         iconView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 60)
 
+        textLabel.numberOfLines = 0
         textLabel.textAlignment = .center
         textLabel.textColor = .systemGray2
 
