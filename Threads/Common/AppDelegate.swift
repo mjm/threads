@@ -39,13 +39,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: - Core Data stack
 
-    lazy var persistentContainer: NSPersistentCloudKitContainer = {
+    lazy var persistentContainer: NSPersistentContainer = {
+        if UserDefaults.standard.bool(forKey: "UseTemporaryStore") {
+            return createTemporaryContainer()
+        } else {
+            return createCloudKitContainer()
+        }
+    }()
+
+    private func createCloudKitContainer() -> NSPersistentContainer {
         let container = NSPersistentCloudKitContainer(name: "Threads")
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores { storeDescription, error in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
-            
+
             container.performBackgroundTask { context in
                 do {
                     let numMerged = try Thread.mergeThreads(context: context)
@@ -54,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 } catch {
                     NSLog("Error merging duplicate threads: \(error)")
                 }
-                
+
                 do {
                     try Thread.importThreads(DMCThread.all, context: context)
                     try context.save()
@@ -63,10 +71,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     NSLog("Error importing threads into local store: \(error)")
                 }
             }
-        })
+        }
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.undoManager = UndoManager()
         return container
-    }()
+    }
+
+    private func createTemporaryContainer() -> NSPersistentContainer {
+        let container = NSPersistentContainer(name: "Threads")
+
+        let description = NSPersistentStoreDescription()
+        description.type = NSInMemoryStoreType
+        container.persistentStoreDescriptions = [description]
+
+        container.loadPersistentStores { _, error in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+
+            container.performBackgroundTask { context in
+                do {
+                    try Thread.importThreads(DMCThread.all, context: context)
+                    try context.save()
+                    NSLog("Imported threads")
+                } catch {
+                    NSLog("Error importing threads into local store: \(error)")
+                }
+            }
+        }
+        container.viewContext.automaticallyMergesChangesFromParent = true
+        container.viewContext.undoManager = UndoManager()
+        return container
+    }
 }
 
