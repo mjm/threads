@@ -58,6 +58,24 @@ class ProjectListViewController: CollectionViewController<ProjectListViewControl
         snapshot.appendItems(projectsList.objects.map { .project($0) }, toSection: .projects)
     }
 
+    override func dataSourceDidUpdateSnapshot(animated: Bool) {
+        if projectsList.objects.isEmpty {
+            let emptyView = EmptyView()
+            emptyView.textLabel.text = Localized.emptyProjects
+            emptyView.iconView.image = UIImage(systemName: "rectangle.3.offgrid.fill")
+            collectionView.backgroundView = emptyView
+
+            NSLayoutConstraint.activate([
+                emptyView.leadingAnchor.constraint(equalTo: collectionView.safeAreaLayoutGuide.leadingAnchor),
+                emptyView.trailingAnchor.constraint(equalTo: collectionView.safeAreaLayoutGuide.trailingAnchor),
+                emptyView.topAnchor.constraint(equalTo: collectionView.safeAreaLayoutGuide.topAnchor),
+                emptyView.bottomAnchor.constraint(equalTo: collectionView.safeAreaLayoutGuide.bottomAnchor),
+            ])
+        } else {
+            collectionView.backgroundView = nil
+        }
+    }
+
     override var cellTypes: [String : RegisteredCellType<UICollectionViewCell>] {
         ["Project": .nib(ProjectCollectionViewCell.self)]
     }
