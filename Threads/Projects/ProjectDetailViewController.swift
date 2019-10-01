@@ -431,21 +431,22 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
 // MARK: - Actions
 extension ProjectDetailViewController {
     @IBAction func showActions() {
-        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let sheet = UIAlertController(actionRunner: actionRunner, preferredStyle: .actionSheet)
 
         sheet.addAction(UIAlertAction(title: Localized.edit, style: .default) { _ in
             self.setEditing(true, animated: true)
         })
-        sheet.addAction(actionRunner.alertAction(ShareProjectAction(project: project),
-                                                 title: Localized.share))
-        sheet.addAction(actionRunner.alertAction(AddProjectToShoppingListAction(project: project)))
+        sheet.addAction(ShareProjectAction(project: project), title: Localized.share)
+        sheet.addAction(AddProjectToShoppingListAction(project: project))
 
-        let deleteAction = actionRunner.alertAction(DeleteProjectAction(project: project), title: Localized.delete, style: .destructive, willPerform: {
-            self.userActivity = nil
-        }) {
+        sheet.addAction(
+            DeleteProjectAction(project: project),
+            title: Localized.delete,
+            style: .destructive,
+            willPerform: { self.userActivity = nil }
+        ) {
             self.performSegue(withIdentifier: "DeleteProject", sender: nil)
         }
-        sheet.addAction(deleteAction)
 
         sheet.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
 

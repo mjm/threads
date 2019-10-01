@@ -245,32 +245,36 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
 // MARK: - Actions
 extension ThreadDetailViewController {
     @IBAction func showActions() {
-        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let sheet = UIAlertController(actionRunner: actionRunner, preferredStyle: .actionSheet)
 
         if !thread.inShoppingList {
-            sheet.addAction(actionRunner.alertAction(AddToShoppingListAction(thread: thread)))
+            sheet.addAction(AddToShoppingListAction(thread: thread))
         }
 
         // TODO add to project
 
         if thread.amountInCollection == 0 {
-            sheet.addAction(actionRunner.alertAction(MarkInStockAction(thread: thread)))
+            sheet.addAction(MarkInStockAction(thread: thread))
         } else {
             if thread.onBobbin {
-                sheet.addAction(actionRunner.alertAction(MarkOffBobbinAction(thread: thread)))
+                sheet.addAction(MarkOffBobbinAction(thread: thread))
             } else {
-                sheet.addAction(actionRunner.alertAction(MarkOnBobbinAction(thread: thread)))
+                sheet.addAction(MarkOnBobbinAction(thread: thread))
             }
 
-            sheet.addAction(actionRunner.alertAction(MarkOutOfStockAction(thread: thread)))
+            sheet.addAction(MarkOutOfStockAction(thread: thread))
         }
-
-        let deleteAction = actionRunner.alertAction(RemoveThreadAction(thread: thread), title: Localized.removeFromCollection, style: .destructive, willPerform: {
-            self.userActivity = nil
-        }) {
+        
+        sheet.addAction(
+            RemoveThreadAction(thread: thread),
+            title: Localized.removeFromCollection,
+            style: .destructive,
+            willPerform: {
+                self.userActivity = nil
+            }
+        ) {
             self.performSegue(withIdentifier: "DeleteThread", sender: nil)
         }
-        sheet.addAction(deleteAction)
 
         sheet.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
 
