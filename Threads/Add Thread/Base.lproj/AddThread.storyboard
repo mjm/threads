@@ -69,6 +69,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="keyboardAccessoryView" destination="hR2-6R-oaO" id="orh-jo-2PD"/>
+                        <outlet property="quickAddButton" destination="sEq-cV-b1a" id="bel-tj-lEz"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2rI-HD-z3J" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -98,10 +99,18 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="uki-FH-zUn"/>
+                        <barButtonItem enabled="NO" image="plus.circle.fill" catalog="system" id="sEq-cV-b1a">
+                            <connections>
+                                <action selector="quickAddThread" destination="UPr-OV-mSa" id="1gR-Ew-5DD"/>
+                            </connections>
+                        </barButtonItem>
                     </items>
                 </toolbar>
             </objects>
             <point key="canvasLocation" x="3451" y="-227"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="plus.circle.fill" catalog="system" width="64" height="62"/>
+    </resources>
 </document>

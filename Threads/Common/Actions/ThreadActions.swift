@@ -85,6 +85,8 @@ struct AddThreadAction<AddAction: UserAction>: UserAction {
     // This action won't do the actual undoable work, instead the AddAction will do that.
     let undoActionName: String? = nil
 
+    let coordinator = Coordinator()
+
     func performAsync(_ context: UserActionContext<AddThreadAction<AddAction>>) {
         let storyboard = UIStoryboard(name: "AddThread", bundle: nil)
         let navController = storyboard.instantiateInitialViewController() as! UINavigationController
@@ -103,6 +105,15 @@ struct AddThreadAction<AddAction: UserAction>: UserAction {
             context.perform(addAction)
         }
 
+        navController.presentationController?.delegate = coordinator
         context.present(navController)
+    }
+
+    class Coordinator: NSObject, UIAdaptivePresentationControllerDelegate {
+        func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+            let navController = presentationController.presentedViewController as! UINavigationController
+            let addThreadController = navController.viewControllers[0] as! AddThreadViewController
+            return addThreadController.canDismiss
+        }
     }
 }

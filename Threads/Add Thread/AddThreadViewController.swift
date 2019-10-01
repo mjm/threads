@@ -26,10 +26,20 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
     
     private var searchController: UISearchController!
     private var resultsViewController: ThreadResultsViewController!
-    
+
+    private var threadToAdd: Thread? {
+        didSet {
+            quickAddButton.isEnabled = threadToAdd != nil
+        }
+    }
     private var selectedThreads: [Thread] = []
+
+    var canDismiss: Bool {
+        return selectedThreads.isEmpty
+    }
     
     @IBOutlet var keyboardAccessoryView: UIToolbar!
+    @IBOutlet var quickAddButton: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +49,8 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         
         searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.searchResultsUpdater = self
+        searchController.automaticallyShowsCancelButton = false
+        searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.autocapitalizationType = .none
         searchController.searchBar.placeholder = Localized.searchForNewThreads
         searchController.searchBar.keyboardType = .asciiCapableNumberPad
@@ -46,8 +58,6 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
-        
-        definesPresentationContext = true
     }
 
     override func dataSourceWillInitialize() {
@@ -82,11 +92,19 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        searchController.searchBar.perform(#selector(becomeFirstResponder), with: nil, afterDelay: 0.1)
+        searchController.searchBar.perform(#selector(becomeFirstResponder), with: nil, afterDelay: 0.05)
     }
     
     @IBAction func tapKeyboardShortcut(sender: UIBarButtonItem) {
         searchController.searchBar.text = sender.title!
+    }
+
+    @IBAction func quickAddThread() {
+        guard let thread = threadToAdd else {
+            return
+        }
+
+        addThread(thread)
     }
 
     @IBAction func cancel() {
@@ -112,11 +130,7 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
             return
         }
         
-        selectedThreads.append(thread)
-        updateSnapshot()
-        
-        searchController.searchBar.text = ""
-        dismiss(animated: true)
+        addThread(thread)
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -135,12 +149,19 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         
         return nil
     }
+
+    private func addThread(_ thread: Thread) {
+        selectedThreads.append(thread)
+        updateSnapshot()
+
+        searchController.searchBar.text = ""
+    }
 }
 
 extension AddThreadViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         let exclusions = Set(selectedThreads)
-        resultsViewController.search(searchController.searchBar.text ?? "", excluding: exclusions)
+        threadToAdd = resultsViewController.search(searchController.searchBar.text ?? "", excluding: exclusions)
     }
 }
 
@@ -194,11 +215,13 @@ class ThreadResultsViewController: TableViewController<ThreadResultsViewControll
         }
     }
     
-    func search(_ query: String, excluding: Set<Thread>) {
+    func search(_ query: String, excluding: Set<Thread>) -> Thread? {
         self.query = query.lowercased()
         self.exclusions = excluding
 
         updateSnapshot(animated: false)
+
+        return filteredThreads.first { $0.number?.lowercased() == self.query }
     }
     
     func thread(at indexPath: IndexPath) -> Thread? {
