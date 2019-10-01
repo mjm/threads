@@ -11,13 +11,28 @@ import CoreData
 
 class AddThreadViewController: TableViewController<AddThreadViewController.Section, AddThreadViewController.Cell> {
     enum Section: CaseIterable {
-        case threads
+        case results
+        case selected
     }
 
     enum Cell: ReusableCell {
-        case thread(Thread)
+        case thread(Thread, isResult: Bool)
 
         var cellIdentifier: String { "Thread" }
+
+        static func ==(lhs: Cell, rhs: Cell) -> Bool {
+            switch (lhs, rhs) {
+            case let (.thread(left, isResult: _), .thread(right, isResult: _)):
+                return left == right
+            }
+        }
+
+        func hash(into hasher: inout Hasher) {
+            switch self {
+            case let .thread(thread, isResult: _):
+                hasher.combine(thread)
+            }
+        }
     }
     
     var choices: [Thread] = []
@@ -25,7 +40,6 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
     var onAdd: (([Thread]) -> Void)!
     
     private var searchController: UISearchController!
-    private var resultsViewController: ThreadResultsViewController!
 
     private var threadToAdd: Thread? {
         didSet {
@@ -33,6 +47,8 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         }
     }
     private var selectedThreads: [Thread] = []
+    private var filteredThreads: [Thread] = []
+    private var isAdding = false
 
     var canDismiss: Bool {
         return selectedThreads.isEmpty
@@ -44,13 +60,12 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        resultsViewController = ThreadResultsViewController(choices: choices)
-        resultsViewController.tableView.delegate = self
-        
-        searchController = UISearchController(searchResultsController: resultsViewController)
+        searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.automaticallyShowsCancelButton = false
         searchController.hidesNavigationBarDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
+
         searchController.searchBar.autocapitalizationType = .none
         searchController.searchBar.placeholder = Localized.searchForNewThreads
         searchController.searchBar.keyboardType = .asciiCapableNumberPad
@@ -62,11 +77,25 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
 
     override func dataSourceWillInitialize() {
         dataSource.canEditRow = { _, _, _ in true }
+
+        dataSource.sectionTitle = { _, _, section in
+            switch section {
+            case .results: return NSLocalizedString("Matching Threads", comment: "")
+            case .selected: return NSLocalizedString("Threads to Add", comment: "")
+            }
+        }
     }
 
     override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
-        snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(selectedThreads.map { .thread($0) }, toSection: .threads)
+        if !filteredThreads.isEmpty {
+            snapshot.appendSections([.results])
+            snapshot.appendItems(filteredThreads.map { .thread($0, isResult: true) }, toSection: .results)
+        }
+
+        if !selectedThreads.isEmpty {
+            snapshot.appendSections([.selected])
+            snapshot.appendItems(selectedThreads.map { .thread($0, isResult: false) }, toSection: .selected)
+        }
     }
 
     override func dataSourceDidUpdateSnapshot(animated: Bool) {
@@ -83,7 +112,7 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
 
     override func populate(cell: UITableViewCell, item: AddThreadViewController.Cell) {
         switch item {
-        case let .thread(thread):
+        case let .thread(thread, isResult: _):
             let cell = cell as! CollectionThreadTableViewCell
             cell.populate(thread)
         }
@@ -116,20 +145,19 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if tableView == self.tableView {
+        guard case .thread(_, isResult: true) = dataSource.itemIdentifier(for: indexPath) else {
             return nil
-        } else {
-            return indexPath
         }
+
+        return indexPath
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        assert(tableView == resultsViewController.tableView)
-        
-        guard let thread = resultsViewController.thread(at: indexPath) else {
+        guard case let .thread(thread, isResult: true) = dataSource.itemIdentifier(for: indexPath) else {
             return
         }
-        
+
+        tableView.deselectRow(at: indexPath, animated: true)
         addThread(thread)
     }
     
@@ -151,84 +179,31 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
     }
 
     private func addThread(_ thread: Thread) {
-        selectedThreads.append(thread)
-        updateSnapshot()
+        isAdding = true
 
+        selectedThreads.insert(thread, at: 0)
         searchController.searchBar.text = ""
+
+        isAdding = false
     }
 }
 
 extension AddThreadViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
+        let query = searchController.searchBar.text?.lowercased() ?? ""
         let exclusions = Set(selectedThreads)
-        threadToAdd = resultsViewController.search(searchController.searchBar.text ?? "", excluding: exclusions)
-    }
-}
 
-class ThreadResultsViewController: TableViewController<ThreadResultsViewController.Section, AddThreadViewController.Cell> {
-    enum Section: CaseIterable {
-        case threads
-    }
-    
-    let threads: [Thread]
-    var query = ""
-    var exclusions = Set<Thread>()
-
-    var filteredThreads: [Thread] {
         if query.isEmpty {
-            return []
+            filteredThreads = []
         } else {
-            return threads.filter {
+            filteredThreads = choices.filter {
                 return !exclusions.contains($0) &&
                     $0.number!.lowercased().hasPrefix(query)
             }
         }
-    }
 
-    init(choices: [Thread]) {
-        self.threads = choices
-        super.init(style: .plain)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
+        threadToAdd = filteredThreads.first { $0.number?.lowercased() == query }
 
-    override var canBecomeFirstResponder: Bool {
-        false
-    }
-
-    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
-        snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(filteredThreads.map { .thread($0) }, toSection: .threads)
-    }
-
-    override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {
-        ["Thread": .nib(CollectionThreadTableViewCell.self)]
-    }
-
-    override func populate(cell: UITableViewCell, item: AddThreadViewController.Cell) {
-        switch item {
-        case let .thread(thread):
-            let cell = cell as! CollectionThreadTableViewCell
-            cell.populate(thread)
-        }
-    }
-    
-    func search(_ query: String, excluding: Set<Thread>) -> Thread? {
-        self.query = query.lowercased()
-        self.exclusions = excluding
-
-        updateSnapshot(animated: false)
-
-        return filteredThreads.first { $0.number?.lowercased() == self.query }
-    }
-    
-    func thread(at indexPath: IndexPath) -> Thread? {
-        if case let .thread(thread) = dataSource.itemIdentifier(for: indexPath) {
-            return thread
-        }
-
-        return nil
+        updateSnapshot(animated: isAdding)
     }
 }
