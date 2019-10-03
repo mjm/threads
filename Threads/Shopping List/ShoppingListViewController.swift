@@ -98,8 +98,12 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
 
             tableView.tableFooterView = UIView() // hides the empty cell separators
         } else {
-            tableView.backgroundView = nil
-            tableView.tableFooterView = nil
+            if tableView.backgroundView != nil {
+                tableView.backgroundView = nil
+            }
+            if tableView.tableFooterView != nil {
+                tableView.tableFooterView = nil
+            }
         }
     }
 
