@@ -6,9 +6,9 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import CoreData
+import CloudKit
 
 @objc(ProjectImage)
 public class ProjectImage: NSManagedObject {
@@ -47,6 +47,26 @@ public class ProjectImage: NSManagedObject {
 
         if let project = project {
             project.reorderImages()
+        }
+    }
+
+    func publishReference() -> (CKRecord.Reference, CKRecord?) {
+        if let publishedID = publishedID {
+            let id = CKRecord.ID(recordName: publishedID)
+            return (CKRecord.Reference(recordID: id, action: .none), nil)
+        } else {
+            let record = CKRecord(recordType: "ProjectImage")
+            _ = thumbnailImage // ensure the thumbnail data is set
+
+            let destination = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+            do {
+                try thumbnailData!.write(to: destination)
+                record["thumbnail"] = CKAsset(fileURL: destination)
+            } catch {
+                NSLog("Error writing thumbnail data: \(error)")
+            }
+
+            return (CKRecord.Reference(record: record, action: .none), record)
         }
     }
 }

@@ -79,7 +79,20 @@ extension Project {
             record["name"] = self.name
             record["notes"] = self.notes?.string
 
-            let operation = CKModifyRecordsOperation(recordsToSave: [record])
+            var records = [record]
+
+            let projectImages = self.orderedImages
+            var images: [CKRecord.Reference] = []
+            for (reference, imageRecord) in projectImages.map({ $0.publishReference() }) {
+                images.append(reference)
+                if let record = imageRecord {
+                    records.append(record)
+                }
+            }
+
+            record["images"] = images
+
+            let operation = CKModifyRecordsOperation(recordsToSave: records)
             operation.queuePriority = .veryHigh // this will be blocking a user operation so let's do it STAT
             operation.isAtomic = true
             operation.savePolicy = .changedKeys
@@ -95,7 +108,15 @@ extension Project {
                 }
 
                 self.managedObjectContext?.perform {
-                    self.publishedID = records[0].recordID.recordName
+                    let projectRecord = records[0]
+
+                    self.publishedID = projectRecord.recordID.recordName
+
+                    let imageReferences = projectRecord["images"] as! [CKRecord.Reference]
+                    for (image, reference) in zip(projectImages, imageReferences) {
+                        image.publishedID = reference.recordID.recordName
+                    }
+                    
                     completion(nil)
                 }
             }
