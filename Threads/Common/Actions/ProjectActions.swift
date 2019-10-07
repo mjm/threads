@@ -103,7 +103,7 @@ struct ShareProjectAction: SyncUserAction {
     let undoActionName: String? = nil
 
     func perform(_ context: UserActionContext<ShareProjectAction>) throws {
-        let activityController = UIActivityViewController(activityItems: [project],
+        let activityController = UIActivityViewController(activityItems: [ProjectActivity(project: project)],
                                                           applicationActivities: nil)
         context.present(activityController)
     }

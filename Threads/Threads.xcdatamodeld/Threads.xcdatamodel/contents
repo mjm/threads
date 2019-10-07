@@ -3,6 +3,7 @@
     <entity name="Project" representedClassName="Project" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="notes" optional="YES" attributeType="Transformable" customClassName="NSAttributedString"/>
+        <attribute name="publishedID" optional="YES" attributeType="String"/>
         <relationship name="images" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectImage" inverseName="project" inverseEntity="ProjectImage"/>
         <relationship name="threads" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectThread" inverseName="project" inverseEntity="ProjectThread"/>
     </entity>
@@ -30,7 +31,7 @@
         <relationship name="projects" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectThread" inverseName="thread" inverseEntity="ProjectThread"/>
     </entity>
     <elements>
-        <element name="Project" positionX="-36" positionY="81" width="128" height="103"/>
+        <element name="Project" positionX="-36" positionY="81" width="128" height="118"/>
         <element name="ProjectImage" positionX="-36" positionY="81" width="128" height="103"/>
         <element name="ProjectThread" positionX="-45" positionY="63" width="128" height="88"/>
         <element name="Thread" positionX="-54" positionY="-9" width="128" height="193"/>

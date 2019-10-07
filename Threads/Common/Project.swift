@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import CloudKit
 
 extension Project {
     class func allProjectsFetchRequest() -> NSFetchRequest<Project> {
@@ -59,5 +60,58 @@ extension Project {
     
     var primaryImage: ProjectImage? {
         orderedImages.first
+    }
+
+    func publish(completion: @escaping (Error?) -> Void) {
+        let database = CKContainer.default().publicCloudDatabase
+
+        publishableRecord { record, error in
+            if let error = error {
+                completion(error)
+                return
+            }
+
+            guard let record = record else {
+                completion(nil)
+                return
+            }
+
+            record["name"] = self.name
+            record["notes"] = self.notes?.string
+
+            let operation = CKModifyRecordsOperation(recordsToSave: [record])
+            operation.queuePriority = .veryHigh // this will be blocking a user operation so let's do it STAT
+            operation.isAtomic = true
+            operation.savePolicy = .changedKeys
+            operation.modifyRecordsCompletionBlock = { records, _, error in
+                if let error = error {
+                    completion(error)
+                    return
+                }
+
+                guard let records = records else {
+                    completion(nil)
+                    return
+                }
+
+                self.managedObjectContext?.perform {
+                    self.publishedID = records[0].recordID.recordName
+                    completion(nil)
+                }
+            }
+
+            database.add(operation)
+        }
+    }
+
+    private func publishableRecord(completion: @escaping (CKRecord?, Error?) -> Void) {
+        if let id = publishedID {
+            let recordID = CKRecord.ID(recordName: id)
+
+            let database = CKContainer.default().publicCloudDatabase
+            database.fetch(withRecordID: recordID, completionHandler: completion)
+        } else {
+            completion(CKRecord(recordType: "Project"), nil)
+        }
     }
 }
