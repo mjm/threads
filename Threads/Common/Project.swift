@@ -92,6 +92,22 @@ extension Project {
 
             record["images"] = images
 
+            let projectThreads: [ProjectThread]
+            do {
+                projectThreads = try self.managedObjectContext!.fetch(ProjectThread.fetchRequest(for: self))
+                var threads: [CKRecord.Reference] = []
+                for projectThread in projectThreads {
+                    let threadRecord = projectThread.publishRecord()
+                    records.append(threadRecord)
+                    threads.append(CKRecord.Reference(record: threadRecord, action: .none))
+                }
+
+                record["threads"] = threads
+            } catch {
+                completion(error)
+                return
+            }
+
             let operation = CKModifyRecordsOperation(recordsToSave: records)
             operation.queuePriority = .veryHigh // this will be blocking a user operation so let's do it STAT
             operation.isAtomic = true
@@ -116,7 +132,12 @@ extension Project {
                     for (image, reference) in zip(projectImages, imageReferences) {
                         image.publishedID = reference.recordID.recordName
                     }
-                    
+
+                    let threadReferences = projectRecord["threads"] as! [CKRecord.Reference]
+                    for (thread, reference) in zip(projectThreads, threadReferences) {
+                        thread.publishedID = reference.recordID.recordName
+                    }
+
                     completion(nil)
                 }
             }
