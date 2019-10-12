@@ -8,20 +8,10 @@
 
 import UIKit
 
-class SidebarViewController: TableViewController<SidebarViewController.Section, SidebarViewController.Cell> {
+class SidebarViewController: TableViewController<SidebarViewController.Section, SidebarSelection> {
     enum Section: CaseIterable {
         case threads
         case projects
-    }
-    
-    enum Cell: ReusableCell {
-        case collection
-        case shoppingList
-        case project(Project)
-        
-        var cellIdentifier: String {
-            "Cell"
-        }
     }
     
     private var projectsList: FetchedObjectList<Project>!
@@ -58,7 +48,7 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
         ]
     }
     
-    override func populate(cell: UITableViewCell, item: SidebarViewController.Cell) {
+    override func populate(cell: UITableViewCell, item: SidebarSelection) {
         switch item {
         case .collection:
             cell.imageView?.image = UIImage(systemName: "tray.full")
@@ -73,22 +63,32 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        setSelection(rootViewController.selection)
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath) else {
             return
         }
         
-        switch item {
-        case .collection:
-            performSegue(withIdentifier: "ShowMyThreads", sender: nil)
-        case .shoppingList:
-            performSegue(withIdentifier: "ShowShoppingList", sender: nil)
-        case let .project(project):
-            performSegue(withIdentifier: "ShowProject", sender: project)
-        }
+        rootViewController.selection = item
     }
     
-    @IBSegueAction func makeProjectDetailController(coder: NSCoder, sender: Project) -> UIViewController? {
-        ProjectDetailViewController(coder: coder, project: sender)
+    func setSelection(_ selection: SidebarSelection) {
+        let indexPath = dataSource.indexPath(for: selection)
+        tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+    }
+    
+    private var rootViewController: SplitViewController {
+        splitViewController as! SplitViewController
+    }
+}
+
+extension SidebarSelection: ReusableCell {
+    var cellIdentifier: String {
+        "Cell"
     }
 }

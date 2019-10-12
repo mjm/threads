@@ -30,47 +30,56 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="L1k-ka-a9y"/>
-                    <connections>
-                        <segue destination="rzo-At-ANd" kind="showDetail" identifier="ShowMyThreads" id="u7e-bQ-rrU"/>
-                        <segue destination="rYA-Ya-Row" kind="showDetail" identifier="ShowShoppingList" id="mpM-ba-aqc"/>
-                        <segue destination="Ihm-ay-lre" kind="showDetail" identifier="ShowProject" destinationCreationSelector="makeProjectDetailControllerWithCoder:sender:" id="dfW-Pw-ZSO"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="luB-EE-Ivv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="404" y="-545"/>
         </scene>
+        <!--Detail View Controller-->
+        <scene sceneID="7Vm-5q-mjB">
+            <objects>
+                <tabBarController id="E9e-Pn-O7U" customClass="DetailViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBar key="tabBar" hidden="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="e1J-tv-zlw">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="rzo-At-ANd" kind="relationship" relationship="viewControllers" id="uwQ-xj-tZQ"/>
+                        <segue destination="rYA-Ya-Row" kind="relationship" relationship="viewControllers" id="aPc-BF-cee"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Eas-Hy-jWg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="404" y="282"/>
+        </scene>
         <!--MyThreads-->
         <scene sceneID="ewL-G1-1c0">
             <objects>
-                <viewControllerPlaceholder storyboardName="MyThreads" id="rzo-At-ANd" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="MyThreads" id="rzo-At-ANd" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="mbB-2y-ehb"/>
+                </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eg6-9s-uJ4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="190" y="-6"/>
+            <point key="canvasLocation" x="989" y="82"/>
         </scene>
         <!--ShoppingList-->
         <scene sceneID="4aA-dZ-sn0">
             <objects>
-                <viewControllerPlaceholder storyboardName="ShoppingList" id="rYA-Ya-Row" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="ShoppingList" id="rYA-Ya-Row" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="CZq-lb-p2s"/>
+                </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="77T-Tr-hb6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="404" y="-6"/>
-        </scene>
-        <!--ProjectDetail-->
-        <scene sceneID="A6O-uV-M9B">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Projects" referencedIdentifier="ProjectDetail" id="Ihm-ay-lre" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dLM-RI-UVr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="613" y="-6"/>
+            <point key="canvasLocation" x="994" y="282"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="R1y-er-gxk">
             <objects>
-                <splitViewController id="MC4-pC-cMN" sceneMemberID="viewController">
+                <splitViewController id="MC4-pC-cMN" customClass="SplitViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
                     <connections>
                         <segue destination="nKs-hz-GSD" kind="relationship" relationship="masterViewController" id="Wlj-ej-oo3"/>
-                        <segue destination="rzo-At-ANd" kind="relationship" relationship="detailViewController" id="7w8-Xm-H5s"/>
+                        <segue destination="E9e-Pn-O7U" kind="relationship" relationship="detailViewController" id="bt7-bz-kch"/>
                     </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zQW-4L-MTQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -78,7 +87,4 @@
             <point key="canvasLocation" x="-514" y="-204"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="u7e-bQ-rrU"/>
-    </inferredMetricsTieBreakers>
 </document>

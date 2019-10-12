@@ -10,6 +10,8 @@
 		C906E3B423526FCC003EE053 /* MacSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3B323526FCC003EE053 /* MacSceneDelegate.swift */; };
 		C906E3B6235270CD003EE053 /* Main_Mac.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C906E3B5235270CD003EE053 /* Main_Mac.storyboard */; };
 		C906E3B9235272A0003EE053 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3B8235272A0003EE053 /* SidebarViewController.swift */; };
+		C906E3BB23527C61003EE053 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3BA23527C61003EE053 /* SplitViewController.swift */; };
+		C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3BC23528E82003EE053 /* DetailViewController.swift */; };
 		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
 		C946962B2340EF1B00843179 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946962A2340EF1B00843179 /* EmptyView.swift */; };
 		C946962D2342D69500843179 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946962C2342D69500843179 /* AlertController.swift */; };
@@ -98,6 +100,8 @@
 		C906E3B323526FCC003EE053 /* MacSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSceneDelegate.swift; sourceTree = "<group>"; };
 		C906E3B5235270CD003EE053 /* Main_Mac.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main_Mac.storyboard; sourceTree = "<group>"; };
 		C906E3B8235272A0003EE053 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
+		C906E3BA23527C61003EE053 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
+		C906E3BC23528E82003EE053 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
 		C946962A2340EF1B00843179 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		C946962C2342D69500843179 /* AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
@@ -206,6 +210,8 @@
 			isa = PBXGroup;
 			children = (
 				C906E3B8235272A0003EE053 /* SidebarViewController.swift */,
+				C906E3BC23528E82003EE053 /* DetailViewController.swift */,
+				C906E3BA23527C61003EE053 /* SplitViewController.swift */,
 			);
 			path = Sidebar;
 			sourceTree = "<group>";
@@ -537,6 +543,7 @@
 				C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */,
 				C97FCDB3232CAD4E000B1590 /* TextInputCollectionViewCell.swift in Sources */,
 				C97FCE08233073AA000B1590 /* ProjectActions.swift in Sources */,
+				C906E3BB23527C61003EE053 /* SplitViewController.swift in Sources */,
 				C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */,
 				C9491E372320C67A0031F463 /* SwatchView.swift in Sources */,
 				C97FCDE3232DD3D2000B1590 /* ThreadPreviewViewController.swift in Sources */,
@@ -556,6 +563,7 @@
 				C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */,
 				C9491E44232491D90031F463 /* Project.swift in Sources */,
 				C97FCDBF232D9FD0000B1590 /* TextViewCollectionViewCell.swift in Sources */,
+				C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
