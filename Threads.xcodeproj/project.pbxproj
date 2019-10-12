@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C906E3B423526FCC003EE053 /* MacSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3B323526FCC003EE053 /* MacSceneDelegate.swift */; };
+		C906E3B6235270CD003EE053 /* Main_Mac.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C906E3B5235270CD003EE053 /* Main_Mac.storyboard */; };
+		C906E3B9235272A0003EE053 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3B8235272A0003EE053 /* SidebarViewController.swift */; };
 		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
 		C946962B2340EF1B00843179 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946962A2340EF1B00843179 /* EmptyView.swift */; };
 		C946962D2342D69500843179 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946962C2342D69500843179 /* AlertController.swift */; };
@@ -92,6 +95,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C906E3B323526FCC003EE053 /* MacSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSceneDelegate.swift; sourceTree = "<group>"; };
+		C906E3B5235270CD003EE053 /* Main_Mac.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main_Mac.storyboard; sourceTree = "<group>"; };
+		C906E3B8235272A0003EE053 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
 		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
 		C946962A2340EF1B00843179 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		C946962C2342D69500843179 /* AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
@@ -196,6 +202,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C906E3B72352728C003EE053 /* Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				C906E3B8235272A0003EE053 /* SidebarViewController.swift */,
+			);
+			path = Sidebar;
+			sourceTree = "<group>";
+		};
 		C942E44B2336C72300987EAB /* Banner */ = {
 			isa = PBXGroup;
 			children = (
@@ -233,9 +247,11 @@
 				C97FCDE7232DFC7E000B1590 /* Projects */,
 				C97FCDE8232DFCB2000B1590 /* Add Thread */,
 				C942E44B2336C72300987EAB /* Banner */,
+				C906E3B72352728C003EE053 /* Sidebar */,
 				C9491E12231DAA5D0031F463 /* AllThreads.json */,
 				C9491DFF231D897C0031F463 /* Assets.xcassets */,
 				C9491DF9231D897B0031F463 /* Main.storyboard */,
+				C906E3B5235270CD003EE053 /* Main_Mac.storyboard */,
 				C9491E01231D897C0031F463 /* LaunchScreen.storyboard */,
 				C9491E04231D897C0031F463 /* Info.plist */,
 				C9491E0A231D8A1E0031F463 /* Threads.entitlements */,
@@ -266,6 +282,7 @@
 			children = (
 				C9491DF3231D897B0031F463 /* AppDelegate.swift */,
 				C9491DF5231D897B0031F463 /* SceneDelegate.swift */,
+				C906E3B323526FCC003EE053 /* MacSceneDelegate.swift */,
 				C97FCDAF232C8ED7000B1590 /* UserActivity.swift */,
 				C97FCDBC232D79E7000B1590 /* Localized.swift */,
 				C97FCDBB232D78AA000B1590 /* Localizable.stringsdict */,
@@ -467,6 +484,7 @@
 				C9491E13231DAA5D0031F463 /* AllThreads.json in Resources */,
 				C97FCDB4232CAD4E000B1590 /* TextInputCollectionViewCell.xib in Resources */,
 				C9491E2D231DE0070031F463 /* CollectionThreadTableViewCell.xib in Resources */,
+				C906E3B6235270CD003EE053 /* Main_Mac.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -501,6 +519,7 @@
 				C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */,
 				C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */,
 				C97FCE02232F4CB3000B1590 /* UserActionRunner.swift in Sources */,
+				C906E3B423526FCC003EE053 /* MacSceneDelegate.swift in Sources */,
 				C9491E4023246AC80031F463 /* Partition.swift in Sources */,
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,
 				C97FCDFB232F3BC3000B1590 /* Image.swift in Sources */,
@@ -526,6 +545,7 @@
 				C97FCDAE232C8796000B1590 /* Project+UIActivityItemSource.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,
 				C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */,
+				C906E3B9235272A0003EE053 /* SidebarViewController.swift in Sources */,
 				C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */,
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
 				C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */,

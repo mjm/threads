@@ -81,7 +81,7 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
         
         // update the tab bar badge
         let unpurchasedItems = threadsList.objects.filter { !$0.purchased }.count
-        navigationController!.tabBarItem.badgeValue = unpurchasedItems > 0 ? "\(unpurchasedItems)" : nil
+        navigationController?.tabBarItem.badgeValue = unpurchasedItems > 0 ? "\(unpurchasedItems)" : nil
 
         if threadsList.objects.isEmpty {
             let emptyView = EmptyView()

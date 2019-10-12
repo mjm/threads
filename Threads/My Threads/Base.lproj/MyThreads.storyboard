@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7CW-HH-VtZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7CW-HH-VtZ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -53,13 +53,13 @@
                                         <variation key="heightClass=compact" hidden="YES"/>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DMC 123" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w9Z-SE-2O9">
-                                        <rect key="frame" x="0.0" y="150" width="123" height="36"/>
+                                        <rect key="frame" x="0.0" y="150" width="139" height="33.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Blue Violet Very Dark" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="onO-yH-TMf">
-                                        <rect key="frame" x="0.0" y="194" width="181.5" height="24"/>
+                                        <rect key="frame" x="0.0" y="191.5" width="198.5" height="26.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -95,7 +95,7 @@
                                                 <rect key="frame" x="0.0" y="48.5" width="189" height="20.5"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="249" verticalCompressionResistancePriority="250" image="nosign" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="yY0-lK-X7S">
-                                                        <rect key="frame" x="0.0" y="0.0" width="20.5" height="20.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="20.5" height="20"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="yY0-lK-X7S" secondAttribute="height" multiplier="1:1" id="goG-s4-kw9"/>
                                                         </constraints>
@@ -117,7 +117,7 @@
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="249" verticalCompressionResistancePriority="250" image="cart.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ekf-fz-gvn">
-                                                        <rect key="frame" x="0.0" y="-1" width="20.5" height="24.5"/>
+                                                        <rect key="frame" x="0.0" y="-1" width="20.5" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="ekf-fz-gvn" secondAttribute="height" multiplier="1:1" id="mvo-Ho-Oj8"/>
                                                         </constraints>
@@ -140,7 +140,7 @@
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="249" verticalCompressionResistancePriority="250" image="rectangle.3.offgrid.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ofx-I9-5ve">
-                                                        <rect key="frame" x="0.0" y="-0.5" width="20.5" height="22.5"/>
+                                                        <rect key="frame" x="0.0" y="-0.5" width="20.5" height="22"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="ofx-I9-5ve" secondAttribute="height" multiplier="1:1" id="poZ-ai-6EO"/>
                                                         </constraints>
@@ -269,7 +269,7 @@
                                             <rect key="frame" x="0.0" y="-2" width="414" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eTv-Sc-ZXe" customClass="SeparatorView" customModule="Threads" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eTv-Sc-ZXe" customClass="SeparatorView" customModule="Threads" customModuleProvider="target">
                                                     <rect key="frame" x="15" y="43.5" width="384" height="0.5"/>
                                                 </view>
                                             </subviews>
@@ -329,7 +329,7 @@
                                                             <rect key="frame" x="0.0" y="48.5" width="124.5" height="20.5"/>
                                                             <subviews>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="249" verticalCompressionResistancePriority="250" image="nosign" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="hoM-Cs-HsN">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="20.5" height="20.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="20.5" height="20"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" secondItem="hoM-Cs-HsN" secondAttribute="height" multiplier="1:1" id="XBh-XC-Fd2"/>
                                                                     </constraints>
@@ -386,6 +386,7 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="actionsButtonItem" destination="XNe-tt-yiG" id="Yod-tn-3CT"/>
                         <segue destination="2gX-dE-jLk" kind="unwind" identifier="DeleteThread" unwindAction="unwindDeleteThreadWithSegue:" id="WIa-Ox-vl8"/>
                     </connections>
                 </tableViewController>
@@ -397,10 +398,10 @@
     </scenes>
     <resources>
         <image name="Bobbin" width="100" height="100"/>
-        <image name="cart.fill" catalog="system" width="64" height="52"/>
-        <image name="ellipsis.circle.fill" catalog="system" width="64" height="62"/>
-        <image name="nosign" catalog="system" width="64" height="62"/>
-        <image name="plus" catalog="system" width="64" height="58"/>
+        <image name="cart.fill" catalog="system" width="64" height="50"/>
+        <image name="ellipsis.circle.fill" catalog="system" width="64" height="60"/>
+        <image name="nosign" catalog="system" width="64" height="60"/>
+        <image name="plus" catalog="system" width="64" height="56"/>
         <image name="rectangle.3.offgrid.fill" catalog="system" width="64" height="40"/>
     </resources>
 </document>

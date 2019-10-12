@@ -34,6 +34,8 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
 
     private var projectsList: FetchedObjectList<ProjectThread>!
     
+    @IBOutlet var actionsButtonItem: UIBarButtonItem!
+    
     init?(coder: NSCoder, thread: Thread) {
         self.thread = thread
         super.init(coder: coder)
@@ -246,6 +248,7 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
 extension ThreadDetailViewController {
     @IBAction func showActions() {
         let sheet = UIAlertController(actionRunner: actionRunner, preferredStyle: .actionSheet)
+        sheet.popoverPresentationController?.barButtonItem = actionsButtonItem
 
         if !thread.inShoppingList {
             sheet.addAction(AddToShoppingListAction(thread: thread))

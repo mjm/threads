@@ -432,6 +432,7 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
 extension ProjectDetailViewController {
     @IBAction func showActions() {
         let sheet = UIAlertController(actionRunner: actionRunner, preferredStyle: .actionSheet)
+        sheet.popoverPresentationController?.barButtonItem = actionsButtonItem
 
         sheet.addAction(UIAlertAction(title: Localized.edit, style: .default) { _ in
             self.setEditing(true, animated: true)

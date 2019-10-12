@@ -115,9 +115,11 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
 // MARK: - Table View Delegate
 extension MyThreadsViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        #if !targetEnvironment(macCatalyst)
         if case let .thread(thread) = dataSource.itemIdentifier(for: indexPath)! {
             showDetail(for: thread)
         }
+        #endif
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

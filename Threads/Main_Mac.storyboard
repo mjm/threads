@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="MC4-pC-cMN">
+    <device id="mac" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Root View Controller-->
+        <scene sceneID="Z5O-Cy-4WW">
+            <objects>
+                <tableViewController clearsSelectionOnViewWillAppear="NO" id="nKs-hz-GSD" customClass="SidebarViewController" customModule="Threads" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="M45-WP-oT5">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="wgi-U9-MDI">
+                                <rect key="frame" x="0.0" y="55" width="320" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wgi-U9-MDI" id="pZt-h5-zO6">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="nKs-hz-GSD" id="HTC-dd-UVV"/>
+                            <outlet property="delegate" destination="nKs-hz-GSD" id="k0v-xV-X2m"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Root View Controller" id="L1k-ka-a9y"/>
+                    <connections>
+                        <segue destination="rzo-At-ANd" kind="showDetail" identifier="ShowMyThreads" id="u7e-bQ-rrU"/>
+                        <segue destination="rYA-Ya-Row" kind="showDetail" identifier="ShowShoppingList" id="mpM-ba-aqc"/>
+                        <segue destination="Ihm-ay-lre" kind="showDetail" identifier="ShowProject" destinationCreationSelector="makeProjectDetailControllerWithCoder:sender:" id="dfW-Pw-ZSO"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="luB-EE-Ivv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="404" y="-545"/>
+        </scene>
+        <!--MyThreads-->
+        <scene sceneID="ewL-G1-1c0">
+            <objects>
+                <viewControllerPlaceholder storyboardName="MyThreads" id="rzo-At-ANd" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eg6-9s-uJ4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="190" y="-6"/>
+        </scene>
+        <!--ShoppingList-->
+        <scene sceneID="4aA-dZ-sn0">
+            <objects>
+                <viewControllerPlaceholder storyboardName="ShoppingList" id="rYA-Ya-Row" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="77T-Tr-hb6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="404" y="-6"/>
+        </scene>
+        <!--ProjectDetail-->
+        <scene sceneID="A6O-uV-M9B">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Projects" referencedIdentifier="ProjectDetail" id="Ihm-ay-lre" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dLM-RI-UVr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="613" y="-6"/>
+        </scene>
+        <!--Split View Controller-->
+        <scene sceneID="R1y-er-gxk">
+            <objects>
+                <splitViewController id="MC4-pC-cMN" sceneMemberID="viewController">
+                    <connections>
+                        <segue destination="nKs-hz-GSD" kind="relationship" relationship="masterViewController" id="Wlj-ej-oo3"/>
+                        <segue destination="rzo-At-ANd" kind="relationship" relationship="detailViewController" id="7w8-Xm-H5s"/>
+                    </connections>
+                </splitViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zQW-4L-MTQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-514" y="-204"/>
+        </scene>
+    </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="u7e-bQ-rrU"/>
+    </inferredMetricsTieBreakers>
+</document>
