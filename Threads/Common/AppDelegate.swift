@@ -118,6 +118,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         builder.insertChild(menu, atStartOfMenu: .file)
         
+        let share = UICommand(title: "Share", action: #selector(SplitViewController.shareProject(_:)), propertyList: UICommandTagShare)
+        if let closeMenu = builder.menu(for: .close) {
+            builder.replace(menu: .close, with: closeMenu.replacingChildren([share] + closeMenu.children))
+        } else {
+            builder.insertChild(UIMenu(title: "", options: .displayInline, children: [share]), atEndOfMenu: .file)
+        }
+        
         let viewMyThreads = UIKeyCommand(title: "My Threads", action: #selector(SplitViewController.viewMyThreads(_:)), input: "1", modifierFlags: [.command])
         let viewShoppingList = UIKeyCommand(title: "Shopping List", action: #selector(SplitViewController.viewShoppingList(_:)), input: "2", modifierFlags: [.command])
         let viewShortcutsMenu = UIMenu(title: "", options: .displayInline, children: [viewMyThreads, viewShoppingList])
@@ -132,8 +139,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         builder.insertSibling(threadMenu, afterMenu: .view)
         
         let editProject = UIKeyCommand(title: "Edit", action: #selector(SplitViewController.toggleEditingProject(_:)), input: "e", modifierFlags: [.command, .shift])
-        let shareProject = UICommand(title: "Share", action: #selector(SplitViewController.shareProject(_:)))
-        let projectActionsMenu = UIMenu(title: "", options: .displayInline, children: [editProject, shareProject])
+        let projectActionsMenu = UIMenu(title: "", options: .displayInline, children: [editProject])
         
         let projectMenu = UIMenu(title: "Project", children: [projectActionsMenu])
         builder.insertSibling(projectMenu, afterMenu: .view)

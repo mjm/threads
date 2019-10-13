@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 enum SidebarSelection: Hashable {
     case collection
@@ -126,6 +127,7 @@ class SplitViewController: UISplitViewController {
     }
     
     func updateToolbar() {
+        #if targetEnvironment(macCatalyst)
         guard let scene = view.window?.windowScene, let titlebar = scene.titlebar, let toolbar = titlebar.toolbar else {
             return
         }
@@ -136,7 +138,7 @@ class SplitViewController: UISplitViewController {
             if projectController.isEditing {
                 desiredState.append(contentsOf: [.flexibleSpace, .doneEditing])
             } else {
-                desiredState.append(contentsOf: [.flexibleSpace, .edit])
+                desiredState.append(contentsOf: [.flexibleSpace, .edit, .share])
             }
         }
         
@@ -152,6 +154,7 @@ class SplitViewController: UISplitViewController {
         if let titleIdentifier = toolbar.centeredItemIdentifier, let titleItem = toolbar.items.first(where: { $0.itemIdentifier == titleIdentifier }) {
             titleItem.title = selection.toolbarTitle
         }
+        #endif
     }
     
     var managedObjectContext: NSManagedObjectContext {

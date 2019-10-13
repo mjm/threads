@@ -17,6 +17,31 @@ extension Project: UIActivityItemSource {
         NSLog("activityType = \(String(describing: activityType))")
         return name ?? Localized.unnamedProject
     }
+    
+    var itemProvider: NSItemProvider {
+        let itemProvider = NSItemProvider()
+        itemProvider.registerObject(ofClass: NSURL.self, visibility: .all) { completion in
+            let progress = Progress.discreteProgress(totalUnitCount: 1)
+            
+            self.publish { error in
+                if error != nil {
+                    completion(nil, error)
+                } else {
+                    if let recordID = self.publishedID {
+                        let url = URL(string: "https://threads-demo.glitch.me/projects/\(recordID)")!
+                        NSLog("URL for published project: \(url)")
+                        progress.completedUnitCount = 1
+                        completion(url as NSURL, nil)
+                    } else {
+                        fatalError()
+                    }
+                }
+            }
+            
+            return progress
+        }
+        return itemProvider
+    }
 }
 
 class ProjectActivity: UIActivityItemProvider {
@@ -38,6 +63,8 @@ class ProjectActivity: UIActivityItemProvider {
 
             group.leave()
         }
+        
+        group.wait()
 
         if let recordID = project.publishedID {
             let url = "https://threads-demo.glitch.me/projects/\(recordID)"
