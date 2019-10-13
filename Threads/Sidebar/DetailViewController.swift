@@ -58,4 +58,8 @@ class DetailViewController: UITabBarController {
         
         projectDetailViewController = newController
     }
+    
+    var currentUserActivity: NSUserActivity? {
+        selectedViewController?.userActivity
+    }
 }

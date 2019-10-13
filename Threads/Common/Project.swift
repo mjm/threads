@@ -17,6 +17,15 @@ extension Project {
         return request
     }
     
+    class func withName(_ name: String, context: NSManagedObjectContext) throws -> Project? {
+        let request: NSFetchRequest<Project> = fetchRequest()
+        request.predicate = NSPredicate(format: "name = %@", name)
+        request.fetchLimit = 1
+        
+        let results = try context.fetch(request)
+        return results.first
+    }
+    
     func addToShoppingList() {
         let projectThreads = (threads?.allObjects ?? []) as! [ProjectThread]
         for projectThread in projectThreads {

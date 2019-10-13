@@ -13,7 +13,9 @@ import CoreSpotlight
 import CoreServices
 
 private let threadURLKey = "ThreadURL"
+private let threadNumberKey = "ThreadNumber"
 private let projectURLKey = "ProjectURL"
+private let projectNameKey = "ProjectName"
 
 private enum UserActivityType: String {
     case showMyThreads = "com.mattmoriarity.Threads.ShowMyThreads"
@@ -47,6 +49,9 @@ enum UserActivity {
                 let threadID = context.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: threadURL),
                 let thread = context.object(with: threadID) as? Thread {
                 self = .showThread(thread)
+            } else if let threadNumber = userActivity.userInfo?[threadNumberKey] as? String,
+                let thread = try? Thread.withNumber(threadNumber, context: context) {
+                self = .showThread(thread)
             } else {
                 return nil
             }
@@ -54,6 +59,9 @@ enum UserActivity {
             if let projectURL = userActivity.userInfo?[projectURLKey] as? URL,
                 let projectID = context.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: projectURL),
                 let project = context.object(with: projectID) as? Project {
+                self = .showProject(project)
+            } else if let projectName = userActivity.userInfo?[projectNameKey] as? String,
+                let project = try? Project.withName(projectName, context: context) {
                 self = .showProject(project)
             } else {
                 return nil
@@ -104,7 +112,7 @@ enum UserActivity {
                 attributes.thumbnailData = data
             }
             activity.contentAttributeSet = attributes
-            activity.userInfo = [threadURLKey: threadURL]
+            activity.userInfo = [threadURLKey: threadURL, threadNumberKey: thread.number!]
             activity.requiredUserInfoKeys = [threadURLKey]
         case let .showProject(project):
             let projectURL = project.objectID.uriRepresentation()
@@ -115,7 +123,7 @@ enum UserActivity {
                 attributes.thumbnailData = data
             }
             activity.contentAttributeSet = attributes
-            activity.userInfo = [projectURLKey: projectURL]
+            activity.userInfo = [projectURLKey: projectURL, projectNameKey: project.name ?? ""]
             activity.requiredUserInfoKeys = [projectURLKey]
         }
         

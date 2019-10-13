@@ -52,6 +52,15 @@ public class Thread: NSManagedObject {
         return request
     }
     
+    class func withNumber(_ number: String, context: NSManagedObjectContext) throws -> Thread? {
+        let request: NSFetchRequest<Thread> = fetchRequest()
+        request.predicate = NSPredicate(format: "number = %@", number)
+        request.fetchLimit = 1
+        
+        let results = try context.fetch(request)
+        return results.first
+    }
+    
     class func importThreads(_ threads: [DMCThread], context: NSManagedObjectContext) throws {
         // assumes the threads are already sorted by number
         
