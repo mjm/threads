@@ -144,6 +144,14 @@ class TableViewController<SectionType: Hashable, CellType: ReusableCell>: UITabl
             }
         }
     }
+    
+    var selectedCell: CellType? {
+        guard let indexPath = tableView.indexPathForSelectedRow else {
+            return nil
+        }
+        
+        return dataSource.itemIdentifier(for: indexPath)
+    }
 
     // MARK: - Subclasses can override
 

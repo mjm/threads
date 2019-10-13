@@ -100,6 +100,14 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
         actionRunner.perform(action)
     }
     
+    override func delete(_ sender: Any?) {
+        guard case let .thread(thread) = selectedCell else {
+            return
+        }
+        
+        actionRunner.perform(RemoveThreadAction(thread: thread))
+    }
+    
     @IBAction func unwindDeleteThread(segue: UIStoryboardSegue) {
     }
     
