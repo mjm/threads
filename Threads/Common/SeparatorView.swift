@@ -8,6 +8,12 @@
 
 import UIKit
 
+#if targetEnvironment(macCatalyst)
+let separatorHeight: CGFloat = 1.0
+#else
+let separatorHeight: CGFloat = 0.5
+#endif
+
 @IBDesignable
 class SeparatorView: UIView {
     override init(frame: CGRect) {
@@ -23,7 +29,7 @@ class SeparatorView: UIView {
     private func configure() {
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .separator
-        
-        heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+
+        heightAnchor.constraint(equalToConstant: separatorHeight).isActive = true
     }
 }
