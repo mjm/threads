@@ -47,6 +47,14 @@ class SplitViewController: UISplitViewController {
         }
     }
     
+    @objc func viewMyThreads(_ sender: Any) {
+        selection = .collection
+    }
+    
+    @objc func viewShoppingList(_ sender: Any) {
+        selection = .shoppingList
+    }
+    
     @objc func showProject(_ sender: Any) {
         guard let project = sender as? Project else {
             preconditionFailure("Sender for showProject(_:) should be a Project")

@@ -111,11 +111,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         builder.remove(menu: .format)
         builder.remove(menu: .newScene) // remove option to open a new window
+        builder.remove(menu: .toolbar)
         
         let newProject = UIKeyCommand(title: "New Project…", action: #selector(SplitViewController.addProject(_:)), input: "n", modifierFlags: [.command])
         let menu = UIMenu(title: "", options: .displayInline, children: [newProject])
 
         builder.insertChild(menu, atStartOfMenu: .file)
+        
+        let viewMyThreads = UIKeyCommand(title: "My Threads", action: #selector(SplitViewController.viewMyThreads(_:)), input: "1", modifierFlags: [.command])
+        let viewShoppingList = UIKeyCommand(title: "Shopping List", action: #selector(SplitViewController.viewShoppingList(_:)), input: "2", modifierFlags: [.command])
+        let viewShortcutsMenu = UIMenu(title: "", options: .displayInline, children: [viewMyThreads, viewShoppingList])
+        
+        builder.insertChild(viewShortcutsMenu, atStartOfMenu: .view)
     }
 }
 
