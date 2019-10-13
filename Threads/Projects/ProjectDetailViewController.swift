@@ -332,7 +332,7 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
 
                 let traitCollection = layoutEnvironment.traitCollection
                 let showMultipleImages = traitCollection.verticalSizeClass == .compact || traitCollection.horizontalSizeClass == .regular
-                let dimension: NSCollectionLayoutDimension = showMultipleImages ? .fractionalHeight(0.4) : .fractionalWidth(0.8)
+                let dimension: NSCollectionLayoutDimension = showMultipleImages ? .absolute(200) : .fractionalWidth(0.8)
                 let groupSize = NSCollectionLayoutSize(widthDimension: dimension,
                                                        heightDimension: dimension)
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
@@ -345,13 +345,23 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
                 return section
                 
             case .editImages:
+                #if targetEnvironment(macCatalyst)
+                let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(200),
+                                                      heightDimension: .absolute(200))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupSize =  NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                        heightDimension: .absolute(200))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                #else
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                      heightDimension: .fractionalHeight(1.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
+                
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                        heightDimension: .fractionalWidth(0.33))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
+                #endif
                 group.interItemSpacing = .fixed(1)
 
                 let section = NSCollectionLayoutSection(group: group)
