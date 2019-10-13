@@ -142,7 +142,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         builder.insertSibling(threadMenu, afterMenu: .view)
         
         let editProject = UIKeyCommand(title: "Edit", action: #selector(SplitViewController.toggleEditingProject(_:)), input: "e", modifierFlags: [.command, .shift])
-        let projectActionsMenu = UIMenu(title: "", options: .displayInline, children: [editProject])
+        let addToShoppingList = UICommand(title: "Add to Shopping List", action: #selector(SplitViewController.addProjectToShoppingList(_:)))
+        let projectActionsMenu = UIMenu(title: "", options: .displayInline, children: [editProject, addToShoppingList])
         
         let projectMenu = UIMenu(title: "Project", children: [projectActionsMenu])
         builder.insertSibling(projectMenu, afterMenu: .view)

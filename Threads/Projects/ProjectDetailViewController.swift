@@ -472,6 +472,10 @@ extension ProjectDetailViewController {
     @objc func shareProject(_ sender: Any) {
         actionRunner.perform(ShareProjectAction(project: project))
     }
+    
+    @objc func addProjectToShoppingList(_ sender: Any) {
+        actionRunner.perform(AddProjectToShoppingListAction(project: project))
+    }
 
     @objc func addThreads(_ sender: Any) {
         let existingThreads = threadsList.objects.compactMap { $0.thread }

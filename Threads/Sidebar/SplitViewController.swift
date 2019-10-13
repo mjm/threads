@@ -91,13 +91,22 @@ class SplitViewController: UISplitViewController {
         controller.shareProject(sender)
     }
     
+    @objc func addProjectToShoppingList(_ sender: Any) {
+        guard let controller = projectDetailViewController else {
+            return
+        }
+        
+        controller.addProjectToShoppingList(sender)
+    }
+    
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         guard super.canPerformAction(action, withSender: sender) else {
             return false
         }
 
         switch action {
-        case #selector(shareProject(_:)):
+        case #selector(shareProject(_:)),
+             #selector(addProjectToShoppingList(_:)):
             return projectDetailViewController != nil
         case #selector(addThreads(_:)):
             guard let currentController = detailViewController.selectedViewController else {
