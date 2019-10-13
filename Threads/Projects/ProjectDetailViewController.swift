@@ -292,6 +292,9 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
         navigationItem.setRightBarButtonItems(
             editing ? [editButtonItem] : [actionsButtonItem],
             animated: animated)
+        if let rootViewController = splitViewController as? SplitViewController {
+            rootViewController.updateToolbar()
+        }
 
         if editing {
             project.managedObjectContext!.commit()
@@ -452,6 +455,14 @@ extension ProjectDetailViewController {
         sheet.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
 
         present(sheet, animated: true)
+    }
+    
+    @objc func edit(_ sender: Any) {
+        setEditing(true, animated: true)
+    }
+    
+    @objc func doneEditing(_ sender: Any) {
+        setEditing(false, animated: true)
     }
 
     func addThread() {

@@ -37,6 +37,8 @@ class MacSceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension NSToolbarItem.Identifier {
     static let addProject = NSToolbarItem.Identifier("addProject")
     static let title = NSToolbarItem.Identifier("title")
+    static let edit = NSToolbarItem.Identifier("edit")
+    static let doneEditing = NSToolbarItem.Identifier("doneEditing")
 }
 
 class ToolbarDelegate: NSObject, NSToolbarDelegate {
@@ -51,7 +53,7 @@ class ToolbarDelegate: NSObject, NSToolbarDelegate {
     }
     
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [.addProject, .title]
+        [.addProject, .title, .edit]
     }
     
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
@@ -65,6 +67,18 @@ class ToolbarDelegate: NSObject, NSToolbarDelegate {
         case .title:
             let item = NSToolbarItem(itemIdentifier: .title)
             item.title = "Threads"
+            return item
+        case .edit:
+            let item = NSToolbarItem(itemIdentifier: .edit)
+            item.image = UIImage(systemName: "pencil")
+            item.isBordered = true
+            item.action = #selector(ProjectDetailViewController.edit(_:))
+            return item
+        case .doneEditing:
+            let item = NSToolbarItem(itemIdentifier: .doneEditing)
+            item.title = "Done"
+            item.isBordered = true
+            item.action = #selector(ProjectDetailViewController.doneEditing(_:))
             return item
         default:
             fatalError("unexpected toolbar item identifier \(itemIdentifier)")

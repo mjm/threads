@@ -31,7 +31,7 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
                 self?.updateSnapshot()
             },
             updateCell: { [weak self] project in
-//                self?.updateCell(project)
+                self?.updateCell(project)
             }
         )
     }
@@ -61,6 +61,15 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
             cell.imageView?.tintColor = .systemGray
             cell.textLabel?.text = project.name ?? Localized.unnamedProject
         }
+    }
+    
+    func updateCell(_ project: Project) {
+        let cell = cellForProject(project)
+        cell?.textLabel?.text = project.name ?? Localized.unnamedProject
+    }
+
+    private func cellForProject(_ project: Project) -> UITableViewCell? {
+        dataSource.indexPath(for: .project(project)).flatMap { tableView.cellForRow(at: $0) }
     }
     
     override func viewDidAppear(_ animated: Bool) {
