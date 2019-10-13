@@ -105,5 +105,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         container.viewContext.undoManager = UndoManager()
         return container
     }
+    
+    override func buildMenu(with builder: UIMenuBuilder) {
+        guard builder.system == .main else { return }
+        
+        builder.remove(menu: .format)
+        builder.remove(menu: .newScene) // remove option to open a new window
+        
+        let newProject = UIKeyCommand(title: "New Project…", action: #selector(SplitViewController.addProject(_:)), input: "n", modifierFlags: [.command])
+        let menu = UIMenu(title: "", options: .displayInline, children: [newProject])
+
+        builder.insertChild(menu, atStartOfMenu: .file)
+    }
 }
 
