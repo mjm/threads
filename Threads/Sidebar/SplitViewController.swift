@@ -64,6 +64,17 @@ class SplitViewController: UISplitViewController {
         selection = .project(project)
     }
     
+    @objc func addThreads(_ sender: Any) {
+        guard let currentController = detailViewController.selectedViewController else {
+            return
+        }
+        
+        let action = #selector(addThreads(_:))
+        if currentController.canPerformAction(action, withSender: sender) {
+            currentController.perform(action, with: sender)
+        }
+    }
+    
     @objc func toggleEditingProject(_ sender: Any) {
         guard let controller = projectDetailViewController else {
             return
@@ -88,6 +99,12 @@ class SplitViewController: UISplitViewController {
         switch action {
         case #selector(shareProject(_:)):
             return projectDetailViewController != nil
+        case #selector(addThreads(_:)):
+            guard let currentController = detailViewController.selectedViewController else {
+                return false
+            }
+            
+            return currentController.canPerformAction(action, withSender: sender)
         default:
             return true
         }
@@ -133,12 +150,12 @@ class SplitViewController: UISplitViewController {
         }
         
         let currentState = toolbar.items.map { $0.itemIdentifier }
-        var desiredState: [NSToolbarItem.Identifier] = [.addProject, .title]
+        var desiredState: [NSToolbarItem.Identifier] = [.addProject, .title, .flexibleSpace, .addThreads]
         if let projectController = projectDetailViewController {
             if projectController.isEditing {
-                desiredState.append(contentsOf: [.flexibleSpace, .doneEditing])
+                desiredState.append(contentsOf: [.doneEditing])
             } else {
-                desiredState.append(contentsOf: [.flexibleSpace, .edit, .share])
+                desiredState.append(contentsOf: [.edit, .share])
             }
         }
         

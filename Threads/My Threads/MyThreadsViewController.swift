@@ -89,7 +89,7 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
         return tableView.cellForRow(at: indexPath) as? CollectionThreadTableViewCell
     }
 
-    @IBAction func addThread() {
+    @IBAction func addThreads(_ sender: Any) {
         let request = Thread.notInCollectionFetchRequest()
         guard let threads = try? managedObjectContext.fetch(request) else {
             NSLog("Could not fetch threads to search from")

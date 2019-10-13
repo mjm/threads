@@ -131,11 +131,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         builder.insertChild(viewShortcutsMenu, atStartOfMenu: .view)
         
+        let addThreads = UIKeyCommand(title: "Add Threads…", action: #selector(SplitViewController.addThreads(_:)), input: "n", modifierFlags: [.command, .shift])
+        let addMenu = UIMenu(title: "", options: .displayInline, children: [addThreads])
+        
         let toggleInStock = UIKeyCommand(title: "In Stock", action: #selector(MyThreadsViewController.toggleInStock(_:)), input: "k", modifierFlags: [.command])
         let toggleOnBobbin = UIKeyCommand(title: "On Bobbin", action: #selector(MyThreadsViewController.toggleOnBobbin(_:)), input: "b", modifierFlags: [.command])
         let threadStateActionsMenu = UIMenu(title: "", options: .displayInline, children: [toggleInStock, toggleOnBobbin])
         
-        let threadMenu = UIMenu(title: "Thread", children: [threadStateActionsMenu])
+        let threadMenu = UIMenu(title: "Thread", children: [addMenu, threadStateActionsMenu])
         builder.insertSibling(threadMenu, afterMenu: .view)
         
         let editProject = UIKeyCommand(title: "Edit", action: #selector(SplitViewController.toggleEditingProject(_:)), input: "e", modifierFlags: [.command, .shift])

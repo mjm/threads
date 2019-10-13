@@ -172,9 +172,11 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
             }
         }, toSection: .threads)
 
+        #if !targetEnvironment(macCatalyst)
         if isEditing {
             snapshot.appendItems([.add], toSection: .threads)
         }
+        #endif
     }
 
     override func dataSourceDidUpdateSnapshot(animated: Bool) {
@@ -471,7 +473,7 @@ extension ProjectDetailViewController {
         actionRunner.perform(ShareProjectAction(project: project))
     }
 
-    func addThread() {
+    @objc func addThreads(_ sender: Any) {
         let existingThreads = threadsList.objects.compactMap { $0.thread }
         let request = Thread.sortedByNumberFetchRequest()
 
@@ -504,7 +506,7 @@ extension ProjectDetailViewController {
         switch item {
 
         case .add:
-            addThread()
+            addThreads(item)
             collectionView.deselectItem(at: indexPath, animated: true)
 
         case .imagePlaceholder:

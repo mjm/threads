@@ -24,7 +24,7 @@
                     <navigationItem key="navigationItem" title="My Threads" id="Jdq-jQ-2S2">
                         <barButtonItem key="rightBarButtonItem" title="Item" image="plus" catalog="system" id="7H5-Pg-JAI">
                             <connections>
-                                <action selector="addThread" destination="7CW-HH-VtZ" id="gK2-cr-Iqg"/>
+                                <action selector="addThreads:" destination="7CW-HH-VtZ" id="A3W-pc-mmI"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

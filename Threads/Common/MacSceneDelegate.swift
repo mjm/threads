@@ -38,6 +38,7 @@ class MacSceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension NSToolbarItem.Identifier {
     static let addProject = NSToolbarItem.Identifier("addProject")
     static let title = NSToolbarItem.Identifier("title")
+    static let addThreads = NSToolbarItem.Identifier("addThreads")
     static let edit = NSToolbarItem.Identifier("edit")
     static let doneEditing = NSToolbarItem.Identifier("doneEditing")
     static let share = NSToolbarItem.Identifier("share")
@@ -51,11 +52,11 @@ class ToolbarDelegate: NSObject, NSToolbarDelegate {
     }
     
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [.addProject, .title]
+        [.addProject, .title, .flexibleSpace, .addThreads]
     }
     
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [.addProject, .title, .edit, .doneEditing, .share]
+        [.addProject, .title, .addThreads, .edit, .doneEditing, .share]
     }
     
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
@@ -70,6 +71,13 @@ class ToolbarDelegate: NSObject, NSToolbarDelegate {
         case .title:
             let item = NSToolbarItem(itemIdentifier: .title)
             item.title = "Threads"
+            return item
+        case .addThreads:
+            let item = NSToolbarItem(itemIdentifier: .addThreads)
+            item.toolTip = "Add threads"
+            item.image = UIImage(systemName: "plus")
+            item.isBordered = true
+            item.action = #selector(SplitViewController.addThreads(_:))
             return item
         case .edit:
             let item = NSToolbarItem(itemIdentifier: .edit)

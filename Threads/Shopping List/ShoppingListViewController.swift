@@ -145,7 +145,7 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
 
 // MARK: - Actions
 extension ShoppingListViewController {
-    @IBAction func addThread() {
+    @IBAction func addThreads(_ sender: Any) {
         let request = Thread.notInShoppingListFetchRequest()
         guard let threads = try? managedObjectContext.fetch(request) else {
             NSLog("Could not fetch threads to search from")
