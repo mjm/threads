@@ -112,11 +112,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         builder.remove(menu: .format)
         builder.remove(menu: .newScene) // remove option to open a new window
         builder.remove(menu: .toolbar)
-        
-        let newProject = UIKeyCommand(title: "New Project…", action: #selector(SplitViewController.addProject(_:)), input: "n", modifierFlags: [.command])
-        let menu = UIMenu(title: "", options: .displayInline, children: [newProject])
 
-        builder.insertChild(menu, atStartOfMenu: .file)
+        builder.insertChild(UIMenu(title: "", options: .displayInline, children: [
+            UIKeyCommand(title: "New Project…", action: #selector(SplitViewController.addProject(_:)), input: "n", modifierFlags: [.command])
+        ]), atStartOfMenu: .file)
         
         let share = UICommand(title: "Share", action: #selector(SplitViewController.shareProject(_:)), propertyList: UICommandTagShare)
         if let closeMenu = builder.menu(for: .close) {
@@ -124,29 +123,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             builder.insertChild(UIMenu(title: "", options: .displayInline, children: [share]), atEndOfMenu: .file)
         }
+
+        builder.insertChild(UIMenu(title: "", options: .displayInline, children: [
+            UIKeyCommand(title: "My Threads", action: #selector(SplitViewController.viewMyThreads(_:)), input: "1", modifierFlags: [.command]),
+            UIKeyCommand(title: "Shopping List", action: #selector(SplitViewController.viewShoppingList(_:)), input: "2", modifierFlags: [.command]),
+        ]), atStartOfMenu: .view)
         
-        let viewMyThreads = UIKeyCommand(title: "My Threads", action: #selector(SplitViewController.viewMyThreads(_:)), input: "1", modifierFlags: [.command])
-        let viewShoppingList = UIKeyCommand(title: "Shopping List", action: #selector(SplitViewController.viewShoppingList(_:)), input: "2", modifierFlags: [.command])
-        let viewShortcutsMenu = UIMenu(title: "", options: .displayInline, children: [viewMyThreads, viewShoppingList])
+        builder.insertSibling(UIMenu(title: "Thread", children: [
+            UIMenu(title: "", options: .displayInline, children: [
+                UIKeyCommand(title: "Add Threads…", action: #selector(SplitViewController.addThreads(_:)), input: "n", modifierFlags: [.command, .shift]),
+            ]),
+            UIMenu(title: "", options: .displayInline, children: [
+                UIKeyCommand(title: "In Stock", action: #selector(MyThreadsViewController.toggleInStock(_:)), input: "k", modifierFlags: [.command]),
+                UIKeyCommand(title: "On Bobbin", action: #selector(MyThreadsViewController.toggleOnBobbin(_:)), input: "b", modifierFlags: [.command]),
+            ]),
+        ]), afterMenu: .view)
         
-        builder.insertChild(viewShortcutsMenu, atStartOfMenu: .view)
-        
-        let addThreads = UIKeyCommand(title: "Add Threads…", action: #selector(SplitViewController.addThreads(_:)), input: "n", modifierFlags: [.command, .shift])
-        let addMenu = UIMenu(title: "", options: .displayInline, children: [addThreads])
-        
-        let toggleInStock = UIKeyCommand(title: "In Stock", action: #selector(MyThreadsViewController.toggleInStock(_:)), input: "k", modifierFlags: [.command])
-        let toggleOnBobbin = UIKeyCommand(title: "On Bobbin", action: #selector(MyThreadsViewController.toggleOnBobbin(_:)), input: "b", modifierFlags: [.command])
-        let threadStateActionsMenu = UIMenu(title: "", options: .displayInline, children: [toggleInStock, toggleOnBobbin])
-        
-        let threadMenu = UIMenu(title: "Thread", children: [addMenu, threadStateActionsMenu])
-        builder.insertSibling(threadMenu, afterMenu: .view)
-        
-        let editProject = UIKeyCommand(title: "Edit", action: #selector(SplitViewController.toggleEditingProject(_:)), input: "e", modifierFlags: [.command, .shift])
-        let addToShoppingList = UICommand(title: "Add to Shopping List", action: #selector(SplitViewController.addProjectToShoppingList(_:)))
-        let projectActionsMenu = UIMenu(title: "", options: .displayInline, children: [editProject, addToShoppingList])
-        
-        let projectMenu = UIMenu(title: "Project", children: [projectActionsMenu])
-        builder.insertSibling(projectMenu, afterMenu: .view)
+        builder.insertSibling(UIMenu(title: "Project", children: [
+            UIMenu(title: "", options: .displayInline, children: [
+                UIKeyCommand(title: "Edit", action: #selector(SplitViewController.toggleEditingProject(_:)), input: "e", modifierFlags: [.command, .shift]),
+                UICommand(title: "Add to Shopping List", action: #selector(SplitViewController.addProjectToShoppingList(_:))),
+            ]),
+        ]), afterMenu: .view)
     }
 }
 
