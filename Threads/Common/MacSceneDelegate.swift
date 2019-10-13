@@ -72,13 +72,13 @@ class ToolbarDelegate: NSObject, NSToolbarDelegate {
             let item = NSToolbarItem(itemIdentifier: .edit)
             item.image = UIImage(systemName: "pencil")
             item.isBordered = true
-            item.action = #selector(ProjectDetailViewController.edit(_:))
+            item.action = #selector(SplitViewController.toggleEditingProject(_:))
             return item
         case .doneEditing:
             let item = NSToolbarItem(itemIdentifier: .doneEditing)
             item.title = "Done"
             item.isBordered = true
-            item.action = #selector(ProjectDetailViewController.doneEditing(_:))
+            item.action = #selector(SplitViewController.toggleEditingProject(_:))
             return item
         default:
             fatalError("unexpected toolbar item identifier \(itemIdentifier)")

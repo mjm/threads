@@ -63,12 +63,66 @@ class SplitViewController: UISplitViewController {
         selection = .project(project)
     }
     
+    @objc func toggleEditingProject(_ sender: Any) {
+        guard let controller = projectDetailViewController else {
+            return
+        }
+        
+        controller.setEditing(!controller.isEditing, animated: true)
+    }
+    
+    @objc func shareProject(_ sender: Any) {
+        guard let controller = projectDetailViewController else {
+            return
+        }
+        
+        controller.shareProject(sender)
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        guard super.canPerformAction(action, withSender: sender) else {
+            return false
+        }
+
+        switch action {
+        case #selector(shareProject(_:)):
+            return projectDetailViewController != nil
+        default:
+            return true
+        }
+    }
+    
+    override func validate(_ command: UICommand) {
+        super.validate(command)
+        
+        switch command.action {
+        case #selector(toggleEditingProject(_:)):
+            if let controller = projectDetailViewController {
+                command.title = controller.isEditing ? "Stop Editing" : "Edit"
+                command.attributes = []
+            } else {
+                command.title = "Edit"
+                command.attributes = .disabled
+            }
+        default:
+            return
+        }
+    }
+    
     var sidebarViewController: SidebarViewController {
         viewControllers[0] as! SidebarViewController
     }
     
     var detailViewController: DetailViewController {
         viewControllers[1] as! DetailViewController
+    }
+    
+    var projectDetailViewController: ProjectDetailViewController? {
+        if case .project = selection {
+            return detailViewController.projectDetailViewController
+        }
+        
+        return nil
     }
     
     func updateToolbar() {
@@ -78,8 +132,8 @@ class SplitViewController: UISplitViewController {
         
         let currentState = toolbar.items.map { $0.itemIdentifier }
         var desiredState: [NSToolbarItem.Identifier] = [.addProject, .title]
-        if case .project = selection {
-            if detailViewController.projectDetailViewController!.isEditing {
+        if let projectController = projectDetailViewController {
+            if projectController.isEditing {
                 desiredState.append(contentsOf: [.flexibleSpace, .doneEditing])
             } else {
                 desiredState.append(contentsOf: [.flexibleSpace, .edit])

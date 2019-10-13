@@ -129,8 +129,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let threadStateActionsMenu = UIMenu(title: "", options: .displayInline, children: [toggleInStock, toggleOnBobbin])
         
         let threadMenu = UIMenu(title: "Thread", children: [threadStateActionsMenu])
-        
         builder.insertSibling(threadMenu, afterMenu: .view)
+        
+        let editProject = UIKeyCommand(title: "Edit", action: #selector(SplitViewController.toggleEditingProject(_:)), input: "e", modifierFlags: [.command, .shift])
+        let shareProject = UICommand(title: "Share", action: #selector(SplitViewController.shareProject(_:)))
+        let projectActionsMenu = UIMenu(title: "", options: .displayInline, children: [editProject, shareProject])
+        
+        let projectMenu = UIMenu(title: "Project", children: [projectActionsMenu])
+        builder.insertSibling(projectMenu, afterMenu: .view)
     }
 }
 

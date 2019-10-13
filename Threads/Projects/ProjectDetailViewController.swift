@@ -457,12 +457,8 @@ extension ProjectDetailViewController {
         present(sheet, animated: true)
     }
     
-    @objc func edit(_ sender: Any) {
-        setEditing(true, animated: true)
-    }
-    
-    @objc func doneEditing(_ sender: Any) {
-        setEditing(false, animated: true)
+    @objc func shareProject(_ sender: Any) {
+        actionRunner.perform(ShareProjectAction(project: project))
     }
 
     func addThread() {
