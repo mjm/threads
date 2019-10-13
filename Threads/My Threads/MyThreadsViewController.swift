@@ -118,6 +118,12 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
     func showDetail(for thread: Thread) {
         performSegue(withIdentifier: "ThreadDetail", sender: thread)
     }
+    
+    override var keyCommands: [UIKeyCommand]? {
+        [
+            UIKeyCommand(title: "Delete", action: #selector(delete(_:)), input: "\u{8}") // Delete key
+        ]
+    }
 }
 
 // MARK: - Table View Delegate

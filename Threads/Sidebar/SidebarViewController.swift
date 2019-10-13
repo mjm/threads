@@ -117,6 +117,12 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
 }
 
 extension SidebarViewController {
+    override var keyCommands: [UIKeyCommand]? {
+        [
+            UIKeyCommand(title: "Delete", action: #selector(delete(_:)), input: "\u{8}") // Delete key
+        ]
+    }
+    
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if !super.canPerformAction(action, withSender: sender) {
             return false
