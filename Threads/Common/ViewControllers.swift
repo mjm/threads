@@ -31,6 +31,7 @@ class ViewController: UIViewController {
         userActivity = currentUserActivity?.userActivity
     }
 
+    #if !targetEnvironment(macCatalyst)
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         becomeFirstResponder()
@@ -40,6 +41,7 @@ class ViewController: UIViewController {
         super.viewWillDisappear(animated)
         resignFirstResponder()
     }
+    #endif
 
     override var canBecomeFirstResponder: Bool {
         true
@@ -100,6 +102,7 @@ class TableViewController<SectionType: Hashable, CellType: ReusableCell>: UITabl
         userActivity = currentUserActivity?.userActivity
     }
 
+    #if !targetEnvironment(macCatalyst)
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         becomeFirstResponder()
@@ -109,6 +112,7 @@ class TableViewController<SectionType: Hashable, CellType: ReusableCell>: UITabl
         super.viewWillDisappear(animated)
         resignFirstResponder()
     }
+    #endif
 
     override var canBecomeFirstResponder: Bool {
         true
@@ -206,6 +210,7 @@ class CollectionViewController<SectionType: Hashable, CellType: ReusableCell>: U
         userActivity = currentUserActivity?.userActivity
     }
 
+    #if !targetEnvironment(macCatalyst)
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         becomeFirstResponder()
@@ -215,6 +220,7 @@ class CollectionViewController<SectionType: Hashable, CellType: ReusableCell>: U
         super.viewWillDisappear(animated)
         resignFirstResponder()
     }
+    #endif
 
     override var canBecomeFirstResponder: Bool {
         true
