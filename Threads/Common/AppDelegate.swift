@@ -123,6 +123,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let viewShortcutsMenu = UIMenu(title: "", options: .displayInline, children: [viewMyThreads, viewShoppingList])
         
         builder.insertChild(viewShortcutsMenu, atStartOfMenu: .view)
+        
+        let toggleInStock = UIKeyCommand(title: "In Stock", action: #selector(MyThreadsViewController.toggleInStock(_:)), input: "k", modifierFlags: [.command])
+        let toggleOnBobbin = UIKeyCommand(title: "On Bobbin", action: #selector(MyThreadsViewController.toggleOnBobbin(_:)), input: "b", modifierFlags: [.command])
+        let threadStateActionsMenu = UIMenu(title: "", options: .displayInline, children: [toggleInStock, toggleOnBobbin])
+        
+        let threadMenu = UIMenu(title: "Thread", children: [threadStateActionsMenu])
+        
+        builder.insertSibling(threadMenu, afterMenu: .view)
     }
 }
 

@@ -108,6 +108,30 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
         actionRunner.perform(RemoveThreadAction(thread: thread))
     }
     
+    @objc func toggleOnBobbin(_ sender: Any?) {
+        guard case let .thread(thread) = selectedCell, thread.amountInCollection > 0 else {
+            return
+        }
+        
+        if thread.onBobbin {
+            actionRunner.perform(MarkOffBobbinAction(thread: thread))
+        } else {
+            actionRunner.perform(MarkOnBobbinAction(thread: thread))
+        }
+    }
+    
+    @objc func toggleInStock(_ sender: Any?) {
+        guard case let .thread(thread) = selectedCell else {
+            return
+        }
+        
+        if thread.amountInCollection > 0 {
+            actionRunner.perform(MarkOutOfStockAction(thread: thread))
+        } else {
+            actionRunner.perform(MarkInStockAction(thread: thread))
+        }
+    }
+    
     @IBAction func unwindDeleteThread(segue: UIStoryboardSegue) {
     }
     
@@ -123,6 +147,44 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
         [
             UIKeyCommand(title: "Delete", action: #selector(delete(_:)), input: "\u{8}") // Delete key
         ]
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        guard super.canPerformAction(action, withSender: sender) else {
+            return false
+        }
+        
+        switch action {
+        case #selector(delete(_:)):
+            return selectedCell != nil
+        default:
+            return true
+        }
+    }
+    
+    override func validate(_ command: UICommand) {
+        super.validate(command)
+        
+        switch command.action {
+        case #selector(toggleOnBobbin(_:)):
+            if case let .thread(thread) = selectedCell {
+                command.state = thread.onBobbin ? .on : .off
+                command.attributes = thread.amountInCollection > 0 ? [] : .disabled
+            } else {
+                command.state = .off
+                command.attributes = .disabled
+            }
+        case #selector(toggleInStock(_:)):
+            if case let .thread(thread) = selectedCell {
+                command.state = thread.amountInCollection > 0 ? .on : .off
+                command.attributes = []
+            } else {
+                command.state = .off
+                command.attributes = .disabled
+            }
+        default:
+            return
+        }
     }
 }
 
