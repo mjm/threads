@@ -90,14 +90,7 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
     }
 
     @IBAction func addThreads(_ sender: Any) {
-        let request = Thread.notInCollectionFetchRequest()
-        guard let threads = try? managedObjectContext.fetch(request) else {
-            NSLog("Could not fetch threads to search from")
-            return
-        }
-
-        let action = AddThreadAction(choices: threads) { AddToCollectionAction(threads: $0) }
-        actionRunner.perform(action)
+        actionRunner.perform(AddThreadAction(mode: .collection))
     }
     
     override func delete(_ sender: Any?) {
@@ -297,5 +290,27 @@ extension MyThreadsViewController {
         animator.addAnimations {
             self.showDetail(for: thread)
         }
+    }
+}
+
+class AddThreadsToCollectionDelegate: NSObject, AddThreadViewControllerDelegate {
+    let context: NSManagedObjectContext
+    
+    init(context: NSManagedObjectContext) {
+        self.context = context
+    }
+    
+    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) -> [Thread] {
+        let request = Thread.notInCollectionFetchRequest()
+        guard let threads = try? context.fetch(request) else {
+            NSLog("Could not fetch threads to search from")
+            return []
+        }
+        
+        return threads
+    }
+    
+    func addThreadViewController(_ addThreadViewController: AddThreadViewController, performActionForAddingThreads threads: [Thread], actionRunner: UserActionRunner) {
+        actionRunner.perform(AddToCollectionAction(threads: threads))
     }
 }

@@ -52,6 +52,14 @@
 					<key>UISceneStoryboardFile</key>
 					<string>Main_Mac</string>
 				</dict>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>AddThread</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).AddThreadSceneDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>AddThread</string>
+				</dict>
 			</array>
 		</dict>
 	</dict>

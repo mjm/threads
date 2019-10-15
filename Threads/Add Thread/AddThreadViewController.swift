@@ -35,9 +35,10 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         }
     }
     
-    var choices: [Thread] = []
-    var onCancel: (() -> Void)!
-    var onAdd: (([Thread]) -> Void)!
+    weak var delegate: AddThreadViewControllerDelegate?
+    var onDismiss: (() -> Void)!
+    
+    private var choices: [Thread] = []
     
     private var searchController: UISearchController!
 
@@ -73,6 +74,10 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
+        
+        if let choices = delegate?.choicesForAddingThreads(self) {
+            self.choices = choices
+        }
     }
 
     override func dataSourceWillInitialize() {
@@ -137,11 +142,12 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
     }
 
     @IBAction func cancel() {
-        onCancel()
+        onDismiss()
     }
 
     @IBAction func add() {
-        onAdd(selectedThreads)
+        delegate?.addThreadViewController(self, performActionForAddingThreads: selectedThreads, actionRunner: actionRunner)
+        onDismiss()
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -206,4 +212,11 @@ extension AddThreadViewController: UISearchResultsUpdating {
 
         updateSnapshot(animated: isAdding)
     }
+}
+
+protocol AddThreadViewControllerDelegate: NSObjectProtocol {
+    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) -> [Thread]
+    func addThreadViewController(_ addThreadViewController: AddThreadViewController,
+                                 performActionForAddingThreads threads: [Thread],
+                                 actionRunner: UserActionRunner)
 }

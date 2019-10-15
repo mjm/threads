@@ -16,15 +16,17 @@ private let threadURLKey = "ThreadURL"
 private let threadNumberKey = "ThreadNumber"
 private let projectURLKey = "ProjectURL"
 private let projectNameKey = "ProjectName"
+private let addThreadModeNameKey = "AddThreadMode"
 
-private enum UserActivityType: String {
+enum UserActivityType: String {
     case showMyThreads = "com.mattmoriarity.Threads.ShowMyThreads"
     case showShoppingList = "com.mattmoriarity.Threads.ShowShoppingList"
     case showProjects = "com.mattmoriarity.Threads.ShowProjects"
     case showThread = "com.mattmoriarity.Threads.ShowThread"
     case showProject = "com.mattmoriarity.Threads.ShowProject"
+    case addThreads = "com.mattmoriarity.Threads.AddThreads"
     
-    func create() -> NSUserActivity {
+    fileprivate func create() -> NSUserActivity {
         return NSUserActivity(activityType: rawValue)
     }
 }
@@ -35,6 +37,7 @@ enum UserActivity {
     case showProjects
     case showThread(Thread)
     case showProject(Project)
+    case addThreads(AddThreadAction.Mode)
     
     init?(userActivity: NSUserActivity, context: NSManagedObjectContext) {
         switch UserActivityType(rawValue: userActivity.activityType) {
@@ -66,6 +69,12 @@ enum UserActivity {
             } else {
                 return nil
             }
+        case .addThreads:
+            guard let mode = AddThreadAction.Mode(activityUserInfo: userActivity.userInfo, context: context) else {
+                return nil
+            }
+            
+            self = .addThreads(mode)
         case .none:
             return nil
         }
@@ -78,6 +87,7 @@ enum UserActivity {
         case .showProjects: return .showProjects
         case .showThread: return .showThread
         case .showProject: return .showProject
+        case .addThreads: return .addThreads
         }
     }
     
@@ -125,6 +135,11 @@ enum UserActivity {
             activity.contentAttributeSet = attributes
             activity.userInfo = [projectURLKey: projectURL, projectNameKey: project.name ?? ""]
             activity.requiredUserInfoKeys = [projectURLKey]
+        case let .addThreads(mode):
+            activity.isEligibleForHandoff = false
+            activity.isEligibleForSearch = false
+            activity.isEligibleForPrediction = false
+            activity.userInfo = mode.userInfo
         }
         
         return activity
@@ -160,6 +175,50 @@ enum UserActivity {
                 NSLog("Deleted user activity with identifier \(identifier)")
                 DispatchQueue.main.async(execute: completion)
             }
+        }
+    }
+}
+
+extension AddThreadAction.Mode {
+    init?(activityUserInfo: [AnyHashable: Any]?, context: NSManagedObjectContext) {
+        guard let userInfo = activityUserInfo else {
+            return nil
+        }
+        
+        switch userInfo[addThreadModeNameKey] as? String {
+        case "collection":
+            self = .collection
+        case "shoppingList":
+            self = .shoppingList
+        case "project":
+            if let projectURL = userInfo[projectURLKey] as? URL,
+                let projectID = context.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: projectURL),
+                let project = context.object(with: projectID) as? Project {
+                self = .project(project)
+            } else if let projectName = userInfo[projectNameKey] as? String,
+                let project = try? Project.withName(projectName, context: context) {
+                self = .project(project)
+            } else {
+                return nil
+            }
+        default:
+            return nil
+        }
+    }
+    
+    var userInfo: [AnyHashable: Any]? {
+        switch self {
+        case .collection:
+            return [addThreadModeNameKey: "collection"]
+        case .shoppingList:
+            return [addThreadModeNameKey: "shoppingList"]
+        case let .project(project):
+            let projectURL = project.objectID.uriRepresentation()
+            return [
+                addThreadModeNameKey: "project",
+                projectURLKey: projectURL,
+                projectNameKey: project.name ?? "",
+            ]
         }
     }
 }

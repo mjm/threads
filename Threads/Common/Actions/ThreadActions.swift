@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 struct MarkOffBobbinAction: SyncUserAction {
     let thread: Thread
@@ -78,31 +79,48 @@ struct RemoveThreadAction: DestructiveUserAction {
     }
 }
 
-struct AddThreadAction<AddAction: UserAction>: UserAction {
-    let choices: [Thread]
-    let actionCreator: ([Thread]) -> AddAction
+struct AddThreadAction: UserAction {
+    enum Mode {
+        case collection
+        case shoppingList
+        case project(Project)
+        
+        func makeDelegate(context: NSManagedObjectContext) -> AddThreadViewControllerDelegate {
+            switch self {
+            case .collection:
+                return AddThreadsToCollectionDelegate(context: context)
+            case .shoppingList:
+                return AddThreadsToShoppingListDelegate(context: context)
+            case let .project(project):
+                return AddThreadsToProjectDelegate(project: project)
+            }
+        }
+    }
+    
+    let mode: Mode
 
-    // This action won't do the actual undoable work, instead the AddAction will do that.
     let undoActionName: String? = nil
 
+    #if targetEnvironment(macCatalyst)
+    
+    func performAsync(_ context: UserActionContext<AddThreadAction>) {
+        let activity = UserActivity.addThreads(mode).userActivity
+        UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: nil)
+    }
+    
+    #else
+    
     let coordinator = Coordinator()
-
-    func performAsync(_ context: UserActionContext<AddThreadAction<AddAction>>) {
+    
+    func performAsync(_ context: UserActionContext<AddThreadAction>) {
         let storyboard = UIStoryboard(name: "AddThread", bundle: nil)
         let navController = storyboard.instantiateInitialViewController() as! UINavigationController
         let addThreadController = navController.viewControllers[0] as! AddThreadViewController
 
-        let actionCreator = self.actionCreator
-
-        addThreadController.choices = choices
-        addThreadController.onCancel = {
+        coordinator.addThreadsDelegate = mode.makeDelegate(context: addThreadController.managedObjectContext)
+        addThreadController.delegate = coordinator.addThreadsDelegate
+        addThreadController.onDismiss = {
             context.completeAndDismiss()
-        }
-        addThreadController.onAdd = { threads in
-            let addAction = actionCreator(threads)
-
-            context.completeAndDismiss()
-            context.perform(addAction)
         }
 
         navController.presentationController?.delegate = coordinator
@@ -110,10 +128,14 @@ struct AddThreadAction<AddAction: UserAction>: UserAction {
     }
 
     class Coordinator: NSObject, UIAdaptivePresentationControllerDelegate {
+        var addThreadsDelegate: AddThreadViewControllerDelegate?
+        
         func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
             let navController = presentationController.presentedViewController as! UINavigationController
             let addThreadController = navController.viewControllers[0] as! AddThreadViewController
             return addThreadController.canDismiss
         }
     }
+    
+    #endif
 }

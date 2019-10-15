@@ -113,6 +113,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
                 navigationController.pushViewController(detailViewController, animated: animated)
             }
+        case .addThreads:
+            preconditionFailure("SceneDelegate should not have to handle an addThreads activity")
         case .none:
             NSLog("Was not able to load the activity. It may have referenced an object that no longer exists, or it may be a new activity type handed off to us from a newer version of the app (though I'm not sure the system will let that last one happen).")
         }

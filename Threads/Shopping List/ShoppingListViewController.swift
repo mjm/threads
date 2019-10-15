@@ -146,14 +146,7 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
 // MARK: - Actions
 extension ShoppingListViewController {
     @IBAction func addThreads(_ sender: Any) {
-        let request = Thread.notInShoppingListFetchRequest()
-        guard let threads = try? managedObjectContext.fetch(request) else {
-            NSLog("Could not fetch threads to search from")
-            return
-        }
-
-        let action = AddThreadAction(choices: threads) { AddToShoppingListAction(threads: $0) }
-        actionRunner.perform(action)
+        actionRunner.perform(AddThreadAction(mode: .shoppingList))
     }
     
     @IBAction func addCheckedToCollection() {
@@ -183,5 +176,27 @@ extension ShoppingListViewController {
             self.updateSnapshot()
             self.purchaseDelayTimer = nil
         }
+    }
+}
+
+class AddThreadsToShoppingListDelegate: NSObject, AddThreadViewControllerDelegate {
+    let context: NSManagedObjectContext
+    
+    init(context: NSManagedObjectContext) {
+        self.context = context
+    }
+    
+    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) -> [Thread] {
+        let request = Thread.notInShoppingListFetchRequest()
+        guard let threads = try? context.fetch(request) else {
+            NSLog("Could not fetch threads to search from")
+            return []
+        }
+        
+        return threads
+    }
+    
+    func addThreadViewController(_ addThreadViewController: AddThreadViewController, performActionForAddingThreads threads: [Thread], actionRunner: UserActionRunner) {
+        actionRunner.perform(AddToShoppingListAction(threads: threads))
     }
 }

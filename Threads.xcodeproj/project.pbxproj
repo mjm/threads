@@ -46,6 +46,7 @@
 		C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */; };
 		C955EDE6234013DC000ACC39 /* FetchedObjectList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */; };
 		C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE7234028A8000ACC39 /* ViewControllers.swift */; };
+		C9571DF62353EF5400CCA56B /* AddThreadSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */; };
 		C97FCDA323296433000B1590 /* EditProjectThreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */; };
 		C97FCDA423296433000B1590 /* EditProjectThreadCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */; };
 		C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA52329A921000B1590 /* SeparatorView.swift */; };
@@ -141,6 +142,7 @@
 		C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
 		C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedObjectList.swift; sourceTree = "<group>"; };
 		C955EDE7234028A8000ACC39 /* ViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllers.swift; sourceTree = "<group>"; };
+		C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadSceneDelegate.swift; sourceTree = "<group>"; };
 		C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProjectThreadCollectionViewCell.swift; sourceTree = "<group>"; };
 		C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditProjectThreadCollectionViewCell.xib; sourceTree = "<group>"; };
 		C97FCDA52329A921000B1590 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
@@ -373,6 +375,7 @@
 			children = (
 				C97FCDDF232DCE86000B1590 /* AddThread.storyboard */,
 				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
+				C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */,
 			);
 			path = "Add Thread";
 			sourceTree = "<group>";
@@ -520,6 +523,7 @@
 				C97FCDA323296433000B1590 /* EditProjectThreadCollectionViewCell.swift in Sources */,
 				C97FCDBD232D79E7000B1590 /* Localized.swift in Sources */,
 				C97FCE06233068C0000B1590 /* ShoppingListActions.swift in Sources */,
+				C9571DF62353EF5400CCA56B /* AddThreadSceneDelegate.swift in Sources */,
 				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
 				C97FCDC3232DA92E000B1590 /* NSAttributedString.swift in Sources */,
 				C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */,

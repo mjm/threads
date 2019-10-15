@@ -478,20 +478,7 @@ extension ProjectDetailViewController {
     }
 
     @objc func addThreads(_ sender: Any) {
-        let existingThreads = threadsList.objects.compactMap { $0.thread }
-        let request = Thread.sortedByNumberFetchRequest()
-
-        // Not ideal, but I haven't figured out a way in Core Data to get all the threads that
-        // aren't in a particular project. Many-to-many relationships are hard.
-        guard let allThreads = try? project.managedObjectContext!.fetch(request) else {
-            NSLog("Could not fetch threads to search from")
-            return
-        }
-
-        let threads = allThreads.filter { !existingThreads.contains($0) }
-
-        let action = AddThreadAction(choices: threads) { AddToProjectAction(threads: $0, project: self.project) }
-        actionRunner.perform(action)
+        actionRunner.perform(AddThreadAction(mode: .project(project)))
     }
 }
 
@@ -626,5 +613,33 @@ class AddThreadCollectionViewCell: UICollectionViewCell {
     
     private func updateBackground() {
         contentView.backgroundColor = (isSelected || isHighlighted) ? .opaqueSeparator : .systemBackground
+    }
+}
+
+class AddThreadsToProjectDelegate: NSObject, AddThreadViewControllerDelegate {
+    let project: Project
+    
+    init(project: Project) {
+        self.project = project
+    }
+    
+    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) -> [Thread] {
+        do {
+            let projectThreads = try project.managedObjectContext!.fetch(ProjectThread.fetchRequest(for: project))
+            let existingThreads = projectThreads.compactMap { $0.thread }
+            
+            // Not ideal, but I haven't figured out a way in Core Data to get all the threads that
+            // aren't in a particular project. Many-to-many relationships are hard.
+            let allThreads = try project.managedObjectContext!.fetch(Thread.sortedByNumberFetchRequest())
+            
+            return allThreads.filter { !existingThreads.contains($0) }
+        } catch {
+            NSLog("Could not get thread choices to add to project: \(error)")
+            return []
+        }
+    }
+    
+    func addThreadViewController(_ addThreadViewController: AddThreadViewController, performActionForAddingThreads threads: [Thread], actionRunner: UserActionRunner) {
+        actionRunner.perform(AddToProjectAction(threads: threads, project: project))
     }
 }

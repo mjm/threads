@@ -27,7 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         #if targetEnvironment(macCatalyst)
-        return UISceneConfiguration(name: "Mac", sessionRole: connectingSceneSession.role)
+        if options.userActivities.first?.activityType == UserActivityType.addThreads.rawValue {
+            return UISceneConfiguration(name: "AddThread", sessionRole: connectingSceneSession.role)
+        } else {
+            return UISceneConfiguration(name: "Mac", sessionRole: connectingSceneSession.role)
+        }
         #else
         return UISceneConfiguration(name: "iPhone", sessionRole: connectingSceneSession.role)
         #endif
