@@ -9,14 +9,29 @@
 import UIKit
 import CoreServices
 
-struct CreateProjectAction: SyncUserAction {
+struct CreateProjectAction: UserAction {
     typealias ResultType = Project
 
     let undoActionName: String? = Localized.newProject
 
-    func perform(_ context: UserActionContext<CreateProjectAction>) throws -> Project {
-        return Project(context: context.managedObjectContext)
+    #if targetEnvironment(macCatalyst)
+    func performAsync(_ context: UserActionContext<CreateProjectAction>) {
+        let alert = UIAlertController(title: "Create a Project", message: "Enter a name for your new project:", preferredStyle: .alert)
+        alert.addTextField(configurationHandler: nil)
+        alert.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
+        alert.addAction(UIAlertAction(title: "Create", style: .default) { _ in
+            let project = Project(context: context.managedObjectContext)
+            project.name = alert.textFields?[0].text
+            context.complete(project)
+        })
+        
+        context.present(alert)
     }
+    #else
+    func performAsync(_ context: UserActionContext<CreateProjectAction>) {
+        context.complete(Project(context: context.managedObjectContext))
+    }
+    #endif
 }
 
 struct AddToProjectAction: SyncUserAction {
