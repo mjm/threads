@@ -114,7 +114,7 @@ struct AddThreadAction: UserAction {
     
     func performAsync(_ context: UserActionContext<AddThreadAction>) {
         let storyboard = UIStoryboard(name: "AddThread", bundle: nil)
-        let navController = storyboard.instantiateInitialViewController() as! UINavigationController
+        let navController = storyboard.instantiateViewController(identifier: "NavController") as! UINavigationController
         let addThreadController = navController.viewControllers[0] as! AddThreadViewController
 
         coordinator.addThreadsDelegate = mode.makeDelegate(context: addThreadController.managedObjectContext)

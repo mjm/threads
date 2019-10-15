@@ -72,8 +72,12 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         searchController.searchBar.keyboardType = .asciiCapableNumberPad
         searchController.searchBar.inputAccessoryView = keyboardAccessoryView
         
+        #if targetEnvironment(macCatalyst)
+        tableView.tableHeaderView = searchController.searchBar
+        #else
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
+        #endif
         
         if let choices = delegate?.choicesForAddingThreads(self) {
             self.choices = choices
