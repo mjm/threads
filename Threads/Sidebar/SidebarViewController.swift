@@ -16,6 +16,18 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
     
     private var projectsList: FetchedObjectList<Project>!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // This prevents the sidebar cells from becoming first responder, and keeps the selection appearance
+        // having a vibrancy effect that looks good.
+        //
+        // https://github.com/mmackh/Catalyst-Helpers#blue-highlights-in-uitableviewcell-on-selection
+        //
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(cellTapped(_:)))
+        tableView.addGestureRecognizer(tapRecognizer)
+    }
+    
     override func dataSourceWillInitialize() {
         dataSource.sectionTitle = { tableView, _, section in
             switch section {
@@ -78,14 +90,6 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
         setSelection(rootViewController.selection)
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let item = dataSource.itemIdentifier(for: indexPath) else {
-            return
-        }
-        
-        rootViewController.selection = item
-    }
-    
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard case let .project(project) = dataSource.itemIdentifier(for: indexPath) else {
             return nil
@@ -104,6 +108,17 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
                                              attributes: .destructive)
             ])
         }
+    }
+    
+    @objc func cellTapped(_ sender: UITapGestureRecognizer) {
+        let point = sender.location(in: tableView)
+        guard let indexPath = tableView.indexPathForRow(at: point),
+            let item = dataSource.itemIdentifier(for: indexPath) else {
+                return
+        }
+        
+        tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        rootViewController.selection = item
     }
     
     func setSelection(_ selection: SidebarSelection) {
