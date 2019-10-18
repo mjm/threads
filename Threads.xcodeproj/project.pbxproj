@@ -85,6 +85,7 @@
 		C98F07C82333093800BAB311 /* ProjectPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07C72333093800BAB311 /* ProjectPreviewViewController.swift */; };
 		C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07C92334716F00BAB311 /* RoundedShadowView.swift */; };
 		C98F07CC2334745400BAB311 /* RoundedShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07CB2334745400BAB311 /* RoundedShadowImageView.swift */; };
+		C99677EE235A6C5400AE2F5C /* OpenInSafariActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,6 +188,7 @@
 		C98F07C72333093800BAB311 /* ProjectPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectPreviewViewController.swift; sourceTree = "<group>"; };
 		C98F07C92334716F00BAB311 /* RoundedShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowView.swift; sourceTree = "<group>"; };
 		C98F07CB2334745400BAB311 /* RoundedShadowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowImageView.swift; sourceTree = "<group>"; };
+		C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInSafariActivity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -318,6 +320,7 @@
 				C97FCDC2232DA92E000B1590 /* NSAttributedString.swift */,
 				C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */,
 				C97FCDED232E941D000B1590 /* Cells.swift */,
+				C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */,
 				C97FCDFC232F4945000B1590 /* Actions */,
 			);
 			path = Common;
@@ -568,6 +571,7 @@
 				C9491E44232491D90031F463 /* Project.swift in Sources */,
 				C97FCDBF232D9FD0000B1590 /* TextViewCollectionViewCell.swift in Sources */,
 				C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */,
+				C99677EE235A6C5400AE2F5C /* OpenInSafariActivity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -119,7 +119,7 @@ struct ShareProjectAction: SyncUserAction {
 
     func perform(_ context: UserActionContext<ShareProjectAction>) throws {
         let activityController = UIActivityViewController(activityItems: [ProjectActivity(project: project)],
-                                                          applicationActivities: nil)
+                                                          applicationActivities: [OpenInSafariActivity()])
         context.present(activityController)
     }
 }

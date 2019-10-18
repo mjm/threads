@@ -70,6 +70,12 @@ extension Project {
     var primaryImage: ProjectImage? {
         orderedImages.first
     }
+    
+    static let placeholderURL = URL(string: "https://threads-demo.glitch.me/projects/example")!
+    
+    var publishedURL: URL? {
+        publishedID.flatMap { URL(string: "https://threads-demo.glitch.me/projects/\($0)") }
+    }
 
     func publish(completion: @escaping (Error?) -> Void) {
         let database = CKContainer.default().publicCloudDatabase

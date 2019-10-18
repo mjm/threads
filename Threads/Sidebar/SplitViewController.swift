@@ -196,6 +196,13 @@ extension SplitViewController: UIActivityItemsConfigurationReading {
         
         return []
     }
+    
+    // This method doesn't seem to *ever* get called, so I don't see a way to support custom app activities
+    // for the toolbar or menu item. But this is how we would implement it if it did work, so maybe in some
+    // update, it'll start working.
+    var applicationActivitiesForActivityItemsConfiguration: [UIActivity]? {
+        [OpenInSafariActivity()]
+    }
 }
 
 #if targetEnvironment(macCatalyst)
