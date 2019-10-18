@@ -34,6 +34,8 @@ class DetailViewController: UITabBarController {
         case let .project(project):
             showProject(project)
         }
+        
+        selectedViewController?.becomeFirstResponder()
     }
     
     func showProject(_ project: Project, editing: Bool = false) {
