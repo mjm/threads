@@ -159,12 +159,12 @@ class SplitViewController: UISplitViewController {
         }
         
         let currentState = toolbar.items.map { $0.itemIdentifier }
-        var desiredState: [NSToolbarItem.Identifier] = [.addProject, .title, .flexibleSpace, .addThreads]
+        var desiredState: [NSToolbarItem.Identifier] = [.addProject, .title, .flexibleSpace, .addThreads, .share]
         if let projectController = projectDetailViewController {
             if projectController.isEditing {
                 desiredState.append(contentsOf: [.doneEditing])
             } else {
-                desiredState.append(contentsOf: [.edit, .share])
+                desiredState.append(contentsOf: [.edit])
             }
         }
         
@@ -187,3 +187,81 @@ class SplitViewController: UISplitViewController {
         return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
     }
 }
+
+extension SplitViewController: UIActivityItemsConfigurationReading {
+    var itemProvidersForActivityItemsConfiguration: [NSItemProvider] {
+        if let project = projectDetailViewController?.project {
+            return [project.itemProvider]
+        }
+        
+        return []
+    }
+}
+
+#if targetEnvironment(macCatalyst)
+
+extension NSToolbarItem.Identifier {
+    static let addProject = NSToolbarItem.Identifier("addProject")
+    static let title = NSToolbarItem.Identifier("title")
+    static let addThreads = NSToolbarItem.Identifier("addThreads")
+    static let edit = NSToolbarItem.Identifier("edit")
+    static let doneEditing = NSToolbarItem.Identifier("doneEditing")
+    static let share = NSToolbarItem.Identifier("share")
+}
+
+extension SplitViewController: NSToolbarDelegate {
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        [.addProject, .title, .flexibleSpace, .addThreads, .share]
+    }
+    
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        [.addProject, .title, .addThreads, .edit, .doneEditing, .share]
+    }
+    
+    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+        switch itemIdentifier {
+        case .addProject:
+            let item = NSToolbarItem(itemIdentifier: .addProject)
+            item.toolTip = "Create a new project"
+            item.image = UIImage(systemName: "rectangle.stack.badge.plus")
+            item.isBordered = true
+            item.action = #selector(addProject(_:))
+            return item
+        case .title:
+            let item = NSToolbarItem(itemIdentifier: .title)
+            item.title = "Threads"
+            return item
+        case .addThreads:
+            let item = NSToolbarItem(itemIdentifier: .addThreads)
+            item.toolTip = "Add threads"
+            item.image = UIImage(systemName: "plus")
+            item.isBordered = true
+            item.action = #selector(addThreads(_:))
+            return item
+        case .edit:
+            let item = NSToolbarItem(itemIdentifier: .edit)
+            item.toolTip = "Edit this project"
+            item.image = UIImage(systemName: "pencil")
+            item.isBordered = true
+            item.action = #selector(toggleEditingProject(_:))
+            return item
+        case .doneEditing:
+            let item = NSToolbarItem(itemIdentifier: .doneEditing)
+            item.toolTip = "Stop editing this project"
+            item.title = "Done"
+            item.isBordered = true
+            item.action = #selector(toggleEditingProject(_:))
+            return item
+        case .share:
+            let item = NSSharingServicePickerToolbarItem(itemIdentifier: .share)
+            item.toolTip = "Publish and share this project"
+            item.activityItemsConfiguration = self
+            return item
+        default:
+            fatalError("unexpected toolbar item identifier \(itemIdentifier)")
+        }
+    }
+
+}
+
+#endif

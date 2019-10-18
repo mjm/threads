@@ -211,9 +211,9 @@
 		C906E3B72352728C003EE053 /* Sidebar */ = {
 			isa = PBXGroup;
 			children = (
+				C906E3BA23527C61003EE053 /* SplitViewController.swift */,
 				C906E3B8235272A0003EE053 /* SidebarViewController.swift */,
 				C906E3BC23528E82003EE053 /* DetailViewController.swift */,
-				C906E3BA23527C61003EE053 /* SplitViewController.swift */,
 			);
 			path = Sidebar;
 			sourceTree = "<group>";
