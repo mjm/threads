@@ -9,6 +9,10 @@
 import UIKit
 import CoreServices
 
+extension Event.Key {
+    static let projectName: Event.Key = "project_name"
+}
+
 struct CreateProjectAction: UserAction {
     typealias ResultType = Project
 
@@ -22,6 +26,9 @@ struct CreateProjectAction: UserAction {
         alert.addAction(UIAlertAction(title: "Create", style: .default) { _ in
             let project = Project(context: context.managedObjectContext)
             project.name = alert.textFields?[0].text
+            
+            Event.current[.projectName] = project.name
+            
             context.complete(project)
         })
         
@@ -63,6 +70,9 @@ struct AddToProjectAction: SyncUserAction {
     }
 
     func perform(_ context: UserActionContext<AddToProjectAction>) throws {
+        Event.current[.threadCount] = threads.count
+        Event.current[.projectName] = project.name
+        
         for thread in threads {
             thread.add(to: project)
         }
@@ -83,9 +93,12 @@ struct AddProjectToShoppingListAction: SyncUserAction {
     let undoActionName: String? = Localized.addToShoppingList
 
     func perform(_ context: UserActionContext<AddProjectToShoppingListAction>) throws {
+        Event.current[.projectName] = project.name
         project.addToShoppingList()
 
         let threads = (project.threads as! Set<ProjectThread>).compactMap { $0.thread }
+        Event.current[.threadCount] = threads.count
+        
         let message = threads.count == 1
             ? String(format: Localized.addToShoppingListBannerNumber, threads[0].number!)
             : String(format: Localized.addToShoppingListBannerCount, threads.count)
@@ -103,6 +116,8 @@ struct DeleteProjectAction: DestructiveUserAction {
     let confirmationButtonTitle: String = Localized.delete
 
     func performAsync(_ context: UserActionContext<DeleteProjectAction>) {
+        Event.current[.projectName] = project.name
+        
         UserActivity.showProject(project).delete {
             context.managedObjectContext.delete(self.project)
             context.complete()
@@ -118,6 +133,8 @@ struct ShareProjectAction: SyncUserAction {
     let undoActionName: String? = nil
 
     func perform(_ context: UserActionContext<ShareProjectAction>) throws {
+        Event.current[.projectName] = project.name
+        
         let activityController = UIActivityViewController(activityItems: [ProjectActivity(project: project)],
                                                           applicationActivities: [OpenInSafariActivity()])
         context.present(activityController)
@@ -132,6 +149,8 @@ struct AddImageToProjectAction: UserAction {
     let undoActionName: String? = Localized.addImage
 
     func performAsync(_ context: UserActionContext<AddImageToProjectAction>) {
+        Event.current[.projectName] = project.name
+        
         coordinator.project = project
         coordinator.context = context
 
@@ -177,6 +196,8 @@ struct MoveProjectImageAction: SyncUserAction {
     let undoActionName: String? = Localized.moveImage
 
     func perform(_ context: UserActionContext<MoveProjectImageAction>) throws -> () {
+        Event.current[.projectName] = project.name
+        
         var images = project.orderedImages
 
         let image = images.remove(at: sourceIndex)
@@ -192,6 +213,7 @@ struct DeleteProjectImageAction: SyncUserAction {
     let undoActionName: String? = Localized.deleteImage
 
     func perform(_ context: UserActionContext<DeleteProjectImageAction>) throws {
+        Event.current[.projectName] = image.project?.name
         image.delete()
     }
 }
