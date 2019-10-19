@@ -71,6 +71,8 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         searchController.searchBar.placeholder = Localized.searchForNewThreads
         searchController.searchBar.keyboardType = .asciiCapableNumberPad
         searchController.searchBar.inputAccessoryView = keyboardAccessoryView
+        searchController.searchBar.delegate = self
+        searchController.searchBar.searchTextField.delegate = self
         
         #if targetEnvironment(macCatalyst)
         tableView.tableHeaderView = searchController.searchBar
@@ -214,7 +216,38 @@ extension AddThreadViewController: UISearchResultsUpdating {
 
         threadToAdd = filteredThreads.first { $0.number?.lowercased() == query }
 
+        #if targetEnvironment(macCatalyst)
+        updateSnapshot(animated: false)
+        #else
         updateSnapshot(animated: isAdding)
+        #endif
+    }
+}
+
+extension AddThreadViewController: UISearchBarDelegate {
+}
+
+extension AddThreadViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        quickAddThread()
+        return false
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if string == " " {
+            guard let existingText = textField.text as NSString? else {
+                return false
+            }
+            
+            if range.location == existingText.length {
+                // a space at the end of the text means quick add thread
+                quickAddThread()
+            }
+            
+            return false
+        }
+        
+        return true
     }
 }
 
