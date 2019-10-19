@@ -65,6 +65,9 @@ struct Event: Encodable {
     }
 }
 
+private let eventEncoder = TextEncoder()
+private let log = OSLog(subsystem: "com.mattmoriarity.Threads", category: "events")
+
 struct EventBuilder {
     var error: Error?
     var fields: [Event.Key: AnyEncodable] = [:]
@@ -80,10 +83,30 @@ struct EventBuilder {
         }
     }
     
+    mutating func send(_ message: String) {
+        send(.default, message)
+    }
+    
+    mutating func send(_ level: OSLogType, _ message: String) {
+        let event = makeEvent(message: message)
+        do {
+            let text = try eventEncoder.encode(event)
+            os_log(level, log: log, "%{public}s", text)
+        } catch {
+            NSLog("Could not serialize event: \(error)")
+        }
+        
+        // reset for the next event
+        error = nil
+        fields = [:]
+    }
+    
     func makeEvent(message: String, timestamp: Date = Date()) -> Event {
-        Event(timestamp: timestamp,
-              error: error,
-              message: message,
-              fields: fields)
+        let fields = Event.global.fields.merging(self.fields) { globalValue, localValue in localValue }
+        
+        return Event(timestamp: timestamp,
+                     error: error,
+                     message: message,
+                     fields: fields)
     }
 }

@@ -11,6 +11,12 @@ import CoreData
 
 let isMainQueueKey = DispatchSpecificKey<Bool>()
 
+extension Event.Key {
+    static let undoActionName: Event.Key = "undo_action"
+    static let actionName: Event.Key = "action"
+    static let saved: Event.Key = "saved"
+}
+
 class UserActionRunner {
     weak var viewController: UIViewController?
     let managedObjectContext: NSManagedObjectContext
@@ -43,35 +49,40 @@ class UserActionRunner {
     }
 
     func reallyPerform<Action: UserAction>(_ action: Action, context: UserActionContext<Action>) {
+        Event.current[.actionName] = String(describing: Action.self)
+        
         context.willPerformHandler()
 
         if let undoActionName = action.undoActionName {
             managedObjectContext.undoManager?.setActionName(undoActionName)
-            NSLog("Performing action \"\(undoActionName)\": \(action)")
-        } else {
-            NSLog("Performing action: \(action)")
+            Event.current[.undoActionName] = undoActionName
         }
 
         action.performAsync(context)
     }
 
     func presentError(_ error: Error) {
-        guard let viewController = viewController else { return }
+        Event.current.error = error
+        
+        if let viewController = viewController {
+            let alert = UIAlertController(title: Localized.errorOccurred,
+                                          message: error.localizedDescription,
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: Localized.dismiss, style: .cancel))
 
-        let alert = UIAlertController(title: Localized.errorOccurred,
-                                      message: error.localizedDescription,
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Localized.dismiss, style: .cancel))
-
-        viewController.present(alert, animated: true)
+            viewController.present(alert, animated: true)
+        }
+        
+        Event.current.send(.error, "completed user action")
     }
 
     func complete<Action: UserAction>(_ action: Action) {
         if action.saveAfterComplete {
             managedObjectContext.commit()
         }
+        Event.current[.saved] = action.saveAfterComplete
 
-        NSLog("Completed action: \(action)")
+        Event.current.send("completed user action")
     }
 
     func contextualAction<Action: UserAction>(

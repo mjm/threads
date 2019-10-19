@@ -93,6 +93,7 @@
 		C99677FA235B84E400AE2F5C /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677F9235B84E400AE2F5C /* EventTests.swift */; };
 		C99677FC235B8C2600AE2F5C /* TextEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677FB235B8C2600AE2F5C /* TextEncoder.swift */; };
 		C99677FE235BA23600AE2F5C /* TextEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677FD235BA23600AE2F5C /* TextEncoderTests.swift */; };
+		C9967800235BABB900AE2F5C /* CurrentEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677FF235BABB900AE2F5C /* CurrentEvent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -203,6 +204,7 @@
 		C99677F9235B84E400AE2F5C /* EventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
 		C99677FB235B8C2600AE2F5C /* TextEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEncoder.swift; sourceTree = "<group>"; };
 		C99677FD235BA23600AE2F5C /* TextEncoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEncoderTests.swift; sourceTree = "<group>"; };
+		C99677FF235BABB900AE2F5C /* CurrentEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentEvent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -429,6 +431,7 @@
 			isa = PBXGroup;
 			children = (
 				C99677F5235B7A7200AE2F5C /* Event.swift */,
+				C99677FF235BABB900AE2F5C /* CurrentEvent.swift */,
 				C99677F7235B82BF00AE2F5C /* AnyEncodable.swift */,
 				C99677FB235B8C2600AE2F5C /* TextEncoder.swift */,
 			);
@@ -608,6 +611,7 @@
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
 				C942E44D2336C7F400987EAB /* BannerController.swift in Sources */,
+				C9967800235BABB900AE2F5C /* CurrentEvent.swift in Sources */,
 				C97FCE00232F4C9F000B1590 /* UserActionContext.swift in Sources */,
 				C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */,
 				C9491E44232491D90031F463 /* Project.swift in Sources */,
