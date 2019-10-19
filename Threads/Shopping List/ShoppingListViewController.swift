@@ -208,7 +208,7 @@ extension ShoppingListViewController {
     }
     
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        if !super.canPerformAction(action, withSender: sender) {
+        guard super.canPerformAction(action, withSender: sender) else {
             return false
         }
         

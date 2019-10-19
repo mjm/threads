@@ -156,6 +156,19 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         onDismiss()
     }
     
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        guard super.canPerformAction(action, withSender: sender) else {
+            return false
+        }
+        
+        switch action {
+        case #selector(add):
+            return !selectedThreads.isEmpty
+        default:
+            return true
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         guard case .thread(_, isResult: true) = dataSource.itemIdentifier(for: indexPath) else {
             return nil
