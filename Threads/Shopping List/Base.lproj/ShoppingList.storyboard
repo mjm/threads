@@ -29,7 +29,7 @@
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="14" maxY="0.0"/>
                                     <state key="normal" title="Add Checked To Collection" image="tray.and.arrow.down.fill" catalog="system"/>
                                     <connections>
-                                        <action selector="addCheckedToCollection" destination="eZf-QS-yfS" eventType="touchUpInside" id="J7p-jF-OWY"/>
+                                        <action selector="addCheckedToCollection:" destination="eZf-QS-yfS" eventType="touchUpInside" id="V6u-ek-NhD"/>
                                     </connections>
                                 </button>
                             </subviews>

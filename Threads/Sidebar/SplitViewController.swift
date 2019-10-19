@@ -166,6 +166,9 @@ class SplitViewController: UISplitViewController {
         
         let currentState = toolbar.items.map { $0.itemIdentifier }
         var desiredState: [NSToolbarItem.Identifier] = [.addProject, .title, .flexibleSpace, .addThreads, .share]
+        if selection == .shoppingList {
+            desiredState.insert(.addCheckedToCollection, at: desiredState.index(desiredState.endIndex, offsetBy: -2))
+        }
         if let projectController = projectDetailViewController {
             if projectController.isEditing {
                 desiredState.append(contentsOf: [.doneEditing])
@@ -220,6 +223,7 @@ extension NSToolbarItem.Identifier {
     static let edit = NSToolbarItem.Identifier("edit")
     static let doneEditing = NSToolbarItem.Identifier("doneEditing")
     static let share = NSToolbarItem.Identifier("share")
+    static let addCheckedToCollection = NSToolbarItem.Identifier("addCheckedToCollection")
 }
 
 extension SplitViewController: NSToolbarDelegate {
@@ -228,7 +232,7 @@ extension SplitViewController: NSToolbarDelegate {
     }
     
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [.addProject, .title, .addThreads, .edit, .doneEditing, .share]
+        [.addProject, .title, .addThreads, .edit, .doneEditing, .share, .addCheckedToCollection]
     }
     
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
@@ -269,6 +273,13 @@ extension SplitViewController: NSToolbarDelegate {
             let item = NSSharingServicePickerToolbarItem(itemIdentifier: .share)
             item.toolTip = "Publish and share this project"
             item.activityItemsConfiguration = self
+            return item
+        case .addCheckedToCollection:
+            let item = NSToolbarItem(itemIdentifier: .addCheckedToCollection)
+            item.toolTip = "Add all checked threads to My Threads"
+            item.image = UIImage(systemName: "tray.and.arrow.down")
+            item.isBordered = true
+            item.action = #selector(ShoppingListViewController.addCheckedToCollection(_:))
             return item
         default:
             fatalError("unexpected toolbar item identifier \(itemIdentifier)")

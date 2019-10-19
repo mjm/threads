@@ -32,6 +32,10 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
         super.viewDidLoad()
         
         addCheckedButton.imageView?.tintColor = .white
+        
+        #if targetEnvironment(macCatalyst)
+        tableView.tableHeaderView = nil
+        #endif
     }
 
     override var currentUserActivity: UserActivity? { .showShoppingList }
@@ -59,6 +63,7 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
     }
     
     override func dataSourceDidUpdateSnapshot(animated: Bool) {
+        #if !targetEnvironment(macCatalyst)
         // animate in/out the "Add Checked to Collection" button
         let anyChecked = !threadsList.objects.filter { $0.purchased }.isEmpty
         let header = self.tableView.tableHeaderView!
@@ -78,6 +83,7 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
         } else {
             changeHeight()
         }
+        #endif
         
         // update the tab bar badge
         let unpurchasedItems = threadsList.objects.filter { !$0.purchased }.count
@@ -149,8 +155,21 @@ extension ShoppingListViewController {
         actionRunner.perform(AddThreadAction(mode: .shoppingList))
     }
     
-    @IBAction func addCheckedToCollection() {
+    @IBAction func addCheckedToCollection(_ sender: Any) {
         actionRunner.perform(AddPurchasedToCollectionAction())
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if !super.canPerformAction(action, withSender: sender) {
+            return false
+        }
+        
+        switch action {
+        case #selector(addCheckedToCollection(_:)):
+            return !threadsList.objects.filter { $0.purchased }.isEmpty
+        default:
+            return true
+        }
     }
 }
 
