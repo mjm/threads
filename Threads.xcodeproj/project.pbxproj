@@ -86,6 +86,8 @@
 		C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07C92334716F00BAB311 /* RoundedShadowView.swift */; };
 		C98F07CC2334745400BAB311 /* RoundedShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07CB2334745400BAB311 /* RoundedShadowImageView.swift */; };
 		C99677EE235A6C5400AE2F5C /* OpenInSafariActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */; };
+		C99677F1235B497600AE2F5C /* StoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677F0235B497600AE2F5C /* StoreObserver.swift */; };
+		C99677F3235B499C00AE2F5C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99677F2235B499C00AE2F5C /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -189,6 +191,8 @@
 		C98F07C92334716F00BAB311 /* RoundedShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowView.swift; sourceTree = "<group>"; };
 		C98F07CB2334745400BAB311 /* RoundedShadowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowImageView.swift; sourceTree = "<group>"; };
 		C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInSafariActivity.swift; sourceTree = "<group>"; };
+		C99677F0235B497600AE2F5C /* StoreObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreObserver.swift; sourceTree = "<group>"; };
+		C99677F2235B499C00AE2F5C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +201,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9491E0D231D8A230031F463 /* CloudKit.framework in Frameworks */,
+				C99677F3235B499C00AE2F5C /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +278,7 @@
 		C9491E0B231D8A220031F463 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C99677F2235B499C00AE2F5C /* StoreKit.framework */,
 				C9491E0C231D8A220031F463 /* CloudKit.framework */,
 			);
 			name = Frameworks;
@@ -321,6 +327,7 @@
 				C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */,
 				C97FCDED232E941D000B1590 /* Cells.swift */,
 				C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */,
+				C99677EF235B496100AE2F5C /* In-App Purchase */,
 				C97FCDFC232F4945000B1590 /* Actions */,
 			);
 			path = Common;
@@ -395,6 +402,14 @@
 				C97FCE07233073AA000B1590 /* ProjectActions.swift */,
 			);
 			path = Actions;
+			sourceTree = "<group>";
+		};
+		C99677EF235B496100AE2F5C /* In-App Purchase */ = {
+			isa = PBXGroup;
+			children = (
+				C99677F0235B497600AE2F5C /* StoreObserver.swift */,
+			);
+			path = "In-App Purchase";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -520,6 +535,7 @@
 				C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */,
 				C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */,
 				C97FCDF1232EA234000B1590 /* ProjectImage.swift in Sources */,
+				C99677F1235B497600AE2F5C /* StoreObserver.swift in Sources */,
 				C9491E2F231E0BE00031F463 /* Thread.swift in Sources */,
 				C9491E3E23235FBF0031F463 /* ThreadTableViewCell.swift in Sources */,
 				C946962B2340EF1B00843179 /* EmptyView.swift in Sources */,

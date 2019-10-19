@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import StoreKit
 
 func printResponderChain(_ responder: UIResponder?) {
     guard let responder = responder else { return }
@@ -18,9 +19,20 @@ func printResponderChain(_ responder: UIResponder?) {
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    let storeObserver = StoreObserver(productIDs: [.premium])
+    
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        try! storeObserver.validateReceipt()
+        return true
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        SKPaymentQueue.default().add(storeObserver)
         return true
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        SKPaymentQueue.default().remove(storeObserver)
     }
 
     // MARK: UISceneSession Lifecycle
