@@ -193,6 +193,20 @@ extension ShoppingListViewController {
         })
     }
     
+    override func delete(_ sender: Any?) {
+        guard case let .thread(thread) = selectedCell else {
+            return
+        }
+        
+        actionRunner.perform(RemoveFromShoppingListAction(thread: thread))
+    }
+    
+    override var keyCommands: [UIKeyCommand]? {
+        [
+            UIKeyCommand(title: "Delete", action: #selector(delete(_:)), input: "\u{8}") // Delete key
+        ]
+    }
+    
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if !super.canPerformAction(action, withSender: sender) {
             return false
@@ -201,7 +215,8 @@ extension ShoppingListViewController {
         switch action {
         case #selector(addCheckedToCollection(_:)):
             return !threadsList.objects.filter { $0.purchased }.isEmpty
-        case #selector(incrementThreadQuantity(_:)):
+        case #selector(incrementThreadQuantity(_:)),
+             #selector(delete(_:)):
             return selectedCell != nil
         default:
             return true

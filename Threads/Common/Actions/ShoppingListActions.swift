@@ -100,3 +100,13 @@ struct ChangeShoppingListAmountAction: SyncUserAction {
         }
     }
 }
+
+struct RemoveFromShoppingListAction: SyncUserAction {
+    let thread: Thread
+    
+    let undoActionName: String? = Localized.removeFromShoppingList
+    
+    func perform(_ context: UserActionContext<RemoveFromShoppingListAction>) throws {
+        thread.removeFromShoppingList()
+    }
+}
