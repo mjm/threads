@@ -11,6 +11,8 @@ import CoreServices
 
 extension Event.Key {
     static let projectName: Event.Key = "project_name"
+    static let byteCount: Event.Key = "byte_count"
+    static let activityType: Event.Key = "activity_type"
 }
 
 struct CreateProjectAction: UserAction {
@@ -22,7 +24,9 @@ struct CreateProjectAction: UserAction {
     func performAsync(_ context: UserActionContext<CreateProjectAction>) {
         let alert = UIAlertController(title: "Create a Project", message: "Enter a name for your new project:", preferredStyle: .alert)
         alert.addTextField(configurationHandler: nil)
-        alert.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
+        alert.addAction(UIAlertAction(title: Localized.cancel, style: .cancel) { _ in
+            context.complete(error: UserActionError.canceled)
+        })
         alert.addAction(UIAlertAction(title: "Create", style: .default) { _ in
             let project = Project(context: context.managedObjectContext)
             project.name = alert.textFields?[0].text
@@ -125,18 +129,34 @@ struct DeleteProjectAction: DestructiveUserAction {
     }
 }
 
-struct ShareProjectAction: SyncUserAction {
+struct ShareProjectAction: UserAction {
     let project: Project
 
     // There's not really anything you can do to undo a share, since it leaves the
     // context of the app.
     let undoActionName: String? = nil
 
-    func perform(_ context: UserActionContext<ShareProjectAction>) throws {
+    func performAsync(_ context: UserActionContext<ShareProjectAction>) {
         Event.current[.projectName] = project.name
         
         let activityController = UIActivityViewController(activityItems: [ProjectActivity(project: project)],
                                                           applicationActivities: [OpenInSafariActivity()])
+        
+        activityController.completionWithItemsHandler = { activityType, completed, items, error in
+            if let error = error {
+                context.complete(error: error)
+                return
+            }
+            
+            Event.current[.activityType] = activityType?.rawValue
+            
+            if completed {
+                context.complete()
+            } else {
+                context.complete(error: UserActionError.canceled)
+            }
+        }
+        
         context.present(activityController)
     }
 }
@@ -170,6 +190,7 @@ struct AddImageToProjectAction: UserAction {
             if let url = info[.imageURL] as? URL {
                 do {
                     let data = try Data(contentsOf: url)
+                    Event.current[.byteCount] = data.count
                     project.addImage(data)
                 } catch {
                     context.completeAndDismiss(error: error)
@@ -183,7 +204,7 @@ struct AddImageToProjectAction: UserAction {
         }
 
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            context.completeAndDismiss()
+            context.completeAndDismiss(error: UserActionError.canceled)
         }
     }
 }

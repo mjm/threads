@@ -15,6 +15,7 @@ extension Event.Key {
     static let undoActionName: Event.Key = "undo_action"
     static let actionName: Event.Key = "action"
     static let saved: Event.Key = "saved"
+    static let canceled: Event.Key = "canceled"
 }
 
 class UserActionRunner {
@@ -62,18 +63,23 @@ class UserActionRunner {
     }
 
     func presentError(_ error: Error) {
-        Event.current.error = error
-        
-        if let viewController = viewController {
-            let alert = UIAlertController(title: Localized.errorOccurred,
-                                          message: error.localizedDescription,
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: Localized.dismiss, style: .cancel))
-
-            viewController.present(alert, animated: true)
+        if case UserActionError.canceled = error {
+            Event.current[.canceled] = true
+            Event.current.send("completed user action")
+        } else {
+            Event.current.error = error
+            
+            if let viewController = viewController {
+                let alert = UIAlertController(title: Localized.errorOccurred,
+                                              message: error.localizedDescription,
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: Localized.dismiss, style: .cancel))
+                
+                viewController.present(alert, animated: true)
+            }
+            
+            Event.current.send(.error, "completed user action")
         }
-        
-        Event.current.send(.error, "completed user action")
     }
 
     func complete<Action: UserAction>(_ action: Action) {

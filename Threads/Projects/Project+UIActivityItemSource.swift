@@ -8,6 +8,12 @@
 
 import UIKit
 
+extension Event.Key {
+    static let previousPublishedID: Event.Key = "prev_published_id"
+    static let publishedID: Event.Key = "published_id"
+    static let publishedURL: Event.Key = "published_url"
+}
+
 extension Project {
     var itemProvider: NSItemProvider {
         let itemProvider = NSItemProvider()
@@ -45,12 +51,14 @@ class ProjectActivity: UIActivityItemProvider {
     private var isPublished = false
     override var item: Any {
         if !isPublished {
+            Event.current[.previousPublishedID] = project.publishedID
+            
             let group = DispatchGroup()
             group.enter()
 
             project.publish { error in
                 if let error = error {
-                    NSLog("Error publishing project: \(error)")
+                    Event.current.error = error
                 }
 
                 group.leave()
@@ -58,14 +66,12 @@ class ProjectActivity: UIActivityItemProvider {
             
             group.wait()
             isPublished = true
+            
+            Event.current[.publishedID] = project.publishedID
+            Event.current[.publishedURL] = project.publishedURL
         }
-
-        if let url = project.publishedURL {
-            NSLog("URL for published project: \(url)")
-            return url
-        } else {
-            return ""
-        }
+        
+        return project.publishedURL ?? ""
     }
 
     public override func activityViewController(_ activityViewController: UIActivityViewController, thumbnailImageForActivityType activityType: UIActivity.ActivityType?, suggestedSize size: CGSize) -> UIImage? {
