@@ -34,6 +34,12 @@ class SplitViewController: UISplitViewController {
         primaryBackgroundStyle = .sidebar
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        updateToolbar()
+    }
+    
     var selection: SidebarSelection = .collection {
         didSet {
             sidebarViewController.setSelection(selection)
