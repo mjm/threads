@@ -22,8 +22,23 @@ class ThreadTableViewCell: UITableViewCell {
             numberLabel.text = Localized.dmcNumberUnknown
         }
         labelLabel.text = thread.label ?? ""
-
-        numberLabel.textColor = UIColor.label
-        labelLabel.textColor = UIColor.label
+        
+        updateColors(selected: isSelected || isHighlighted)
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        updateColors(selected: selected || isHighlighted)
+    }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        updateColors(selected: highlighted || isSelected)
+    }
+    
+    func updateColors(selected: Bool) {
+        backgroundColor = .systemBackground
+        numberLabel.textColor = selected ? .lightText : .label
+        labelLabel.textColor = selected ? .lightText : .label
     }
 }

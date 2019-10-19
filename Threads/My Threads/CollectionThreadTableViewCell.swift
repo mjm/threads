@@ -11,11 +11,12 @@ import UIKit
 class CollectionThreadTableViewCell: ThreadTableViewCell {
 
     @IBOutlet var statusLabel: UILabel!
+    
+    var isOutOfStock = false
 
     override func populate(_ thread: Thread) {
+        isOutOfStock = thread.inCollection && thread.amountInCollection == 0
         super.populate(thread)
-        
-        backgroundColor = UIColor.systemBackground
 
         statusLabel.isHidden = true
         
@@ -24,14 +25,20 @@ class CollectionThreadTableViewCell: ThreadTableViewCell {
                 statusLabel.isHidden = false
                 statusLabel.text = Localized.onBobbin
             } else if thread.amountInCollection == 0 {
+                isOutOfStock = true
+                
                 statusLabel.isHidden = false
                 statusLabel.text = Localized.outOfStock
-                
-                numberLabel.textColor = UIColor.secondaryLabel
-                labelLabel.textColor = UIColor.secondaryLabel
-                
-                backgroundColor = UIColor.secondarySystemBackground
             }
         }
+    }
+    
+    override func updateColors(selected: Bool) {
+        super.updateColors(selected: selected)
+        statusLabel.textColor = selected ? .lightText : .secondaryLabel
+        
+        numberLabel.textColor = selected ? .lightText : (isOutOfStock ? .secondaryLabel : .label)
+        labelLabel.textColor = selected ? .lightText : (isOutOfStock ? .secondaryLabel : .label)
+        backgroundColor = isOutOfStock ? .secondarySystemBackground : .systemBackground
     }
 }
