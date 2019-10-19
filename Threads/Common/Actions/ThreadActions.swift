@@ -9,12 +9,18 @@
 import UIKit
 import CoreData
 
+extension Event.Key {
+    static let threadNumber: Event.Key = "thread_num"
+    static let threadCount: Event.Key = "thread_count"
+}
+
 struct MarkOffBobbinAction: SyncUserAction {
     let thread: Thread
 
     let undoActionName: String? = Localized.markOffBobbin
 
     func perform(_ context: UserActionContext<MarkOffBobbinAction>) throws {
+        Event.current[.threadNumber] = thread.number
         thread.onBobbin = false
     }
 }
@@ -25,6 +31,7 @@ struct MarkOnBobbinAction: SyncUserAction {
     let undoActionName: String? = Localized.markOnBobbin
 
     func perform(_ context: UserActionContext<MarkOnBobbinAction>) throws {
+        Event.current[.threadNumber] = thread.number
         thread.onBobbin = true
     }
 }
@@ -35,6 +42,7 @@ struct MarkInStockAction: SyncUserAction {
     let undoActionName: String? = Localized.markInStock
 
     func perform(_ context: UserActionContext<MarkInStockAction>) throws {
+        Event.current[.threadNumber] = thread.number
         thread.amountInCollection = 1
     }
 }
@@ -45,6 +53,7 @@ struct MarkOutOfStockAction: SyncUserAction {
     let undoActionName: String? = Localized.markOutOfStock
 
     func perform(_ context: UserActionContext<MarkOutOfStockAction>) throws {
+        Event.current[.threadNumber] = thread.number
         thread.amountInCollection = 0
         thread.onBobbin = false
     }
@@ -56,6 +65,7 @@ struct AddToCollectionAction: SyncUserAction {
     let undoActionName: String? = Localized.addToCollection
 
     func perform(_ context: UserActionContext<AddToCollectionAction>) throws {
+        Event.current[.threadCount] = threads.count
         for thread in threads {
             thread.addToCollection()
         }
@@ -72,6 +82,7 @@ struct RemoveThreadAction: DestructiveUserAction {
     let confirmationButtonTitle = Localized.remove
 
     func performAsync(_ context: UserActionContext<RemoveThreadAction>) {
+        Event.current[.threadNumber] = thread.number
         UserActivity.showThread(thread).delete {
             self.thread.removeFromCollection()
             context.complete()

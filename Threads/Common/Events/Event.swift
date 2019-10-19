@@ -51,7 +51,7 @@ struct Event: Encodable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: Key.self)
-        try container.encode(timestamp, forKey: .time)
+//        try container.encode(timestamp, forKey: .time)
         if let error = error {
             try container.encode(error.localizedDescription, forKey: .error)
         }
