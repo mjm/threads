@@ -18,32 +18,36 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell {
     var onDecreaseQuantity: () -> Void = { }
     var onIncreaseQuantity: () -> Void = { }
     var onCheckTapped: () -> Void = { }
+    
+    var isPurchased = false
 
     override func populate(_ thread: Thread) {
+        isPurchased = thread.purchased
         super.populate(thread)
-
-        backgroundColor = .systemBackground
 
         let amount = thread.amountInShoppingList
         quantityLabel.text = "\(amount)"
-        quantityLabel.textColor = .label
 
         decreaseButton.setImage(UIImage(systemName: amount == 1 ? "trash" : "minus.square"), for: .normal)
         checkButton.setImage(UIImage(systemName: thread.purchased ? "checkmark.square" : "square"), for: .normal)
-        let buttonTintColor = thread.purchased ? UIColor.secondaryLabel : nil
-        checkButton.tintColor = buttonTintColor
-        decreaseButton.tintColor = buttonTintColor
-        increaseButton.tintColor = buttonTintColor
 
         decreaseButton.isEnabled = !thread.purchased
         increaseButton.isEnabled = !thread.purchased
-
-        if thread.purchased {
-            numberLabel.textColor = .secondaryLabel
-            labelLabel.textColor = .secondaryLabel
-            quantityLabel.textColor = .secondaryLabel
-            backgroundColor = .secondarySystemBackground
-        }
+    }
+    
+    override func updateColors(selected: Bool) {
+        super.updateColors(selected: selected)
+        
+        backgroundColor = isPurchased ? .secondarySystemBackground : .systemBackground
+        let labelColor: UIColor = selected ? .lightText : (isPurchased ? .secondaryLabel : .label)
+        numberLabel.textColor = labelColor
+        labelLabel.textColor = labelColor
+        quantityLabel.textColor = labelColor
+        
+        let buttonTintColor: UIColor? = selected ? .lightText : (isPurchased ? .secondaryLabel : nil)
+        checkButton.tintColor = buttonTintColor
+        decreaseButton.tintColor = buttonTintColor
+        increaseButton.tintColor = buttonTintColor
     }
 
     @IBAction func checkButtonPressed() {

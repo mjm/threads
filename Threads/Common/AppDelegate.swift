@@ -140,6 +140,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UIMenu(title: "", options: .displayInline, children: [
                 UIKeyCommand(title: "In Stock", action: #selector(MyThreadsViewController.toggleInStock(_:)), input: "k", modifierFlags: [.command]),
                 UIKeyCommand(title: "On Bobbin", action: #selector(MyThreadsViewController.toggleOnBobbin(_:)), input: "b", modifierFlags: [.command]),
+                UIKeyCommand(title: "Purchased", action: #selector(ShoppingListViewController.toggleThreadPurchased(_:)), input: "u", modifierFlags: [.command]),
+            ]),
+            UIMenu(title: "", options: .displayInline, children: [
+                UIKeyCommand(title: "Increase Quantity", action: #selector(ShoppingListViewController.incrementThreadQuantity(_:)), input: "=", modifierFlags: [.command]),
+                UIKeyCommand(title: "Decrease Quantity", action: #selector(ShoppingListViewController.decrementThreadQuantity(_:)), input: "-", modifierFlags: [.command]),
             ]),
         ]), afterMenu: .view)
         

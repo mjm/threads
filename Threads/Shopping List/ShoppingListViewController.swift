@@ -35,6 +35,7 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
         
         #if targetEnvironment(macCatalyst)
         tableView.tableHeaderView = nil
+        tableView.allowsSelection = true
         #endif
     }
 
@@ -159,6 +160,39 @@ extension ShoppingListViewController {
         actionRunner.perform(AddPurchasedToCollectionAction())
     }
     
+    @objc func toggleThreadPurchased(_ sender: Any) {
+        guard case let .thread(thread) = selectedCell else {
+            return
+        }
+        
+        // move the thread immediately if triggered by keyboard shortcut or menu item
+        let willPerform = sender is UIKeyCommand ? {} : {
+            self.delayPurchase(thread)
+        }
+        
+        actionRunner.perform(TogglePurchasedAction(thread: thread), willPerform: willPerform)
+    }
+    
+    @objc func incrementThreadQuantity(_ sender: Any) {
+        guard case let .thread(thread) = selectedCell else {
+            return
+        }
+        
+        actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment), willPerform: {
+            self.resetDelayedPurchaseTimer()
+        })
+    }
+    
+    @objc func decrementThreadQuantity(_ sender: Any) {
+        guard case let .thread(thread) = selectedCell else {
+            return
+        }
+        
+        actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .decrement), willPerform: {
+            self.resetDelayedPurchaseTimer()
+        })
+    }
+    
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if !super.canPerformAction(action, withSender: sender) {
             return false
@@ -167,8 +201,35 @@ extension ShoppingListViewController {
         switch action {
         case #selector(addCheckedToCollection(_:)):
             return !threadsList.objects.filter { $0.purchased }.isEmpty
+        case #selector(incrementThreadQuantity(_:)):
+            return selectedCell != nil
         default:
             return true
+        }
+    }
+    
+    override func validate(_ command: UICommand) {
+        super.validate(command)
+        
+        switch command.action {
+        case #selector(toggleThreadPurchased(_:)):
+            if case let .thread(thread) = selectedCell {
+                command.state = thread.purchased ? .on : .off
+                command.attributes = []
+            } else {
+                command.state = .off
+                command.attributes = .disabled
+            }
+        case #selector(decrementThreadQuantity(_:)):
+            if case let .thread(thread) = selectedCell {
+                command.title = thread.amountInShoppingList > 1 ? "Decrease Quantity" : "Remove from Shopping List"
+                command.attributes = []
+            } else {
+                command.title = "Decrease Quantity"
+                command.attributes = .disabled
+            }
+        default:
+            return
         }
     }
 }
