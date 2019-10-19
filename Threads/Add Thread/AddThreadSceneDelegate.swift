@@ -16,6 +16,20 @@ class AddThreadSceneDelegate: UIResponder, UIWindowSceneDelegate {
     var toolbarDelegate: AddThreadToolbarDelegate?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let userActivity = connectionOptions.userActivities.first else {
+            NSLog("AddThread scene was created without a user activity")
+            closeWindow(session)
+            return
+        }
+        
+        let addThreadController = window!.rootViewController as! AddThreadViewController
+    
+        guard case let .addThreads(mode) = UserActivity(userActivity: userActivity, context: addThreadController.managedObjectContext) else {
+            NSLog("AddThread scene was created with the wrong type of user activity")
+            closeWindow(session)
+            return
+        }
+        
         if let scene = scene as? UIWindowScene {
             scene.sizeRestrictions?.minimumSize = CGSize(width: 300, height: 300)
             scene.sizeRestrictions?.maximumSize = CGSize(width: 500, height: 4000)
@@ -32,23 +46,17 @@ class AddThreadSceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         }
         
-        window!.canResizeToFitContent = true
-        
-        let addThreadController = window!.rootViewController as! AddThreadViewController
-        
-        guard let userActivity = connectionOptions.userActivities.first else {
-            NSLog("AddThread scene was created without a user activity")
-            return
-        }
-        
-        guard case let .addThreads(mode) = UserActivity(userActivity: userActivity, context: addThreadController.managedObjectContext) else {
-            NSLog("AddThread scene was created with the wrong type of user activity")
-            return
-        }
-        
         addThreadsDelegate = mode.makeDelegate(context: addThreadController.managedObjectContext)
         addThreadController.delegate = addThreadsDelegate
         addThreadController.onDismiss = {
+            UIApplication.shared.requestSceneSessionDestruction(session, options: nil)
+        }
+    }
+    
+    private func closeWindow(_ session: UISceneSession) {
+        // this is a hack to make the window go away automatically in case this scene is left over from the application
+        // terminating uncleanly.
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
             UIApplication.shared.requestSceneSessionDestruction(session, options: nil)
         }
     }
