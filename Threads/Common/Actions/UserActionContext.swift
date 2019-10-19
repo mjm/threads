@@ -9,20 +9,29 @@
 import UIKit
 import CoreData
 
+enum UserActionSource {
+    case barButtonItem(UIBarButtonItem)
+    case view(UIView)
+    case rect(CGRect)
+}
+
 class UserActionContext<Action: UserAction> {
     let runner: UserActionRunner
     let action: Action
+    let source: UserActionSource?
     let willPerformHandler: () -> Void
     let completionHandler: (Action.ResultType) -> Void
 
     init(
         runner: UserActionRunner,
         action: Action,
+        source: UserActionSource?,
         willPerform: @escaping () -> Void,
         completion: @escaping (Action.ResultType) -> Void
     ) {
         self.runner = runner
         self.action = action
+        self.source = source
         self.willPerformHandler = willPerform
         self.completionHandler = completion
     }
@@ -81,6 +90,17 @@ class UserActionContext<Action: UserAction> {
     /// - Parameters:
     ///     - viewController: The view controller to present.
     func present(_ viewController: UIViewController) {
+        switch source {
+        case let .barButtonItem(item):
+            viewController.popoverPresentationController?.barButtonItem = item
+        case let .view(view):
+            viewController.popoverPresentationController?.sourceView = view
+        case let .rect(rect):
+            viewController.popoverPresentationController?.sourceRect = rect
+        default:
+            break
+        }
+        
         runner.viewController?.present(viewController, animated: true)
     }
 

@@ -24,10 +24,12 @@ class UserActionRunner {
     }
 
     func perform<Action: UserAction>(_ action: Action,
+                                     source: UserActionSource? = nil,
                                      willPerform: @escaping () -> Void = {},
                                      completion: @escaping (Action.ResultType) -> Void = { _ in }) {
         let context = UserActionContext(runner: self,
                                         action: action,
+                                        source: source,
                                         willPerform: willPerform,
                                         completion: completion)
 
@@ -80,7 +82,7 @@ class UserActionRunner {
         completion: @escaping (Action.ResultType) -> Void = { _ in }
     ) -> UIContextualAction {
         UIContextualAction(style: style, title: title) { _, _, contextualActionCompletion in
-            self.perform(action) { result in
+            self.perform(action, willPerform: willPerform) { result in
                 completion(result)
                 contextualActionCompletion(true)
             }
@@ -93,6 +95,7 @@ class UserActionRunner {
         image: UIImage? = nil,
         attributes: UIMenuElement.Attributes = [],
         state: UIMenuElement.State = .off,
+        source: UserActionSource? = nil,
         willPerform: @escaping () -> Void = {},
         completion: @escaping (Action.ResultType) -> Void = { _ in }
     ) -> UIAction {
@@ -102,7 +105,7 @@ class UserActionRunner {
 
         let extraAttributes: UIMenuElement.Attributes = action.canPerform ? [] : .disabled
         return UIAction(title: title, image: image, attributes: attributes.union(extraAttributes), state: state) { _ in
-            self.perform(action, completion: completion)
+            self.perform(action, source: source, willPerform: willPerform, completion: completion)
         }
     }
 

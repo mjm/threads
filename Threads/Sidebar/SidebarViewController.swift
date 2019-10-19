@@ -91,7 +91,8 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
     }
     
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard case let .project(project) = dataSource.itemIdentifier(for: indexPath) else {
+        guard case let .project(project) = dataSource.itemIdentifier(for: indexPath),
+            let cell = tableView.cellForRow(at: indexPath) else {
             return nil
         }
         
@@ -101,7 +102,8 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
                                              image: UIImage(systemName: "cart.badge.plus")),
                 self.actionRunner.menuAction(ShareProjectAction(project: project),
                                              title: Localized.share,
-                                             image: UIImage(systemName: "square.and.arrow.up")),
+                                             image: UIImage(systemName: "square.and.arrow.up"),
+                                             source: .view(cell)),
                 self.actionRunner.menuAction(DeleteProjectAction(project: project),
                                              title: Localized.delete,
                                              image: UIImage(systemName: "trash"),
