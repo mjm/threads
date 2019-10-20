@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Events
 
 extension Event.Key {
     static let fetchProductsTime: Event.Key = "fetch_products_ms"

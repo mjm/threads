@@ -2,8 +2,17 @@
   "object": {
     "pins": [
       {
+        "package": "Events",
+        "repositoryURL": "https://github.com/mjm/Events.git",
+        "state": {
+          "branch": "master",
+          "revision": "885ca735c2cee798b6d58732e14c0ce2b633608d",
+          "version": null
+        }
+      },
+      {
         "package": "LogfmtEncoder",
-        "repositoryURL": "https://github.com/mjm/LogfmtEncoder.git",
+        "repositoryURL": "https://github.com/mjm/LogfmtEncoder",
         "state": {
           "branch": "master",
           "revision": "ca4f9cff09b85295966012eec60aa38f7124eccb",

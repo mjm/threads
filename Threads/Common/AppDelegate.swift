@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import StoreKit
+import Events
 
 func printResponderChain(_ responder: UIResponder?) {
     guard let responder = responder else { return }

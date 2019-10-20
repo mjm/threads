@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Events
 
 let isMainQueueKey = DispatchSpecificKey<Bool>()
 

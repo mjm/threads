@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import CloudKit
+import Events
 
 extension Event.Key {
     static let fetchProjectTime: Event.Key = "fetch_project_ms"

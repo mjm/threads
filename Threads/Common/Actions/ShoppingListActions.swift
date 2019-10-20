@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Events
 
 extension Event.Key {
     static let oldAmount: Event.Key = "old_amount"

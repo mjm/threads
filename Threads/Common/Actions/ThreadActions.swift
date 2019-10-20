@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Events
 
 extension Event.Key {
     static let threadNumber: Event.Key = "thread_num"

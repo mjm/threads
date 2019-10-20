@@ -88,12 +88,8 @@
 		C99677EE235A6C5400AE2F5C /* OpenInSafariActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */; };
 		C99677F1235B497600AE2F5C /* StoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677F0235B497600AE2F5C /* StoreObserver.swift */; };
 		C99677F3235B499C00AE2F5C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99677F2235B499C00AE2F5C /* StoreKit.framework */; };
-		C99677F6235B7A7200AE2F5C /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677F5235B7A7200AE2F5C /* Event.swift */; };
-		C99677F8235B82BF00AE2F5C /* AnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677F7235B82BF00AE2F5C /* AnyEncodable.swift */; };
-		C99677FA235B84E400AE2F5C /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677F9235B84E400AE2F5C /* EventTests.swift */; };
-		C9967800235BABB900AE2F5C /* CurrentEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677FF235BABB900AE2F5C /* CurrentEvent.swift */; };
 		C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9967801235C02EA00AE2F5C /* StoreActions.swift */; };
-		C9967807235CB1B900AE2F5C /* LogfmtEncoder in Frameworks */ = {isa = PBXBuildFile; productRef = C9967806235CB1B900AE2F5C /* LogfmtEncoder */; };
+		C9C8C0DE235CBA7200787BEA /* Events in Frameworks */ = {isa = PBXBuildFile; productRef = C9C8C0DD235CBA7200787BEA /* Events */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -199,10 +195,6 @@
 		C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInSafariActivity.swift; sourceTree = "<group>"; };
 		C99677F0235B497600AE2F5C /* StoreObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreObserver.swift; sourceTree = "<group>"; };
 		C99677F2235B499C00AE2F5C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		C99677F5235B7A7200AE2F5C /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		C99677F7235B82BF00AE2F5C /* AnyEncodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyEncodable.swift; sourceTree = "<group>"; };
-		C99677F9235B84E400AE2F5C /* EventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
-		C99677FF235BABB900AE2F5C /* CurrentEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentEvent.swift; sourceTree = "<group>"; };
 		C9967801235C02EA00AE2F5C /* StoreActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreActions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -212,8 +204,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9491E0D231D8A230031F463 /* CloudKit.framework in Frameworks */,
-				C9967807235CB1B900AE2F5C /* LogfmtEncoder in Frameworks */,
 				C99677F3235B499C00AE2F5C /* StoreKit.framework in Frameworks */,
+				C9C8C0DE235CBA7200787BEA /* Events in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,7 +293,6 @@
 			children = (
 				C9491E22231DDBB70031F463 /* Info.plist */,
 				C9491E28231DDBC60031F463 /* ColorTests.swift */,
-				C99677F9235B84E400AE2F5C /* EventTests.swift */,
 			);
 			path = ThreadsTests;
 			sourceTree = "<group>";
@@ -340,7 +331,6 @@
 				C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */,
 				C97FCDED232E941D000B1590 /* Cells.swift */,
 				C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */,
-				C99677F4235B77DC00AE2F5C /* Events */,
 				C99677EF235B496100AE2F5C /* In-App Purchase */,
 				C97FCDFC232F4945000B1590 /* Actions */,
 			);
@@ -427,16 +417,6 @@
 			path = "In-App Purchase";
 			sourceTree = "<group>";
 		};
-		C99677F4235B77DC00AE2F5C /* Events */ = {
-			isa = PBXGroup;
-			children = (
-				C99677F5235B7A7200AE2F5C /* Event.swift */,
-				C99677FF235BABB900AE2F5C /* CurrentEvent.swift */,
-				C99677F7235B82BF00AE2F5C /* AnyEncodable.swift */,
-			);
-			path = Events;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -454,7 +434,7 @@
 			);
 			name = Threads;
 			packageProductDependencies = (
-				C9967806235CB1B900AE2F5C /* LogfmtEncoder */,
+				C9C8C0DD235CBA7200787BEA /* Events */,
 			);
 			productName = Threads;
 			productReference = C9491DF0231D897B0031F463 /* Threads.app */;
@@ -507,7 +487,7 @@
 			);
 			mainGroup = C9491DE7231D897A0031F463;
 			packageReferences = (
-				C9967805235CB1B900AE2F5C /* XCRemoteSwiftPackageReference "LogfmtEncoder" */,
+				C9C8C0DC235CBA7200787BEA /* XCRemoteSwiftPackageReference "Events" */,
 			);
 			productRefGroup = C9491DF1231D897B0031F463 /* Products */;
 			projectDirPath = "";
@@ -564,7 +544,6 @@
 				C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */,
 				C97FCDEC232E014D000B1590 /* NSManagedObjectContext.swift in Sources */,
 				C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */,
-				C99677F6235B7A7200AE2F5C /* Event.swift in Sources */,
 				C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */,
 				C97FCDF1232EA234000B1590 /* ProjectImage.swift in Sources */,
 				C99677F1235B497600AE2F5C /* StoreObserver.swift in Sources */,
@@ -597,7 +576,6 @@
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
 				C98F07C82333093800BAB311 /* ProjectPreviewViewController.swift in Sources */,
 				C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */,
-				C99677F8235B82BF00AE2F5C /* AnyEncodable.swift in Sources */,
 				C97FCDB3232CAD4E000B1590 /* TextInputCollectionViewCell.swift in Sources */,
 				C97FCE08233073AA000B1590 /* ProjectActions.swift in Sources */,
 				C906E3BB23527C61003EE053 /* SplitViewController.swift in Sources */,
@@ -616,7 +594,6 @@
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
 				C942E44D2336C7F400987EAB /* BannerController.swift in Sources */,
-				C9967800235BABB900AE2F5C /* CurrentEvent.swift in Sources */,
 				C97FCE00232F4C9F000B1590 /* UserActionContext.swift in Sources */,
 				C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */,
 				C9491E44232491D90031F463 /* Project.swift in Sources */,
@@ -630,7 +607,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C99677FA235B84E400AE2F5C /* EventTests.swift in Sources */,
 				C9491E29231DDBC60031F463 /* ColorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -941,9 +917,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C9967805235CB1B900AE2F5C /* XCRemoteSwiftPackageReference "LogfmtEncoder" */ = {
+		C9C8C0DC235CBA7200787BEA /* XCRemoteSwiftPackageReference "Events" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mjm/LogfmtEncoder.git";
+			repositoryURL = "https://github.com/mjm/Events.git";
 			requirement = {
 				branch = master;
 				kind = branch;
@@ -952,10 +928,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C9967806235CB1B900AE2F5C /* LogfmtEncoder */ = {
+		C9C8C0DD235CBA7200787BEA /* Events */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9967805235CB1B900AE2F5C /* XCRemoteSwiftPackageReference "LogfmtEncoder" */;
-			productName = LogfmtEncoder;
+			package = C9C8C0DC235CBA7200787BEA /* XCRemoteSwiftPackageReference "Events" */;
+			productName = Events;
 		};
 /* End XCSwiftPackageProductDependency section */
 

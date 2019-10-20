@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Events
 
 extension Event.Key {
     static let mergedThreadCount: Event.Key = "merged_thread_count"

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreServices
+import Events
 
 extension Event.Key {
     static let projectName: Event.Key = "project_name"

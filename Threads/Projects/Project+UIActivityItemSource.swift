@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Events
 
 extension Event.Key {
     static let previousPublishedID: Event.Key = "prev_published_id"
