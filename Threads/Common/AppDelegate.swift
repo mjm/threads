@@ -38,6 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         SKPaymentQueue.default().add(StoreObserver.default)
+        Event.sink = OSLogEventSink(subsystem: "com.mattmoriarity.Threads", category: "events")
         Event.global[.premium] = { StoreObserver.default.hasPurchased(.premium) }
         return true
     }
