@@ -11,6 +11,11 @@ import UIKit
 import CoreData
 import CoreSpotlight
 import CoreServices
+import Events
+
+extension Event.Key {
+    static let activityID: Event.Key = "activity_id"
+}
 
 private let threadURLKey = "ThreadURL"
 private let threadNumberKey = "ThreadNumber"
@@ -99,7 +104,6 @@ enum UserActivity {
         activity.isEligibleForSearch = true
         activity.isEligibleForPrediction = true
         if let identifier = persistentIdentifier {
-            NSLog("creating user activity with persistent identifier \(identifier)")
             activity.persistentIdentifier = identifier
         }
         
@@ -175,6 +179,20 @@ enum UserActivity {
                 NSLog("Deleted user activity with identifier \(identifier)")
                 DispatchQueue.main.async(execute: completion)
             }
+        }
+    }
+    
+    func addToCurrentEvent() {
+        Event.current[.activityType] = userActivityType.rawValue
+        Event.current[.activityID] = persistentIdentifier
+        
+        switch self {
+        case let .showProject(project):
+            Event.current[.projectName] = project.name
+        case let .showThread(thread):
+            Event.current[.threadNumber] = thread.number
+        default:
+            return
         }
     }
 }

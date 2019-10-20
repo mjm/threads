@@ -47,12 +47,14 @@ class MacSceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let window = window else { return nil }
         
         let rootViewController = window.rootViewController as! SplitViewController
-        let activity = rootViewController.detailViewController.currentUserActivity
         
-        Event.current[.activityType] = activity?.activityType
-        Event.current.send("saving activity")
+        if let activity = rootViewController.detailViewController.currentUserActivity {
+            UserActivity(userActivity: activity, context: managedObjectContext)?.addToCurrentEvent()
+            Event.current.send("saving activity")
+            return activity
+        }
         
-        return activity
+        return nil
     }
     
     private func restoreActivity(_ activity: NSUserActivity, animated: Bool) {
@@ -62,22 +64,25 @@ class MacSceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let rootViewController = window.rootViewController as! SplitViewController
         
-        // get the context so we can rehydrate objects from the activity
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let userActivity = UserActivity(userActivity: activity, context: managedObjectContext)
+        userActivity?.addToCurrentEvent()
         
-        switch UserActivity(userActivity: activity, context: context) {
+        switch userActivity {
         case .showMyThreads, .showThread:
             rootViewController.selection = .collection
         case .showShoppingList:
             rootViewController.selection = .shoppingList
         case let .showProject(project):
-            Event.current[.projectName] = project.name
             rootViewController.selection = .project(project)
         case .none:
             NSLog("Was not able to load the activity. It may have referenced an object that no longer exists, or it may be a new activity type handed off to us from a newer version of the app (though I'm not sure the system will let that last one happen).")
         default:
             return
         }
+    }
+    
+    private var managedObjectContext: NSManagedObjectContext {
+        (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     }
 }
 
