@@ -8,6 +8,7 @@
 
 import Foundation
 import os
+import LogfmtEncoder
 
 struct Event: Encodable {
     enum Key: Hashable, CodingKey, ExpressibleByStringLiteral {
@@ -65,7 +66,7 @@ struct Event: Encodable {
     }
 }
 
-private let eventEncoder = TextEncoder()
+private let eventEncoder = LogfmtEncoder()
 private let log = OSLog(subsystem: "com.mattmoriarity.Threads", category: "events")
 
 struct EventBuilder {

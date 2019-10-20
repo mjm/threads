@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "LogfmtEncoder",
+        "repositoryURL": "https://github.com/mjm/LogfmtEncoder.git",
+        "state": {
+          "branch": "master",
+          "revision": "ca4f9cff09b85295966012eec60aa38f7124eccb",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
