@@ -17,6 +17,15 @@ func printResponderChain(_ responder: UIResponder?) {
     printResponderChain(responder.next)
 }
 
+extension Event.Key {
+    static let temporaryStore: Event.Key = "temporary_store"
+    static let loadStoreTime: Event.Key = "load_store_ms"
+    static let mergeThreadsTime: Event.Key = "merge_threads_ms"
+    static let mergeThreadsError: Event.Key = "merge_threads_err"
+    static let importThreadsTime: Event.Key = "import_threads_ms"
+    static let importThreadsError: Event.Key = "import_threads_err"
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     let storeObserver = StoreObserver(productIDs: [.premium])
@@ -59,6 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     lazy var persistentContainer: NSPersistentContainer = {
         if UserDefaults.standard.bool(forKey: "UseTemporaryStore") {
+            Event.global[.temporaryStore] = true
             return createTemporaryContainer()
         } else {
             return createCloudKitContainer()
@@ -66,28 +76,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
 
     private func createCloudKitContainer() -> NSPersistentContainer {
+        var event = EventBuilder()
+        
         let container = NSPersistentCloudKitContainer(name: "Threads")
+        
+        event.startTimer(.loadStoreTime)
         container.loadPersistentStores { storeDescription, error in
+            event.stopTimer(.loadStoreTime)
+            event.error = error
+            
             if let error = error as NSError? {
+                event.send(.error, "loaded persistent store")
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
 
             container.performBackgroundTask { context in
+                event.startTimer(.mergeThreadsTime)
                 do {
-                    let numMerged = try Thread.mergeThreads(context: context)
+                    try Thread.mergeThreads(context: context, event: &event)
                     try context.save()
-                    NSLog("Merged \(numMerged) threads")
                 } catch {
-                    NSLog("Error merging duplicate threads: \(error)")
+                    event[.mergeThreadsError] = error.localizedDescription
                 }
+                event.stopTimer(.mergeThreadsTime)
 
+                event.startTimer(.importThreadsTime)
                 do {
-                    try Thread.importThreads(DMCThread.all, context: context)
+                    try Thread.importThreads(DMCThread.all, context: context, event: &event)
                     try context.save()
-                    NSLog("Imported threads")
                 } catch {
-                    NSLog("Error importing threads into local store: \(error)")
+                    event[.importThreadsError] = error.localizedDescription
                 }
+                event.stopTimer(.importThreadsTime)
+                
+                event.send("loaded persistent store")
             }
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
@@ -96,25 +118,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func createTemporaryContainer() -> NSPersistentContainer {
+        var event = EventBuilder()
+        
         let container = NSPersistentContainer(name: "Threads")
 
         let description = NSPersistentStoreDescription()
         description.type = NSInMemoryStoreType
         container.persistentStoreDescriptions = [description]
 
+        event.startTimer(.loadStoreTime)
         container.loadPersistentStores { _, error in
+            event.stopTimer(.loadStoreTime)
+            event.error = error
+            
             if let error = error as NSError? {
+                event.send(.error, "loaded persistent store")
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
 
             container.performBackgroundTask { context in
+                event.startTimer(.importThreadsTime)
                 do {
-                    try Thread.importThreads(DMCThread.all, context: context)
+                    try Thread.importThreads(DMCThread.all, context: context, event: &event)
                     try context.save()
-                    NSLog("Imported threads")
                 } catch {
-                    NSLog("Error importing threads into local store: \(error)")
+                    event[.importThreadsError] = error.localizedDescription
                 }
+                event.stopTimer(.importThreadsTime)
+                
+                event.send("loaded persistent store")
             }
         }
         container.viewContext.automaticallyMergesChangesFromParent = true

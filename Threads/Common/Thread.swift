@@ -9,6 +9,13 @@
 import UIKit
 import CoreData
 
+extension Event.Key {
+    static let mergedThreadCount: Event.Key = "merged_thread_count"
+    static let createdThreadCount: Event.Key = "created_thread_count"
+    static let extraThreadCount: Event.Key = "extra_thread_count"
+    static let updatedThreadCount: Event.Key = "updated_thread_count"
+}
+
 public class Thread: NSManagedObject {
     class func inCollectionFetchRequest() -> NSFetchRequest<Thread> {
         let request = sortedByNumberFetchRequest()
@@ -61,7 +68,7 @@ public class Thread: NSManagedObject {
         return results.first
     }
     
-    class func importThreads(_ threads: [DMCThread], context: NSManagedObjectContext) throws {
+    class func importThreads(_ threads: [DMCThread], context: NSManagedObjectContext, event: inout EventBuilder) throws {
         // assumes the threads are already sorted by number
         
         let existingThreads = try context.fetch(sortedByNumberFetchRequest())
@@ -72,14 +79,20 @@ public class Thread: NSManagedObject {
         var leftItem = leftIter.next()
         var rightItem = rightIter.next()
         
+        var createdCount = 0
+        var extraCount = 0
+        var updatedCount = 0
+        
         while leftItem != nil && rightItem != nil {
             if leftItem!.number! > rightItem!.number {
                 // We don't have a local thread for this one, so make one
                 _ = Thread(dmcThread: rightItem!, context: context)
                 rightItem = rightIter.next()
+                createdCount += 1
             } else if leftItem!.number! < rightItem!.number {
                 // Leave around threads that we don't have to import anymore
                 leftItem = leftIter.next()
+                extraCount += 1
             } else {
                 // Update existing threads
                 leftItem!.label = rightItem!.label
@@ -87,16 +100,22 @@ public class Thread: NSManagedObject {
                 
                 leftItem = leftIter.next()
                 rightItem = rightIter.next()
+                updatedCount += 1
             }
         }
         
         // Create any remaining threads we don't already have
         for item in rightIter {
             _ = Thread(dmcThread: item, context: context)
+            createdCount += 1
         }
+        
+        event[.createdThreadCount] = createdCount
+        event[.extraThreadCount] = extraCount
+        event[.updatedThreadCount] = updatedCount
     }
     
-    class func mergeThreads(context: NSManagedObjectContext) throws -> Int {
+    class func mergeThreads(context: NSManagedObjectContext, event: inout EventBuilder) throws {
         let threads = try context.fetch(sortedByNumberFetchRequest())
         
         var currentThread: Thread?
@@ -116,7 +135,7 @@ public class Thread: NSManagedObject {
             }
         }
         
-        return mergedThreads
+        event[.mergedThreadCount] = mergedThreads
     }
     
     func merge(_ other: Thread) {
