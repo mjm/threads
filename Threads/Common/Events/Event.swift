@@ -71,6 +71,7 @@ private let log = OSLog(subsystem: "com.mattmoriarity.Threads", category: "event
 struct EventBuilder {
     var error: Error?
     var fields: [Event.Key: AnyEncodable] = [:]
+    var lazyFields: [Event.Key: () -> AnyEncodable] = [:]
     private var timers: [Event.Key: Date] = [:]
     
     init() {}
@@ -81,6 +82,15 @@ struct EventBuilder {
         }
         set {
             fields[key] = AnyEncodable(newValue)
+        }
+    }
+    
+    subscript <T: Encodable>(_ key: Event.Key) -> () -> T {
+        get {
+            fatalError("Lazy fields cannot be retrieved")
+        }
+        set {
+            lazyFields[key] = { AnyEncodable(newValue()) }
         }
     }
     
@@ -121,12 +131,16 @@ struct EventBuilder {
         fields = [:]
     }
     
-    func makeEvent(message: String, timestamp: Date = Date()) -> Event {
-        let fields = Event.global.fields.merging(self.fields) { globalValue, localValue in localValue }
+    mutating func makeEvent(message: String, timestamp: Date = Date()) -> Event {
+        let fields = Event.global.resolvedFields.merging(self.resolvedFields) { globalValue, localValue in localValue }
         
         return Event(timestamp: timestamp,
                      error: error,
                      message: message,
                      fields: fields)
+    }
+    
+    private var resolvedFields: [Event.Key: AnyEncodable] {
+        fields.merging(lazyFields.mapValues { $0() }) { $1 }
     }
 }

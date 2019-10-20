@@ -17,9 +17,13 @@ extension Event.Key {
 
 private let now = Date()
 
-class ErrorBuilderTests: XCTestCase {
+class EventBuilderTests: XCTestCase {
+    override class func setUp() {
+        Event.global = EventBuilder()
+    }
+    
     func testCreateEmptyEvent() throws {
-        let b = EventBuilder()
+        var b = EventBuilder()
         let event = b.makeEvent(message: "test message", timestamp: now)
         
         XCTAssertEqual(event.timestamp, now)
@@ -41,6 +45,53 @@ class ErrorBuilderTests: XCTestCase {
         XCTAssertEqual(event.fields[.bar]?.value as? Int, 123)
         XCTAssertEqual(event.fields[.baz]?.value as? URL, URL(string: "http://example.org/"))
     }
+    
+    func testIncludesFieldsFromGlobal() throws {
+        Event.global[.baz] = "baz"
+        
+        var b = EventBuilder()
+        b[.foo] = "a string test"
+        b[.bar] = 123
+        let event = b.makeEvent(message: "test message", timestamp: now)
+        
+        XCTAssertEqual(event.fields[.foo]?.value as? String, "a string test")
+        XCTAssertEqual(event.fields[.bar]?.value as? Int, 123)
+        XCTAssertEqual(event.fields[.baz]?.value as? String, "baz")
+    }
+    
+    func testLocalValuesOverrideGlobal() throws {
+        Event.global[.baz] = "baz"
+        
+        var b = EventBuilder()
+        b[.foo] = "a string test"
+        b[.bar] = 123
+        b[.baz] = "overridden"
+        let event = b.makeEvent(message: "test message", timestamp: now)
+        
+        XCTAssertEqual(event.fields[.foo]?.value as? String, "a string test")
+        XCTAssertEqual(event.fields[.bar]?.value as? Int, 123)
+        XCTAssertEqual(event.fields[.baz]?.value as? String, "overridden")
+    }
+    
+    func testLazyFields() throws {
+        var counter = 1
+        Event.global[.bar] = { counter }
+        
+        var b = EventBuilder()
+        b[.foo] = { counter * 2 }
+        
+        let event = b.makeEvent(message: "test message", timestamp: now)
+        
+        XCTAssertEqual(event.fields[.foo]?.value as? Int, 2)
+        XCTAssertEqual(event.fields[.bar]?.value as? Int, 1)
+        
+        counter = 5
+        
+        let event2 = b.makeEvent(message: "test message", timestamp: now)
+        
+        XCTAssertEqual(event2.fields[.foo]?.value as? Int, 10)
+        XCTAssertEqual(event2.fields[.bar]?.value as? Int, 5)
+    }
 }
 
 private let encoder: JSONEncoder = {
@@ -51,11 +102,10 @@ private let encoder: JSONEncoder = {
 
 class EventTests: XCTestCase {
     func testRoundtripEmptyEvent() throws {
-        let b = EventBuilder()
+        var b = EventBuilder()
         let fields = try roundtrip(event: b.makeEvent(message: "a cool message", timestamp: now))
         
         XCTAssertEqual(fields["msg"] as? String, "a cool message")
-        XCTAssert(fields["time"] is String)
     }
     
     func testRoundtripEventWithFields() throws {
@@ -66,7 +116,6 @@ class EventTests: XCTestCase {
         let fields = try roundtrip(event: b.makeEvent(message: "a cool message", timestamp: now))
         
         XCTAssertEqual(fields["msg"] as? String, "a cool message")
-        XCTAssert(fields["time"] is String)
         XCTAssertEqual(fields["foo"] as? String, "a string test")
         XCTAssertEqual(fields["bar"] as? Int, 123)
         XCTAssertEqual(fields["baz"] as? String, "http://example.org/")

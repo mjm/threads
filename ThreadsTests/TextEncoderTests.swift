@@ -42,6 +42,6 @@ class TextEncoderTests: XCTestCase {
         let date = Date(timeIntervalSinceReferenceDate: 0)
         let result = try encoder.encode(b.makeEvent(message: "my event message", timestamp: date))
         
-        XCTAssertEqual(result, "time=\"2001-01-01T00:00:00Z\" msg=\"my event message\" bar=1234 baz=\"http://example.com/\" foo=\"an interesting value\"")
+        XCTAssertEqual(result, "msg=\"my event message\" bar=1234 baz=\"http://example.com/\" foo=\"an interesting value\"")
     }
 }

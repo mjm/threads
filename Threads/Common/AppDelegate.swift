@@ -24,6 +24,8 @@ extension Event.Key {
     static let mergeThreadsError: Event.Key = "merge_threads_err"
     static let importThreadsTime: Event.Key = "import_threads_ms"
     static let importThreadsError: Event.Key = "import_threads_err"
+    
+    static let premium: Event.Key = "premium"
 }
 
 @UIApplicationMain
@@ -37,6 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         SKPaymentQueue.default().add(storeObserver)
+        Event.global[.premium] = { self.storeObserver.hasPurchased(.premium) }
         return true
     }
     
