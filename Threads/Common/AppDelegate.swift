@@ -30,21 +30,19 @@ extension Event.Key {
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    let storeObserver = StoreObserver(productIDs: [.premium])
-    
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        try! storeObserver.validateReceipt()
+        try! StoreObserver.default.validateReceipt()
         return true
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        SKPaymentQueue.default().add(storeObserver)
-        Event.global[.premium] = { self.storeObserver.hasPurchased(.premium) }
+        SKPaymentQueue.default().add(StoreObserver.default)
+        Event.global[.premium] = { StoreObserver.default.hasPurchased(.premium) }
         return true
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
-        SKPaymentQueue.default().remove(storeObserver)
+        SKPaymentQueue.default().remove(StoreObserver.default)
     }
 
     // MARK: UISceneSession Lifecycle
@@ -163,6 +161,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         builder.remove(menu: .format)
         builder.remove(menu: .newScene) // remove option to open a new window
         builder.remove(menu: .toolbar)
+        
+        builder.insertSibling(UIMenu(title: "", options: .displayInline, children: [
+            UICommand(title: "Buy Threads Premium...", action: #selector(SplitViewController.buyPremium(_:))),
+        ]), beforeMenu: .services)
 
         builder.insertChild(UIMenu(title: "", options: .displayInline, children: [
             UIKeyCommand(title: "New Project…", action: #selector(SplitViewController.addProject(_:)), input: "n", modifierFlags: [.command])

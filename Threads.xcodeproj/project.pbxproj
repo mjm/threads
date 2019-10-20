@@ -94,6 +94,7 @@
 		C99677FC235B8C2600AE2F5C /* TextEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677FB235B8C2600AE2F5C /* TextEncoder.swift */; };
 		C99677FE235BA23600AE2F5C /* TextEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677FD235BA23600AE2F5C /* TextEncoderTests.swift */; };
 		C9967800235BABB900AE2F5C /* CurrentEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677FF235BABB900AE2F5C /* CurrentEvent.swift */; };
+		C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9967801235C02EA00AE2F5C /* StoreActions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -205,6 +206,7 @@
 		C99677FB235B8C2600AE2F5C /* TextEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEncoder.swift; sourceTree = "<group>"; };
 		C99677FD235BA23600AE2F5C /* TextEncoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEncoderTests.swift; sourceTree = "<group>"; };
 		C99677FF235BABB900AE2F5C /* CurrentEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentEvent.swift; sourceTree = "<group>"; };
+		C9967801235C02EA00AE2F5C /* StoreActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreActions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -423,6 +425,7 @@
 			isa = PBXGroup;
 			children = (
 				C99677F0235B497600AE2F5C /* StoreObserver.swift */,
+				C9967801235C02EA00AE2F5C /* StoreActions.swift */,
 			);
 			path = "In-App Purchase";
 			sourceTree = "<group>";
@@ -566,6 +569,7 @@
 				C9491E2F231E0BE00031F463 /* Thread.swift in Sources */,
 				C9491E3E23235FBF0031F463 /* ThreadTableViewCell.swift in Sources */,
 				C946962B2340EF1B00843179 /* EmptyView.swift in Sources */,
+				C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */,
 				C97FCDA323296433000B1590 /* EditProjectThreadCollectionViewCell.swift in Sources */,
 				C97FCDBD232D79E7000B1590 /* Localized.swift in Sources */,
 				C97FCE06233068C0000B1590 /* ShoppingListActions.swift in Sources */,

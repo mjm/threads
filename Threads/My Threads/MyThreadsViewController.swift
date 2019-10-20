@@ -23,6 +23,12 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
     private var threadsList: FetchedObjectList<Thread>!
 
     override var currentUserActivity: UserActivity? { .showMyThreads }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "dollarsign.circle.fill"), style: .plain, target: self, action: #selector(buyPremium(_:)))
+    }
 
     override func dataSourceWillInitialize() {
         dataSource.canEditRow = { _, _, _ in true }
@@ -87,6 +93,10 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
         }
 
         return tableView.cellForRow(at: indexPath) as? CollectionThreadTableViewCell
+    }
+    
+    @objc func buyPremium(_ sender: Any) {
+        actionRunner.perform(BuyPremiumAction())
     }
 
     @IBAction func addThreads(_ sender: Any) {

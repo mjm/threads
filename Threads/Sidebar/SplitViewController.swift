@@ -105,6 +105,10 @@ class SplitViewController: UISplitViewController {
         controller.addProjectToShoppingList(sender)
     }
     
+    @objc func buyPremium(_ sender: Any) {
+        actionRunner.perform(BuyPremiumAction())
+    }
+    
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         guard super.canPerformAction(action, withSender: sender) else {
             return false
