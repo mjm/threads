@@ -49,12 +49,19 @@ fileprivate class _TextEncoder: Encoder {
 }
 
 private let dateFormatter = ISO8601DateFormatter()
+private let floatFormatter: NumberFormatter = {
+    let formatter = NumberFormatter()
+    formatter.maximumFractionDigits = 4
+    formatter.minimumFractionDigits = 0
+    formatter.minimumIntegerDigits = 1
+    return formatter
+}()
 
 extension _TextEncoder {
     fileprivate func stringify(_ value: Bool) -> String { return value ? "true" : "false" }
     fileprivate func stringify(_ value: String) -> String { return value }
-    fileprivate func stringify(_ value: Double) -> String { return String(describing: value) }
-    fileprivate func stringify(_ value: Float) -> String { return String(describing: value) }
+    fileprivate func stringify(_ value: Double) -> String { return floatFormatter.string(from: value as NSNumber) ?? String(describing: value) }
+    fileprivate func stringify(_ value: Float) -> String { return floatFormatter.string(from: value as NSNumber) ?? String(describing: value) }
     fileprivate func stringify(_ value: Int) -> String { return String(describing: value) }
     fileprivate func stringify(_ value: Int8) -> String { return String(describing: value) }
     fileprivate func stringify(_ value: Int16) -> String { return String(describing: value) }

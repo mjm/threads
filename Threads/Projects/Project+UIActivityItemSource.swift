@@ -12,6 +12,7 @@ extension Event.Key {
     static let previousPublishedID: Event.Key = "prev_published_id"
     static let publishedID: Event.Key = "published_id"
     static let publishedURL: Event.Key = "published_url"
+    static let publishTime: Event.Key = "publish_ms"
 }
 
 extension Project {
@@ -53,6 +54,8 @@ class ProjectActivity: UIActivityItemProvider {
         if !isPublished {
             Event.current[.previousPublishedID] = project.publishedID
             
+            Event.current.startTimer(.publishTime)
+            
             let group = DispatchGroup()
             group.enter()
 
@@ -65,6 +68,9 @@ class ProjectActivity: UIActivityItemProvider {
             }
             
             group.wait()
+            
+            Event.current.stopTimer(.publishTime)
+            
             isPublished = true
             
             Event.current[.publishedID] = project.publishedID

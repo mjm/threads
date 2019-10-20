@@ -71,6 +71,7 @@ private let log = OSLog(subsystem: "com.mattmoriarity.Threads", category: "event
 struct EventBuilder {
     var error: Error?
     var fields: [Event.Key: AnyEncodable] = [:]
+    private var timers: [Event.Key: Date] = [:]
     
     init() {}
     
@@ -81,6 +82,25 @@ struct EventBuilder {
         set {
             fields[key] = AnyEncodable(newValue)
         }
+    }
+    
+    mutating func startTimer(_ key: Event.Key) {
+        guard timers[key] == nil else {
+            preconditionFailure("Attempted to start timer for key \(key), but there's already a timer going for that key.")
+        }
+        
+        timers[key] = Date()
+    }
+    
+    mutating func stopTimer(_ key: Event.Key) {
+        let endTime = Date()
+        
+        guard let startTime = timers.removeValue(forKey: key) else {
+            preconditionFailure("Attempted to stop timer for key \(key), but it was never started.")
+        }
+        
+        let duration = startTime.distance(to: endTime)
+        self[key] = duration * 1000.0 // store durations as milliseconds
     }
     
     mutating func send(_ message: String) {

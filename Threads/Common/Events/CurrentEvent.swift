@@ -8,8 +8,30 @@
 
 import Foundation
 
+private let eventAccessQueue = DispatchQueue(label: "com.mattmoriarity.Threads.EventAccessQueue")
+
 extension Event {
-    static var global = EventBuilder()
+    private static var _global = EventBuilder()
+    static var global: EventBuilder {
+        get {
+            eventAccessQueue.sync { _global }
+        }
+        set {
+            eventAccessQueue.sync(flags: .barrier) {
+                _global = newValue
+            }
+        }
+    }
     
-    static var current = EventBuilder()
+    private static var _current = EventBuilder()
+    static var current: EventBuilder {
+        get {
+            eventAccessQueue.sync { _current }
+        }
+        set {
+            eventAccessQueue.sync(flags: .barrier) {
+                _current = newValue
+            }
+        }
+    }
 }

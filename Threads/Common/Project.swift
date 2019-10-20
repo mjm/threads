@@ -10,6 +10,12 @@ import Foundation
 import CoreData
 import CloudKit
 
+extension Event.Key {
+    static let fetchProjectTime: Event.Key = "fetch_project_ms"
+    static let saveProjectTime: Event.Key = "save_project_ms"
+    static let recordCount: Event.Key = "record_count"
+}
+
 extension Project {
     class func allProjectsFetchRequest() -> NSFetchRequest<Project> {
         let request: NSFetchRequest<Project> = fetchRequest()
@@ -122,12 +128,16 @@ extension Project {
                 completion(error)
                 return
             }
+            
+            Event.current[.recordCount] = records.count
 
             let operation = CKModifyRecordsOperation(recordsToSave: records)
             operation.queuePriority = .veryHigh // this will be blocking a user operation so let's do it STAT
             operation.isAtomic = true
             operation.savePolicy = .changedKeys
             operation.modifyRecordsCompletionBlock = { records, _, error in
+                Event.current.stopTimer(.saveProjectTime)
+                
                 if let error = error {
                     completion(error)
                     return
@@ -157,6 +167,7 @@ extension Project {
                 }
             }
 
+            Event.current.startTimer(.saveProjectTime)
             database.add(operation)
         }
     }
@@ -164,9 +175,13 @@ extension Project {
     private func publishableRecord(completion: @escaping (CKRecord?, Error?) -> Void) {
         if let id = publishedID {
             let recordID = CKRecord.ID(recordName: id)
-
             let database = CKContainer.default().publicCloudDatabase
-            database.fetch(withRecordID: recordID, completionHandler: completion)
+            
+            Event.current.startTimer(.fetchProjectTime)
+            database.fetch(withRecordID: recordID) { record, error in
+                Event.current.stopTimer(.fetchProjectTime)
+                completion(record, error)
+            }
         } else {
             completion(CKRecord(recordType: "Project"), nil)
         }
