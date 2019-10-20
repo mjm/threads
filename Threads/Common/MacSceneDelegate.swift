@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Events
 
 #if targetEnvironment(macCatalyst)
 
@@ -32,14 +33,14 @@ class MacSceneDelegate: UIResponder, UIWindowSceneDelegate {
         scene.titlebar?.titleVisibility = .hidden
         
         if let activity = connectionOptions.userActivities.first ?? scene.session.stateRestorationActivity {
-            NSLog("connecting to scene with user activity \(activity.activityType) \(activity)")
             restoreActivity(activity, animated: false)
         }
+        Event.current.send("connecting scene")
     }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        NSLog("continuing user activity \(userActivity.activityType) \(userActivity)")
         restoreActivity(userActivity, animated: scene.activationState == .foregroundActive)
+        Event.current.send("continued activity")
     }
     
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
@@ -48,17 +49,18 @@ class MacSceneDelegate: UIResponder, UIWindowSceneDelegate {
         let rootViewController = window.rootViewController as! SplitViewController
         let activity = rootViewController.detailViewController.currentUserActivity
         
-        NSLog("storing user activity \(activity?.activityType ?? "") \(String(describing: activity))")
+        Event.current[.activityType] = activity?.activityType
+        Event.current.send("saving activity")
         
         return activity
     }
     
     private func restoreActivity(_ activity: NSUserActivity, animated: Bool) {
+        Event.current[.activityType] = activity.activityType
+        
         guard let window = window else { return }
         
         let rootViewController = window.rootViewController as! SplitViewController
-        
-        NSLog("restoring user activity \(activity.activityType) \(activity)")
         
         // get the context so we can rehydrate objects from the activity
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -69,6 +71,7 @@ class MacSceneDelegate: UIResponder, UIWindowSceneDelegate {
         case .showShoppingList:
             rootViewController.selection = .shoppingList
         case let .showProject(project):
+            Event.current[.projectName] = project.name
             rootViewController.selection = .project(project)
         case .none:
             NSLog("Was not able to load the activity. It may have referenced an object that no longer exists, or it may be a new activity type handed off to us from a newer version of the app (though I'm not sure the system will let that last one happen).")
