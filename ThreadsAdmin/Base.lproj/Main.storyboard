@@ -717,13 +717,13 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
                                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Inb-hC-179">
-                                                <rect key="frame" x="0.0" y="20" width="175" height="412"/>
+                                                <rect key="frame" x="0.0" y="45" width="175" height="387"/>
                                                 <clipView key="contentView" id="Ium-bV-lYa">
-                                                    <rect key="frame" x="0.0" y="0.0" width="175" height="412"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="175" height="387"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QSe-Iv-bKw">
-                                                            <rect key="frame" x="0.0" y="0.0" width="175" height="412"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="175" height="387"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -731,7 +731,7 @@
                                                             <tableColumns>
                                                                 <tableColumn width="172" minWidth="40" maxWidth="1000" id="myu-F4-iwv">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
-                                                                        <font key="font" metaFont="menu" size="11"/>
+                                                                        <font key="font" metaFont="label" size="11"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
@@ -781,29 +781,40 @@
                                                     <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
+                                                <connections>
+                                                    <outlet property="nextKeyView" destination="Efy-kY-RlD" id="xWm-cy-1Q8"/>
+                                                </connections>
                                             </scrollView>
-                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fPx-O8-hTR">
-                                                <rect key="frame" x="0.0" y="-1" width="25" height="22"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="20" id="Xm0-nx-7c7"/>
-                                                    <constraint firstAttribute="width" constant="25" id="vlM-Uk-AAr"/>
-                                                </constraints>
-                                                <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eC3-8w-e6o">
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zuO-ZU-9wh">
+                                                <rect key="frame" x="72" y="4" width="89" height="32"/>
+                                                <buttonCell key="cell" type="push" title="Remove" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sw5-NS-8IE">
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
                                                 <connections>
-                                                    <action selector="add:" target="ryb-zL-5ay" id="Fgd-81-hAx"/>
+                                                    <action selector="remove:" target="ryb-zL-5ay" id="6ae-iC-ick"/>
+                                                </connections>
+                                            </button>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KEZ-hJ-OZ1">
+                                                <rect key="frame" x="7" y="4" width="65" height="32"/>
+                                                <buttonCell key="cell" type="push" title="Add" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8Ao-et-BSP">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="add:" target="ryb-zL-5ay" id="Lzg-E0-ggK"/>
                                                 </connections>
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="fPx-O8-hTR" secondAttribute="bottom" id="5ML-ar-mdh"/>
                                             <constraint firstItem="Inb-hC-179" firstAttribute="leading" secondItem="LmO-qk-uHz" secondAttribute="leading" id="5k9-QG-vHb"/>
+                                            <constraint firstItem="zuO-ZU-9wh" firstAttribute="bottom" secondItem="KEZ-hJ-OZ1" secondAttribute="bottom" id="8vW-n0-sLp"/>
+                                            <constraint firstAttribute="bottom" secondItem="KEZ-hJ-OZ1" secondAttribute="bottom" constant="11" id="9h7-Wg-2hL"/>
+                                            <constraint firstItem="KEZ-hJ-OZ1" firstAttribute="top" secondItem="Inb-hC-179" secondAttribute="bottom" constant="13" id="9td-XM-V3b"/>
                                             <constraint firstAttribute="trailing" secondItem="Inb-hC-179" secondAttribute="trailing" id="CZY-3k-Zij"/>
                                             <constraint firstItem="Inb-hC-179" firstAttribute="top" secondItem="LmO-qk-uHz" secondAttribute="top" id="PB1-nO-FH4"/>
-                                            <constraint firstItem="fPx-O8-hTR" firstAttribute="leading" secondItem="LmO-qk-uHz" secondAttribute="leading" id="kwR-Fh-qoh"/>
-                                            <constraint firstItem="fPx-O8-hTR" firstAttribute="top" secondItem="Inb-hC-179" secondAttribute="bottom" id="xdY-mA-3sG"/>
+                                            <constraint firstItem="zuO-ZU-9wh" firstAttribute="leading" secondItem="KEZ-hJ-OZ1" secondAttribute="trailing" constant="12" id="bu4-c1-A97"/>
+                                            <constraint firstItem="KEZ-hJ-OZ1" firstAttribute="leading" secondItem="LmO-qk-uHz" secondAttribute="leading" constant="13" id="vTl-vA-Y5K"/>
                                         </constraints>
                                     </view>
                                     <view id="Hgu-T6-PsV">
@@ -842,6 +853,7 @@
                                                             </textFieldCell>
                                                             <connections>
                                                                 <binding destination="ryb-zL-5ay" name="value" keyPath="selection.number" id="YEt-U0-WqV"/>
+                                                                <outlet property="nextKeyView" destination="XOB-DU-qQW" id="xZa-Ai-P6i"/>
                                                             </connections>
                                                         </textField>
                                                     </gridCell>
@@ -865,6 +877,7 @@
                                                             </textFieldCell>
                                                             <connections>
                                                                 <binding destination="ryb-zL-5ay" name="value" keyPath="selection.label" id="TNN-yf-Dke"/>
+                                                                <outlet property="nextKeyView" destination="ajg-by-bxE" id="PFP-lM-oVf"/>
                                                             </connections>
                                                         </textField>
                                                     </gridCell>
@@ -888,6 +901,7 @@
                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <connections>
                                                                 <binding destination="ryb-zL-5ay" name="value" keyPath="selection.color" id="CTd-og-EEn"/>
+                                                                <outlet property="nextKeyView" destination="Efy-kY-RlD" id="gj6-Qq-H8V"/>
                                                             </connections>
                                                         </colorWell>
                                                     </gridCell>
@@ -925,7 +939,4 @@
             <point key="canvasLocation" x="74.5" y="818"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="NSAddTemplate" width="11" height="11"/>
-    </resources>
 </document>

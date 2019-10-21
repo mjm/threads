@@ -1,18 +1,53 @@
 [
   {
-    "colorHex" : "#FFFFFF",
-    "label" : "Snow White",
-    "number" : "B5200"
+    "colorHex" : "#EEEDEF",
+    "label" : "White Tin",
+    "number" : "1"
   },
   {
-    "colorHex" : "#FFFFFF",
-    "label" : "White",
-    "number" : "White"
+    "colorHex" : "#C5C3C8",
+    "label" : "Tin",
+    "number" : "2"
   },
   {
-    "colorHex" : "#FFECBF",
-    "label" : "Ecru/Off-white",
-    "number" : "Ecru"
+    "colorHex" : "#B0AFB4",
+    "label" : "Tin - Medium",
+    "number" : "3"
+  },
+  {
+    "colorHex" : "#9C9B9C",
+    "label" : "Tin - Dark",
+    "number" : "4"
+  },
+  {
+    "colorHex" : "#DFCDBF",
+    "label" : "Driftwood - Light",
+    "number" : "5"
+  },
+  {
+    "colorHex" : "#D7C6B9",
+    "label" : "Driftwood - Medium Light",
+    "number" : "6"
+  },
+  {
+    "colorHex" : "#C8B9AB",
+    "label" : "Driftwood",
+    "number" : "7"
+  },
+  {
+    "colorHex" : "#977D71",
+    "label" : "Driftwood - Dark",
+    "number" : "8"
+  },
+  {
+    "colorHex" : "#4F2216",
+    "label" : "Cocoa - Very Dark",
+    "number" : "9"
+  },
+  {
+    "colorHex" : "#F0FDDC",
+    "label" : "Tender Green - Very Light",
+    "number" : "10"
   },
   {
     "colorHex" : "#945B80",
@@ -2138,5 +2173,20 @@
     "colorHex" : "#F5F0DB",
     "label" : "Mocha Brown Ultra Very Light",
     "number" : "3866"
+  },
+  {
+    "colorHex" : "#FFFFFF",
+    "label" : "Snow White",
+    "number" : "B5200"
+  },
+  {
+    "colorHex" : "#FFECBF",
+    "label" : "Ecru/Off-white",
+    "number" : "Ecru"
+  },
+  {
+    "colorHex" : "#FFFFFF",
+    "label" : "White",
+    "number" : "White"
   }
 ]

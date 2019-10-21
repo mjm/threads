@@ -46,4 +46,8 @@ class ViewController: NSViewController {
             NSApp.presentError(error)
         }
     }
+    
+    @objc func newDocument(_ sender: Any?) {
+        threadsController.add(sender)
+    }
 }
