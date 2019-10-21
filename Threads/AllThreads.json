@@ -50,6 +50,91 @@
     "number" : "10"
   },
   {
+    "colorHex" : "#E4ECBA",
+    "label" : "Tender Green - Light",
+    "number" : "11"
+  },
+  {
+    "colorHex" : "#CFD8A0",
+    "label" : "Tender Green",
+    "number" : "12"
+  },
+  {
+    "colorHex" : "#CAF4E0",
+    "label" : "Nile Green - Medium Light",
+    "number" : "13"
+  },
+  {
+    "colorHex" : "#D8F8B9",
+    "label" : "Apple Green - Pale",
+    "number" : "14"
+  },
+  {
+    "colorHex" : "#D6EDAB",
+    "label" : "Apple Green",
+    "number" : "15"
+  },
+  {
+    "colorHex" : "#AED485",
+    "label" : "Chartreuse - Light",
+    "number" : "16"
+  },
+  {
+    "colorHex" : "#E4E281",
+    "label" : "Yellow Plum - Light",
+    "number" : "17"
+  },
+  {
+    "colorHex" : "#D8D57B",
+    "label" : "Yellow Plum",
+    "number" : "18"
+  },
+  {
+    "colorHex" : "#EFCB6F",
+    "label" : "Autumn Gold - Medium Light",
+    "number" : "19"
+  },
+  {
+    "colorHex" : "#ECB297",
+    "label" : "Shrimp",
+    "number" : "20"
+  },
+  {
+    "colorHex" : "#CD9A86",
+    "label" : "Alizarian - Light",
+    "number" : "21"
+  },
+  {
+    "colorHex" : "#B06452",
+    "label" : "Alizarian",
+    "number" : "22"
+  },
+  {
+    "colorHex" : "#EBE2EC",
+    "label" : "Apple Blossom",
+    "number" : "23"
+  },
+  {
+    "colorHex" : "#DED6EC",
+    "label" : "White Lavender",
+    "number" : "24"
+  },
+  {
+    "colorHex" : "#D8D2E8",
+    "label" : "Lavender - Ultra Light",
+    "number" : "25"
+  },
+  {
+    "colorHex" : "#CDC7DD",
+    "label" : "Lavender - Pale",
+    "number" : "26"
+  },
+  {
+    "colorHex" : "#E9EBFB",
+    "label" : "White Violet",
+    "number" : "27"
+  },
+  {
     "colorHex" : "#945B80",
     "label" : "Lavender Very Dark",
     "number" : "208"
