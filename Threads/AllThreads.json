@@ -645,6 +645,11 @@
     "number" : "504"
   },
   {
+    "colorHex" : "#4A8162",
+    "label" : "Grass Green - Dark",
+    "number" : "505"
+  },
+  {
     "colorHex" : "#107F87",
     "label" : "Wedgewood Medium",
     "number" : "517"
@@ -810,8 +815,8 @@
     "number" : "613"
   },
   {
-    "colorHex" : "#A24D34",
-    "label" : "Negro Flesh Medium",
+    "colorHex" : "#764435",
+    "label" : "Desert Sand - Ultra Very Dark",
     "number" : "632"
   },
   {
@@ -940,6 +945,11 @@
     "number" : "727"
   },
   {
+    "colorHex" : "#E7B153",
+    "label" : "Golden Yellow",
+    "number" : "728"
+  },
+  {
     "colorHex" : "#F3B080",
     "label" : "Old Gold Medium",
     "number" : "729"
@@ -1021,7 +1031,7 @@
   },
   {
     "colorHex" : "#FBE3D1",
-    "label" : "Peach Flesh Light",
+    "label" : "Peach - Light",
     "number" : "754"
   },
   {
@@ -1086,7 +1096,7 @@
   },
   {
     "colorHex" : "#47375D",
-    "label" : "Cornflower Blue VeryD",
+    "label" : "Cornflower Blue - Very Dark",
     "number" : "791"
   },
   {
@@ -1126,13 +1136,18 @@
   },
   {
     "colorHex" : "#E9EEE9",
-    "label" : "Delft PALE",
+    "label" : "Delft Pale",
     "number" : "800"
   },
   {
     "colorHex" : "#7B4714",
     "label" : "Coffee Brown Dark",
     "number" : "801"
+  },
+  {
+    "colorHex" : "#212651",
+    "label" : "Blue - Deep",
+    "number" : "803"
   },
   {
     "colorHex" : "#1E8285",
@@ -1155,17 +1170,17 @@
     "number" : "813"
   },
   {
-    "colorHex" : "#A20058",
+    "colorHex" : "#671A32",
     "label" : "Garnet Dark",
     "number" : "814"
   },
   {
-    "colorHex" : "#A6005B",
+    "colorHex" : "#741A34",
     "label" : "Garnet Medium",
     "number" : "815"
   },
   {
-    "colorHex" : "#B3005B",
+    "colorHex" : "#862138",
     "label" : "Garnet",
     "number" : "816"
   },
@@ -1280,17 +1295,17 @@
     "number" : "842"
   },
   {
-    "colorHex" : "#6B6766",
-    "label" : "Beaver Brown Ultra Dark",
+    "colorHex" : "#474742",
+    "label" : "Beaver Gray - Ultra Dark",
     "number" : "844"
   },
   {
-    "colorHex" : "#995C30",
-    "label" : "Hazel Nut Brown Very Dark",
+    "colorHex" : "#8F5E37",
+    "label" : "Hazel Nut Brown",
     "number" : "868"
   },
   {
-    "colorHex" : "#995C30",
+    "colorHex" : "#714D2D",
     "label" : "Hazel Nut Brown Very Dark",
     "number" : "869"
   },
@@ -1335,13 +1350,13 @@
     "number" : "899"
   },
   {
-    "colorHex" : "#CE2B00",
+    "colorHex" : "#B63D26",
     "label" : "Burnt Orange Dark",
     "number" : "900"
   },
   {
-    "colorHex" : "#8A184D",
-    "label" : "Granet Very Dark",
+    "colorHex" : "#5C1A29",
+    "label" : "Garnet - Very Dark",
     "number" : "902"
   },
   {
@@ -1390,12 +1405,12 @@
     "number" : "913"
   },
   {
-    "colorHex" : "#AA185B",
+    "colorHex" : "#881C59",
     "label" : "Plum Dark",
     "number" : "915"
   },
   {
-    "colorHex" : "#AB165F",
+    "colorHex" : "#9E236F",
     "label" : "Plum Medium",
     "number" : "917"
   },
@@ -1471,7 +1486,7 @@
   },
   {
     "colorHex" : "#454531",
-    "label" : "Avocado Green Very D",
+    "label" : "Avocado Green - Very Dark",
     "number" : "936"
   },
   {
@@ -1496,7 +1511,7 @@
   },
   {
     "colorHex" : "#FFCEA4",
-    "label" : "Flesh Medium",
+    "label" : "Tawny",
     "number" : "945"
   },
   {
@@ -1510,18 +1525,18 @@
     "number" : "947"
   },
   {
-    "colorHex" : "#FFF3E7",
-    "label" : "Peach Flesh Very Light",
+    "colorHex" : "#F8E7D4",
+    "label" : "Peach - Very Light",
     "number" : "948"
   },
   {
-    "colorHex" : "#EFA27F",
-    "label" : "Sportsman Flesh",
+    "colorHex" : "#DCAF92",
+    "label" : "Desert Sand - Light",
     "number" : "950"
   },
   {
-    "colorHex" : "#FFE5BC",
-    "label" : "Flesh",
+    "colorHex" : "#F4DDB9",
+    "label" : "Tawny - Light",
     "number" : "951"
   },
   {
@@ -1566,7 +1581,7 @@
   },
   {
     "colorHex" : "#FFE9E9",
-    "label" : "Dusty Rose Ultra Very L",
+    "label" : "Dusty Rose - Ultra Very Light",
     "number" : "963"
   },
   {
@@ -1578,6 +1593,11 @@
     "colorHex" : "#CED5B0",
     "label" : "Baby Green Medium",
     "number" : "966"
+  },
+  {
+    "colorHex" : "#F5C4AE",
+    "label" : "Peach - Light",
+    "number" : "967"
   },
   {
     "colorHex" : "#FF7518",
@@ -1596,7 +1616,7 @@
   },
   {
     "colorHex" : "#FFC243",
-    "label" : "Canary BRT",
+    "label" : "Canary - Bright",
     "number" : "973"
   },
   {
@@ -1650,47 +1670,47 @@
     "number" : "993"
   },
   {
-    "colorHex" : "#007B86",
+    "colorHex" : "#285FAB",
     "label" : "Electric Blue Dark",
     "number" : "995"
   },
   {
-    "colorHex" : "#AADEE1",
+    "colorHex" : "#63A5E5",
     "label" : "Electric Blue Medium",
     "number" : "996"
   },
   {
-    "colorHex" : "#7B7711",
+    "colorHex" : "#635939",
     "label" : "Khaki Green Dark",
     "number" : "3011"
   },
   {
-    "colorHex" : "#B5AA59",
+    "colorHex" : "#877B52",
     "label" : "Khaki Green Medium",
     "number" : "3012"
   },
   {
-    "colorHex" : "#CCC481",
+    "colorHex" : "#ADA97F",
     "label" : "Khaki Green Light",
     "number" : "3013"
   },
   {
-    "colorHex" : "#735B5D",
+    "colorHex" : "#4D413B",
     "label" : "Brown Grey Very Dark",
     "number" : "3021"
   },
   {
-    "colorHex" : "#ACACAA",
+    "colorHex" : "#838175",
     "label" : "Brown Grey Medium",
     "number" : "3022"
   },
   {
-    "colorHex" : "#C6BEAD",
+    "colorHex" : "#9F9B87",
     "label" : "Brown Grey Light",
     "number" : "3023"
   },
   {
-    "colorHex" : "#D2D0CD",
+    "colorHex" : "#BCB8AC",
     "label" : "Brown Grey Very Light",
     "number" : "3024"
   },
@@ -1751,16 +1771,16 @@
   },
   {
     "colorHex" : "#C2654C",
-    "label" : "Dessert Sand",
+    "label" : "Desert Sand",
     "number" : "3064"
   },
   {
-    "colorHex" : "#E9E9DF",
+    "colorHex" : "#D1D2CA",
     "label" : "Beaver Grey Very Light",
     "number" : "3072"
   },
   {
-    "colorHex" : "#FFFFDC",
+    "colorHex" : "#FAF6BC",
     "label" : "Golden Yellow Very Light",
     "number" : "3078"
   },
@@ -1820,22 +1840,22 @@
     "number" : "3354"
   },
   {
-    "colorHex" : "#605F54",
+    "colorHex" : "#4A513C",
     "label" : "Pine Green Dark",
     "number" : "3362"
   },
   {
-    "colorHex" : "#747F60",
+    "colorHex" : "#657354",
     "label" : "Pine Green Medium",
     "number" : "3363"
   },
   {
-    "colorHex" : "#A1A787",
+    "colorHex" : "#909972",
     "label" : "Pine Green",
     "number" : "3364"
   },
   {
-    "colorHex" : "#532510",
+    "colorHex" : "#332210",
     "label" : "Black Brown",
     "number" : "3371"
   },
@@ -1915,12 +1935,12 @@
     "number" : "3722"
   },
   {
-    "colorHex" : "#C3767B",
+    "colorHex" : "#8D585B",
     "label" : "Antique Mauve Dark",
     "number" : "3726"
   },
   {
-    "colorHex" : "#FFC7C4",
+    "colorHex" : "#D1A0A5",
     "label" : "Antique Mauve Light",
     "number" : "3727"
   },
@@ -1935,27 +1955,27 @@
     "number" : "3733"
   },
   {
-    "colorHex" : "#9C7D85",
+    "colorHex" : "#6B535B",
     "label" : "Antique Violet Dark",
     "number" : "3740"
   },
   {
-    "colorHex" : "#EBEBE7",
-    "label" : "Antique Violet Very L",
+    "colorHex" : "#CCC2C8",
+    "label" : "Antique Violet - Very Light",
     "number" : "3743"
   },
   {
-    "colorHex" : "#9566A2",
+    "colorHex" : "#7B4CB0",
     "label" : "Blue Violet Dark",
     "number" : "3746"
   },
   {
-    "colorHex" : "#E6ECE8",
+    "colorHex" : "#CDC5EA",
     "label" : "Blue Violet Very Light",
     "number" : "3747"
   },
   {
-    "colorHex" : "#0C5B6C",
+    "colorHex" : "#274351",
     "label" : "Antique Blue Very Dark",
     "number" : "3750"
   },
@@ -1990,12 +2010,12 @@
     "number" : "3761"
   },
   {
-    "colorHex" : "#188086",
+    "colorHex" : "#2D5C75",
     "label" : "Peacock Blue Very Dark",
     "number" : "3765"
   },
   {
-    "colorHex" : "#18656F",
+    "colorHex" : "#59879F",
     "label" : "Peacock Blue Light",
     "number" : "3766"
   },
@@ -2010,18 +2030,23 @@
     "number" : "3770"
   },
   {
-    "colorHex" : "#AD533E",
-    "label" : "Negro Flesh",
+    "colorHex" : "#DEAE9C",
+    "label" : "Peach - Dark",
+    "number" : "3771"
+  },
+  {
+    "colorHex" : "#8F5A47",
+    "label" : "Desert Sand - Very Dark",
     "number" : "3772"
   },
   {
-    "colorHex" : "#E78667",
-    "label" : "Sportsman Flesh Medium",
+    "colorHex" : "#C48970",
+    "label" : "Desert Sand - Medium",
     "number" : "3773"
   },
   {
-    "colorHex" : "#FFDCC1",
-    "label" : "Sportsman Flesh Very L",
+    "colorHex" : "#EDD0B6",
+    "label" : "Desert Sand - Very Light",
     "number" : "3774"
   },
   {
@@ -2055,32 +2080,32 @@
     "number" : "3782"
   },
   {
-    "colorHex" : "#8B6D73",
+    "colorHex" : "#5E534C",
     "label" : "Brown Grey Dark",
     "number" : "3787"
   },
   {
-    "colorHex" : "#8C756D",
+    "colorHex" : "#695A4C",
     "label" : "Beige Grey Ultra Dark",
     "number" : "3790"
   },
   {
-    "colorHex" : "#514C53",
+    "colorHex" : "#39393D",
     "label" : "Pewter Grey Very Dark",
     "number" : "3799"
   },
   {
     "colorHex" : "#FF2C00",
-    "label" : "Dark Melon Very",
+    "label" : "Melon - Very Dark",
     "number" : "3801"
   },
   {
-    "colorHex" : "#0991A0",
+    "colorHex" : "#5F2C33",
     "label" : "Antique Mauve Very Dark",
     "number" : "3802"
   },
   {
-    "colorHex" : "#A10048",
+    "colorHex" : "#7C3043",
     "label" : "Mauve Dark",
     "number" : "3803"
   },
@@ -2100,32 +2125,32 @@
     "number" : "3806"
   },
   {
-    "colorHex" : "#7759B3",
-    "label" : "Cornflower Bleu",
+    "colorHex" : "#4E5999",
+    "label" : "Cornflower Blue",
     "number" : "3807"
   },
   {
-    "colorHex" : "#006B6B",
+    "colorHex" : "#23525A",
     "label" : "Turquoise Ultra Very Dark",
     "number" : "3808"
   },
   {
-    "colorHex" : "#009999",
+    "colorHex" : "#316773",
     "label" : "Turquoise Very Dark",
     "number" : "3809"
   },
   {
-    "colorHex" : "#00BFBF",
+    "colorHex" : "#316874",
     "label" : "Turquoise Dark",
     "number" : "3810"
   },
   {
-    "colorHex" : "#CCFFFF",
+    "colorHex" : "#B4DFE3",
     "label" : "Turquoise Very Light",
     "number" : "3811"
   },
   {
-    "colorHex" : "#53A682",
+    "colorHex" : "#489E85",
     "label" : "Seagreen Very Dark",
     "number" : "3812"
   },
@@ -2135,157 +2160,157 @@
     "number" : "3813"
   },
   {
-    "colorHex" : "#468C6E",
+    "colorHex" : "#3B8373",
     "label" : "Aquamarine",
     "number" : "3814"
   },
   {
-    "colorHex" : "#628C7A",
+    "colorHex" : "#4D7159",
     "label" : "Celadon Green Dark",
     "number" : "3815"
   },
   {
-    "colorHex" : "#8FBFAB",
+    "colorHex" : "#6A917A",
     "label" : "Celadon Green",
     "number" : "3816"
   },
   {
-    "colorHex" : "#B6F2D8",
+    "colorHex" : "#90C3A6",
     "label" : "Celadon Green Light",
     "number" : "3817"
   },
   {
-    "colorHex" : "#006B3D",
+    "colorHex" : "#265B31",
     "label" : "Emarald Green Ultra Very Dark",
     "number" : "3818"
   },
   {
-    "colorHex" : "#CEF407",
+    "colorHex" : "#CBC969",
     "label" : "Moss Green Light",
     "number" : "3819"
   },
   {
-    "colorHex" : "#FFF280",
+    "colorHex" : "#D2A750",
     "label" : "Straw Dark",
     "number" : "3820"
   },
   {
-    "colorHex" : "#FFEA33",
+    "colorHex" : "#E3BD63",
     "label" : "Straw",
     "number" : "3821"
   },
   {
-    "colorHex" : "#FFF280",
+    "colorHex" : "#F0D278",
     "label" : "Straw Light",
     "number" : "3822"
   },
   {
-    "colorHex" : "#FFFACC",
+    "colorHex" : "#FCF5D0",
     "label" : "Pale Yellow Ultra",
     "number" : "3823"
   },
   {
-    "colorHex" : "#FFC68C",
+    "colorHex" : "#F0B19C",
     "label" : "Apricot Light",
     "number" : "3824"
   },
   {
-    "colorHex" : "#FFD3A6",
+    "colorHex" : "#F0A778",
     "label" : "Pale Pumpkin",
     "number" : "3825"
   },
   {
-    "colorHex" : "#BF7830",
+    "colorHex" : "#A76A3C",
     "label" : "Golden Brown",
     "number" : "3826"
   },
   {
-    "colorHex" : "#FFCC80",
+    "colorHex" : "#DFA86E",
     "label" : "Pale Golden Brown",
     "number" : "3827"
   },
   {
-    "colorHex" : "#BF9D69",
+    "colorHex" : "#A27D4B",
     "label" : "Hazelnut Brown",
     "number" : "3828"
   },
   {
-    "colorHex" : "#CCA366",
+    "colorHex" : "#9C692E",
     "label" : "Old Gold Very Dark",
     "number" : "3829"
   },
   {
-    "colorHex" : "#B35212",
+    "colorHex" : "#9C483C",
     "label" : "Terra Cotta",
     "number" : "3830"
   },
   {
-    "colorHex" : "#E60066",
+    "colorHex" : "#B23953",
     "label" : "Raspberry Dark",
     "number" : "3831"
   },
   {
-    "colorHex" : "#CC3377",
+    "colorHex" : "#D36A71",
     "label" : "Raspberry Medium",
     "number" : "3832"
   },
   {
-    "colorHex" : "#FF8CBF",
+    "colorHex" : "#DC8F96",
     "label" : "Raspberry Light",
     "number" : "3833"
   },
   {
-    "colorHex" : "#8A458A",
+    "colorHex" : "#622655",
     "label" : "Grape Dark",
     "number" : "3834"
   },
   {
-    "colorHex" : "#A653A6",
+    "colorHex" : "#885076",
     "label" : "Grape Medium",
     "number" : "3835"
   },
   {
-    "colorHex" : "#CCA3CC",
+    "colorHex" : "#BD98B8",
     "label" : "Grape Light",
     "number" : "3836"
   },
   {
-    "colorHex" : "#990099",
+    "colorHex" : "#7F318A",
     "label" : "Lavender Ultra Dark",
     "number" : "3837"
   },
   {
-    "colorHex" : "#8060BF",
-    "label" : "Lavender Bleu Dark",
+    "colorHex" : "#636BA8",
+    "label" : "Lavender Blue - Dark",
     "number" : "3838"
   },
   {
-    "colorHex" : "#697FBF",
-    "label" : "Lavender Bleu Medium",
+    "colorHex" : "#797DBF",
+    "label" : "Lavender Blue - Medium",
     "number" : "3839"
   },
   {
-    "colorHex" : "#CFD4E6",
-    "label" : "Lavender Bleu Light",
+    "colorHex" : "#B4BDE6",
+    "label" : "Lavender Blue - Light",
     "number" : "3840"
   },
   {
-    "colorHex" : "#DCE5FA",
+    "colorHex" : "#DCE9F1",
     "label" : "Pale Baby Bleu",
     "number" : "3841"
   },
   {
-    "colorHex" : "#0066B3",
+    "colorHex" : "#214E67",
     "label" : "Wedgwood Dark",
     "number" : "3842"
   },
   {
-    "colorHex" : "#4D79FF",
-    "label" : "Electric Bleu",
+    "colorHex" : "#51A0D9",
+    "label" : "Electric Blue",
     "number" : "3843"
   },
   {
-    "colorHex" : "#17ADE6",
+    "colorHex" : "#3E7C9D",
     "label" : "Turquoise Dark Bright",
     "number" : "3844"
   },
@@ -2365,37 +2390,37 @@
     "number" : "3859"
   },
   {
-    "colorHex" : "#A67A3A",
+    "colorHex" : "#836462",
     "label" : "Cocoa",
     "number" : "3860"
   },
   {
-    "colorHex" : "#A6815B",
-    "label" : "Cocao Light",
+    "colorHex" : "#A58682",
+    "label" : "Cocoa Light",
     "number" : "3861"
   },
   {
-    "colorHex" : "#A66829",
+    "colorHex" : "#684A2E",
     "label" : "Mocha Beige Dark",
     "number" : "3862"
   },
   {
-    "colorHex" : "#BF864D",
+    "colorHex" : "#8E735F",
     "label" : "Mocha Beige Medium",
     "number" : "3863"
   },
   {
-    "colorHex" : "#D9AE82",
+    "colorHex" : "#C4AB94",
     "label" : "Mocha Beige Light",
     "number" : "3864"
   },
   {
-    "colorHex" : "#FFFFF2",
+    "colorHex" : "#FEFDF8",
     "label" : "Winter White",
     "number" : "3865"
   },
   {
-    "colorHex" : "#F5F0DB",
+    "colorHex" : "#EEE7D7",
     "label" : "Mocha Brown Ultra Very Light",
     "number" : "3866"
   },
@@ -2405,7 +2430,7 @@
     "number" : "B5200"
   },
   {
-    "colorHex" : "#FFECBF",
+    "colorHex" : "#FDF6E8",
     "label" : "Ecru/Off-white",
     "number" : "Ecru"
   },
