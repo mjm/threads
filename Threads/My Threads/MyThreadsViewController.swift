@@ -278,7 +278,7 @@ extension MyThreadsViewController {
                                                         state: action.canPerform ? .off : .on)
                 })
             } catch {
-                present(error: error)
+                self.present(error: error)
                 addToProjectMenu = UIAction(title: Localized.addToProjectMenu, image: UIImage(systemName: "rectangle.3.offgrid"), attributes: .disabled) { _ in }
             }
             
@@ -310,14 +310,9 @@ class AddThreadsToCollectionDelegate: NSObject, AddThreadViewControllerDelegate 
         self.context = context
     }
     
-    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) -> [Thread] {
+    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) throws -> [Thread] {
         let request = Thread.notInCollectionFetchRequest()
-        guard let threads = try? context.fetch(request) else {
-            NSLog("Could not fetch threads to search from")
-            return []
-        }
-        
-        return threads
+        return try context.fetch(request)
     }
     
     func addThreadViewController(_ addThreadViewController: AddThreadViewController, performActionForAddingThreads threads: [Thread], actionRunner: UserActionRunner) {

@@ -281,14 +281,9 @@ class AddThreadsToShoppingListDelegate: NSObject, AddThreadViewControllerDelegat
         self.context = context
     }
     
-    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) -> [Thread] {
+    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) throws -> [Thread] {
         let request = Thread.notInShoppingListFetchRequest()
-        guard let threads = try? context.fetch(request) else {
-            NSLog("Could not fetch threads to search from")
-            return []
-        }
-        
-        return threads
+        return try context.fetch(request)
     }
     
     func addThreadViewController(_ addThreadViewController: AddThreadViewController, performActionForAddingThreads threads: [Thread], actionRunner: UserActionRunner) {

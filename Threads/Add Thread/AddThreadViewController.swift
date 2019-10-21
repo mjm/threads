@@ -81,8 +81,12 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         navigationItem.hidesSearchBarWhenScrolling = false
         #endif
         
-        if let choices = delegate?.choicesForAddingThreads(self) {
-            self.choices = choices
+        do {
+            if let choices = try delegate?.choicesForAddingThreads(self) {
+                self.choices = choices
+            }
+        } catch {
+            present(error: error)
         }
     }
 
@@ -265,7 +269,7 @@ extension AddThreadViewController: UITextFieldDelegate {
 }
 
 protocol AddThreadViewControllerDelegate: NSObjectProtocol {
-    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) -> [Thread]
+    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) throws -> [Thread]
     func addThreadViewController(_ addThreadViewController: AddThreadViewController,
                                  performActionForAddingThreads threads: [Thread],
                                  actionRunner: UserActionRunner)
