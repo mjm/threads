@@ -193,19 +193,29 @@ struct AddImageToProjectAction: UserAction {
                     let data = try Data(contentsOf: url)
                     Event.current[.byteCount] = data.count
                     project.addImage(data)
+
+                    context.completeAndDismiss()
                 } catch {
                     context.completeAndDismiss(error: error)
-                    return
                 }
             } else {
-                NSLog("Did not get an original image URL for the chosen media")
+                context.completeAndDismiss(error: Error.noImageURL)
             }
-
-            context.completeAndDismiss()
         }
 
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             context.completeAndDismiss(error: UserActionError.canceled)
+        }
+    }
+    
+    enum Error: LocalizedError {
+        case noImageURL
+        
+        var errorDescription: String? {
+            switch self {
+            case .noImageURL:
+                return "The chosen media could not be added to the project because it is not a valid image."
+            }
         }
     }
 }

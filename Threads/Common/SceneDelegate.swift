@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Events
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -16,7 +17,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let _ = (scene as? UIWindowScene) else { return }
         
         if let activity = connectionOptions.userActivities.first ?? scene.session.stateRestorationActivity {
-            NSLog("connecting to scene with user activity \(activity.activityType) \(activity)")
             restoreActivity(activity, animated: false)
         }
 
@@ -25,28 +25,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Force shopping list to load so it can set its badge value
         let shoppingListController = getTab(type: ShoppingListViewController.self)
         shoppingListController.loadViewIfNeeded()
-    }
-
-    func sceneDidDisconnect(_ scene: UIScene) {
-        // Called as the scene is being released by the system.
-        // This occurs shortly after the scene enters the background, or when its session is discarded.
-        // Release any resources associated with this scene that can be re-created the next time the scene connects.
-        // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
-    }
-
-    func sceneDidBecomeActive(_ scene: UIScene) {
-        // Called when the scene has moved from an inactive state to an active state.
-        // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
-    }
-
-    func sceneWillResignActive(_ scene: UIScene) {
-        // Called when the scene will move from an active state to an inactive state.
-        // This may occur due to temporary interruptions (ex. an incoming phone call).
-    }
-
-    func sceneWillEnterForeground(_ scene: UIScene) {
-        // Called as the scene transitions from the background to the foreground.
-        // Use this method to undo the changes made on entering the background.
+        
+        Event.current.send("connecting scene")
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
@@ -59,8 +39,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        NSLog("continuing user activity \(userActivity.activityType) \(userActivity)")
         restoreActivity(userActivity, animated: scene.activationState == .foregroundActive)
+        Event.current.send("continuing activity")
     }
 
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
@@ -69,20 +49,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tabController = window.rootViewController as! UITabBarController
         let navController = tabController.selectedViewController as! UINavigationController
         let displayedController = navController.topViewController
-        let activity = displayedController?.userActivity
+
+        if let activity = displayedController?.userActivity {
+            UserActivity(userActivity: activity, context: managedObjectContext)?.addToCurrentEvent()
+            Event.current.send("saving activity")
+            return activity
+        }
         
-        NSLog("storing user activity \(activity?.activityType ?? "") \(String(describing: activity))")
-        
-        return activity
+        return nil
     }
     
     private func restoreActivity(_ activity: NSUserActivity, animated: Bool) {
-        NSLog("restoring user activity \(activity.activityType) \(activity)")
+        Event.current[.activityType] = activity.activityType
         
-        // get the context so we can rehydrate objects from the activity
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let userActivity = UserActivity(userActivity: activity, context: managedObjectContext)
+        userActivity?.addToCurrentEvent()
         
-        switch UserActivity(userActivity: activity, context: context) {
+        switch userActivity {
         case .showMyThreads:
             selectTab(type: MyThreadsViewController.self)
         case .showShoppingList:
@@ -93,26 +76,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let myThreadsController = selectTab(type: MyThreadsViewController.self)
             if let threadDetailController = topViewController as? ThreadDetailViewController,
                 threadDetailController.thread == thread {
-                NSLog("already viewing the right thread, doing nothing")
-            } else {
-                navigationController.popToRootViewController(animated: animated)
-                let detailViewController = myThreadsController.storyboard!.instantiateViewController(identifier: "ThreadDetail") { coder in
-                    myThreadsController.makeDetailController(coder: coder, sender: thread)
-                }
-                navigationController.pushViewController(detailViewController, animated: animated)
+                return
             }
+            
+            navigationController.popToRootViewController(animated: animated)
+            let detailViewController = myThreadsController.storyboard!.instantiateViewController(identifier: "ThreadDetail") { coder in
+                myThreadsController.makeDetailController(coder: coder, sender: thread)
+            }
+            navigationController.pushViewController(detailViewController, animated: animated)
         case let .showProject(project):
             let projectListController = selectTab(type: ProjectListViewController.self)
             if let projectDetailController = topViewController as? ProjectDetailViewController,
                 projectDetailController.project == project {
-                NSLog("already viewing the right project, doing nothing")
-            } else {
-                navigationController.popToRootViewController(animated: animated)
-                let detailViewController = projectListController.storyboard!.instantiateViewController(identifier: "ProjectDetail") { coder in
-                    projectListController.makeDetailController(coder: coder, sender: ProjectDetail(project: project))
-                }
-                navigationController.pushViewController(detailViewController, animated: animated)
+                return
             }
+            
+            navigationController.popToRootViewController(animated: animated)
+            let detailViewController = projectListController.storyboard!.instantiateViewController(identifier: "ProjectDetail") { coder in
+                projectListController.makeDetailController(coder: coder, sender: ProjectDetail(project: project))
+            }
+            navigationController.pushViewController(detailViewController, animated: animated)
         case .addThreads:
             preconditionFailure("SceneDelegate should not have to handle an addThreads activity")
         case .none:
@@ -147,6 +130,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private var topViewController: UIViewController {
         return navigationController.topViewController!
+    }
+    
+    private var managedObjectContext: NSManagedObjectContext {
+        (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     }
 }
 

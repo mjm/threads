@@ -176,7 +176,7 @@ enum UserActivity {
     func delete(completion: @escaping () -> Void = {}) {
         if let identifier = persistentIdentifier {
             NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [identifier]) {
-                NSLog("Deleted user activity with identifier \(identifier)")
+                self.addToCurrentEvent()
                 DispatchQueue.main.async(execute: completion)
             }
         }
