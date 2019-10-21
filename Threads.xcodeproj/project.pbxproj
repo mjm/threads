@@ -90,6 +90,11 @@
 		C99677F3235B499C00AE2F5C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99677F2235B499C00AE2F5C /* StoreKit.framework */; };
 		C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9967801235C02EA00AE2F5C /* StoreActions.swift */; };
 		C9C8C0DE235CBA7200787BEA /* Events in Frameworks */ = {isa = PBXBuildFile; productRef = C9C8C0DD235CBA7200787BEA /* Events */; };
+		C9E01488235D4AA5007B2626 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01487235D4AA5007B2626 /* AppDelegate.swift */; };
+		C9E0148A235D4AA5007B2626 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01489235D4AA5007B2626 /* ViewController.swift */; };
+		C9E0148C235D4AA8007B2626 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9E0148B235D4AA8007B2626 /* Assets.xcassets */; };
+		C9E0148F235D4AA8007B2626 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9E0148D235D4AA8007B2626 /* Main.storyboard */; };
+		C9E01496235D4D8C007B2626 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01495235D4D8C007B2626 /* Color.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -196,6 +201,14 @@
 		C99677F0235B497600AE2F5C /* StoreObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreObserver.swift; sourceTree = "<group>"; };
 		C99677F2235B499C00AE2F5C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		C9967801235C02EA00AE2F5C /* StoreActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreActions.swift; sourceTree = "<group>"; };
+		C9E01485235D4AA5007B2626 /* ThreadsAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThreadsAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9E01487235D4AA5007B2626 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C9E01489235D4AA5007B2626 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C9E0148B235D4AA8007B2626 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C9E0148E235D4AA8007B2626 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C9E01490235D4AA8007B2626 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C9E01491235D4AA8007B2626 /* ThreadsAdmin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ThreadsAdmin.entitlements; sourceTree = "<group>"; };
+		C9E01495235D4D8C007B2626 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,6 +223,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C9491E1B231DDBB70031F463 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C9E01482235D4AA5007B2626 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -243,6 +263,7 @@
 				C97FCDEF232E9AFE000B1590 /* README.md */,
 				C9491DF2231D897B0031F463 /* Threads */,
 				C9491E1F231DDBB70031F463 /* ThreadsTests */,
+				C9E01486235D4AA5007B2626 /* ThreadsAdmin */,
 				C9491DF1231D897B0031F463 /* Products */,
 				C9491E0B231D8A220031F463 /* Frameworks */,
 			);
@@ -253,6 +274,7 @@
 			children = (
 				C9491DF0231D897B0031F463 /* Threads.app */,
 				C9491E1E231DDBB70031F463 /* ThreadsTests.xctest */,
+				C9E01485235D4AA5007B2626 /* ThreadsAdmin.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -417,6 +439,20 @@
 			path = "In-App Purchase";
 			sourceTree = "<group>";
 		};
+		C9E01486235D4AA5007B2626 /* ThreadsAdmin */ = {
+			isa = PBXGroup;
+			children = (
+				C9E01487235D4AA5007B2626 /* AppDelegate.swift */,
+				C9E01489235D4AA5007B2626 /* ViewController.swift */,
+				C9E0148B235D4AA8007B2626 /* Assets.xcassets */,
+				C9E0148D235D4AA8007B2626 /* Main.storyboard */,
+				C9E01490235D4AA8007B2626 /* Info.plist */,
+				C9E01491235D4AA8007B2626 /* ThreadsAdmin.entitlements */,
+				C9E01495235D4D8C007B2626 /* Color.swift */,
+			);
+			path = ThreadsAdmin;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -458,13 +494,30 @@
 			productReference = C9491E1E231DDBB70031F463 /* ThreadsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		C9E01484235D4AA5007B2626 /* ThreadsAdmin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C9E01494235D4AA8007B2626 /* Build configuration list for PBXNativeTarget "ThreadsAdmin" */;
+			buildPhases = (
+				C9E01481235D4AA5007B2626 /* Sources */,
+				C9E01482235D4AA5007B2626 /* Frameworks */,
+				C9E01483235D4AA5007B2626 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ThreadsAdmin;
+			productName = ThreadsAdmin;
+			productReference = C9E01485235D4AA5007B2626 /* ThreadsAdmin.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		C9491DE8231D897A0031F463 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1100;
+				LastSwiftUpdateCheck = 1110;
 				LastUpgradeCheck = 1100;
 				ORGANIZATIONNAME = "Matt Moriarity";
 				TargetAttributes = {
@@ -474,6 +527,9 @@
 					C9491E1D231DDBB70031F463 = {
 						CreatedOnToolsVersion = 11.0;
 						TestTargetID = C9491DEF231D897A0031F463;
+					};
+					C9E01484235D4AA5007B2626 = {
+						CreatedOnToolsVersion = 11.1;
 					};
 				};
 			};
@@ -495,6 +551,7 @@
 			targets = (
 				C9491DEF231D897A0031F463 /* Threads */,
 				C9491E1D231DDBB70031F463 /* ThreadsTests */,
+				C9E01484235D4AA5007B2626 /* ThreadsAdmin */,
 			);
 		};
 /* End PBXProject section */
@@ -530,6 +587,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C9E01483235D4AA5007B2626 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9E0148C235D4AA8007B2626 /* Assets.xcassets in Resources */,
+				C9E0148F235D4AA8007B2626 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -611,6 +677,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C9E01481235D4AA5007B2626 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9E0148A235D4AA5007B2626 /* ViewController.swift in Sources */,
+				C9E01488235D4AA5007B2626 /* AppDelegate.swift in Sources */,
+				C9E01496235D4D8C007B2626 /* Color.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -681,6 +757,14 @@
 				C97FCDE1232DCE8A000B1590 /* en */,
 			);
 			name = AddThread.storyboard;
+			sourceTree = "<group>";
+		};
+		C9E0148D235D4AA8007B2626 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C9E0148E235D4AA8007B2626 /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -884,6 +968,50 @@
 			};
 			name = Release;
 		};
+		C9E01492235D4AA8007B2626 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ThreadsAdmin/ThreadsAdmin.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = PE8BN56Z28;
+				ENABLE_HARDENED_RUNTIME = NO;
+				INFOPLIST_FILE = ThreadsAdmin/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattmoriarity.ThreadsAdmin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C9E01493235D4AA8007B2626 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ThreadsAdmin/ThreadsAdmin.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = PE8BN56Z28;
+				ENABLE_HARDENED_RUNTIME = NO;
+				INFOPLIST_FILE = ThreadsAdmin/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattmoriarity.ThreadsAdmin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -910,6 +1038,15 @@
 			buildConfigurations = (
 				C9491E26231DDBB70031F463 /* Debug */,
 				C9491E27231DDBB70031F463 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9E01494235D4AA8007B2626 /* Build configuration list for PBXNativeTarget "ThreadsAdmin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9E01492235D4AA8007B2626 /* Debug */,
+				C9E01493235D4AA8007B2626 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
