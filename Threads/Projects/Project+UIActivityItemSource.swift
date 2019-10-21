@@ -18,21 +18,37 @@ extension Event.Key {
 
 extension Project {
     var itemProvider: NSItemProvider {
+        var isPublished = false
+        
         let itemProvider = NSItemProvider()
         itemProvider.registerObject(ofClass: NSURL.self, visibility: .all) { completion in
-            let progress = Progress.discreteProgress(totalUnitCount: 1)
+            if isPublished, let url = self.publishedURL {
+                completion(url as NSURL, nil)
+                return nil
+            }
             
+            let progress = Progress.discreteProgress(totalUnitCount: 1)
+            Event.current[.projectName] = self.name
+            Event.current[.previousPublishedID] = self.publishedID
+            
+            Event.current.startTimer(.publishTime)
             self.publish { error in
+                Event.current.stopTimer(.publishTime)
+                isPublished = true
+                
                 if error != nil {
+                    Event.current.error = error
+                    Event.current.send("shared project")
                     completion(nil, error)
+                } else if let url = self.publishedURL {
+                    Event.current[.publishedID] = self.publishedID
+                    Event.current[.publishedURL] = url
+                    Event.current.send("shared project")
+                    
+                    progress.completedUnitCount = 1
+                    completion(url as NSURL, nil)
                 } else {
-                    if let url = self.publishedURL {
-                        NSLog("URL for published project: \(url)")
-                        progress.completedUnitCount = 1
-                        completion(url as NSURL, nil)
-                    } else {
-                        fatalError()
-                    }
+                    fatalError()
                 }
             }
             
