@@ -69,16 +69,7 @@ class UserActionRunner {
             Event.current.send("completed user action")
         } else {
             Event.current.error = error
-            
-            if let viewController = viewController {
-                let alert = UIAlertController(title: Localized.errorOccurred,
-                                              message: error.localizedDescription,
-                                              preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: Localized.dismiss, style: .cancel))
-                
-                viewController.present(alert, animated: true)
-            }
-            
+            viewController?.present(error: error)
             Event.current.send(.error, "completed user action")
         }
     }

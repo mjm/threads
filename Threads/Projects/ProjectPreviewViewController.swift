@@ -41,7 +41,7 @@ class ProjectPreviewViewController: UIViewController {
         do {
             threads = try project.managedObjectContext!.fetch(ProjectThread.fetchRequest(for: project))
         } catch {
-            NSLog("Error loading project threads: \(error)")
+            present(error: error)
             threads = []
         }
 

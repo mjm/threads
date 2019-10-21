@@ -278,7 +278,7 @@ extension MyThreadsViewController {
                                                         state: action.canPerform ? .off : .on)
                 })
             } catch {
-                NSLog("Error fetching projects for context menu: \(error)")
+                present(error: error)
                 addToProjectMenu = UIAction(title: Localized.addToProjectMenu, image: UIImage(systemName: "rectangle.3.offgrid"), attributes: .disabled) { _ in }
             }
             
