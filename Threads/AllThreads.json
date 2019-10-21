@@ -135,6 +135,146 @@
     "number" : "27"
   },
   {
+    "colorHex" : "#75508F",
+    "label" : "Eggplant - Medium Light",
+    "number" : "28"
+  },
+  {
+    "colorHex" : "#614172",
+    "label" : "Eggplant",
+    "number" : "29"
+  },
+  {
+    "colorHex" : "#6955CC",
+    "label" : "Blueberry - Medium Light",
+    "number" : "30"
+  },
+  {
+    "colorHex" : "#52359D",
+    "label" : "Blueberry",
+    "number" : "31"
+  },
+  {
+    "colorHex" : "#492F85",
+    "label" : "Blueberry - Dark",
+    "number" : "32"
+  },
+  {
+    "colorHex" : "#C95C9C",
+    "label" : "Fuchsia",
+    "number" : "33"
+  },
+  {
+    "colorHex" : "#A1497E",
+    "label" : "Fuchsia - Dark",
+    "number" : "34"
+  },
+  {
+    "colorHex" : "#6A2F54",
+    "label" : "Fuchsia - Very Dark",
+    "number" : "35"
+  },
+  {
+    "colorHex" : "#BE2754",
+    "label" : "Red - Bright",
+    "number" : "150"
+  },
+  {
+    "colorHex" : "#F7CBD6",
+    "label" : "Pink",
+    "number" : "151"
+  },
+  {
+    "colorHex" : "#D6A3A1",
+    "label" : "Tawny - Dark",
+    "number" : "152"
+  },
+  {
+    "colorHex" : "#E3C6E8",
+    "label" : "Lilac",
+    "number" : "153"
+  },
+  {
+    "colorHex" : "#452439",
+    "label" : "Red - Very Dark",
+    "number" : "154"
+  },
+  {
+    "colorHex" : "#9076B2",
+    "label" : "Forget-me-not Blue",
+    "number" : "155"
+  },
+  {
+    "colorHex" : "#8377AF",
+    "label" : "Blue - Medium",
+    "number" : "156"
+  },
+  {
+    "colorHex" : "#B6B6E6",
+    "label" : "Blue - Light",
+    "number" : "157"
+  },
+  {
+    "colorHex" : "#373064",
+    "label" : "Blue - Dark",
+    "number" : "158"
+  },
+  {
+    "colorHex" : "#BAB5DB",
+    "label" : "Petrol Blue - Light",
+    "number" : "159"
+  },
+  {
+    "colorHex" : "#8078A5",
+    "label" : "Petrol Blue - Medium",
+    "number" : "160"
+  },
+  {
+    "colorHex" : "#5E5687",
+    "label" : "Petrol Blue - Dark",
+    "number" : "161"
+  },
+  {
+    "colorHex" : "#CEE5EF",
+    "label" : "Baby Blue - Light",
+    "number" : "162"
+  },
+  {
+    "colorHex" : "#5C7860",
+    "label" : "Green",
+    "number" : "163"
+  },
+  {
+    "colorHex" : "#C1E2B9",
+    "label" : "Green - Light",
+    "number" : "164"
+  },
+  {
+    "colorHex" : "#E4F387",
+    "label" : "Green - Bright",
+    "number" : "165"
+  },
+  {
+    "colorHex" : "#B0C14F",
+    "label" : "Lime Green",
+    "number" : "166"
+  },
+  {
+    "colorHex" : "#7E5E38",
+    "label" : "Khaki Brown",
+    "number" : "167"
+  },
+  {
+    "colorHex" : "#B0ADB6",
+    "label" : "Silver Gray",
+    "number" : "168"
+  },
+  {
+    "colorHex" : "#807C7C",
+    "label" : "Pewter Gray",
+    "number" : "169"
+  },
+  {
     "colorHex" : "#945B80",
     "label" : "Lavender Very Dark",
     "number" : "208"
