@@ -106,8 +106,9 @@ public class Thread: NSManagedObject {
         }
         
         // Create any remaining threads we don't already have
-        for item in rightIter {
-            _ = Thread(dmcThread: item, context: context)
+        while rightItem != nil {
+            _ = Thread(dmcThread: rightItem!, context: context)
+            rightItem = rightIter.next()
             createdCount += 1
         }
         
