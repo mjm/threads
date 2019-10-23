@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/mjm/Events.git",
         "state": {
           "branch": "master",
-          "revision": "6bbf350fb59088d5cb41f9ac58519062cfb726eb",
+          "revision": "42a9e8022c53a104621975f13f5532bd7e063074",
           "version": null
         }
       },
@@ -15,7 +15,7 @@
         "repositoryURL": "https://github.com/mjm/LogfmtEncoder",
         "state": {
           "branch": "master",
-          "revision": "ca4f9cff09b85295966012eec60aa38f7124eccb",
+          "revision": "f863c6ac646b7b3dec908a56d376c3cad485bbe2",
           "version": null
         }
       }
