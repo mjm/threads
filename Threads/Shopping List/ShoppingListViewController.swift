@@ -41,7 +41,7 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
     
     override func createObservers() -> [Any] {
         [
-            threadsList.contentChangePublisher().sink { [weak self] in
+            threadsList.objectsPublisher().sink { [weak self] _ in
                 self?.updateSnapshot()
             },
             threadsList.objectPublisher().sink { [weak self] thread in

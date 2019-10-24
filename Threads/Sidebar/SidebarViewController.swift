@@ -30,7 +30,7 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
     
     override func createObservers() -> [Any] {
         [
-            projectsList.contentChangePublisher().sink { [weak self] in
+            projectsList.objectsPublisher().sink { [weak self] _ in
                 self?.updateSnapshot()
             },
             projectsList.objectPublisher().sink { [weak self] project in

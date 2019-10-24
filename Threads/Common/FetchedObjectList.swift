@@ -11,7 +11,8 @@ import Combine
 
 class FetchedObjectList<ObjectType: NSManagedObject>: NSObject, NSFetchedResultsControllerDelegate {
     let fetchedResultsController: NSFetchedResultsController<ObjectType>
-    private let contentSubject = PassthroughSubject<Void, Never>()
+    
+    private let objectsSubject = CurrentValueSubject<[ObjectType], Never>([])
     private let objectSubject = PassthroughSubject<ObjectType, Never>()
 
     init(
@@ -34,12 +35,10 @@ class FetchedObjectList<ObjectType: NSManagedObject>: NSObject, NSFetchedResults
         }
     }
 
-    var objects: [ObjectType] {
-        fetchedResultsController.fetchedObjects ?? []
-    }
+    var objects: [ObjectType] { fetchedResultsController.fetchedObjects ?? [] }
     
-    func contentChangePublisher() -> AnyPublisher<Void, Never> {
-        contentSubject.eraseToAnyPublisher()
+    func objectsPublisher() -> AnyPublisher<[ObjectType], Never> {
+        objectsSubject.eraseToAnyPublisher()
     }
     
     func objectPublisher() -> AnyPublisher<ObjectType, Never> {
@@ -47,7 +46,7 @@ class FetchedObjectList<ObjectType: NSManagedObject>: NSObject, NSFetchedResults
     }
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        contentSubject.send()
+        objectsSubject.send(fetchedResultsController.fetchedObjects ?? [])
     }
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {

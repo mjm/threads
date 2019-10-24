@@ -87,7 +87,7 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
             }.sink { [weak self] notes in
                 (self?.cell(for: .viewNotes) as? TextViewCollectionViewCell)?.textView.attributedText = notes
             },
-            threadsList.contentChangePublisher().merge(with: imagesList.contentChangePublisher()).sink { [weak self] in
+            threadsList.objectsPublisher().combineLatest(imagesList.objectsPublisher()).sink { [weak self] _, _ in
                 self?.updateSnapshot()
             },
             threadsList.objectPublisher().sink { [weak self] projectThread in

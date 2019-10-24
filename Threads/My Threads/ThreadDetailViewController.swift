@@ -98,7 +98,7 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
             thread.publisher(for: \.amountInCollection).sink { [weak self] _ in
                 self?.updateDetails()
             },
-            projectsList.contentChangePublisher().sink { [weak self] in
+            projectsList.objectsPublisher().sink { [weak self] _ in
                 self?.updateSnapshot()
             },
             projectsList.objectPublisher().sink { [weak self] projectThread in
