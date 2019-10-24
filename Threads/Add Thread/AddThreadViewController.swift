@@ -42,13 +42,11 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
     
     private var searchController: UISearchController!
 
-    private var threadToAdd: Thread? {
-        didSet {
-            quickAddButton.isEnabled = threadToAdd != nil
-        }
-    }
-    private var selectedThreads: [Thread] = []
-    private var filteredThreads: [Thread] = []
+    @Published private var threadToAdd: Thread?
+    @Published private var query: String = ""
+    @Published private var selectedThreads: [Thread] = []
+    @Published private var filteredThreads: [Thread] = []
+    
     private var isAdding = false
 
     var canDismiss: Bool {
@@ -80,14 +78,34 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         #endif
+    }
+    
+    override func createObservers() -> [Any] {
+        let addButton = navigationItem.rightBarButtonItems!.first!
         
-        do {
-            if let choices = try delegate?.choicesForAddingThreads(self) {
-                self.choices = choices
-            }
-        } catch {
-            present(error: error)
-        }
+        return [
+            $query.combineLatest($selectedThreads) { query, selectedThreads -> [Thread] in
+                if query.isEmpty {
+                    return []
+                } else {
+                    return self.choices.filter {
+                        return !selectedThreads.contains($0) &&
+                            $0.number!.lowercased().hasPrefix(query)
+                    }
+                }
+            }.assign(to: \.filteredThreads, on: self),
+            
+            $query.combineLatest($filteredThreads) { query, threads -> Thread? in
+                threads.first { $0.number?.lowercased() == query }
+            }.assign(to: \.threadToAdd, on: self),
+            
+            $threadToAdd.map { $0 != nil}.assign(to: \.isEnabled, on: quickAddButton),
+            
+            $selectedThreads.map { !$0.isEmpty }.assign(to: \.isEnabled, on: addButton),
+            $selectedThreads.map { threads in
+                String.localizedStringWithFormat(Localized.addBatchButton, threads.count)
+            }.assign(to: \.title, on: addButton),
+        ]
     }
 
     override func dataSourceWillInitialize() {
@@ -98,6 +116,14 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
             case .results: return NSLocalizedString("Matching Threads", comment: "")
             case .selected: return NSLocalizedString("Threads to Add", comment: "")
             }
+        }
+        
+        do {
+            if let choices = try delegate?.choicesForAddingThreads(self) {
+                self.choices = choices
+            }
+        } catch {
+            present(error: error)
         }
     }
 
@@ -110,14 +136,6 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         if !selectedThreads.isEmpty {
             snapshot.appendSections([.selected])
             snapshot.appendItems(selectedThreads.map { .thread($0, isResult: false) }, toSection: .selected)
-        }
-    }
-
-    override func dataSourceDidUpdateSnapshot(animated: Bool) {
-        // Update the add button to reflect the quantity
-        if let addButton = navigationItem.rightBarButtonItems?.first {
-            addButton.title = String.localizedStringWithFormat(Localized.addBatchButton, selectedThreads.count)
-            addButton.isEnabled = !selectedThreads.isEmpty
         }
     }
 
@@ -219,19 +237,7 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
 
 extension AddThreadViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        let query = searchController.searchBar.text?.lowercased() ?? ""
-        let exclusions = Set(selectedThreads)
-
-        if query.isEmpty {
-            filteredThreads = []
-        } else {
-            filteredThreads = choices.filter {
-                return !exclusions.contains($0) &&
-                    $0.number!.lowercased().hasPrefix(query)
-            }
-        }
-
-        threadToAdd = filteredThreads.first { $0.number?.lowercased() == query }
+        query = searchController.searchBar.text?.lowercased() ?? ""
 
         #if targetEnvironment(macCatalyst)
         updateSnapshot(animated: false)
