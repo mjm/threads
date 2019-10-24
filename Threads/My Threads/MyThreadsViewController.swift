@@ -29,19 +29,24 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "dollarsign.circle.fill"), style: .plain, target: self, action: #selector(buyPremium(_:)))
     }
+    
+    override func createObservers() -> [Any] {
+        [
+            threadsList.contentChangePublisher().sink { [weak self] in
+                self?.updateSnapshot()
+            },
+            threadsList.objectPublisher().sink { [weak self] thread in
+                self?.updateCell(thread)
+            },
+        ]
+    }
 
     override func dataSourceWillInitialize() {
         dataSource.canEditRow = { _, _, _ in true }
 
         threadsList = FetchedObjectList(
             fetchRequest: Thread.inCollectionFetchRequest(),
-            managedObjectContext: managedObjectContext,
-            updateSnapshot: { [weak self] in
-                self?.updateSnapshot()
-            },
-            updateCell: { [weak self] thread in
-                self?.updateCell(thread)
-            }
+            managedObjectContext: managedObjectContext
         )
     }
 

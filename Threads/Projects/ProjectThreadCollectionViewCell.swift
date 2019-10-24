@@ -15,7 +15,8 @@ class ProjectThreadCollectionViewCell: UICollectionViewCell {
     @IBOutlet var quantityLabel: UILabel!
 
     func populate(_ projectThread: ProjectThread) {
-        let thread = projectThread.thread!
+        guard let thread = projectThread.thread else { return }
+
         colorView.color = thread.color ?? .systemBackground
 
         if let number = thread.number {

@@ -97,7 +97,13 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
             },
             thread.publisher(for: \.amountInCollection).sink { [weak self] _ in
                 self?.updateDetails()
-            }
+            },
+            projectsList.contentChangePublisher().sink { [weak self] in
+                self?.updateSnapshot()
+            },
+            projectsList.objectPublisher().sink { [weak self] projectThread in
+                self?.updateCell(projectThread)
+            },
         ]
     }
 
@@ -117,13 +123,7 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
 
         projectsList = FetchedObjectList(
             fetchRequest: ProjectThread.fetchRequest(for: thread),
-            managedObjectContext: thread.managedObjectContext!,
-            updateSnapshot: { [weak self] in
-                self?.updateSnapshot()
-            },
-            updateCell: { [weak self] projectThread in
-                self?.updateCell(projectThread)
-            }
+            managedObjectContext: thread.managedObjectContext!
         )
     }
 

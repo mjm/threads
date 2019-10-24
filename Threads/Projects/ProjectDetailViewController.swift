@@ -87,6 +87,15 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
             }.sink { [weak self] notes in
                 (self?.cell(for: .viewNotes) as? TextViewCollectionViewCell)?.textView.attributedText = notes
             },
+            threadsList.contentChangePublisher().merge(with: imagesList.contentChangePublisher()).sink { [weak self] in
+                self?.updateSnapshot()
+            },
+            threadsList.objectPublisher().sink { [weak self] projectThread in
+                self?.updateThreadCell(projectThread)
+            },
+            imagesList.objectPublisher().sink { [weak self] image in
+                self?.updateImageCell(image)
+            },
         ]
     }
 
@@ -118,24 +127,12 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
 
         threadsList = FetchedObjectList(
             fetchRequest: ProjectThread.fetchRequest(for: project),
-            managedObjectContext: project.managedObjectContext!,
-            updateSnapshot: { [weak self] in
-                self?.updateSnapshot()
-            },
-            updateCell: { [weak self] projectThread in
-                self?.updateThreadCell(projectThread)
-            }
+            managedObjectContext: project.managedObjectContext!
         )
 
         imagesList = FetchedObjectList(
             fetchRequest: ProjectImage.fetchRequest(for: project),
-            managedObjectContext: project.managedObjectContext!,
-            updateSnapshot: { [weak self] in
-                self?.updateSnapshot()
-            },
-            updateCell: { [weak self] image in
-                self?.updateImageCell(image)
-            }
+            managedObjectContext: project.managedObjectContext!
         )
 
         collectionView.dragInteractionEnabled = true

@@ -29,6 +29,12 @@ class ProjectListViewController: CollectionViewController<ProjectListViewControl
             }.sink { [weak self] project in
                 self?.updateCell(project)
             },
+            projectsList.contentChangePublisher().sink { [weak self] in
+                self?.updateSnapshot()
+            },
+            projectsList.objectPublisher().sink { [weak self] project in
+                self?.updateCell(project)
+            },
         ]
     }
 
@@ -37,13 +43,7 @@ class ProjectListViewController: CollectionViewController<ProjectListViewControl
     override func dataSourceWillInitialize() {
         projectsList = FetchedObjectList(
             fetchRequest: Project.allProjectsFetchRequest(),
-            managedObjectContext: managedObjectContext,
-            updateSnapshot: { [weak self] in
-                self?.updateSnapshot()
-            },
-            updateCell: { [weak self] project in
-                self?.updateCell(project)
-            }
+            managedObjectContext: managedObjectContext
         )
     }
 

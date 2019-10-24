@@ -28,6 +28,17 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
         tableView.addGestureRecognizer(tapRecognizer)
     }
     
+    override func createObservers() -> [Any] {
+        [
+            projectsList.contentChangePublisher().sink { [weak self] in
+                self?.updateSnapshot()
+            },
+            projectsList.objectPublisher().sink { [weak self] project in
+                self?.updateCell(project)
+            },
+        ]
+    }
+    
     override func dataSourceWillInitialize() {
         dataSource.sectionTitle = { tableView, _, section in
             switch section {
@@ -38,13 +49,7 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
         
         projectsList = FetchedObjectList(
             fetchRequest: Project.allProjectsFetchRequest(),
-            managedObjectContext: managedObjectContext,
-            updateSnapshot: { [weak self] in
-                self?.updateSnapshot()
-            },
-            updateCell: { [weak self] project in
-                self?.updateCell(project)
-            }
+            managedObjectContext: managedObjectContext
         )
     }
     

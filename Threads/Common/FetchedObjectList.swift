@@ -7,25 +7,22 @@
 //
 
 import CoreData
+import Combine
 
 class FetchedObjectList<ObjectType: NSManagedObject>: NSObject, NSFetchedResultsControllerDelegate {
     let fetchedResultsController: NSFetchedResultsController<ObjectType>
-    let updateSnapshot: () -> Void
-    let updateCell: (ObjectType) -> Void
+    private let contentSubject = PassthroughSubject<Void, Never>()
+    private let objectSubject = PassthroughSubject<ObjectType, Never>()
 
     init(
         fetchRequest: NSFetchRequest<ObjectType>,
-        managedObjectContext: NSManagedObjectContext,
-        updateSnapshot: @escaping () -> Void,
-        updateCell: @escaping (ObjectType) -> Void
+        managedObjectContext: NSManagedObjectContext
     ) {
         fetchedResultsController =
             NSFetchedResultsController(fetchRequest: fetchRequest,
                                        managedObjectContext: managedObjectContext,
                                        sectionNameKeyPath: nil,
                                        cacheName: nil)
-        self.updateSnapshot = updateSnapshot
-        self.updateCell = updateCell
         super.init()
 
         fetchedResultsController.delegate = self
@@ -40,12 +37,20 @@ class FetchedObjectList<ObjectType: NSManagedObject>: NSObject, NSFetchedResults
     var objects: [ObjectType] {
         fetchedResultsController.fetchedObjects ?? []
     }
+    
+    func contentChangePublisher() -> AnyPublisher<Void, Never> {
+        contentSubject.eraseToAnyPublisher()
+    }
+    
+    func objectPublisher() -> AnyPublisher<ObjectType, Never> {
+        objectSubject.eraseToAnyPublisher()
+    }
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        updateSnapshot()
+        contentSubject.send()
     }
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        updateCell(anObject as! ObjectType)
+        objectSubject.send(anObject as! ObjectType)
     }
 }

@@ -38,19 +38,24 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
         tableView.allowsSelection = true
         #endif
     }
+    
+    override func createObservers() -> [Any] {
+        [
+            threadsList.contentChangePublisher().sink { [weak self] in
+                self?.updateSnapshot()
+            },
+            threadsList.objectPublisher().sink { [weak self] thread in
+                self?.updateCell(thread)
+            },
+        ]
+    }
 
     override var currentUserActivity: UserActivity? { .showShoppingList }
 
     override func dataSourceWillInitialize() {
         threadsList = FetchedObjectList(
             fetchRequest: Thread.inShoppingListFetchRequest(),
-            managedObjectContext: managedObjectContext,
-            updateSnapshot: { [weak self] in
-                self?.updateSnapshot()
-            },
-            updateCell: { [weak self] thread in
-                self?.updateCell(thread)
-            }
+            managedObjectContext: managedObjectContext
         )
     }
 
