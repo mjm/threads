@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import Combine
 
 extension NSManagedObjectContext {
     func commit() {
@@ -23,11 +24,14 @@ extension NSManagedObjectContext {
             }
         }
     }
-
-    func observeChanges<T: NSManagedObject>(type: T.Type, observer: @escaping (Set<T>) -> Void) -> Any {
-        return ObserverBox(NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: self, queue: OperationQueue.main) { note in
+    
+    func publisher<T: NSManagedObject>(type: T.Type) -> AnyPublisher<T, Never>  {
+        return NotificationCenter.default.publisher(
+            for: .NSManagedObjectContextObjectsDidChange,
+            object: self
+        ).receive(on: RunLoop.main).flatMap { note -> AnyPublisher<T, Never> in
             guard let userInfo = note.userInfo else {
-                return
+                return Empty().eraseToAnyPublisher()
             }
 
             var changedObjects = Set<NSManagedObject>()
@@ -35,20 +39,8 @@ extension NSManagedObjectContext {
             changedObjects.formUnion(userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject> ?? [])
             changedObjects.formUnion(userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> ?? [])
 
-            let interestingObjects = Set(changedObjects.compactMap { $0 as? T })
-            observer(interestingObjects)
-        })
-    }
-}
-
-class ObserverBox {
-    let observer: Any
-
-    init(_ observer: Any) {
-        self.observer = observer
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(observer)
+            let objects = Set(changedObjects.compactMap { $0 as? T })
+            return Publishers.Sequence(sequence: objects).eraseToAnyPublisher()
+        }.eraseToAnyPublisher()
     }
 }

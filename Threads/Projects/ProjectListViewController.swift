@@ -24,17 +24,11 @@ class ProjectListViewController: CollectionViewController<ProjectListViewControl
 
     override func createObservers() -> [Any] {
         [
-            managedObjectContext.observeChanges(type: ProjectImage.self) { [weak self] affectedImages in
-                guard let self = self else {
-                    return
-                }
-
-                let affectedProjects = Set(affectedImages.compactMap { $0.project })
-
-                for project in affectedProjects {
-                    self.updateCell(project)
-                }
-            }
+            managedObjectContext.publisher(type: ProjectImage.self).compactMap { image in
+                image.project
+            }.sink { [weak self] project in
+                self?.updateCell(project)
+            },
         ]
     }
 

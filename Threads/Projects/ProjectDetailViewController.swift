@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import CoreServices
+import Combine
 
 class ProjectDetailViewController: CollectionViewController<ProjectDetailViewController.Section, ProjectDetailViewController.Cell> {
     enum Section: CaseIterable {
@@ -80,14 +81,12 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
 
     override func createObservers() -> [Any] {
         [
-            project.observe(\.name) { [weak self] project, change in
-                self?.navigationItem.title = project.name
+            project.publisher(for: \.name).assign(to: \.title, on: navigationItem),
+            project.publisher(for: \.notes).map { notes in
+                (notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
+            }.sink { [weak self] notes in
+                (self?.cell(for: .viewNotes) as? TextViewCollectionViewCell)?.textView.attributedText = notes
             },
-            project.observe(\.notes) { [weak self] project, change in
-                if let cell = self?.cell(for: .viewNotes) as? TextViewCollectionViewCell {
-                    cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
-                }
-            }
         ]
     }
 

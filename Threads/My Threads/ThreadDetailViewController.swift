@@ -78,36 +78,24 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
     override func createObservers() -> [Any] {
         [
             // Ensure we update the project names correctly.
-            //
-            // Watch all Core Data object changes, and whenever anything changes about a project, update the cell for the affected project thread.
-            managedObjectContext.observeChanges(type: Project.self) { [weak self] affectedProjects in
-                guard let self = self else {
-                    return
-                }
-
-                let interestingProjects = Dictionary(uniqueKeysWithValues: self.projectsList.objects.compactMap { projectThread in
-                    projectThread.project.flatMap { ($0, projectThread) }
-                })
-
-                for project in affectedProjects {
-                    if let projectThread = interestingProjects[project] {
-                        self.updateCell(projectThread)
-                    }
-                }
+            managedObjectContext.publisher(type: Project.self).compactMap { project in
+                self.projectsList.objects.first { $0.project == project }
+            }.sink { [weak self] projectThread in
+                self?.updateCell(projectThread)
             },
-            thread.observe(\.inShoppingList) { [weak self] _, _ in
+            thread.publisher(for: \.inShoppingList).sink { [weak self] _ in
                 self?.updateSnapshot()
             },
-            thread.observe(\.amountInShoppingList) { [weak self] _, _ in
+            thread.publisher(for: \.amountInShoppingList).sink { [weak self] _ in
                 self?.updateShoppingList()
             },
-            thread.observe(\.purchased) { [weak self] _, _ in
+            thread.publisher(for: \.purchased).sink { [weak self] _ in
                 self?.updateShoppingList()
             },
-            thread.observe(\.onBobbin) { [weak self] _, _ in
+            thread.publisher(for: \.onBobbin).sink { [weak self] _ in
                 self?.updateDetails()
             },
-            thread.observe(\.amountInCollection) { [weak self] _, _ in
+            thread.publisher(for: \.amountInCollection).sink { [weak self] _ in
                 self?.updateDetails()
             }
         ]
