@@ -44,7 +44,7 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewController.S
         )
         
         return [
-            projectsList.objectsPublisher().print().map { projects in
+            projectsList.objectsPublisher().map { projects in
                 var snapshot = Snapshot()
                 
                 snapshot.appendSections(Section.allCases)

@@ -94,19 +94,23 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
         userActivity = currentUserActivity?.userActivity
     }
 
-    #if !targetEnvironment(macCatalyst)
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        #if !targetEnvironment(macCatalyst)
         becomeFirstResponder()
+        #endif
         
         animate = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        #if !targetEnvironment(macCatalyst)
         resignFirstResponder()
+        #endif
     }
-    #endif
 
     override var canBecomeFirstResponder: Bool {
         true

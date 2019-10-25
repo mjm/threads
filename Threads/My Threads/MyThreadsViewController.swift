@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class MyThreadsViewController: TableViewController<MyThreadsViewController.Section, MyThreadsViewController.Cell> {
+class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewController.Section, MyThreadsViewController.Cell> {
     enum Section {
         case threads
     }
@@ -31,10 +31,25 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
     }
     
     override func createObservers() -> [Any] {
-        [
-            threadsList.objectsPublisher().sink { [weak self] _ in
-                self?.updateSnapshot()
+        threadsList = FetchedObjectList(
+            fetchRequest: Thread.inCollectionFetchRequest(),
+            managedObjectContext: managedObjectContext
+        )
+        
+        return [
+            threadsList.objectsPublisher().map { threads in
+                var snapshot = Snapshot()
+                
+                snapshot.appendSections([.threads])
+                snapshot.appendItems(threads.map { .thread($0) }, toSection: .threads)
+                
+                return snapshot
+            }.combineLatest($animate).apply(to: dataSource),
+            
+            threadsList.objectsPublisher().map { $0.isEmpty }.removeDuplicates().print().sink { [weak self] isEmpty in
+                self?.setShowEmptyView(isEmpty)
             },
+            
             threadsList.objectPublisher().sink { [weak self] thread in
                 self?.updateCell(thread)
             },
@@ -43,20 +58,10 @@ class MyThreadsViewController: TableViewController<MyThreadsViewController.Secti
 
     override func dataSourceWillInitialize() {
         dataSource.canEditRow = { _, _, _ in true }
-
-        threadsList = FetchedObjectList(
-            fetchRequest: Thread.inCollectionFetchRequest(),
-            managedObjectContext: managedObjectContext
-        )
     }
-
-    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
-        snapshot.appendSections([.threads])
-        snapshot.appendItems(threadsList.objects.map { .thread($0) }, toSection: .threads)
-    }
-
-    override func dataSourceDidUpdateSnapshot(animated: Bool) {
-        if threadsList.objects.isEmpty {
+    
+    func setShowEmptyView(_ showEmptyView: Bool) {
+        if showEmptyView {
             let emptyView = EmptyView()
             emptyView.textLabel.text = Localized.emptyCollection
             emptyView.iconView.image = UIImage(named: "Bobbin")
