@@ -88,38 +88,9 @@ extension Project {
     func publish() -> AnyPublisher<URL, Error> {
         let database = CKContainer.default().publicCloudDatabase
         
-        return fetchOrCreateRecord().flatMap { record -> AnyPublisher<URL, Error> in
-            record["name"] = self.name
-            record["notes"] = self.notes?.string
-
-            var records = [record]
-
-            let projectImages = self.orderedImages
-            var images: [CKRecord.Reference] = []
-            for (reference, imageRecord) in projectImages.map({ $0.publishReference() }) {
-                images.append(reference)
-                if let record = imageRecord {
-                    records.append(record)
-                }
-            }
-
-            record["images"] = images
-
-            let projectThreads: [ProjectThread]
-            do {
-                projectThreads = try self.managedObjectContext!.fetch(ProjectThread.fetchRequest(for: self))
-                var threads: [CKRecord.Reference] = []
-                for projectThread in projectThreads {
-                    let threadRecord = projectThread.publishRecord()
-                    records.append(threadRecord)
-                    threads.append(CKRecord.Reference(record: threadRecord, action: .none))
-                }
-
-                record["threads"] = threads
-            } catch {
-                return Fail<URL, Error>(error: error).eraseToAnyPublisher()
-            }
-            
+        return fetchOrCreateRecord().tryMap { record in
+            try self.collectRecordsToUpdate(projectRecord: record)
+        }.flatMap { (records, images, threads) -> AnyPublisher<URL, Error> in
             Event.current[.recordCount] = records.count
             
             return Future { promise in
@@ -141,12 +112,12 @@ extension Project {
                         self.publishedID = projectRecord.recordID.recordName
 
                         let imageReferences = projectRecord["images"] as! [CKRecord.Reference]
-                        for (image, reference) in zip(projectImages, imageReferences) {
+                        for (image, reference) in zip(images, imageReferences) {
                             image.publishedID = reference.recordID.recordName
                         }
 
                         let threadReferences = projectRecord["threads"] as! [CKRecord.Reference]
-                        for (thread, reference) in zip(projectThreads, threadReferences) {
+                        for (thread, reference) in zip(threads, threadReferences) {
                             thread.publishedID = reference.recordID.recordName
                         }
 
@@ -180,5 +151,35 @@ extension Project {
                 promise(.success(CKRecord(recordType: "Project")))
             }
         }
+    }
+    
+    private func collectRecordsToUpdate(projectRecord: CKRecord) throws -> ([CKRecord], [ProjectImage], [ProjectThread]) {
+        var records = [projectRecord]
+        
+        projectRecord["name"] = self.name
+        projectRecord["notes"] = self.notes?.string
+
+        let projectImages = self.orderedImages
+        var images: [CKRecord.Reference] = []
+        for (reference, imageRecord) in projectImages.map({ $0.publishReference() }) {
+            images.append(reference)
+            if let record = imageRecord {
+                records.append(record)
+            }
+        }
+
+        projectRecord["images"] = images
+
+        let projectThreads = try self.managedObjectContext!.fetch(ProjectThread.fetchRequest(for: self))
+        var threads: [CKRecord.Reference] = []
+        for projectThread in projectThreads {
+            let threadRecord = projectThread.publishRecord()
+            records.append(threadRecord)
+            threads.append(CKRecord.Reference(record: threadRecord, action: .none))
+        }
+
+        projectRecord["threads"] = threads
+        
+        return (records, projectImages, projectThreads)
     }
 }
