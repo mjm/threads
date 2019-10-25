@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 import Events
 
 extension Event.Key {
@@ -19,6 +20,7 @@ extension Event.Key {
 extension Project {
     var itemProvider: NSItemProvider {
         var isPublished = false
+        var cancellable: AnyCancellable?
         
         let itemProvider = NSItemProvider()
         itemProvider.registerObject(ofClass: NSURL.self, visibility: .all) { completion in
@@ -32,24 +34,23 @@ extension Project {
             Event.current[.previousPublishedID] = self.publishedID
             
             Event.current.startTimer(.publishTime)
-            self.publish { error in
+            cancellable = self.publish().sink(receiveCompletion: { result in
                 Event.current.stopTimer(.publishTime)
                 isPublished = true
                 
-                if error != nil {
+                if case let .failure(error) = result {
                     Event.current.error = error
-                    Event.current.send("shared project")
                     completion(nil, error)
-                } else if let url = self.publishedURL {
-                    Event.current[.publishedID] = self.publishedID
-                    Event.current[.publishedURL] = url
-                    Event.current.send("shared project")
-                    
-                    progress.completedUnitCount = 1
-                    completion(url as NSURL, nil)
-                } else {
-                    fatalError()
                 }
+
+                Event.current.send("shared project")
+                cancellable?.cancel()
+            }) { url in
+                Event.current[.publishedID] = self.publishedID
+                Event.current[.publishedURL] = url
+                
+                progress.completedUnitCount = 1
+                completion(url as NSURL, nil)
             }
             
             return progress
@@ -75,16 +76,17 @@ class ProjectActivity: UIActivityItemProvider {
             
             let group = DispatchGroup()
             group.enter()
-
-            project.publish { error in
-                if let error = error {
+            
+            let cancellable = project.publish().sink(receiveCompletion: { result in
+                if case let .failure(error) = result {
                     Event.current.error = error
                 }
-
+                
                 group.leave()
-            }
+            }) { _ in }
             
             group.wait()
+            cancellable.cancel()
             
             Event.current.stopTimer(.publishTime)
             

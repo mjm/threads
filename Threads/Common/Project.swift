@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import CloudKit
+import Combine
 import Events
 
 extension Event.Key {
@@ -84,20 +85,10 @@ extension Project {
         publishedID.flatMap { URL(string: "https://threads-demo.glitch.me/projects/\($0)") }
     }
 
-    func publish(completion: @escaping (Error?) -> Void) {
+    func publish() -> AnyPublisher<URL, Error> {
         let database = CKContainer.default().publicCloudDatabase
-
-        publishableRecord { record, error in
-            if let error = error {
-                completion(error)
-                return
-            }
-
-            guard let record = record else {
-                completion(nil)
-                return
-            }
-
+        
+        return fetchOrCreateRecord().flatMap { record -> AnyPublisher<URL, Error> in
             record["name"] = self.name
             record["notes"] = self.notes?.string
 
@@ -126,65 +117,68 @@ extension Project {
 
                 record["threads"] = threads
             } catch {
-                completion(error)
-                return
+                return Fail<URL, Error>(error: error).eraseToAnyPublisher()
             }
             
             Event.current[.recordCount] = records.count
-
-            let operation = CKModifyRecordsOperation(recordsToSave: records)
-            operation.queuePriority = .veryHigh // this will be blocking a user operation so let's do it STAT
-            operation.isAtomic = true
-            operation.savePolicy = .changedKeys
-            operation.modifyRecordsCompletionBlock = { records, _, error in
-                Event.current.stopTimer(.saveProjectTime)
-                
-                if let error = error {
-                    completion(error)
-                    return
-                }
-
-                guard let records = records else {
-                    completion(nil)
-                    return
-                }
-
-                self.managedObjectContext?.perform {
-                    let projectRecord = records[0]
-
-                    self.publishedID = projectRecord.recordID.recordName
-
-                    let imageReferences = projectRecord["images"] as! [CKRecord.Reference]
-                    for (image, reference) in zip(projectImages, imageReferences) {
-                        image.publishedID = reference.recordID.recordName
-                    }
-
-                    let threadReferences = projectRecord["threads"] as! [CKRecord.Reference]
-                    for (thread, reference) in zip(projectThreads, threadReferences) {
-                        thread.publishedID = reference.recordID.recordName
-                    }
-
-                    completion(nil)
-                }
-            }
-
-            Event.current.startTimer(.saveProjectTime)
-            database.add(operation)
-        }
-    }
-
-    private func publishableRecord(completion: @escaping (CKRecord?, Error?) -> Void) {
-        if let id = publishedID {
-            let recordID = CKRecord.ID(recordName: id)
-            let database = CKContainer.default().publicCloudDatabase
             
-            Event.current.startTimer(.fetchProjectTime)
-            database.fetch(withRecordID: recordID) { record, error in
-                Event.current.stopTimer(.fetchProjectTime)
-                completion(record, error)
+            return Future { promise in
+                let operation = CKModifyRecordsOperation(recordsToSave: records)
+                operation.queuePriority = .veryHigh // this will be blocking a user operation so let's do it STAT
+                operation.isAtomic = true
+                operation.savePolicy = .changedKeys
+                operation.modifyRecordsCompletionBlock = { records, _, error in
+                    Event.current.stopTimer(.saveProjectTime)
+                    
+                    if let error = error {
+                        promise(.failure(error))
+                        return
+                    }
+
+                    self.managedObjectContext?.perform {
+                        let projectRecord = records![0]
+
+                        self.publishedID = projectRecord.recordID.recordName
+
+                        let imageReferences = projectRecord["images"] as! [CKRecord.Reference]
+                        for (image, reference) in zip(projectImages, imageReferences) {
+                            image.publishedID = reference.recordID.recordName
+                        }
+
+                        let threadReferences = projectRecord["threads"] as! [CKRecord.Reference]
+                        for (thread, reference) in zip(projectThreads, threadReferences) {
+                            thread.publishedID = reference.recordID.recordName
+                        }
+
+                        promise(.success(self.publishedURL!))
+                    }
+                }
+
+                Event.current.startTimer(.saveProjectTime)
+                database.add(operation)
+            }.eraseToAnyPublisher()
+        }.eraseToAnyPublisher()
+    }
+    
+    private func fetchOrCreateRecord() -> Future<CKRecord, Error> {
+        Future { promise in
+            if let id = self.publishedID {
+                let recordID = CKRecord.ID(recordName: id)
+                let database = CKContainer.default().publicCloudDatabase
+                
+                Event.current.startTimer(.fetchProjectTime)
+                database.fetch(withRecordID: recordID) { record, error in
+                    Event.current.stopTimer(.fetchProjectTime)
+                    
+                    if let error = error {
+                        promise(.failure(error))
+                    } else {
+                        promise(.success(record!))
+                    }
+                }
+            } else {
+                promise(.success(CKRecord(recordType: "Project")))
             }
-        } else {
-            completion(CKRecord(recordType: "Project"), nil)
         }
     }
 }
