@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class AddThreadViewController: TableViewController<AddThreadViewController.Section, AddThreadViewController.Cell> {
+class AddThreadViewController: ReactiveTableViewController<AddThreadViewController.Section, AddThreadViewController.Cell> {
     enum Section: CaseIterable {
         case results
         case selected
@@ -45,7 +45,6 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
     @Published private var threadToAdd: Thread?
     @Published private var query: String = ""
     @Published private var selectedThreads: [Thread] = []
-    @Published private var filteredThreads: [Thread] = []
     
     private var isAdding = false
 
@@ -83,19 +82,38 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
     override func createObservers() -> [Any] {
         let addButton = navigationItem.rightBarButtonItems!.first!
         
-        return [
-            $query.combineLatest($selectedThreads) { query, selectedThreads -> [Thread] in
-                if query.isEmpty {
-                    return []
-                } else {
-                    return self.choices.filter {
-                        return !selectedThreads.contains($0) &&
-                            $0.number!.lowercased().hasPrefix(query)
-                    }
+        let filteredThreads = $query.combineLatest($selectedThreads) { query, selectedThreads -> [Thread] in
+            if query.isEmpty {
+                return []
+            } else {
+                return self.choices.filter {
+                    return !selectedThreads.contains($0) &&
+                        $0.number!.lowercased().hasPrefix(query)
                 }
-            }.assign(to: \.filteredThreads, on: self),
+            }
+        }
+        
+        return [
+            $selectedThreads.combineLatest(filteredThreads).map { input in
+                let (selected, filtered) = input
+                var snapshot = Snapshot()
+                
+                if !filtered.isEmpty {
+                    snapshot.appendSections([.results])
+                    snapshot.appendItems(filtered.map { .thread($0, isResult: true) }, toSection: .results)
+                }
+
+                if !selected.isEmpty {
+                    snapshot.appendSections([.selected])
+                    snapshot.appendItems(selected.map { .thread($0, isResult: false) }, toSection: .selected)
+                }
+                
+                return snapshot
+            }.combineLatest($animate).sink { [weak self] (snapshot, animate) in
+                self?.dataSource.apply(snapshot, animatingDifferences: animate)
+            },
             
-            $query.combineLatest($filteredThreads) { query, threads -> Thread? in
+            $query.combineLatest(filteredThreads) { query, threads -> Thread? in
                 threads.first { $0.number?.lowercased() == query }
             }.assign(to: \.threadToAdd, on: self),
             
@@ -124,18 +142,6 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
             }
         } catch {
             present(error: error)
-        }
-    }
-
-    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
-        if !filteredThreads.isEmpty {
-            snapshot.appendSections([.results])
-            snapshot.appendItems(filteredThreads.map { .thread($0, isResult: true) }, toSection: .results)
-        }
-
-        if !selectedThreads.isEmpty {
-            snapshot.appendSections([.selected])
-            snapshot.appendItems(selectedThreads.map { .thread($0, isResult: false) }, toSection: .selected)
         }
     }
 
@@ -212,7 +218,6 @@ class AddThreadViewController: TableViewController<AddThreadViewController.Secti
         if tableView == self.tableView {
             let delete = UIContextualAction(style: .destructive, title: Localized.dontAdd) { action, view, completionHandler in
                 self.selectedThreads.remove(at: indexPath.row)
-                self.updateSnapshot()
                 completionHandler(true)
             }
             delete.image = UIImage(systemName: "nosign")
@@ -239,11 +244,11 @@ extension AddThreadViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         query = searchController.searchBar.text?.lowercased() ?? ""
 
-        #if targetEnvironment(macCatalyst)
-        updateSnapshot(animated: false)
-        #else
-        updateSnapshot(animated: isAdding)
-        #endif
+//        #if targetEnvironment(macCatalyst)
+//        updateSnapshot(animated: false)
+//        #else
+//        updateSnapshot(animated: isAdding)
+//        #endif
     }
 }
 

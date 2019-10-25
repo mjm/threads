@@ -44,6 +44,7 @@
 		C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */; };
 		C94EB3022325E6A900D4CF56 /* ProjectCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */; };
 		C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */; };
+		C95028E32362BCC800BB02C4 /* ReactiveViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */; };
 		C955EDE6234013DC000ACC39 /* FetchedObjectList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */; };
 		C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE7234028A8000ACC39 /* ViewControllers.swift */; };
 		C9571DF62353EF5400CCA56B /* AddThreadSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */; };
@@ -150,6 +151,7 @@
 		C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCollectionViewCell.swift; sourceTree = "<group>"; };
 		C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectCollectionViewCell.xib; sourceTree = "<group>"; };
 		C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
+		C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveViewControllers.swift; sourceTree = "<group>"; };
 		C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedObjectList.swift; sourceTree = "<group>"; };
 		C955EDE7234028A8000ACC39 /* ViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllers.swift; sourceTree = "<group>"; };
 		C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadSceneDelegate.swift; sourceTree = "<group>"; };
@@ -331,6 +333,7 @@
 				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
 				C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */,
 				C955EDE7234028A8000ACC39 /* ViewControllers.swift */,
+				C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */,
 				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
 				C946962A2340EF1B00843179 /* EmptyView.swift */,
 				C9491E362320C67A0031F463 /* SwatchView.swift */,
@@ -656,6 +659,7 @@
 				C906E3B9235272A0003EE053 /* SidebarViewController.swift in Sources */,
 				C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */,
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
+				C95028E32362BCC800BB02C4 /* ReactiveViewControllers.swift in Sources */,
 				C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */,
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
