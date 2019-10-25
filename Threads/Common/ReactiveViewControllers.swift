@@ -281,3 +281,15 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
         []
     }
 }
+
+extension Publisher {
+    func apply<Section, Item>(to dataSource: UITableViewDiffableDataSource<Section, Item>, animate: Bool = true) -> AnyCancellable where Output == NSDiffableDataSourceSnapshot<Section, Item>, Failure == Never {
+        combineLatest(Just(animate)).apply(to: dataSource)
+    }
+    
+    func apply<Section, Item>(to dataSource: UITableViewDiffableDataSource<Section, Item>) -> AnyCancellable where Output == (NSDiffableDataSourceSnapshot<Section, Item>, Bool), Failure == Never {
+        sink { (snapshot, animate) in
+            dataSource.apply(snapshot, animatingDifferences: animate)
+        }
+    }
+}

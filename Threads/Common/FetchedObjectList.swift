@@ -33,6 +33,9 @@ class FetchedObjectList<ObjectType: NSManagedObject>: NSObject, NSFetchedResults
         } catch {
             NSLog("Error fetching objects: \(error)")
         }
+        
+        // controllerDidChangeContent does not get called for the initial fetch, so we need to send the objects to our subject to populate the initial data
+        objectsSubject.send(objects)
     }
 
     var objects: [ObjectType] { fetchedResultsController.fetchedObjects ?? [] }

@@ -109,9 +109,7 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewControll
                 }
                 
                 return snapshot
-            }.combineLatest($animate).sink { [weak self] (snapshot, animate) in
-                self?.dataSource.apply(snapshot, animatingDifferences: animate)
-            },
+            }.combineLatest($animate).apply(to: dataSource),
             
             $query.combineLatest(filteredThreads) { query, threads -> Thread? in
                 threads.first { $0.number?.lowercased() == query }

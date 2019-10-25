@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SidebarViewController: TableViewController<SidebarViewController.Section, SidebarSelection> {
+class SidebarViewController: ReactiveTableViewController<SidebarViewController.Section, SidebarSelection> {
     enum Section: CaseIterable {
         case threads
         case projects
@@ -28,17 +28,6 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
         tableView.addGestureRecognizer(tapRecognizer)
     }
     
-    override func createObservers() -> [Any] {
-        [
-            projectsList.objectsPublisher().sink { [weak self] _ in
-                self?.updateSnapshot()
-            },
-            projectsList.objectPublisher().sink { [weak self] project in
-                self?.updateCell(project)
-            },
-        ]
-    }
-    
     override func dataSourceWillInitialize() {
         dataSource.sectionTitle = { tableView, _, section in
             switch section {
@@ -46,17 +35,29 @@ class SidebarViewController: TableViewController<SidebarViewController.Section, 
             case .projects: return Localized.projects
             }
         }
-        
+    }
+    
+    override func createObservers() -> [Any] {
         projectsList = FetchedObjectList(
             fetchRequest: Project.allProjectsFetchRequest(),
             managedObjectContext: managedObjectContext
         )
-    }
-    
-    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
-        snapshot.appendSections(Section.allCases)
-        snapshot.appendItems([.collection, .shoppingList], toSection: .threads)
-        snapshot.appendItems(projectsList.objects.map { .project($0) })
+        
+        return [
+            projectsList.objectsPublisher().print().map { projects in
+                var snapshot = Snapshot()
+                
+                snapshot.appendSections(Section.allCases)
+                snapshot.appendItems([.collection, .shoppingList], toSection: .threads)
+                snapshot.appendItems(projects.map { .project($0) })
+
+                return snapshot
+            }.apply(to: dataSource, animate: false),
+            
+            projectsList.objectPublisher().sink { [weak self] project in
+                self?.updateCell(project)
+            },
+        ]
     }
     
     override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {
