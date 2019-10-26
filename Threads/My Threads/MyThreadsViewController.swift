@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Combine
 
 class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewController.Section, MyThreadsViewController.Cell> {
     enum Section {
@@ -30,7 +31,7 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewControll
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "dollarsign.circle.fill"), style: .plain, target: self, action: #selector(buyPremium(_:)))
     }
     
-    override func createObservers() -> [Any] {
+    override func createSubscribers() -> [AnyCancellable] {
         threadsList = FetchedObjectList(
             fetchRequest: Thread.inCollectionFetchRequest(),
             managedObjectContext: managedObjectContext

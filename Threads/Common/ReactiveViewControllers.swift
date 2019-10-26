@@ -68,7 +68,7 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
     private(set) var dataSource: DataSource!
     @Published var animate: Bool = false
 
-    private var observers: [Any] = []
+    private var cancellables: [AnyCancellable] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,7 +89,7 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
 
         dataSourceWillInitialize()
 
-        observers = createObservers()
+        cancellables = createSubscribers()
 
         userActivity = currentUserActivity?.userActivity
     }
@@ -163,7 +163,7 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
 
     func dataSourceWillInitialize() {}
 
-    func createObservers() -> [Any] {
+    func createSubscribers() -> [AnyCancellable] {
         []
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 
 class SidebarViewController: ReactiveTableViewController<SidebarViewController.Section, SidebarSelection> {
     enum Section: CaseIterable {
@@ -37,7 +38,7 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewController.S
         }
     }
     
-    override func createObservers() -> [Any] {
+    override func createSubscribers() -> [AnyCancellable] {
         projectsList = FetchedObjectList(
             fetchRequest: Project.allProjectsFetchRequest(),
             managedObjectContext: managedObjectContext

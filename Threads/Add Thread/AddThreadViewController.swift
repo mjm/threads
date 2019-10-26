@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Combine
 
 class AddThreadViewController: ReactiveTableViewController<AddThreadViewController.Section, AddThreadViewController.Cell> {
     enum Section: CaseIterable {
@@ -79,7 +80,7 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewControll
         #endif
     }
     
-    override func createObservers() -> [Any] {
+    override func createSubscribers() -> [AnyCancellable] {
         let addButton = navigationItem.rightBarButtonItems!.first!
         
         let filteredThreads = $query.combineLatest($selectedThreads) { query, selectedThreads -> [Thread] in
