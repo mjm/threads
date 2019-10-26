@@ -68,7 +68,7 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
     private(set) var dataSource: DataSource!
     @Published var animate: Bool = false
 
-    private var cancellables: [AnyCancellable] = []
+    var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,7 +89,7 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
 
         dataSourceWillInitialize()
 
-        cancellables = createSubscribers()
+        subscribe()
 
         userActivity = currentUserActivity?.userActivity
     }
@@ -163,9 +163,7 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
 
     func dataSourceWillInitialize() {}
 
-    func createSubscribers() -> [AnyCancellable] {
-        []
-    }
+    func subscribe() {}
 }
 
 
@@ -179,7 +177,7 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
     private(set) var dataSource: DataSource!
     @Published var animate: Bool = false
 
-    private var cancellables: [AnyCancellable] = []
+    var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -201,7 +199,7 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
         dataSourceWillInitialize()
         collectionView.collectionViewLayout = createLayout()
         
-        cancellables = createSubscribers()
+        subscribe()
 
         userActivity = currentUserActivity?.userActivity
     }
@@ -278,9 +276,7 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
     func dataSourceWillInitialize() {}
     func dataSourceDidUpdateSnapshot(animated: Bool) {}
 
-    func createSubscribers() -> [AnyCancellable] {
-        []
-    }
+    func subscribe() {}
 }
 
 extension Publisher {

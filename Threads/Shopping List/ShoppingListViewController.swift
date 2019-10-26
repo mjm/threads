@@ -40,7 +40,7 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewCo
         #endif
     }
     
-    override func createSubscribers() -> [AnyCancellable] {
+    override func subscribe() {
         threadsList = FetchedObjectList(
             fetchRequest: Thread.inShoppingListFetchRequest(),
             managedObjectContext: managedObjectContext
@@ -58,40 +58,34 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewCo
             let purchased = partitioned[pivot...]
             return (unpurchased, purchased)
         }
+
+        partitionedThreads.map { (unpurchased, purchased) in
+            var snapshot = Snapshot()
+            
+            snapshot.appendSections(Section.allCases)
+            snapshot.appendItems(unpurchased.map { .thread($0) }, toSection: .unpurchased)
+            snapshot.appendItems(purchased.map { .thread($0) }, toSection: .purchased)
+            
+            return snapshot
+        }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
         
-        var subscribers = [
-            partitionedThreads.map { (unpurchased, purchased) in
-                var snapshot = Snapshot()
-                
-                snapshot.appendSections(Section.allCases)
-                snapshot.appendItems(unpurchased.map { .thread($0) }, toSection: .unpurchased)
-                snapshot.appendItems(purchased.map { .thread($0) }, toSection: .purchased)
-                
-                return snapshot
-            }.combineLatest($animate).apply(to: dataSource),
-            
-            threads.sink { [weak self] threads in
-                self?.setShowEmptyView(threads.isEmpty)
-            },
-            
-            threadsList.objectPublisher().sink { [weak self] thread in
-                self?.updateCell(thread)
-            },
-        ]
+        threads.sink { [weak self] threads in
+            self?.setShowEmptyView(threads.isEmpty)
+        }.store(in: &cancellables)
+        
+        threadsList.objectPublisher().sink { [weak self] thread in
+            self?.updateCell(thread)
+        }.store(in: &cancellables)
         
         #if !targetEnvironment(macCatalyst)
-        subscribers.append(contentsOf: [
-            threads.combineLatest($animate).sink { [weak self] threads, animate in
-                self?.setShowAddToCollectionButton(!threads.filter { $0.purchased }.isEmpty, animated: animate)
-            },
-            
-            threads.sink { [weak self] threads in
-                self?.setTabBarCount(unpurchased: threads.filter { !$0.purchased }.count)
-            },
-        ])
-        #endif
+        threads.combineLatest($animate).sink { [weak self] threads, animate in
+            self?.setShowAddToCollectionButton(!threads.filter { $0.purchased }.isEmpty, animated: animate)
+        }.store(in: &cancellables)
         
-        return subscribers
+        threads.sink { [weak self] threads in
+            self?.setTabBarCount(unpurchased: threads.filter { !$0.purchased }.count)
+        }.store(in: &cancellables)
+        #endif
     }
 
     override var currentUserActivity: UserActivity? { .showShoppingList }

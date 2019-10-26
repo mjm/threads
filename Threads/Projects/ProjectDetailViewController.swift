@@ -81,7 +81,7 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
         }
     }
     
-    override func createSubscribers() -> [AnyCancellable] {
+    override func subscribe() {
         threadsList = FetchedObjectList(
             fetchRequest: ProjectThread.fetchRequest(for: project),
             managedObjectContext: project.managedObjectContext!
@@ -139,41 +139,41 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             return editing ? [self.editButtonItem] : [self.actionsButtonItem]
         }
         
-        return [
-            snapshot.combineLatest($animate).apply(to: dataSource),
-            project.publisher(for: \.name).assign(to: \.title, on: navigationItem),
-            
-            // Editing changes
-            $_editing.map { editing in
-                editing ? .never : .automatic
-            }.assign(to: \.largeTitleDisplayMode, on: navigationItem),
-            barButtonItems.combineLatest($animate).sink { [weak self] items, animate in
-                self?.navigationItem.setRightBarButtonItems(items, animated: animate)
-            },
-            $_editing.sink { [weak self] _ 	in
-                if let rootViewController = self?.splitViewController as? SplitViewController {
-                    rootViewController.updateToolbar()
-                }
-            },
-            
-            notes.map { notes in
-                (notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
-            }.sink { [weak self] notes in
-                (self?.cell(for: .viewNotes) as? TextViewCollectionViewCell)?.textView.attributedText = notes
-            },
-            threads.sink { [weak self] threads in
-                guard let self = self else { return }
-                let text = self.sectionHeaderText(for: threads)
-                self.setThreadsSectionHeaderText(text)
-            },
-            
-            threadsList.objectPublisher().sink { [weak self] projectThread in
-                self?.updateThreadCell(projectThread)
-            },
-            imagesList.objectPublisher().sink { [weak self] image in
-                self?.updateImageCell(image)
-            },
-        ]
+        snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        project.publisher(for: \.name).assign(to: \.title, on: navigationItem).store(in: &cancellables)
+        
+        // Editing changes
+        $_editing.map { editing in
+            editing ? .never : .automatic
+        }.assign(to: \.largeTitleDisplayMode, on: navigationItem).store(in: &cancellables)
+        
+        barButtonItems.combineLatest($animate).sink { [weak self] items, animate in
+            self?.navigationItem.setRightBarButtonItems(items, animated: animate)
+        }.store(in: &cancellables)
+        
+        $_editing.sink { [weak self] _ 	in
+            if let rootViewController = self?.splitViewController as? SplitViewController {
+                rootViewController.updateToolbar()
+            }
+        }.store(in: &cancellables)
+        
+        notes.map { notes in
+            (notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
+        }.sink { [weak self] notes in
+            (self?.cell(for: .viewNotes) as? TextViewCollectionViewCell)?.textView.attributedText = notes
+        }.store(in: &cancellables)
+        threads.sink { [weak self] threads in
+            guard let self = self else { return }
+            let text = self.sectionHeaderText(for: threads)
+            self.setThreadsSectionHeaderText(text)
+        }.store(in: &cancellables)
+        
+        threadsList.objectPublisher().sink { [weak self] projectThread in
+            self?.updateThreadCell(projectThread)
+        }.store(in: &cancellables)
+        imagesList.objectPublisher().sink { [weak self] image in
+            self?.updateImageCell(image)
+        }.store(in: &cancellables)
     }
 
     override var currentUserActivity: UserActivity? { .showProject(project) }

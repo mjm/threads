@@ -38,27 +38,25 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewController.S
         }
     }
     
-    override func createSubscribers() -> [AnyCancellable] {
+    override func subscribe() {
         projectsList = FetchedObjectList(
             fetchRequest: Project.allProjectsFetchRequest(),
             managedObjectContext: managedObjectContext
         )
         
-        return [
-            projectsList.objectsPublisher().map { projects in
-                var snapshot = Snapshot()
-                
-                snapshot.appendSections(Section.allCases)
-                snapshot.appendItems([.collection, .shoppingList], toSection: .threads)
-                snapshot.appendItems(projects.map { .project($0) })
-
-                return snapshot
-            }.apply(to: dataSource, animate: false),
+        projectsList.objectsPublisher().map { projects in
+            var snapshot = Snapshot()
             
-            projectsList.objectPublisher().sink { [weak self] project in
-                self?.updateCell(project)
-            },
-        ]
+            snapshot.appendSections(Section.allCases)
+            snapshot.appendItems([.collection, .shoppingList], toSection: .threads)
+            snapshot.appendItems(projects.map { .project($0) })
+
+            return snapshot
+        }.apply(to: dataSource, animate: false).store(in: &cancellables)
+        
+        projectsList.objectPublisher().sink { [weak self] project in
+            self?.updateCell(project)
+        }.store(in: &cancellables)
     }
     
     override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {

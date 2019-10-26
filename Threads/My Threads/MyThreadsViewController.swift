@@ -31,30 +31,28 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewControll
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "dollarsign.circle.fill"), style: .plain, target: self, action: #selector(buyPremium(_:)))
     }
     
-    override func createSubscribers() -> [AnyCancellable] {
+    override func subscribe() {
         threadsList = FetchedObjectList(
             fetchRequest: Thread.inCollectionFetchRequest(),
             managedObjectContext: managedObjectContext
         )
         
-        return [
-            threadsList.objectsPublisher().map { threads in
-                var snapshot = Snapshot()
-                
-                snapshot.appendSections([.threads])
-                snapshot.appendItems(threads.map { .thread($0) }, toSection: .threads)
-                
-                return snapshot
-            }.combineLatest($animate).apply(to: dataSource),
+        threadsList.objectsPublisher().map { threads in
+            var snapshot = Snapshot()
             
-            threadsList.objectsPublisher().map { $0.isEmpty }.removeDuplicates().print().sink { [weak self] isEmpty in
-                self?.setShowEmptyView(isEmpty)
-            },
+            snapshot.appendSections([.threads])
+            snapshot.appendItems(threads.map { .thread($0) }, toSection: .threads)
             
-            threadsList.objectPublisher().sink { [weak self] thread in
-                self?.updateCell(thread)
-            },
-        ]
+            return snapshot
+        }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+            
+        threadsList.objectsPublisher().map { $0.isEmpty }.removeDuplicates().sink { [weak self] isEmpty in
+            self?.setShowEmptyView(isEmpty)
+        }.store(in: &cancellables)
+        
+        threadsList.objectPublisher().sink { [weak self] thread in
+            self?.updateCell(thread)
+        }.store(in: &cancellables)
     }
 
     override func dataSourceWillInitialize() {

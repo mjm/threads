@@ -23,7 +23,7 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
 
     private var projectsList: FetchedObjectList<Project>!
 
-    override func createSubscribers() -> [AnyCancellable] {
+    override func subscribe() {
         projectsList = FetchedObjectList(
             fetchRequest: Project.allProjectsFetchRequest(),
             managedObjectContext: managedObjectContext
@@ -34,24 +34,22 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
         let updateProject = projectsList.objectPublisher()
             .merge(with: managedObjectContext.publisher(type: ProjectImage.self).compactMap { $0.project })
         
-        return [
-            projects.map { projects in
-                var snapshot = Snapshot()
-                
-                snapshot.appendSections(Section.allCases)
-                snapshot.appendItems(projects.map { .project($0) }, toSection: .projects)
-
-                return snapshot
-            }.combineLatest($animate).apply(to: dataSource),
+        projects.map { projects in
+            var snapshot = Snapshot()
             
-            projects.sink { [weak self] projects in
-                self?.setShowEmptyView(projects.isEmpty)
-            },
+            snapshot.appendSections(Section.allCases)
+            snapshot.appendItems(projects.map { .project($0) }, toSection: .projects)
 
-            updateProject.sink { [weak self] project in
-                self?.updateCell(project)
-            },
-        ]
+            return snapshot
+        }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        
+        projects.sink { [weak self] projects in
+            self?.setShowEmptyView(projects.isEmpty)
+        }.store(in: &cancellables)
+
+        updateProject.sink { [weak self] project in
+            self?.updateCell(project)
+        }.store(in: &cancellables)
     }
 
     override var currentUserActivity: UserActivity? { .showProjects }

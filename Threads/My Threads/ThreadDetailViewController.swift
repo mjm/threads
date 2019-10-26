@@ -76,7 +76,7 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
         }
     }
     
-    override func createSubscribers() -> [AnyCancellable] {
+    override func subscribe() {
         projectsList = FetchedObjectList(
             fetchRequest: ProjectThread.fetchRequest(for: thread),
             managedObjectContext: thread.managedObjectContext!
@@ -98,36 +98,34 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
                 self.projectsList.objects.first { $0.project == project }
             })
         
-        return [
-            projectThreads.combineLatest(inShoppingList, updateDetails) { projectThreads, inShoppingList, _ in
-                var snapshot = Snapshot()
-                
-                snapshot.appendSections([.details])
-                snapshot.appendItems([.details], toSection: .details)
-
-                if inShoppingList {
-                    snapshot.appendSections([.shoppingList])
-                    snapshot.appendItems([.shoppingList], toSection: .shoppingList)
-                }
-
-                if !projectThreads.isEmpty {
-                    snapshot.appendSections([.projects])
-                    snapshot.appendItems(projectThreads.map { .project($0) }, toSection: .projects)
-                }
-                
-                return snapshot
-            }.combineLatest($animate).apply(to: dataSource),
+        projectThreads.combineLatest(inShoppingList, updateDetails) { projectThreads, inShoppingList, _ in
+            var snapshot = Snapshot()
             
-            updateShoppingList.sink { [weak self] _ in
-                self?.updateShoppingList()
-            },
-            updateDetails.sink { [weak self] _ in
-                self?.updateDetails()
-            },
-            updateProject.sink { [weak self] projectThread in
-                self?.updateCell(projectThread)
-            },
-        ]
+            snapshot.appendSections([.details])
+            snapshot.appendItems([.details], toSection: .details)
+
+            if inShoppingList {
+                snapshot.appendSections([.shoppingList])
+                snapshot.appendItems([.shoppingList], toSection: .shoppingList)
+            }
+
+            if !projectThreads.isEmpty {
+                snapshot.appendSections([.projects])
+                snapshot.appendItems(projectThreads.map { .project($0) }, toSection: .projects)
+            }
+            
+            return snapshot
+        }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        
+        updateShoppingList.sink { [weak self] _ in
+            self?.updateShoppingList()
+        }.store(in: &cancellables)
+        updateDetails.sink { [weak self] _ in
+            self?.updateDetails()
+        }.store(in: &cancellables)
+        updateProject.sink { [weak self] projectThread in
+            self?.updateCell(projectThread)
+        }.store(in: &cancellables)
     }
 
     override var currentUserActivity: UserActivity? { .showThread(thread) }

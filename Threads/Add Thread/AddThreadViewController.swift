@@ -80,7 +80,7 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewControll
         #endif
     }
     
-    override func createSubscribers() -> [AnyCancellable] {
+    override func subscribe() {
         let addButton = navigationItem.rightBarButtonItems!.first!
         
         let filteredThreads = $query.combineLatest($selectedThreads) { query, selectedThreads -> [Thread] in
@@ -94,35 +94,35 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewControll
             }
         }
         
-        return [
-            $selectedThreads.combineLatest(filteredThreads).map { input in
-                let (selected, filtered) = input
-                var snapshot = Snapshot()
-                
-                if !filtered.isEmpty {
-                    snapshot.appendSections([.results])
-                    snapshot.appendItems(filtered.map { .thread($0, isResult: true) }, toSection: .results)
-                }
+        $selectedThreads.combineLatest(filteredThreads).map { input in
+            let (selected, filtered) = input
+            var snapshot = Snapshot()
+            
+            if !filtered.isEmpty {
+                snapshot.appendSections([.results])
+                snapshot.appendItems(filtered.map { .thread($0, isResult: true) }, toSection: .results)
+            }
 
-                if !selected.isEmpty {
-                    snapshot.appendSections([.selected])
-                    snapshot.appendItems(selected.map { .thread($0, isResult: false) }, toSection: .selected)
-                }
-                
-                return snapshot
-            }.combineLatest($animate).apply(to: dataSource),
+            if !selected.isEmpty {
+                snapshot.appendSections([.selected])
+                snapshot.appendItems(selected.map { .thread($0, isResult: false) }, toSection: .selected)
+            }
             
-            $query.combineLatest(filteredThreads) { query, threads -> Thread? in
-                threads.first { $0.number?.lowercased() == query }
-            }.assign(to: \.threadToAdd, on: self),
-            
-            $threadToAdd.map { $0 != nil}.assign(to: \.isEnabled, on: quickAddButton),
-            
-            $selectedThreads.map { !$0.isEmpty }.assign(to: \.isEnabled, on: addButton),
-            $selectedThreads.map { threads in
-                String.localizedStringWithFormat(Localized.addBatchButton, threads.count)
-            }.assign(to: \.title, on: addButton),
-        ]
+            return snapshot
+        }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        
+        $query.combineLatest(filteredThreads) { query, threads -> Thread? in
+            threads.first { $0.number?.lowercased() == query }
+        }.assign(to: \.threadToAdd, on: self).store(in: &cancellables)
+        
+        $threadToAdd.map { $0 != nil}
+            .assign(to: \.isEnabled, on: quickAddButton).store(in: &cancellables)
+        
+        $selectedThreads.map { !$0.isEmpty }
+            .assign(to: \.isEnabled, on: addButton).store(in: &cancellables)
+        $selectedThreads.map { threads in
+            String.localizedStringWithFormat(Localized.addBatchButton, threads.count)
+        }.assign(to: \.title, on: addButton).store(in: &cancellables)
     }
 
     override func dataSourceWillInitialize() {
