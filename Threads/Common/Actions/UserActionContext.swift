@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Combine
 
 enum UserActionSource {
     case barButtonItem(UIBarButtonItem)
@@ -45,6 +46,7 @@ class UserActionContext<Action: UserAction> {
     /// - Parameters:
     ///     - result: A value the action is returning to the action's completion handler.
     func complete(_ result: Action.ResultType) {
+        completeSubscription = nil
         performOnMainQueue {
             self.runner.complete(self.action)
             self.completionHandler(result)
@@ -58,10 +60,13 @@ class UserActionContext<Action: UserAction> {
     /// - Parameters:
     ///     - error: The error that caused the action to fail.
     func complete(error: Error) {
+        completeSubscription = nil
         performOnMainQueue {
             self.runner.presentError(error)
         }
     }
+    
+    fileprivate var completeSubscription: AnyCancellable?
 
     /// Signal that the action has completed its work successfully, and dismiss a previously presented view controller.
     ///
@@ -147,5 +152,21 @@ extension UserActionContext where Action.ResultType == Void {
     /// This will cause any completion handler that was provided when the action was run to be executed.
     func completeAndDismiss() {
         completeAndDismiss(())
+    }
+}
+
+extension Publisher {
+    func complete<Action>(_ context: UserActionContext<Action>) where Output == Action.ResultType {
+        var output: Output?
+        context.completeSubscription = sink(receiveCompletion: { completion in
+            switch completion {
+            case .finished:
+                context.complete(output!)
+            case let .failure(error):
+                context.complete(error: error)
+            }
+        }) { value in
+            output = value
+        }
     }
 }

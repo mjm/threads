@@ -7,33 +7,29 @@
 //
 
 import Foundation
+import Combine
+import StoreKit
 import Events
 
 extension Event.Key {
     static let fetchProductsTime: Event.Key = "fetch_products_ms"
 }
 
-struct BuyPremiumAction: UserAction {
+struct BuyPremiumAction: ReactiveUserAction {
     let undoActionName: String? = nil
     
-    func performAsync(_ context: UserActionContext<BuyPremiumAction>) {
+    func publisher(context: UserActionContext<BuyPremiumAction>) -> AnyPublisher<Void, Swift.Error> {
         Event.current.startTimer(.fetchProductsTime)
-        StoreObserver.default.fetch(products: [.premium]) { result in
-            Event.current.stopTimer(.fetchProductsTime)
-            
-            do {
-                let products = try result.get()
-                guard let product = products.first else {
-                    context.complete(error: Error.productInvalid)
-                    return
+        return StoreObserver.default.fetch(products: [.premium])
+            .handleEvents(receiveCompletion: { _ in
+                Event.current.stopTimer(.fetchProductsTime)
+            }).map { $0.first }.tryMap { (product) throws -> SKProduct in
+                if let product = product {
+                    return product
+                } else {
+                    throw Error.productInvalid
                 }
-                
-                print(product)
-                context.complete()
-            } catch {
-                context.complete(error: error)
-            }
-        }
+            }.print().map { _ in () }.eraseToAnyPublisher()
     }
     
     enum Error: LocalizedError {

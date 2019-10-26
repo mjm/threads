@@ -8,6 +8,7 @@
 
 import Foundation
 import StoreKit
+import Combine
 
 enum StoreProduct: String, CaseIterable {
     #if targetEnvironment(macCatalyst)
@@ -23,6 +24,8 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
     let productIDs: Set<StoreProduct>
     var purchasedProductIDs: Set<StoreProduct>
     
+    var requests = Set<AnyCancellable>()
+    
     init(productIDs: Set<StoreProduct>) {
         self.productIDs = productIDs
         self.purchasedProductIDs = Set(productIDs.filter { UserDefaults.standard.bool(forKey: $0.rawValue) })
@@ -36,17 +39,19 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
 //        print(appReceiptURL)
     }
     
-    func fetch(products: [StoreProduct], completionHandler: @escaping (Result<[SKProduct], Error>) -> Void) {
-        var delegate: ProductsRequestDelegate?
+    func fetch(products: [StoreProduct]) -> AnyPublisher<[SKProduct], Error> {
+        var delegate: ProductsRequestDelegate? = ProductsRequestDelegate()
         
-        delegate = ProductsRequestDelegate { result in
-            completionHandler(result)
+        // need the delegate to hang around long enough
+        delegate!.onCompletion.sink(receiveCompletion: { completion in
             delegate = nil
-        }
+        }, receiveValue: { _ in }).store(in: &requests)
         
         let request = SKProductsRequest(productIdentifiers: Set(products.map { $0.rawValue }))
         request.delegate = delegate
         request.start()
+        
+        return delegate!.onCompletion.eraseToAnyPublisher()
     }
     
     func hasPurchased(_ product: StoreProduct) -> Bool {
@@ -142,18 +147,15 @@ class PurchaseObserver: NSObject, SKPaymentTransactionObserver {
     }
 }
 
-class ProductsRequestDelegate: NSObject, SKProductsRequestDelegate {
-    let completionHandler: (Result<[SKProduct], Error>) -> Void
-    
-    init(completionHandler: @escaping (Result<[SKProduct], Error>) -> Void) {
-        self.completionHandler = completionHandler
-    }
+fileprivate class ProductsRequestDelegate: NSObject, SKProductsRequestDelegate {
+    let onCompletion = PassthroughSubject<[SKProduct], Error>()
     
     func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-        completionHandler(.success(response.products))
+        onCompletion.send(response.products)
+        onCompletion.send(completion: .finished)
     }
     
     func request(_ request: SKRequest, didFailWithError error: Error) {
-        completionHandler(.failure(error))
+        onCompletion.send(completion: .failure(error))
     }
 }

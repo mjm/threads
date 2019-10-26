@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 
 protocol UserAction {
     /// The type of value this action returns when it completes successfully.
@@ -72,6 +73,16 @@ extension SyncUserAction {
         } catch {
             context.complete(error: error)
         }
+    }
+}
+
+protocol ReactiveUserAction: UserAction {
+    func publisher(context: UserActionContext<Self>) -> AnyPublisher<ResultType, Error>
+}
+
+extension ReactiveUserAction {
+    func performAsync(_ context: UserActionContext<Self>) {
+        publisher(context: context).complete(context)
     }
 }
 
