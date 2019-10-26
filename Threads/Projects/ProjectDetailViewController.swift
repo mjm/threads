@@ -11,7 +11,7 @@ import CoreData
 import CoreServices
 import Combine
 
-class ProjectDetailViewController: CollectionViewController<ProjectDetailViewController.Section, ProjectDetailViewController.Cell> {
+class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetailViewController.Section, ProjectDetailViewController.Cell> {
     enum Section: CaseIterable {
         case viewImages
         case editImages
@@ -48,6 +48,8 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
     
     let project: Project
     var forceEditMode: Bool
+    
+    @Published private var _editing = false
 
     private var threadsList: FetchedObjectList<ProjectThread>!
     private var imagesList: FetchedObjectList<ProjectImage>!
@@ -78,18 +80,93 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
             setEditing(true, animated: false)
         }
     }
+    
+    override func createSubscribers() -> [AnyCancellable] {
+        threadsList = FetchedObjectList(
+            fetchRequest: ProjectThread.fetchRequest(for: project),
+            managedObjectContext: project.managedObjectContext!
+        )
 
-    override func createObservers() -> [Any] {
-        [
+        imagesList = FetchedObjectList(
+            fetchRequest: ProjectImage.fetchRequest(for: project),
+            managedObjectContext: project.managedObjectContext!
+        )
+        
+        let notes = project.publisher(for: \.notes)
+        let threads = threadsList.objectsPublisher()
+        let images = imagesList.objectsPublisher()
+        
+        let snapshot = threads.combineLatest(images, notes, $_editing) { threads, images, notes, editing -> Snapshot in
+            var snapshot = Snapshot()
+            
+            if editing {
+                snapshot.appendSections([.editImages, .details])
+                snapshot.appendItems(images.map { .editImage($0) }, toSection: .editImages)
+                snapshot.appendItems([.imagePlaceholder], toSection: .editImages)
+                snapshot.appendItems([.editName, .editNotes], toSection: .details)
+            } else {
+                if !images.isEmpty {
+                    snapshot.appendSections([.viewImages])
+                    snapshot.appendItems(images.map { .viewImage($0) }, toSection: .viewImages)
+                }
+                if let notes = notes, notes.length > 0 {
+                    snapshot.appendSections([.notes])
+                    snapshot.appendItems([.viewNotes], toSection: .notes)
+                }
+            }
+
+            snapshot.appendSections([.threads])
+            snapshot.appendItems(threads.enumerated().map { (index, item) in
+                if editing {
+                    return .editThread(item)
+                } else {
+                    let isLast = threads.index(after: index) == threads.endIndex
+                    return .viewThread(item, isLast: isLast)
+                }
+            }, toSection: .threads)
+
+            #if !targetEnvironment(macCatalyst)
+            if editing {
+                snapshot.appendItems([.add], toSection: .threads)
+            }
+            #endif
+            
+            return snapshot
+        }
+        
+        let barButtonItems = $_editing.map { [weak self] editing -> [UIBarButtonItem] in
+            guard let self = self else { return [] }
+            return editing ? [self.editButtonItem] : [self.actionsButtonItem]
+        }
+        
+        return [
+            snapshot.combineLatest($animate).apply(to: dataSource),
             project.publisher(for: \.name).assign(to: \.title, on: navigationItem),
-            project.publisher(for: \.notes).map { notes in
+            
+            // Editing changes
+            $_editing.map { editing in
+                editing ? .never : .automatic
+            }.assign(to: \.largeTitleDisplayMode, on: navigationItem),
+            barButtonItems.combineLatest($animate).sink { [weak self] items, animate in
+                self?.navigationItem.setRightBarButtonItems(items, animated: animate)
+            },
+            $_editing.sink { [weak self] _ 	in
+                if let rootViewController = self?.splitViewController as? SplitViewController {
+                    rootViewController.updateToolbar()
+                }
+            },
+            
+            notes.map { notes in
                 (notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
             }.sink { [weak self] notes in
                 (self?.cell(for: .viewNotes) as? TextViewCollectionViewCell)?.textView.attributedText = notes
             },
-            threadsList.objectsPublisher().combineLatest(imagesList.objectsPublisher()).sink { [weak self] _, _ in
-                self?.updateSnapshot()
+            threads.sink { [weak self] threads in
+                guard let self = self else { return }
+                let text = self.sectionHeaderText(for: threads)
+                self.setThreadsSectionHeaderText(text)
             },
+            
             threadsList.objectPublisher().sink { [weak self] projectThread in
                 self?.updateThreadCell(projectThread)
             },
@@ -110,7 +187,7 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
             switch (kind, section) {
             case (UICollectionView.elementKindSectionHeader, .threads):
                 let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath) as! SectionHeaderLabelView
-                view.textLabel.text = self?.threadsSectionHeaderText()
+                view.textLabel.text = self?.sectionHeaderText(for: self?.threadsList.objects ?? [])
                 return view
             case (UICollectionView.elementKindSectionHeader, .details):
                 let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath) as! SectionHeaderLabelView
@@ -125,61 +202,15 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
             }
         }
 
-        threadsList = FetchedObjectList(
-            fetchRequest: ProjectThread.fetchRequest(for: project),
-            managedObjectContext: project.managedObjectContext!
-        )
-
-        imagesList = FetchedObjectList(
-            fetchRequest: ProjectImage.fetchRequest(for: project),
-            managedObjectContext: project.managedObjectContext!
-        )
-
         collectionView.dragInteractionEnabled = true
         collectionView.dragDelegate = self
         collectionView.dropDelegate = self
     }
-
-    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
-        if isEditing {
-            snapshot.appendSections([.editImages, .details])
-            snapshot.appendItems(imagesList.objects.map { .editImage($0) }, toSection: .editImages)
-            snapshot.appendItems([.imagePlaceholder], toSection: .editImages)
-            snapshot.appendItems([.editName, .editNotes], toSection: .details)
-        } else {
-            if !imagesList.objects.isEmpty {
-                snapshot.appendSections([.viewImages])
-                snapshot.appendItems(imagesList.objects.map { .viewImage($0) }, toSection: .viewImages)
-            }
-            if let notes = project.notes, notes.length > 0 {
-                snapshot.appendSections([.notes])
-                snapshot.appendItems([.viewNotes], toSection: .notes)
-            }
-        }
-
-        let threads = threadsList.objects
-        snapshot.appendSections([.threads])
-        snapshot.appendItems(threads.enumerated().map { (index, item) in
-            if isEditing {
-                return .editThread(item)
-            } else {
-                let isLast = threads.index(after: index) == threads.endIndex
-                return .viewThread(item, isLast: isLast)
-            }
-        }, toSection: .threads)
-
-        #if !targetEnvironment(macCatalyst)
-        if isEditing {
-            snapshot.appendItems([.add], toSection: .threads)
-        }
-        #endif
-    }
-
-    override func dataSourceDidUpdateSnapshot(animated: Bool) {
-        // update the threads section header if needed
+    
+    private func setThreadsSectionHeaderText(_ text: String) {
         if let threadSectionIndex = dataSource.snapshot().indexOfSection(.threads),
             let sectionHeader = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: threadSectionIndex)) as? SectionHeaderLabelView {
-            sectionHeader.textLabel.text = threadsSectionHeaderText()
+            sectionHeader.textLabel.text = text
             sectionHeader.setNeedsLayout()
         }
     }
@@ -243,9 +274,8 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
             cell.textView.isEditable = true
             cell.textView.dataDetectorTypes = []
             cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
-            cell.onChange = { [weak self] newText in
+            cell.onChange = { newText in
                 project.notes = newText
-                self?.updateSnapshot()
             }
 
         case let .editThread(projectThread):
@@ -284,15 +314,9 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        updateSnapshot(animated: animated)
-
-        navigationItem.largeTitleDisplayMode = editing ? .never : .automatic
-        navigationItem.setRightBarButtonItems(
-            editing ? [editButtonItem] : [actionsButtonItem],
-            animated: animated)
-        if let rootViewController = splitViewController as? SplitViewController {
-            rootViewController.updateToolbar()
-        }
+        
+        // used to trigger subscribers
+        self._editing = editing
 
         if editing {
             project.managedObjectContext!.commit()
@@ -425,9 +449,8 @@ class ProjectDetailViewController: CollectionViewController<ProjectDetailViewCon
         }
     }
     
-    private func threadsSectionHeaderText() -> String {
-        let items = threadsList.objects.count
-        return String.localizedStringWithFormat(Localized.threadsSectionHeader, items)
+    private func sectionHeaderText(for threads: [ProjectThread]) -> String {
+        String.localizedStringWithFormat(Localized.threadsSectionHeader, threads.count)
     }
 
     private func cell(for item: Cell) -> UICollectionViewCell? {
