@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreServices
+import Combine
 import Events
 
 extension Event.Key {
@@ -130,50 +131,51 @@ struct DeleteProjectAction: DestructiveUserAction {
     }
 }
 
-struct ShareProjectAction: UserAction {
+struct ShareProjectAction: ReactiveUserAction {
     let project: Project
 
     // There's not really anything you can do to undo a share, since it leaves the
     // context of the app.
     let undoActionName: String? = nil
 
-    func performAsync(_ context: UserActionContext<ShareProjectAction>) {
+    func publisher(context: UserActionContext<ShareProjectAction>) -> AnyPublisher<Void, Error> {
         Event.current[.projectName] = project.name
         
         let activityController = UIActivityViewController(activityItems: [ProjectActivity(project: project)],
                                                           applicationActivities: [OpenInSafariActivity()])
         
-        activityController.completionWithItemsHandler = { activityType, completed, items, error in
-            if let error = error {
-                context.complete(error: error)
-                return
+        return Future { promise in
+            activityController.completionWithItemsHandler = { activityType, completed, items, error in
+                if let error = error {
+                    promise(.failure(error))
+                    return
+                }
+                
+                Event.current[.activityType] = activityType?.rawValue
+                
+                if completed {
+                    promise(.success(()))
+                } else {
+                    promise(.failure(UserActionError.canceled))
+                }
             }
             
-            Event.current[.activityType] = activityType?.rawValue
-            
-            if completed {
-                context.complete()
-            } else {
-                context.complete(error: UserActionError.canceled)
-            }
-        }
-        
-        context.present(activityController)
+            context.present(activityController)
+        }.eraseToAnyPublisher()
     }
 }
 
-struct AddImageToProjectAction: UserAction {
+struct AddImageToProjectAction: ReactiveUserAction {
     let project: Project
 
     let coordinator = Coordinator()
 
     let undoActionName: String? = Localized.addImage
-
-    func performAsync(_ context: UserActionContext<AddImageToProjectAction>) {
+    
+    func publisher(context: UserActionContext<AddImageToProjectAction>) -> AnyPublisher<Void, Swift.Error> {
         Event.current[.projectName] = project.name
         
         coordinator.project = project
-        coordinator.context = context
 
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = coordinator
@@ -181,12 +183,16 @@ struct AddImageToProjectAction: UserAction {
         imagePickerController.mediaTypes = [kUTTypeImage as String]
 
         context.present(imagePickerController)
+        
+        return coordinator.subject.handleEvents(receiveCompletion: { _ in
+            context.dismiss()
+        }).eraseToAnyPublisher()
     }
 
     class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         var project: Project!
-        var context: UserActionContext<AddImageToProjectAction>!
-
+        let subject = PassthroughSubject<Void, Swift.Error>()
+        
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let url = info[.imageURL] as? URL {
                 do {
@@ -194,17 +200,18 @@ struct AddImageToProjectAction: UserAction {
                     Event.current[.byteCount] = data.count
                     project.addImage(data)
 
-                    context.completeAndDismiss()
+                    subject.send()
+                    subject.send(completion: .finished)
                 } catch {
-                    context.completeAndDismiss(error: error)
+                    subject.send(completion: .failure(error))
                 }
             } else {
-                context.completeAndDismiss(error: Error.noImageURL)
+                subject.send(completion: .failure(Error.noImageURL))
             }
         }
 
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            context.completeAndDismiss(error: UserActionError.canceled)
+            subject.send(completion: .failure(UserActionError.canceled))
         }
     }
     
