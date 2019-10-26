@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Combine
 
 enum SidebarSelection: Hashable {
     case collection
@@ -34,17 +35,14 @@ class SplitViewController: UISplitViewController {
         primaryBackgroundStyle = .sidebar
     }
     
+    @Published var selection: SidebarSelection = .collection
+    private var toolbarSubscription: AnyCancellable?
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        updateToolbar()
-    }
-    
-    var selection: SidebarSelection = .collection {
-        didSet {
-            sidebarViewController.setSelection(selection)
-            detailViewController.setSelection(selection)
-            updateToolbar()
+        toolbarSubscription = $selection.sink { [weak self] selection in
+            self?.updateToolbar(selection)
         }
     }
     
@@ -162,33 +160,27 @@ class SplitViewController: UISplitViewController {
         return nil
     }
     
-    func updateToolbar() {
+    func updateToolbar(_ selection: SidebarSelection? = nil) {
         #if targetEnvironment(macCatalyst)
         guard let scene = view.window?.windowScene, let titlebar = scene.titlebar, let toolbar = titlebar.toolbar else {
             return
         }
         
-        let currentState = toolbar.items.map { $0.itemIdentifier }
+        let selection = selection ?? self.selection
+        
         var desiredState: [NSToolbarItem.Identifier] = [.addProject, .title, .flexibleSpace, .addThreads, .share]
         if selection == .shoppingList {
             desiredState.insert(.addCheckedToCollection, at: desiredState.index(desiredState.endIndex, offsetBy: -2))
         }
-        if let projectController = projectDetailViewController {
-            if projectController.isEditing {
+        if case .project = selection {
+            if projectDetailViewController?.isEditing ?? false {
                 desiredState.append(contentsOf: [.doneEditing])
             } else {
                 desiredState.append(contentsOf: [.edit])
             }
         }
         
-        for change in desiredState.difference(from: currentState) {
-            switch change {
-            case let .insert(offset: i, element: element, associatedWith: _):
-                toolbar.insertItem(withItemIdentifier: element, at: i)
-            case let .remove(offset: i, element: _, associatedWith: _):
-                toolbar.removeItem(at: i)
-            }
-        }
+        toolbar.setItemIdentifiers(desiredState)
         
         if let titleIdentifier = toolbar.centeredItemIdentifier, let titleItem = toolbar.items.first(where: { $0.itemIdentifier == titleIdentifier }) {
             titleItem.title = selection.toolbarTitle
@@ -289,7 +281,21 @@ extension SplitViewController: NSToolbarDelegate {
             fatalError("unexpected toolbar item identifier \(itemIdentifier)")
         }
     }
+}
 
+extension NSToolbar {
+    func setItemIdentifiers(_ identifiers: [NSToolbarItem.Identifier]) {
+        let currentIdentifiers = items.map { $0.itemIdentifier }
+        
+        for change in identifiers.difference(from: currentIdentifiers) {
+            switch change {
+            case let .insert(offset: i, element: element, associatedWith: _):
+                insertItem(withItemIdentifier: element, at: i)
+            case let .remove(offset: i, element: _, associatedWith: _):
+                removeItem(at: i)
+            }
+        }
+    }
 }
 
 #endif

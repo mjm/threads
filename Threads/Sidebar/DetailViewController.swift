@@ -7,12 +7,32 @@
 //
 
 import UIKit
+import Combine
 
 class DetailViewController: UITabBarController {
+    private var selectionSubscription: AnyCancellable?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tabBar.isHidden = true
+        
+        selectionSubscription = rootViewController.$selection.sink { [weak self] selection in
+            switch selection {
+            case .collection:
+                self?.selectedIndex = 0
+            case .shoppingList:
+                self?.selectedIndex = 1
+            case let .project(project):
+                self?.showProject(project)
+            }
+            
+            self?.selectedViewController?.becomeFirstResponder()
+        }
+    }
+    
+    private var rootViewController: SplitViewController {
+        splitViewController as! SplitViewController
     }
     
     var myThreadsViewController: MyThreadsViewController {
@@ -24,19 +44,6 @@ class DetailViewController: UITabBarController {
     }
     
     var projectDetailViewController: ProjectDetailViewController?
-    
-    func setSelection(_ selection: SidebarSelection) {
-        switch selection {
-        case .collection:
-            selectedIndex = 0
-        case .shoppingList:
-            selectedIndex = 1
-        case let .project(project):
-            showProject(project)
-        }
-        
-        selectedViewController?.becomeFirstResponder()
-    }
     
     func showProject(_ project: Project, editing: Bool = false) {
         if let currentProject = projectDetailViewController?.project, currentProject == project {

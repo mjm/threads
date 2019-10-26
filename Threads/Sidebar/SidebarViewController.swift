@@ -91,10 +91,21 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewController.S
         dataSource.indexPath(for: .project(project)).flatMap { tableView.cellForRow(at: $0) }
     }
     
+    private var selectionSubscription: AnyCancellable?
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        selectionSubscription = rootViewController.$selection.sink { [weak self] selection in
+            let indexPath = self?.dataSource.indexPath(for: selection)
+            self?.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         
-        setSelection(rootViewController.selection)
+        selectionSubscription = nil
     }
     
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
@@ -128,11 +139,6 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewController.S
         
         tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         rootViewController.selection = item
-    }
-    
-    func setSelection(_ selection: SidebarSelection) {
-        let indexPath = dataSource.indexPath(for: selection)
-        tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
     }
     
     private var rootViewController: SplitViewController {
