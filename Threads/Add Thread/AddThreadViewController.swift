@@ -152,7 +152,7 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewControll
         switch item {
         case let .thread(thread, isResult: _):
             let cell = cell as! CollectionThreadTableViewCell
-            cell.populate(thread)
+            cell.bind(thread)
         }
     }
     
@@ -242,12 +242,6 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewControll
 extension AddThreadViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         query = searchController.searchBar.text?.lowercased() ?? ""
-
-//        #if targetEnvironment(macCatalyst)
-//        updateSnapshot(animated: false)
-//        #else
-//        updateSnapshot(animated: isAdding)
-//        #endif
     }
 }
 

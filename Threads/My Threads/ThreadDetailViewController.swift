@@ -90,9 +90,6 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
         let updateDetails = thread.publisher(for: \.onBobbin)
             .combineLatest(thread.publisher(for: \.amountInCollection)) { _, _ in }
         
-        let updateShoppingList = thread.publisher(for: \.amountInShoppingList)
-            .combineLatest(thread.publisher(for: \.purchased)) { _, _ in }
-        
         let updateProject = projectsList.objectPublisher()
             .merge(with: managedObjectContext.publisher(type: Project.self).compactMap { project in
                 self.projectsList.objects.first { $0.project == project }
@@ -117,9 +114,6 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
             return snapshot
         }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
         
-        updateShoppingList.sink { [weak self] _ in
-            self?.updateShoppingList()
-        }.store(in: &cancellables)
         updateDetails.sink { [weak self] _ in
             self?.updateDetails()
         }.store(in: &cancellables)
@@ -163,7 +157,7 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
             
         case .shoppingList:
             let cell = cell as! ShoppingListThreadTableViewCell
-            cell.populate(thread)
+            cell.bind(thread)
             
             shoppingListSubscription = cell.actionPublisher().sink { [weak self] action in
                 switch action {
@@ -201,14 +195,6 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
 
     func updateDetails() {
         guard let cell = dataSource.indexPath(for: .details).flatMap({ tableView.cellForRow(at: $0) as? ThreadDetailsTableViewCell }) else {
-            return
-        }
-
-        cell.populate(thread)
-    }
-
-    func updateShoppingList() {
-        guard let cell = dataSource.indexPath(for: .shoppingList).flatMap({ tableView.cellForRow(at: $0) as? ShoppingListThreadTableViewCell }) else {
             return
         }
 

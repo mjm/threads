@@ -9,36 +9,48 @@
 import UIKit
 
 class CollectionThreadTableViewCell: ThreadTableViewCell {
-
     @IBOutlet var statusLabel: UILabel!
     
-    var isOutOfStock = false
-
-    override func populate(_ thread: Thread) {
-        isOutOfStock = thread.inCollection && thread.amountInCollection == 0
-        super.populate(thread)
-
-        statusLabel.isHidden = true
+    override func bind(_ thread: Thread) {
+        super.bind(thread)
         
-        if thread.inCollection {
-            if thread.onBobbin {
-                statusLabel.isHidden = false
-                statusLabel.text = Localized.onBobbin
-            } else if thread.amountInCollection == 0 {
-                isOutOfStock = true
-                
-                statusLabel.isHidden = false
-                statusLabel.text = Localized.outOfStock
+        let inCollection = thread.publisher(for: \.inCollection)
+        let isOutOfStock = inCollection.combineLatest(thread.publisher(for: \.amountInCollection)) { inCollection, amount in
+            inCollection && amount == 0
+        }
+        let onBobbin = thread.publisher(for: \.onBobbin)
+        
+        isOutOfStock.combineLatest(onBobbin) { !($0 || $1) }
+            .assign(to: \.isHidden, on: statusLabel)
+            .store(in: &cancellables)
+        isOutOfStock.combineLatest(onBobbin) { outOfStock, onBobbin in
+            if onBobbin {
+                return Localized.onBobbin
+            } else if outOfStock {
+                return Localized.outOfStock
+            } else {
+                return nil
+            }
+        }.assign(to: \.text, on: statusLabel).store(in: &cancellables)
+        
+        isOutOfStock.map { $0 ? UIColor.secondarySystemBackground : UIColor.systemBackground }
+            .assign(to: \.backgroundColor, on: self)
+            .store(in: &cancellables)
+        
+        selectedOrHighlighted.map { $0 ? UIColor.lightText : UIColor.secondaryLabel }
+            .assign(to: \.textColor, on: statusLabel)
+            .store(in: &cancellables)
+        
+        let labelColor = isOutOfStock.combineLatest(selectedOrHighlighted) { outOfStock, selected -> UIColor in
+            if selected {
+                return .lightText
+            } else if outOfStock {
+                return .secondaryLabel
+            } else {
+                return .label
             }
         }
-    }
-    
-    override func updateColors(selected: Bool) {
-        super.updateColors(selected: selected)
-        statusLabel.textColor = selected ? .lightText : .secondaryLabel
-        
-        numberLabel.textColor = selected ? .lightText : (isOutOfStock ? .secondaryLabel : .label)
-        labelLabel.textColor = selected ? .lightText : (isOutOfStock ? .secondaryLabel : .label)
-        backgroundColor = isOutOfStock ? .secondarySystemBackground : .systemBackground
+        numberColorSubscription = labelColor.assign(to: \.textColor, on: numberLabel)
+        labelColorSubscription = labelColor.assign(to: \.textColor, on: labelLabel)
     }
 }

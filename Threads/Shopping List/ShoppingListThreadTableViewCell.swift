@@ -23,35 +23,63 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell {
     
     private let onAction = PassthroughSubject<Action, Never>()
     
-    var isPurchased = false
-
-    override func populate(_ thread: Thread) {
-        isPurchased = thread.purchased
-        super.populate(thread)
-
-        let amount = thread.amountInShoppingList
-        quantityLabel.text = "\(amount)"
-
-        decreaseButton.setImage(UIImage(systemName: amount == 1 ? "trash" : "minus.square"), for: .normal)
-        checkButton.setImage(UIImage(systemName: thread.purchased ? "checkmark.square" : "square"), for: .normal)
-
-        decreaseButton.isEnabled = !thread.purchased
-        increaseButton.isEnabled = !thread.purchased
-    }
-    
-    override func updateColors(selected: Bool) {
-        super.updateColors(selected: selected)
+    override func bind(_ thread: Thread) {
+        super.bind(thread)
         
-        backgroundColor = isPurchased ? .secondarySystemBackground : .systemBackground
-        let labelColor: UIColor = selected ? .lightText : (isPurchased ? .secondaryLabel : .label)
-        numberLabel.textColor = labelColor
-        labelLabel.textColor = labelColor
-        quantityLabel.textColor = labelColor
+        let isPurchased = thread.publisher(for: \.purchased)
+        let amount = thread.publisher(for: \.amountInShoppingList)
         
-        let buttonTintColor: UIColor? = selected ? .lightText : (isPurchased ? .secondaryLabel : nil)
-        checkButton.tintColor = buttonTintColor
-        decreaseButton.tintColor = buttonTintColor
-        increaseButton.tintColor = buttonTintColor
+        amount.map { "\($0)" }
+            .assign(to: \.text, on: quantityLabel)
+            .store(in: &cancellables)
+        
+        amount.map { $0 == 1 ? "trash" : "minus.square" }
+            .map { UIImage(systemName: $0) }
+            .sink { [decreaseButton] image in
+                decreaseButton?.setImage(image, for: .normal)
+            }.store(in: &cancellables)
+        
+        isPurchased.map { $0 ? "checkmark.square" : "square" }
+            .map { UIImage(systemName: $0) }
+            .sink { [checkButton] image in
+                checkButton?.setImage(image, for: .normal)
+            }.store(in: &cancellables)
+        
+        let isNotPurchased = isPurchased.map { !$0 }
+        isNotPurchased.assign(to: \.isEnabled, on: decreaseButton).store(in: &cancellables)
+        isNotPurchased.assign(to: \.isEnabled, on: increaseButton).store(in: &cancellables)
+        
+        isPurchased.map { $0 ? UIColor.secondarySystemBackground : UIColor.systemBackground }
+            .assign(to: \.backgroundColor, on: self)
+            .store(in: &cancellables)
+        
+        let purchasedSelected = isPurchased.combineLatest(selectedOrHighlighted)
+        
+        let labelColor = purchasedSelected.map { purchased, selected -> UIColor in
+            if selected {
+                return .lightText
+            } else if purchased {
+                return .secondaryLabel
+            } else {
+                return .label
+            }
+        }
+        numberColorSubscription = labelColor.assign(to: \.textColor, on: numberLabel)
+        labelColorSubscription = labelColor.assign(to: \.textColor, on: labelLabel)
+        labelColor.assign(to: \.textColor, on: quantityLabel).store(in: &cancellables)
+        
+        let buttonTintColor = purchasedSelected.map { purchased, selected -> UIColor? in
+            if selected {
+                return .lightText
+            } else if purchased {
+                return .secondaryLabel
+            } else {
+                return nil
+            }
+        }
+        buttonTintColor.assign(to: \.tintColor, on: checkButton).store(in: &cancellables)
+        buttonTintColor.assign(to: \.tintColor, on: decreaseButton).store(in: &cancellables)
+        buttonTintColor.assign(to: \.tintColor, on: increaseButton).store(in: &cancellables)
     }
     
     func actionPublisher() -> AnyPublisher<Action, Never> {

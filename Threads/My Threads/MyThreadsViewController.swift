@@ -49,10 +49,6 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewControll
         threadsList.objectsPublisher().map { $0.isEmpty }.removeDuplicates().sink { [weak self] isEmpty in
             self?.setShowEmptyView(isEmpty)
         }.store(in: &cancellables)
-        
-        threadsList.objectPublisher().sink { [weak self] thread in
-            self?.updateCell(thread)
-        }.store(in: &cancellables)
     }
 
     override func dataSourceWillInitialize() {
@@ -88,12 +84,8 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewControll
         switch item {
         case let .thread(thread):
             let cell = cell as! CollectionThreadTableViewCell
-            cell.populate(thread)
+            cell.bind(thread)
         }
-    }
-
-    func updateCell(_ thread: Thread) {
-        cellForThread(thread)?.populate(thread)
     }
 
     private func cellForThread(_ thread: Thread) -> CollectionThreadTableViewCell? {

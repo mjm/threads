@@ -30,12 +30,16 @@ extension Thread {
         colorHex = dmcThread.colorHex
     }
     
-    var color: UIColor? {
+    @objc dynamic var color: UIColor? {
         get {
             return colorHex.flatMap { UIColor(hex: $0) }
         }
         set {
             colorHex = newValue?.hexString ?? ""
         }
+    }
+    
+    class func keyPathsForValuesAffectingColor() -> Set<String> {
+        return ["colorHex"]
     }
 }

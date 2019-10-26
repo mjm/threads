@@ -73,10 +73,6 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewCo
             self?.setShowEmptyView(threads.isEmpty)
         }.store(in: &cancellables)
         
-        threadsList.objectPublisher().sink { [weak self] thread in
-            self?.updateCell(thread)
-        }.store(in: &cancellables)
-        
         #if !targetEnvironment(macCatalyst)
         threads.combineLatest($animate).sink { [weak self] threads, animate in
             self?.setShowAddToCollectionButton(!threads.filter { $0.purchased }.isEmpty, animated: animate)
@@ -151,7 +147,7 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewCo
         switch item {
         case let .thread(thread):
             let cell = cell as! ShoppingListThreadTableViewCell
-            cell.populate(thread)
+            cell.bind(thread)
             
             threadCellObservers[thread.objectID] = cell.actionPublisher().sink { [weak self] action in
                 switch action {
@@ -170,14 +166,6 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewCo
                 }
             }
         }
-    }
-
-    func updateCell(_ thread: Thread) {
-        cellForThread(thread)?.populate(thread)
-    }
-
-    private func cellForThread(_ thread: Thread) -> ShoppingListThreadTableViewCell? {
-        dataSource.indexPath(for: .thread(thread)).flatMap { tableView.cellForRow(at: $0) as? ShoppingListThreadTableViewCell }
     }
 }
 
