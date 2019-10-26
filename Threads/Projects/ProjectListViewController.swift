@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreData
+import Combine
 
-class ProjectListViewController: CollectionViewController<ProjectListViewController.Section, ProjectListViewController.Cell> {
+class ProjectListViewController: ReactiveCollectionViewController<ProjectListViewController.Section, ProjectListViewController.Cell> {
     enum Section: CaseIterable {
         case projects
     }
@@ -22,38 +23,41 @@ class ProjectListViewController: CollectionViewController<ProjectListViewControl
 
     private var projectsList: FetchedObjectList<Project>!
 
-    override func createObservers() -> [Any] {
-        [
-            managedObjectContext.publisher(type: ProjectImage.self).compactMap { image in
-                image.project
-            }.sink { [weak self] project in
-                self?.updateCell(project)
+    override func createSubscribers() -> [AnyCancellable] {
+        projectsList = FetchedObjectList(
+            fetchRequest: Project.allProjectsFetchRequest(),
+            managedObjectContext: managedObjectContext
+        )
+        
+        let projects = projectsList.objectsPublisher()
+        
+        let updateProject = projectsList.objectPublisher()
+            .merge(with: managedObjectContext.publisher(type: ProjectImage.self).compactMap { $0.project })
+        
+        return [
+            projects.map { projects in
+                var snapshot = Snapshot()
+                
+                snapshot.appendSections(Section.allCases)
+                snapshot.appendItems(projects.map { .project($0) }, toSection: .projects)
+
+                return snapshot
+            }.combineLatest($animate).apply(to: dataSource),
+            
+            projects.sink { [weak self] projects in
+                self?.setShowEmptyView(projects.isEmpty)
             },
-            projectsList.objectsPublisher().sink { [weak self] _ in
-                self?.updateSnapshot()
-            },
-            projectsList.objectPublisher().sink { [weak self] project in
+
+            updateProject.sink { [weak self] project in
                 self?.updateCell(project)
             },
         ]
     }
 
     override var currentUserActivity: UserActivity? { .showProjects }
-
-    override func dataSourceWillInitialize() {
-        projectsList = FetchedObjectList(
-            fetchRequest: Project.allProjectsFetchRequest(),
-            managedObjectContext: managedObjectContext
-        )
-    }
-
-    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
-        snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(projectsList.objects.map { .project($0) }, toSection: .projects)
-    }
-
-    override func dataSourceDidUpdateSnapshot(animated: Bool) {
-        if projectsList.objects.isEmpty {
+    
+    private func setShowEmptyView(_ showEmptyView: Bool) {
+        if showEmptyView {
             let emptyView = EmptyView()
             emptyView.textLabel.text = Localized.emptyProjects
             emptyView.iconView.image = UIImage(systemName: "rectangle.3.offgrid.fill")

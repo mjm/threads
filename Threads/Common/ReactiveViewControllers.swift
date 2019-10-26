@@ -177,8 +177,9 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
 
     private(set) var actionRunner: UserActionRunner!
     private(set) var dataSource: DataSource!
+    @Published var animate: Bool = false
 
-    private var observers: [Any] = []
+    private var cancellables: [AnyCancellable] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -199,24 +200,29 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
 
         dataSourceWillInitialize()
         collectionView.collectionViewLayout = createLayout()
-        updateSnapshot(animated: false)
-
-        observers = createObservers()
+        
+        cancellables = createSubscribers()
 
         userActivity = currentUserActivity?.userActivity
     }
 
-    #if !targetEnvironment(macCatalyst)
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        #if !targetEnvironment(macCatalyst)
         becomeFirstResponder()
+        #endif
+        
+        animate = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        #if !targetEnvironment(macCatalyst)
         resignFirstResponder()
+        #endif
     }
-    #endif
 
     override var canBecomeFirstResponder: Bool {
         true
@@ -234,14 +240,6 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
 
     override func updateUserActivityState(_ activity: NSUserActivity) {
         currentUserActivity?.update(activity)
-    }
-
-    func updateSnapshot(animated: Bool = true) {
-        var snapshot = Snapshot()
-        buildSnapshotForDataSource(&snapshot)
-        dataSource.apply(snapshot, animatingDifferences: animated)
-
-        dataSourceDidUpdateSnapshot(animated: animated)
     }
 
     private func registerCellTypes() {
@@ -279,9 +277,8 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
 
     func dataSourceWillInitialize() {}
     func dataSourceDidUpdateSnapshot(animated: Bool) {}
-    func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {}
 
-    func createObservers() -> [Any] {
+    func createSubscribers() -> [AnyCancellable] {
         []
     }
 }
@@ -292,6 +289,16 @@ extension Publisher {
     }
     
     func apply<Section, Item>(to dataSource: UITableViewDiffableDataSource<Section, Item>) -> AnyCancellable where Output == (NSDiffableDataSourceSnapshot<Section, Item>, Bool), Failure == Never {
+        sink { (snapshot, animate) in
+            dataSource.apply(snapshot, animatingDifferences: animate)
+        }
+    }
+    
+    func apply<Section, Item>(to dataSource: UICollectionViewDiffableDataSource<Section, Item>, animate: Bool = true) -> AnyCancellable where Output == NSDiffableDataSourceSnapshot<Section, Item>, Failure == Never {
+        combineLatest(Just(animate)).apply(to: dataSource)
+    }
+    
+    func apply<Section, Item>(to dataSource: UICollectionViewDiffableDataSource<Section, Item>) -> AnyCancellable where Output == (NSDiffableDataSourceSnapshot<Section, Item>, Bool), Failure == Never {
         sink { (snapshot, animate) in
             dataSource.apply(snapshot, animatingDifferences: animate)
         }
