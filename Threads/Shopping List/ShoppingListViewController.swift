@@ -150,26 +150,30 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewCo
     override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {
         ["Thread": .nib(ShoppingListThreadTableViewCell.self)]
     }
+    
+    private var threadCellObservers: [NSManagedObjectID: AnyCancellable] = [:]
 
     override func populate(cell: UITableViewCell, item: ShoppingListViewController.Cell) {
         switch item {
         case let .thread(thread):
             let cell = cell as! ShoppingListThreadTableViewCell
             cell.populate(thread)
-            cell.onCheckTapped = { [weak self] in
-                self?.actionRunner.perform(TogglePurchasedAction(thread: thread), willPerform: {
-                    self?.delayPurchase(thread)
-                })
-            }
-            cell.onIncreaseQuantity = { [weak self] in
-                self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment), willPerform: {
-                    self?.resetDelayedPurchaseTimer()
-                })
-            }
-            cell.onDecreaseQuantity = { [weak self] in
-                self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .decrement), willPerform: {
-                    self?.resetDelayedPurchaseTimer()
-                })
+            
+            threadCellObservers[thread.objectID] = cell.actionPublisher().sink { [weak self] action in
+                switch action {
+                case .purchase:
+                    self?.actionRunner.perform(TogglePurchasedAction(thread: thread), willPerform: {
+                        self?.delayPurchase(thread)
+                    })
+                case .increment:
+                    self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment), willPerform: {
+                        self?.resetDelayedPurchaseTimer()
+                    })
+                case .decrement:
+                    self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .decrement), willPerform: {
+                        self?.resetDelayedPurchaseTimer()
+                    })
+                }
             }
         }
     }

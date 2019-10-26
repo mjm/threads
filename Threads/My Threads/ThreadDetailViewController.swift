@@ -151,31 +151,35 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
             "Project": .class(UITableViewCell.self),
         ]
     }
+    
+    private var shoppingListSubscription: AnyCancellable?
 
     override func populate(cell: UITableViewCell, item: ThreadDetailViewController.Cell) {
         let thread = self.thread
 
         switch item {
 
-            case .details:
-                let cell = cell as! ThreadDetailsTableViewCell
-                cell.populate(thread)
-
-            case .shoppingList:
-                let cell = cell as! ShoppingListThreadTableViewCell
-                cell.populate(thread)
-                cell.onCheckTapped = { [weak self] in
+        case .details:
+            let cell = cell as! ThreadDetailsTableViewCell
+            cell.populate(thread)
+            
+        case .shoppingList:
+            let cell = cell as! ShoppingListThreadTableViewCell
+            cell.populate(thread)
+            
+            shoppingListSubscription = cell.actionPublisher().sink { [weak self] action in
+                switch action {
+                case .purchase:
                     self?.actionRunner.perform(TogglePurchasedAction(thread: thread))
-                }
-                cell.onDecreaseQuantity = { [weak self] in
+                case .increment:
+                    self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment))
+                case .decrement:
                     self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .decrement))
                 }
-                cell.onIncreaseQuantity = { [weak self] in
-                    self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment))
-                }
-
-            case let .project(projectThread):
-                cell.textLabel?.text = projectThread.project?.name
+            }
+            
+        case let .project(projectThread):
+            cell.textLabel?.text = projectThread.project?.name
         }
     }
 

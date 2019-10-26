@@ -7,17 +7,21 @@
 //
 
 import UIKit
+import Combine
 
 class ShoppingListThreadTableViewCell: ThreadTableViewCell {
+    enum Action {
+        case purchase
+        case increment
+        case decrement
+    }
 
     @IBOutlet var checkButton: UIButton!
     @IBOutlet var quantityLabel: UILabel!
     @IBOutlet var decreaseButton: UIButton!
     @IBOutlet var increaseButton: UIButton!
-
-    var onDecreaseQuantity: () -> Void = { }
-    var onIncreaseQuantity: () -> Void = { }
-    var onCheckTapped: () -> Void = { }
+    
+    private let onAction = PassthroughSubject<Action, Never>()
     
     var isPurchased = false
 
@@ -49,16 +53,20 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell {
         decreaseButton.tintColor = buttonTintColor
         increaseButton.tintColor = buttonTintColor
     }
+    
+    func actionPublisher() -> AnyPublisher<Action, Never> {
+        onAction.eraseToAnyPublisher()
+    }
 
     @IBAction func checkButtonPressed() {
-        onCheckTapped()
+        onAction.send(.purchase)
     }
 
     @IBAction func increaseQuantity() {
-        onIncreaseQuantity()
+        onAction.send(.increment)
     }
 
     @IBAction func decreaseQuantity() {
-        onDecreaseQuantity()
+        onAction.send(.decrement)
     }
 }
