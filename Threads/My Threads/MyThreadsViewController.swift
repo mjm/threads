@@ -61,7 +61,7 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewControll
         dataSource.canEditRow = { _, _, _ in true }
     }
     
-    func setShowEmptyView(_ showEmptyView: Bool) {
+    private func setShowEmptyView(_ showEmptyView: Bool) {
         if showEmptyView {
             let emptyView = EmptyView()
             emptyView.textLabel.text = Localized.emptyCollection

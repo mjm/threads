@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreData
+import Combine
 
-class ShoppingListViewController: TableViewController<ShoppingListViewController.Section, ShoppingListViewController.Cell> {
+class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewController.Section, ShoppingListViewController.Cell> {
     enum Section: CaseIterable {
         case unpurchased
         case purchased
@@ -24,7 +25,7 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
     private var threadsList: FetchedObjectList<Thread>!
     
     private var purchaseDelayTimer: Timer?
-    private var pendingPurchases = Set<Thread>()
+    @Published private var pendingPurchases = Set<Thread>()
 
     @IBOutlet var addCheckedButton: UIButton!
     
@@ -39,47 +40,72 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
         #endif
     }
     
-    override func createObservers() -> [Any] {
-        [
-            threadsList.objectsPublisher().sink { [weak self] _ in
-                self?.updateSnapshot()
-            },
-            threadsList.objectPublisher().sink { [weak self] thread in
-                self?.updateCell(thread)
-            },
-        ]
-    }
-
-    override var currentUserActivity: UserActivity? { .showShoppingList }
-
-    override func dataSourceWillInitialize() {
+    override func createSubscribers() -> [AnyCancellable] {
         threadsList = FetchedObjectList(
             fetchRequest: Thread.inShoppingListFetchRequest(),
             managedObjectContext: managedObjectContext
         )
-    }
-
-    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
-        var partitioned = threadsList.objects
-        let p = partitioned.stablePartition { $0.purchased && !pendingPurchases.contains($0) }
-
-        snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(partitioned[..<p].map { .thread($0) }, toSection: .unpurchased)
-        snapshot.appendItems(partitioned[p...].map { .thread($0) }, toSection: .purchased)
-    }
-    
-    override func dataSourceDidUpdateSnapshot(animated: Bool) {
+        
+        let threads = threadsList.objectsPublisher()
+        
+        let partitionedThreads = threads.combineLatest($pendingPurchases) { threads, pendingPurchases -> (ArraySlice<Thread>, ArraySlice<Thread>) in
+            var partitioned = threads
+            let pivot = partitioned.stablePartition {
+                $0.purchased && !pendingPurchases.contains($0)
+            }
+            
+            let unpurchased = partitioned[..<pivot]
+            let purchased = partitioned[pivot...]
+            return (unpurchased, purchased)
+        }
+        
+        var subscribers = [
+            partitionedThreads.map { (unpurchased, purchased) in
+                var snapshot = Snapshot()
+                
+                snapshot.appendSections(Section.allCases)
+                snapshot.appendItems(unpurchased.map { .thread($0) }, toSection: .unpurchased)
+                snapshot.appendItems(purchased.map { .thread($0) }, toSection: .purchased)
+                
+                return snapshot
+            }.combineLatest($animate).apply(to: dataSource),
+            
+            threads.sink { [weak self] threads in
+                self?.setShowEmptyView(threads.isEmpty)
+            },
+            
+            threadsList.objectPublisher().sink { [weak self] thread in
+                self?.updateCell(thread)
+            },
+        ]
+        
         #if !targetEnvironment(macCatalyst)
-        // animate in/out the "Add Checked to Collection" button
-        let anyChecked = !threadsList.objects.filter { $0.purchased }.isEmpty
+        subscribers.append(contentsOf: [
+            threads.combineLatest($animate).sink { [weak self] threads, animate in
+                self?.setShowAddToCollectionButton(!threads.filter { $0.purchased }.isEmpty, animated: animate)
+            },
+            
+            threads.sink { [weak self] threads in
+                self?.setTabBarCount(unpurchased: threads.filter { !$0.purchased }.count)
+            },
+        ])
+        #endif
+        
+        return subscribers
+    }
+
+    override var currentUserActivity: UserActivity? { .showShoppingList }
+    
+    #if !targetEnvironment(macCatalyst)
+    private func setShowAddToCollectionButton(_ showButton: Bool, animated: Bool) {
         let header = self.tableView.tableHeaderView!
-        let height = anyChecked
+        let height = showButton
             ? header.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
             : 0.0
         
         let changeHeight = {
             header.frame.size.height = height
-            header.isHidden = !anyChecked
+            header.isHidden = !showButton
             header.layoutIfNeeded()
         }
 
@@ -89,13 +115,15 @@ class ShoppingListViewController: TableViewController<ShoppingListViewController
         } else {
             changeHeight()
         }
-        #endif
-        
-        // update the tab bar badge
-        let unpurchasedItems = threadsList.objects.filter { !$0.purchased }.count
-        navigationController?.tabBarItem.badgeValue = unpurchasedItems > 0 ? "\(unpurchasedItems)" : nil
-
-        if threadsList.objects.isEmpty {
+    }
+    
+    private func setTabBarCount(unpurchased: Int) {
+        navigationController?.tabBarItem.badgeValue = unpurchased > 0 ? "\(unpurchased)" : nil
+    }
+    #endif
+    
+    private func setShowEmptyView(_ showEmptyView: Bool) {
+        if showEmptyView {
             let emptyView = EmptyView()
             emptyView.textLabel.text = Localized.emptyShoppingList
             emptyView.iconView.image = UIImage(named: "Bobbin")
@@ -273,7 +301,6 @@ extension ShoppingListViewController {
 
         purchaseDelayTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { _ in
             self.pendingPurchases.removeAll()
-            self.updateSnapshot()
             self.purchaseDelayTimer = nil
         }
     }
