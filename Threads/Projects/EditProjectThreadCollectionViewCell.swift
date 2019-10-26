@@ -7,25 +7,34 @@
 //
 
 import UIKit
+import Combine
 
 class EditProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
+    enum Action {
+        case increment
+        case decrement
+    }
+    
     @IBOutlet var decreaseButton: UIButton!
     @IBOutlet var increaseButton: UIButton!
 
-    var onDecreaseQuantity: () -> Void = { }
-    var onIncreaseQuantity: () -> Void = { }
+    private let onAction = PassthroughSubject<Action, Never>()
 
     override func populate(_ projectThread: ProjectThread) {
         super.populate(projectThread)
 
         decreaseButton.setImage(UIImage(systemName: projectThread.amount == 1 ? "trash" : "minus.square"), for: .normal)
     }
+    
+    func actionPublisher() -> AnyPublisher<Action, Never> {
+        onAction.eraseToAnyPublisher()
+    }
 
     @IBAction func increaseQuantity() {
-        onIncreaseQuantity()
+        onAction.send(.increment)
     }
 
     @IBAction func decreaseQuantity() {
-        onDecreaseQuantity()
+        onAction.send(.decrement)
     }
 }

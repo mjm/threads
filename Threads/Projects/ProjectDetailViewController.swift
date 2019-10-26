@@ -227,6 +227,8 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             "EditThread": .nib(EditProjectThreadCollectionViewCell.self),
         ]
     }
+    
+    private var editThreadSubscriptions: [ObjectIdentifier: AnyCancellable] = [:]
 
     override func populate(cell: UICollectionViewCell, item: ProjectDetailViewController.Cell) {
         let project = self.project
@@ -281,15 +283,17 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
         case let .editThread(projectThread):
             let cell = cell as! EditProjectThreadCollectionViewCell
             cell.populate(projectThread)
-            cell.onDecreaseQuantity = {
-                if projectThread.amount == 1 {
-                    projectThread.managedObjectContext?.delete(projectThread)
-                } else {
-                    projectThread.amount -= 1
+            editThreadSubscriptions[ObjectIdentifier(cell)] = cell.actionPublisher().sink { action in
+                switch action {
+                case .increment:
+                    projectThread.amount += 1
+                case .decrement:
+                    if projectThread.amount == 1 {
+                        projectThread.managedObjectContext?.delete(projectThread)
+                    } else {
+                        projectThread.amount -= 1
+                    }
                 }
-            }
-            cell.onIncreaseQuantity = {
-                projectThread.amount += 1
             }
 
         case .add:

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Combine
 import Events
 
 let isMainQueueKey = DispatchSpecificKey<Bool>()
@@ -131,6 +132,14 @@ class UserActionRunner {
 
         return UIAlertAction(title: title, style: style) { _ in
             self.perform(action, willPerform: willPerform, completion: completion)
+        }
+    }
+}
+
+extension Publisher {
+    func perform<Action: UserAction>(on runner: UserActionRunner) -> AnyCancellable where Output == Action, Failure == Never {
+        sink { action in
+            runner.perform(action)
         }
     }
 }
