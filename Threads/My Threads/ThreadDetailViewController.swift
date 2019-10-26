@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreData
+import Combine
 
-class ThreadDetailViewController: TableViewController<ThreadDetailViewController.Section, ThreadDetailViewController.Cell> {
+class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewController.Section, ThreadDetailViewController.Cell> {
     enum Section: CaseIterable {
         case details
         case shoppingList
@@ -74,34 +75,56 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
             navigationItem.scrollEdgeAppearance = appearance.copy()
         }
     }
-
-    override func createObservers() -> [Any] {
-        [
-            // Ensure we update the project names correctly.
-            managedObjectContext.publisher(type: Project.self).compactMap { project in
+    
+    override func createSubscribers() -> [AnyCancellable] {
+        projectsList = FetchedObjectList(
+            fetchRequest: ProjectThread.fetchRequest(for: thread),
+            managedObjectContext: thread.managedObjectContext!
+        )
+        
+        let projectThreads = projectsList.objectsPublisher()
+        let inShoppingList = thread.publisher(for: \.inShoppingList)
+        
+        // Updating the snapshot, even if it hasn't changed, causes the table view
+        // to animate the potential height change in the details cell.
+        let updateDetails = thread.publisher(for: \.onBobbin)
+            .combineLatest(thread.publisher(for: \.amountInCollection)) { _, _ in }
+        
+        let updateShoppingList = thread.publisher(for: \.amountInShoppingList)
+            .combineLatest(thread.publisher(for: \.purchased)) { _, _ in }
+        
+        let updateProject = projectsList.objectPublisher()
+            .merge(with: managedObjectContext.publisher(type: Project.self).compactMap { project in
                 self.projectsList.objects.first { $0.project == project }
-            }.sink { [weak self] projectThread in
-                self?.updateCell(projectThread)
-            },
-            thread.publisher(for: \.inShoppingList).sink { [weak self] _ in
-                self?.updateSnapshot()
-            },
-            thread.publisher(for: \.amountInShoppingList).sink { [weak self] _ in
+            })
+        
+        return [
+            projectThreads.combineLatest(inShoppingList, updateDetails) { projectThreads, inShoppingList, _ in
+                var snapshot = Snapshot()
+                
+                snapshot.appendSections([.details])
+                snapshot.appendItems([.details], toSection: .details)
+
+                if inShoppingList {
+                    snapshot.appendSections([.shoppingList])
+                    snapshot.appendItems([.shoppingList], toSection: .shoppingList)
+                }
+
+                if !projectThreads.isEmpty {
+                    snapshot.appendSections([.projects])
+                    snapshot.appendItems(projectThreads.map { .project($0) }, toSection: .projects)
+                }
+                
+                return snapshot
+            }.combineLatest($animate).apply(to: dataSource),
+            
+            updateShoppingList.sink { [weak self] _ in
                 self?.updateShoppingList()
             },
-            thread.publisher(for: \.purchased).sink { [weak self] _ in
-                self?.updateShoppingList()
-            },
-            thread.publisher(for: \.onBobbin).sink { [weak self] _ in
+            updateDetails.sink { [weak self] _ in
                 self?.updateDetails()
             },
-            thread.publisher(for: \.amountInCollection).sink { [weak self] _ in
-                self?.updateDetails()
-            },
-            projectsList.objectsPublisher().sink { [weak self] _ in
-                self?.updateSnapshot()
-            },
-            projectsList.objectPublisher().sink { [weak self] projectThread in
+            updateProject.sink { [weak self] projectThread in
                 self?.updateCell(projectThread)
             },
         ]
@@ -119,27 +142,6 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
             case .projects:
                 return Localized.projects
             }
-        }
-
-        projectsList = FetchedObjectList(
-            fetchRequest: ProjectThread.fetchRequest(for: thread),
-            managedObjectContext: thread.managedObjectContext!
-        )
-    }
-
-    override func buildSnapshotForDataSource(_ snapshot: inout Snapshot) {
-        snapshot.appendSections([.details])
-        snapshot.appendItems([.details], toSection: .details)
-
-        if thread.inShoppingList {
-            snapshot.appendSections([.shoppingList])
-            snapshot.appendItems([.shoppingList], toSection: .shoppingList)
-        }
-
-        let projectThreads = projectsList.objects
-        if !projectThreads.isEmpty {
-            snapshot.appendSections([.projects])
-            snapshot.appendItems(projectThreads.map { .project($0) }, toSection: .projects)
         }
     }
 
@@ -201,10 +203,6 @@ class ThreadDetailViewController: TableViewController<ThreadDetailViewController
         }
 
         cell.populate(thread)
-
-        // Updating the snapshot, even though it hasn't changed, causes the table view
-        // to animate the potential height change in the cell.
-        updateSnapshot()
     }
 
     func updateShoppingList() {
