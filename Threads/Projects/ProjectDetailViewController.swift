@@ -162,10 +162,6 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             let text = self.sectionHeaderText(for: threads)
             self.setThreadsSectionHeaderText(text)
         }.store(in: &cancellables)
-        
-        imagesList.objectPublisher().sink { [weak self] image in
-            self?.updateImageCell(image)
-        }.store(in: &cancellables)
     }
 
     override var currentUserActivity: UserActivity? { .showProject(project) }
@@ -318,10 +314,6 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             undoManager?.endUndoGrouping()
             project.managedObjectContext!.commit()
         }
-    }
-
-    func updateImageCell(_ image: ProjectImage) {
-        // no-op. there's not currently a meaningful way to update a project image in-place
     }
     
     override func createLayout() -> UICollectionViewLayout {
