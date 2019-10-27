@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import Combine
 
 @IBDesignable
 class ProjectCollectionViewCell: UICollectionViewCell {
     @IBOutlet var imageView: RoundedShadowImageView!
     @IBOutlet var nameLabel: UILabel!
+    
+    var cancellables = Set<AnyCancellable>()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,17 +28,27 @@ class ProjectCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func populate(_ project: Project) {
-        nameLabel.text = project.name
+    func bind(_ project: Project) {
+        project.publisher(for: \.name)
+            .assign(to: \.text, on: nameLabel)
+            .store(in: &cancellables)
 
-        if let image = project.primaryImage?.thumbnailImage {
-            imageView.imageView.contentMode = .scaleAspectFill
-            imageView.imageView.image = image
-        } else {
-            imageView.imageView.contentMode = .center
-            imageView.imageView.image = UIImage(systemName: "photo")
-        }
-
-        imageView.setNeedsLayout()
+        project.publisher(for: \.primaryImage).sink { [weak self] image in
+            if let image = image?.thumbnailImage {
+                self?.imageView.imageView.contentMode = .scaleAspectFill
+                self?.imageView.imageView.image = image
+            } else {
+                self?.imageView.imageView.contentMode = .center
+                self?.imageView.imageView.image = UIImage(systemName: "photo")
+            }
+            
+            self?.imageView.setNeedsLayout()
+        }.store(in: &cancellables)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        cancellables.removeAll()
     }
 }

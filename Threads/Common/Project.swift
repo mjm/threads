@@ -43,9 +43,9 @@ extension Project {
 
     func addImage(_ data: Data) {
         let image = ProjectImage(context: managedObjectContext!)
-        image.order = Int64(allImages.count) // it matters that this one comes before the next line
-        image.project = self
         image.data = data
+        image.order = Int64(allImages.count) // it matters that this one comes before the next line
+        mutableSetValue(forKey: "images").add(image)
     }
     
     var allImages: Set<ProjectImage> {
@@ -62,9 +62,10 @@ extension Project {
             Array(allImages).sorted { $0.order < $1.order }
         }
         set {
+            let images = mutableSetValue(forKey: "images")
             for (i, image) in newValue.enumerated() {
-                image.project = self
                 image.order = Int64(i)
+                images.add(image)
             }
         }
     }
@@ -75,8 +76,12 @@ extension Project {
         }
     }
     
-    var primaryImage: ProjectImage? {
+    @objc dynamic var primaryImage: ProjectImage? {
         orderedImages.first
+    }
+    
+    @objc class func keyPathsForValuesAffectingPrimaryImage() -> Set<String> {
+        return ["images"]
     }
     
     static let placeholderURL = URL(string: "https://threads-demo.glitch.me/projects/example")!

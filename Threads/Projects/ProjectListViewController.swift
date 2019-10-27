@@ -31,9 +31,6 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
         
         let projects = projectsList.objectsPublisher()
         
-        let updateProject = projectsList.objectPublisher()
-            .merge(with: managedObjectContext.publisher(type: ProjectImage.self).compactMap { $0.project })
-        
         projects.map { projects in
             var snapshot = Snapshot()
             
@@ -45,10 +42,6 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
         
         projects.sink { [weak self] projects in
             self?.setShowEmptyView(projects.isEmpty)
-        }.store(in: &cancellables)
-
-        updateProject.sink { [weak self] project in
-            self?.updateCell(project)
         }.store(in: &cancellables)
     }
 
@@ -80,7 +73,7 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
         switch item {
         case let .project(project):
             let cell = cell as! ProjectCollectionViewCell
-            cell.populate(project)
+            cell.bind(project)
         }
     }
     
@@ -118,14 +111,6 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
             section.contentInsets = sectionInsets
             return section
         }
-    }
-
-    func updateCell(_ project: Project) {
-        cellForProject(project)?.populate(project)
-    }
-
-    private func cellForProject(_ project: Project) -> ProjectCollectionViewCell? {
-        dataSource.indexPath(for: .project(project)).flatMap { collectionView.cellForItem(at: $0) as? ProjectCollectionViewCell }
     }
 
     @IBAction func unwindDeleteProject(segue: UIStoryboardSegue) {

@@ -39,7 +39,7 @@ extension Thread {
         }
     }
     
-    class func keyPathsForValuesAffectingColor() -> Set<String> {
+    @objc class func keyPathsForValuesAffectingColor() -> Set<String> {
         return ["colorHex"]
     }
 }
