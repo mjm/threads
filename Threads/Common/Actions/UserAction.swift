@@ -58,7 +58,7 @@ extension UserAction {
 
 protocol AsyncUserAction: UserAction {}
 
-protocol SyncUserAction: UserAction {
+protocol SyncUserAction: ReactiveUserAction {
     /// Do the action's work.
     ///
     /// This will always be called on the main queue.
@@ -68,13 +68,8 @@ protocol SyncUserAction: UserAction {
 }
 
 extension SyncUserAction {
-    func performAsync(_ context: UserActionContext<Self>) {
-        do {
-            let result = try perform(context)
-            context.complete(result)
-        } catch {
-            context.complete(error: error)
-        }
+    func publisher(context: UserActionContext<Self>) -> AnyPublisher<ResultType, Error> {
+        Result(catching: { try perform(context) }).publisher.eraseToAnyPublisher()
     }
 }
 
