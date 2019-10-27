@@ -157,11 +157,6 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             }
         }.store(in: &cancellables)
         
-        notes.map { notes in
-            (notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
-        }.sink { [weak self] notes in
-            (self?.cell(for: .viewNotes) as? TextViewCollectionViewCell)?.textView.attributedText = notes
-        }.store(in: &cancellables)
         threads.sink { [weak self] threads in
             guard let self = self else { return }
             let text = self.sectionHeaderText(for: threads)
@@ -240,8 +235,7 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             let cell = cell as! TextViewCollectionViewCell
             cell.textView.isEditable = false
             cell.textView.dataDetectorTypes = .all
-            cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
-            cell.onChange = { _ in }
+            cell.bind(to: \.formattedNotes, on: project)
 
         case let .viewThread(projectThread, isLast: isLast):
             let cell = cell as! ViewProjectThreadCollectionViewCell
@@ -260,22 +254,19 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
         case .editName:
             let cell = cell as! TextInputCollectionViewCell
             cell.textField.placeholder = Localized.projectName
-            cell.textField.text = project.name
-            cell.onChange = { newText in
-                project.name = newText
-            }
-            cell.onReturn = { [unowned cell] in
-                cell.textField.resignFirstResponder()
-            }
+            cell.bind(to: \.name, on: project)
+            cell.actionPublisher().sink { [weak cell] action in
+                switch action {
+                case .return:
+                    cell?.textField.resignFirstResponder()
+                }
+            }.store(in: &cell.cancellables)
 
         case .editNotes:
             let cell = cell as! TextViewCollectionViewCell
             cell.textView.isEditable = true
             cell.textView.dataDetectorTypes = []
-            cell.textView.attributedText = (project.notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
-            cell.onChange = { newText in
-                project.notes = newText
-            }
+            cell.bind(to: \.formattedNotes, on: project)
 
         case let .editThread(projectThread):
             let cell = cell as! EditProjectThreadCollectionViewCell

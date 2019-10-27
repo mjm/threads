@@ -7,16 +7,34 @@
 //
 
 import UIKit
+import Combine
 
 class TextViewCollectionViewCell: UICollectionViewCell {
     @IBOutlet var textView: UITextView!
     
-    var onChange: (NSAttributedString) -> Void = { _ in }
+    var cancellables = Set<AnyCancellable>()
+    
+    let onChange = PassthroughSubject<NSAttributedString?, Never>()
+    
+    func textPublisher() -> AnyPublisher<NSAttributedString?, Never> {
+        onChange.eraseToAnyPublisher()
+    }
+    
+    func bind<Root: NSObject>(to path: ReferenceWritableKeyPath<Root, NSAttributedString?>, on root: Root) {
+        root.publisher(for: path).assign(to: \.attributedText, on: textView).store(in: &cancellables)
+        textPublisher().assign(to: path, on: root).store(in: &cancellables)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        cancellables.removeAll()
+    }
 }
 
 extension TextViewCollectionViewCell: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        onChange(textView.attributedText)
+        onChange.send(textView.attributedText)
     }
 }
 

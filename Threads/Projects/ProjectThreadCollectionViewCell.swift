@@ -42,4 +42,10 @@ class ProjectThreadCollectionViewCell: UICollectionViewCell {
         labelLabel.textColor = .label
         quantityLabel.textColor = .label
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        cancellables.removeAll()
+    }
 }

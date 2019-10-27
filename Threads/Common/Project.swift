@@ -81,7 +81,20 @@ extension Project {
     }
     
     @objc class func keyPathsForValuesAffectingPrimaryImage() -> Set<String> {
-        return ["images"]
+        ["images"]
+    }
+    
+    @objc dynamic var formattedNotes: NSAttributedString? {
+        get {
+            (notes ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
+        }
+        set {
+            notes = (newValue ?? NSAttributedString()).replacing(font: .preferredFont(forTextStyle: .body), color: .label)
+        }
+    }
+    
+    @objc class func keyPathsForValuesAffectingFormattedNotes() -> Set<String> {
+        ["notes"]
     }
     
     static let placeholderURL = URL(string: "https://threads-demo.glitch.me/projects/example")!
