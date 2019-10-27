@@ -177,7 +177,7 @@ enum UserActivity {
         if let identifier = persistentIdentifier {
             NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [identifier]) {
                 self.addToCurrentEvent()
-                DispatchQueue.main.async(execute: completion)
+                completion()
             }
         }
     }

@@ -47,7 +47,7 @@ class SplitViewController: UISplitViewController {
     }
     
     @objc func addProject(_ sender: Any) {
-        actionRunner.perform(CreateProjectAction()) { project in
+        actionRunner.perform(CreateProjectAction()).ignoreError().handle { project in
             self.showProject(project)
         }
     }

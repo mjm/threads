@@ -21,20 +21,19 @@ class UserActionContext<Action: UserAction> {
     let action: Action
     let source: UserActionSource?
     let willPerformHandler: () -> Void
-    let completionHandler: (Action.ResultType) -> Void
+    
+    let subject = ReplaySubject<Action.ResultType, Error>()
 
     init(
         runner: UserActionRunner,
         action: Action,
         source: UserActionSource?,
-        willPerform: @escaping () -> Void,
-        completion: @escaping (Action.ResultType) -> Void
+        willPerform: @escaping () -> Void
     ) {
         self.runner = runner
         self.action = action
         self.source = source
         self.willPerformHandler = willPerform
-        self.completionHandler = completion
     }
 
     var managedObjectContext: NSManagedObjectContext { runner.managedObjectContext }
@@ -46,11 +45,8 @@ class UserActionContext<Action: UserAction> {
     /// - Parameters:
     ///     - result: A value the action is returning to the action's completion handler.
     func complete(_ result: Action.ResultType) {
-        completeSubscription = nil
-        performOnMainQueue {
-            self.runner.complete(self.action)
-            self.completionHandler(result)
-        }
+        subject.send(result)
+        subject.send(completion: .finished)
     }
 
     /// Signal that the action has completed its work with an error.
@@ -60,10 +56,7 @@ class UserActionContext<Action: UserAction> {
     /// - Parameters:
     ///     - error: The error that caused the action to fail.
     func complete(error: Error) {
-        completeSubscription = nil
-        performOnMainQueue {
-            self.runner.presentError(error)
-        }
+        subject.send(completion: .failure(error))
     }
     
     fileprivate var completeSubscription: AnyCancellable?
@@ -121,20 +114,8 @@ class UserActionContext<Action: UserAction> {
     /// - Parameters:
     ///     - action: The new action to run.
     ///     - completion: A completion handler to run when the new action completes successfully.
-    func perform<OtherAction: UserAction>(_ action: OtherAction, completion: @escaping (OtherAction.ResultType) -> Void = { _ in }) {
-        runner.perform(action, completion: completion)
-    }
-
-    private func performOnMainQueue(execute work: @escaping () -> Void) {
-        // It's sometimes important that our completion handlers do not wait for the next tick
-        // of the event loop. So we check if we are already on the main queue and just run the
-        // block immediately if so, otherwise we dispatch it onto the main queue.
-        let isMainQueue = DispatchQueue.getSpecific(key: isMainQueueKey) ?? false
-        if isMainQueue {
-            work()
-        } else {
-            DispatchQueue.main.async(execute: work)
-        }
+    func perform<OtherAction: UserAction>(_ action: OtherAction) -> AnyPublisher<OtherAction.ResultType, Error> {
+        runner.perform(action)
     }
 }
 
@@ -156,17 +137,11 @@ extension UserActionContext where Action.ResultType == Void {
 }
 
 extension Publisher {
-    func complete<Action>(_ context: UserActionContext<Action>) where Output == Action.ResultType {
-        var output: Output?
-        context.completeSubscription = sink(receiveCompletion: { completion in
-            switch completion {
-            case .finished:
-                context.complete(output!)
-            case let .failure(error):
-                context.complete(error: error)
-            }
-        }) { value in
-            output = value
-        }
+    func ignoreError() -> Publishers.Catch<Self, Empty<Output, Never>> {
+        self.catch { _ in Empty(completeImmediately: false) }
+    }
+    
+    func complete<Action>(_ context: UserActionContext<Action>) where Output == Action.ResultType, Failure == Error {
+        context.completeSubscription = receive(on: RunLoop.main).subscribe(context.subject)
     }
 }

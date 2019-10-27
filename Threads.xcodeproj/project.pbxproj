@@ -45,6 +45,7 @@
 		C94EB3022325E6A900D4CF56 /* ProjectCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */; };
 		C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */; };
 		C95028E32362BCC800BB02C4 /* ReactiveViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */; };
+		C95028E72366070200BB02C4 /* ReplaySubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95028E62366070200BB02C4 /* ReplaySubject.swift */; };
 		C955EDE6234013DC000ACC39 /* FetchedObjectList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */; };
 		C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE7234028A8000ACC39 /* ViewControllers.swift */; };
 		C9571DF62353EF5400CCA56B /* AddThreadSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */; };
@@ -152,6 +153,7 @@
 		C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectCollectionViewCell.xib; sourceTree = "<group>"; };
 		C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
 		C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveViewControllers.swift; sourceTree = "<group>"; };
+		C95028E62366070200BB02C4 /* ReplaySubject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplaySubject.swift; sourceTree = "<group>"; };
 		C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedObjectList.swift; sourceTree = "<group>"; };
 		C955EDE7234028A8000ACC39 /* ViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllers.swift; sourceTree = "<group>"; };
 		C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadSceneDelegate.swift; sourceTree = "<group>"; };
@@ -425,6 +427,7 @@
 				C97FCDFD232F495F000B1590 /* UserAction.swift */,
 				C97FCDFF232F4C9F000B1590 /* UserActionContext.swift */,
 				C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */,
+				C95028E62366070200BB02C4 /* ReplaySubject.swift */,
 				C946962C2342D69500843179 /* AlertController.swift */,
 				C97FCE03232F4E13000B1590 /* ThreadActions.swift */,
 				C97FCE05233068C0000B1590 /* ShoppingListActions.swift */,
@@ -668,6 +671,7 @@
 				C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */,
 				C9491E44232491D90031F463 /* Project.swift in Sources */,
 				C97FCDBF232D9FD0000B1590 /* TextViewCollectionViewCell.swift in Sources */,
+				C95028E72366070200BB02C4 /* ReplaySubject.swift in Sources */,
 				C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */,
 				C99677EE235A6C5400AE2F5C /* OpenInSafariActivity.swift in Sources */,
 			);

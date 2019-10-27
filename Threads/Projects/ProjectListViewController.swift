@@ -139,7 +139,7 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
 // MARK: - Actions
 extension ProjectListViewController {
     @IBAction func createProject() {
-        actionRunner.perform(CreateProjectAction()) { project in
+        actionRunner.perform(CreateProjectAction()).ignoreError().handle { project in
             self.showDetail(for: project, editing: true)
         }
     }

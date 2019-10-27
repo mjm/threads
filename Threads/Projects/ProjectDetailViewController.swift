@@ -426,14 +426,6 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
     private func sectionHeaderText(for threads: [ProjectThread]) -> String {
         String.localizedStringWithFormat(Localized.threadsSectionHeader, threads.count)
     }
-
-    private func cell(for item: Cell) -> UICollectionViewCell? {
-        if let indexPath = dataSource.indexPath(for: item) {
-            return collectionView.cellForItem(at: indexPath)
-        }
-
-        return nil
-    }
 }
 
 // MARK: - Actions

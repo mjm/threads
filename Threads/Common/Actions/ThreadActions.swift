@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Combine
 import Events
 
 extension Event.Key {
@@ -73,7 +74,7 @@ struct AddToCollectionAction: SyncUserAction {
     }
 }
 
-struct RemoveThreadAction: DestructiveUserAction {
+struct RemoveThreadAction: ReactiveUserAction, DestructiveUserAction {
     let thread: Thread
 
     let undoActionName: String? = Localized.removeThread
@@ -82,16 +83,21 @@ struct RemoveThreadAction: DestructiveUserAction {
     let confirmationMessage = Localized.removeThreadPrompt
     let confirmationButtonTitle = Localized.remove
 
-    func performAsync(_ context: UserActionContext<RemoveThreadAction>) {
+    func publisher(context: UserActionContext<RemoveThreadAction>) -> AnyPublisher<Void, Error> {
         Event.current[.threadNumber] = thread.number
-        UserActivity.showThread(thread).delete {
-            self.thread.removeFromCollection()
-            context.complete()
-        }
+        
+        return Future { promise in
+            UserActivity.showThread(self.thread).delete {
+                RunLoop.main.perform {
+                    self.thread.removeFromCollection()
+                    promise(.success(()))
+                }
+            }
+        }.eraseToAnyPublisher()
     }
 }
 
-struct AddThreadAction: UserAction {
+struct AddThreadAction: AsyncUserAction {
     enum Mode {
         case collection
         case shoppingList

@@ -11,8 +11,6 @@ import CoreData
 import Combine
 import Events
 
-let isMainQueueKey = DispatchSpecificKey<Bool>()
-
 extension Event.Key {
     static let undoActionName: Event.Key = "undo_action"
     static let actionName: Event.Key = "action"
@@ -28,19 +26,47 @@ class UserActionRunner {
          managedObjectContext: NSManagedObjectContext) {
         self.viewController = viewController
         self.managedObjectContext = managedObjectContext
-
-        DispatchQueue.main.setSpecific(key: isMainQueueKey, value: true)
     }
 
-    func perform<Action: UserAction>(_ action: Action,
-                                     source: UserActionSource? = nil,
-                                     willPerform: @escaping () -> Void = {},
-                                     completion: @escaping (Action.ResultType) -> Void = { _ in }) {
-        let context = UserActionContext(runner: self,
-                                        action: action,
-                                        source: source,
-                                        willPerform: willPerform,
-                                        completion: completion)
+    @discardableResult
+    func perform<Action: UserAction>(
+        _ action: Action,
+        source: UserActionSource? = nil,
+        willPerform: @escaping () -> Void = {}
+    ) -> AnyPublisher<Action.ResultType, Error> {
+        // the action's context needs to live until the action is complete
+        var context: UserActionContext<Action>? = UserActionContext(
+            runner: self,
+            action: action,
+            source: source,
+            willPerform: willPerform
+        )
+        
+        let publisher = context!.subject
+            .subscribe(on: RunLoop.main)
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
+
+        publisher.handle(receiveCompletion: { completion in
+            switch completion {
+            case .finished:
+                if action.saveAfterComplete {
+                    self.managedObjectContext.commit()
+                }
+                Event.current[.saved] = action.saveAfterComplete
+                
+                Event.current.send("completed user action")
+            case .failure(UserActionError.canceled):
+                Event.current[.canceled] = true
+                Event.current.send("completed user action")
+            case let .failure(error):
+                Event.current.error = error
+                self.viewController?.present(error: error)
+                Event.current.send(.error, "completed user action")
+            }
+            
+            context = nil
+        }, receiveValue: { _ in })
 
         // The goal here is to get dynamic dispatch, so that destructive actions can do their confirmation
         // behavior. So we ask the action to run itself, though it delegates most of the real work by calling
@@ -48,7 +74,9 @@ class UserActionRunner {
         //
         // Concrete action types shouldn't override `run(on:context:)`, it should only be implemented in a
         // protocol extension.
-        action.run(on: self, context: context)
+        action.run(on: self, context: context!)
+        
+        return publisher
     }
 
     func reallyPerform<Action: UserAction>(_ action: Action, context: UserActionContext<Action>) {
@@ -64,26 +92,6 @@ class UserActionRunner {
         action.performAsync(context)
     }
 
-    func presentError(_ error: Error) {
-        if case UserActionError.canceled = error {
-            Event.current[.canceled] = true
-            Event.current.send("completed user action")
-        } else {
-            Event.current.error = error
-            viewController?.present(error: error)
-            Event.current.send(.error, "completed user action")
-        }
-    }
-
-    func complete<Action: UserAction>(_ action: Action) {
-        if action.saveAfterComplete {
-            managedObjectContext.commit()
-        }
-        Event.current[.saved] = action.saveAfterComplete
-
-        Event.current.send("completed user action")
-    }
-
     func contextualAction<Action: UserAction>(
         _ action: Action,
         title: String? = nil,
@@ -92,8 +100,8 @@ class UserActionRunner {
         completion: @escaping (Action.ResultType) -> Void = { _ in }
     ) -> UIContextualAction {
         UIContextualAction(style: style, title: title) { _, _, contextualActionCompletion in
-            self.perform(action, willPerform: willPerform) { result in
-                completion(result)
+            self.perform(action, willPerform: willPerform).ignoreError().handle { value in
+                completion(value)
                 contextualActionCompletion(true)
             }
         }
@@ -115,7 +123,7 @@ class UserActionRunner {
 
         let extraAttributes: UIMenuElement.Attributes = action.canPerform ? [] : .disabled
         return UIAction(title: title, image: image, attributes: attributes.union(extraAttributes), state: state) { _ in
-            self.perform(action, source: source, willPerform: willPerform, completion: completion)
+            self.perform(action, source: source, willPerform: willPerform).ignoreError().handle(receiveValue: completion)
         }
     }
 
@@ -131,15 +139,29 @@ class UserActionRunner {
         }
 
         return UIAlertAction(title: title, style: style) { _ in
-            self.perform(action, willPerform: willPerform, completion: completion)
+            self.perform(action, willPerform: willPerform).ignoreError().handle(receiveValue: completion)
         }
     }
 }
 
 extension Publisher {
+    func handle(receiveCompletion: @escaping (Subscribers.Completion<Failure>) -> Void, receiveValue: @escaping (Output) -> Void) {
+        var cancellable: AnyCancellable?
+        cancellable = sink(receiveCompletion: { completion in
+            receiveCompletion(completion)
+            cancellable?.cancel()
+        }, receiveValue: receiveValue)
+    }
+    
     func perform<Action: UserAction>(on runner: UserActionRunner) -> AnyCancellable where Output == Action, Failure == Never {
         sink { action in
             runner.perform(action)
         }
+    }
+}
+
+extension Publisher where Failure == Never {
+    func handle(receiveValue: @escaping (Output) -> Void) {
+        handle(receiveCompletion: { _ in }, receiveValue: receiveValue)
     }
 }

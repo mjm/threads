@@ -56,6 +56,8 @@ extension UserAction {
     }
 }
 
+protocol AsyncUserAction: UserAction {}
+
 protocol SyncUserAction: UserAction {
     /// Do the action's work.
     ///

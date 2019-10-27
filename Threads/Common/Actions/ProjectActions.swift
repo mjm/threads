@@ -17,7 +17,7 @@ extension Event.Key {
     static let activityType: Event.Key = "activity_type"
 }
 
-struct CreateProjectAction: UserAction {
+struct CreateProjectAction: AsyncUserAction {
     typealias ResultType = Project
 
     let undoActionName: String? = Localized.newProject
@@ -234,7 +234,7 @@ struct MoveProjectImageAction: SyncUserAction {
 
     let undoActionName: String? = Localized.moveImage
 
-    func perform(_ context: UserActionContext<MoveProjectImageAction>) throws -> () {
+    func perform(_ context: UserActionContext<MoveProjectImageAction>) throws {
         Event.current[.projectName] = project.name
         
         var images = project.orderedImages
