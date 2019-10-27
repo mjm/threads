@@ -11,8 +11,8 @@ import UIKit
 class ViewProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
     @IBOutlet var separatorLeadingConstraint: NSLayoutConstraint!
 
-    func populate(_ projectThread: ProjectThread, isLastItem: Bool = false) {
-        super.populate(projectThread)
+    func bind(_ projectThread: ProjectThread, isLastItem: Bool = false) {
+        super.bind(projectThread)
         
         separatorLeadingConstraint.constant = isLastItem ? 0 : 15
     }

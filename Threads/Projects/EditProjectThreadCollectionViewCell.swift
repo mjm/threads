@@ -20,10 +20,15 @@ class EditProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
 
     private let onAction = PassthroughSubject<Action, Never>()
 
-    override func populate(_ projectThread: ProjectThread) {
-        super.populate(projectThread)
-
-        decreaseButton.setImage(UIImage(systemName: projectThread.amount == 1 ? "trash" : "minus.square"), for: .normal)
+    override func bind(_ projectThread: ProjectThread) {
+        super.bind(projectThread)
+        
+        projectThread.publisher(for: \.amount)
+            .map { $0 == 1 ? "trash" : "minus.square" }
+            .map { UIImage(systemName: $0) }
+            .sink { [decreaseButton] image in
+                decreaseButton?.setImage(image, for: .normal)
+            }.store(in: &cancellables)
     }
     
     func actionPublisher() -> AnyPublisher<Action, Never> {

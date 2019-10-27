@@ -168,9 +168,6 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             self.setThreadsSectionHeaderText(text)
         }.store(in: &cancellables)
         
-        threadsList.objectPublisher().sink { [weak self] projectThread in
-            self?.updateThreadCell(projectThread)
-        }.store(in: &cancellables)
         imagesList.objectPublisher().sink { [weak self] image in
             self?.updateImageCell(image)
         }.store(in: &cancellables)
@@ -248,7 +245,7 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
 
         case let .viewThread(projectThread, isLast: isLast):
             let cell = cell as! ViewProjectThreadCollectionViewCell
-            cell.populate(projectThread, isLastItem: isLast)
+            cell.bind(projectThread, isLastItem: isLast)
 
         case let .editImage(image):
             let cell = cell as! EditImageCollectionViewCell
@@ -282,7 +279,7 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
 
         case let .editThread(projectThread):
             let cell = cell as! EditProjectThreadCollectionViewCell
-            cell.populate(projectThread)
+            cell.bind(projectThread)
             editThreadSubscriptions[ObjectIdentifier(cell)] = cell.actionPublisher().sink { action in
                 switch action {
                 case .increment:
@@ -329,16 +326,6 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
         } else {
             undoManager?.endUndoGrouping()
             project.managedObjectContext!.commit()
-        }
-    }
-
-    func updateThreadCell(_ thread: ProjectThread) {
-        if let cell = self.cell(for: .viewThread(thread, isLast: false)) as? ViewProjectThreadCollectionViewCell {
-            cell.populate(thread)
-        } else if let cell = self.cell(for: .viewThread(thread, isLast: true)) as? ViewProjectThreadCollectionViewCell {
-            cell.populate(thread, isLastItem: true)
-        } else if let cell = self.cell(for: .editThread(thread)) as? EditProjectThreadCollectionViewCell {
-            cell.populate(thread)
         }
     }
 
