@@ -23,6 +23,8 @@ final class MyThreadsViewModel: ViewModel {
 
     private let threadsList: FetchedObjectList<Thread>
 
+    @Published var selectedCell: Cell?
+
     override init(context: NSManagedObjectContext = .view) {
         threadsList
             = FetchedObjectList(
@@ -50,6 +52,8 @@ final class MyThreadsViewModel: ViewModel {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
+
+    var selectedThread: Thread? { selectedCell?.thread }
 }
 
 // MARK: - Actions
@@ -62,27 +66,41 @@ extension MyThreadsViewModel {
         actionRunner.perform(AddThreadAction(mode: .collection))
     }
 
-    func delete(cell: Cell) {
-        actionRunner.perform(RemoveThreadAction(thread: cell.thread))
+    var canDeleteSelectedThread: Bool { selectedThread != nil }
+
+    func deleteSelectedThread() {
+        if let thread = selectedThread {
+            actionRunner.perform(RemoveThreadAction(thread: thread))
+        }
     }
 
-    func toggleOnBobbin(cell: Cell) {
-        guard cell.thread.amountInCollection > 0 else {
+    var canToggleSelectedThreadOnBobbin: Bool {
+        (selectedThread?.amountInCollection ?? 0) > 0
+    }
+
+    func toggleSelectedThreadOnBobbin() {
+        guard let thread = selectedThread, thread.amountInCollection > 0 else {
             return
         }
 
-        if cell.thread.onBobbin {
-            actionRunner.perform(MarkOffBobbinAction(thread: cell.thread))
+        if thread.onBobbin {
+            actionRunner.perform(MarkOffBobbinAction(thread: thread))
         } else {
-            actionRunner.perform(MarkOnBobbinAction(thread: cell.thread))
+            actionRunner.perform(MarkOnBobbinAction(thread: thread))
         }
     }
 
-    func toggleInStock(cell: Cell) {
-        if cell.thread.amountInCollection > 0 {
-            actionRunner.perform(MarkOutOfStockAction(thread: cell.thread))
+    var canToggleSelectedThreadInStock: Bool { selectedThread != nil }
+
+    func toggleSelectedThreadInStock() {
+        guard let thread = selectedThread else {
+            return
+        }
+
+        if thread.amountInCollection > 0 {
+            actionRunner.perform(MarkOutOfStockAction(thread: thread))
         } else {
-            actionRunner.perform(MarkInStockAction(thread: cell.thread))
+            actionRunner.perform(MarkInStockAction(thread: thread))
         }
     }
 }

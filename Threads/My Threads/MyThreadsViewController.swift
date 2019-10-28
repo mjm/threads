@@ -88,21 +88,15 @@ class MyThreadsViewController: ReactiveTableViewController<
     }
 
     override func delete(_ sender: Any?) {
-        if let cell = selectedCell {
-            viewModel.delete(cell: cell)
-        }
+        viewModel.deleteSelectedThread()
     }
 
     @objc func toggleOnBobbin(_ sender: Any?) {
-        if let cell = selectedCell {
-            viewModel.toggleOnBobbin(cell: cell)
-        }
+        viewModel.toggleSelectedThreadOnBobbin()
     }
 
     @objc func toggleInStock(_ sender: Any?) {
-        if let cell = selectedCell {
-            viewModel.toggleInStock(cell: cell)
-        }
+        viewModel.toggleSelectedThreadInStock()
     }
 
     @IBAction func unwindDeleteThread(segue: UIStoryboardSegue) {
@@ -129,7 +123,7 @@ class MyThreadsViewController: ReactiveTableViewController<
 
         switch action {
         case #selector(delete(_:)):
-            return selectedCell != nil
+            return viewModel.canDeleteSelectedThread
         default:
             return true
         }
@@ -140,21 +134,11 @@ class MyThreadsViewController: ReactiveTableViewController<
 
         switch command.action {
         case #selector(toggleOnBobbin(_:)):
-            if let thread = selectedCell?.thread {
-                command.state = thread.onBobbin ? .on : .off
-                command.attributes = thread.amountInCollection > 0 ? [] : .disabled
-            } else {
-                command.state = .off
-                command.attributes = .disabled
-            }
+            command.state = (viewModel.selectedThread?.onBobbin ?? false) ? .on : .off
+            command.attributes = viewModel.canToggleSelectedThreadOnBobbin ? [] : .disabled
         case #selector(toggleInStock(_:)):
-            if let thread = selectedCell?.thread {
-                command.state = thread.amountInCollection > 0 ? .on : .off
-                command.attributes = []
-            } else {
-                command.state = .off
-                command.attributes = .disabled
-            }
+            command.state = (viewModel.selectedThread?.amountInCollection ?? 0) > 0 ? .on : .off
+            command.attributes = viewModel.canToggleSelectedThreadInStock ? [] : .disabled
         default:
             return
         }
@@ -164,6 +148,8 @@ class MyThreadsViewController: ReactiveTableViewController<
 // MARK: - Table View Delegate
 extension MyThreadsViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.selectedCell = dataSource.itemIdentifier(for: indexPath)
+
         #if !targetEnvironment(macCatalyst)
         if case let .thread(thread) = dataSource.itemIdentifier(for: indexPath)! {
             showDetail(for: thread)
