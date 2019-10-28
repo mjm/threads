@@ -24,19 +24,3 @@ class NavigationController: UINavigationController {
         topViewController
     }
 }
-
-// MARK: - View Controller Extensions
-
-extension UIViewController {
-    func present(error: Error, animated: Bool = true) {
-        let error = error as NSError
-
-        let alert = UIAlertController(
-            title: error.localizedDescription,
-            message: error.localizedFailureReason,
-            preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Localized.dismiss, style: .cancel))
-
-        present(alert, animated: animated)
-    }
-}

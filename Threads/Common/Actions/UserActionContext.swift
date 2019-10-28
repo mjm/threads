@@ -99,12 +99,12 @@ class UserActionContext<Action: UserAction> {
             break
         }
 
-        runner.viewController?.present(viewController, animated: true)
+        runner.presenter?.present(viewController, animated: true)
     }
 
     /// Dismiss a view controller that was previously presented using `present(_:)`.
     func dismiss() {
-        runner.viewController?.dismiss(animated: true)
+        runner.presenter?.dismiss(animated: true)
     }
 
     /// Perform an action on the same runner that ran the current action.

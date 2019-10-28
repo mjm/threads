@@ -31,7 +31,7 @@ class SplitViewController: UISplitViewController {
         super.viewDidLoad()
 
         actionRunner
-            = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
+            = UserActionRunner(presenter: self, managedObjectContext: managedObjectContext)
 
         primaryBackgroundStyle = .sidebar
     }

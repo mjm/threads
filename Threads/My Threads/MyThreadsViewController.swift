@@ -11,22 +11,17 @@ import CoreData
 import UIKit
 
 class MyThreadsViewController: ReactiveTableViewController<
-    MyThreadsViewController.Section, MyThreadsViewController.Cell
+    MyThreadsViewModel.Section, MyThreadsViewModel.Cell
 >
 {
-    enum Section {
-        case threads
-    }
-
-    enum Cell: ReusableCell {
-        case thread(Thread)
-
-        var cellIdentifier: String { "Thread" }
-    }
-
-    private var threadsList: FetchedObjectList<Thread>!
+    let viewModel: MyThreadsViewModel
 
     override var currentUserActivity: UserActivity? { .showMyThreads }
+
+    required init?(coder: NSCoder) {
+        viewModel = MyThreadsViewModel()
+        super.init(coder: coder)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,35 +33,13 @@ class MyThreadsViewController: ReactiveTableViewController<
     }
 
     override func subscribe() {
-        threadsList
-            = FetchedObjectList(
-                fetchRequest: Thread.inCollectionFetchRequest(),
-                managedObjectContext: managedObjectContext
-            )
+        viewModel.presenter = self
 
-        snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        viewModel.snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
 
-        isEmpty.sink { [weak self] isEmpty in
+        viewModel.isEmpty.sink { [weak self] isEmpty in
             self?.setShowEmptyView(isEmpty)
         }.store(in: &cancellables)
-    }
-
-    var snapshot: AnyPublisher<Snapshot, Never> {
-        threadsList.objectsPublisher().map { threads -> Snapshot in
-            var snapshot = Snapshot()
-
-            snapshot.appendSections([.threads])
-            snapshot.appendItems(threads.map { .thread($0) }, toSection: .threads)
-
-            return snapshot
-        }.eraseToAnyPublisher()
-    }
-
-    var isEmpty: AnyPublisher<Bool, Never> {
-        threadsList.objectsPublisher()
-            .map { $0.isEmpty }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
     }
 
     override func dataSourceWillInitialize() {
@@ -101,51 +74,34 @@ class MyThreadsViewController: ReactiveTableViewController<
         ["Thread": .nib(CollectionThreadTableViewCell.self)]
     }
 
-    override func populate(cell: UITableViewCell, item: MyThreadsViewController.Cell) {
-        switch item {
-        case let .thread(thread):
-            let cell = cell as! CollectionThreadTableViewCell
-            cell.bind(thread)
-        }
+    override func populate(cell: UITableViewCell, item: MyThreadsViewModel.Cell) {
+        let cell = cell as! CollectionThreadTableViewCell
+        cell.bind(item.thread)
     }
 
     @objc func buyPremium(_ sender: Any) {
-        actionRunner.perform(BuyPremiumAction())
+        viewModel.buyPremium()
     }
 
     @IBAction func addThreads(_ sender: Any) {
-        actionRunner.perform(AddThreadAction(mode: .collection))
+        viewModel.addThreads()
     }
 
     override func delete(_ sender: Any?) {
-        guard case let .thread(thread) = selectedCell else {
-            return
+        if let cell = selectedCell {
+            viewModel.delete(cell: cell)
         }
-
-        actionRunner.perform(RemoveThreadAction(thread: thread))
     }
 
     @objc func toggleOnBobbin(_ sender: Any?) {
-        guard case let .thread(thread) = selectedCell, thread.amountInCollection > 0 else {
-            return
-        }
-
-        if thread.onBobbin {
-            actionRunner.perform(MarkOffBobbinAction(thread: thread))
-        } else {
-            actionRunner.perform(MarkOnBobbinAction(thread: thread))
+        if let cell = selectedCell {
+            viewModel.toggleOnBobbin(cell: cell)
         }
     }
 
     @objc func toggleInStock(_ sender: Any?) {
-        guard case let .thread(thread) = selectedCell else {
-            return
-        }
-
-        if thread.amountInCollection > 0 {
-            actionRunner.perform(MarkOutOfStockAction(thread: thread))
-        } else {
-            actionRunner.perform(MarkInStockAction(thread: thread))
+        if let cell = selectedCell {
+            viewModel.toggleInStock(cell: cell)
         }
     }
 
@@ -184,7 +140,7 @@ class MyThreadsViewController: ReactiveTableViewController<
 
         switch command.action {
         case #selector(toggleOnBobbin(_:)):
-            if case let .thread(thread) = selectedCell {
+            if let thread = selectedCell?.thread {
                 command.state = thread.onBobbin ? .on : .off
                 command.attributes = thread.amountInCollection > 0 ? [] : .disabled
             } else {
@@ -192,7 +148,7 @@ class MyThreadsViewController: ReactiveTableViewController<
                 command.attributes = .disabled
             }
         case #selector(toggleInStock(_:)):
-            if case let .thread(thread) = selectedCell {
+            if let thread = selectedCell?.thread {
                 command.state = thread.amountInCollection > 0 ? .on : .off
                 command.attributes = []
             } else {
@@ -218,7 +174,7 @@ extension MyThreadsViewController {
     override func tableView(
         _ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
     ) -> UISwipeActionsConfiguration? {
-        guard case let .thread(thread) = dataSource.itemIdentifier(for: indexPath) else {
+        guard let thread = dataSource.itemIdentifier(for: indexPath)?.thread else {
             return nil
         }
 
@@ -246,7 +202,7 @@ extension MyThreadsViewController {
     override func tableView(
         _ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
     ) -> UISwipeActionsConfiguration? {
-        guard case let .thread(thread) = dataSource.itemIdentifier(for: indexPath) else {
+        guard let thread = dataSource.itemIdentifier(for: indexPath)?.thread else {
             return nil
         }
 
@@ -272,7 +228,7 @@ extension MyThreadsViewController {
         _ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath,
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
-        guard case let .thread(thread) = dataSource.itemIdentifier(for: indexPath) else {
+        guard let thread = dataSource.itemIdentifier(for: indexPath)?.thread else {
             return nil
         }
 

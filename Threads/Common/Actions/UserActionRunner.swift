@@ -19,14 +19,14 @@ extension Event.Key {
 }
 
 class UserActionRunner {
-    weak var viewController: UIViewController?
+    weak var presenter: UserActionPresenter?
     let managedObjectContext: NSManagedObjectContext
 
     init(
-        viewController: UIViewController,
+        presenter: UserActionPresenter? = nil,
         managedObjectContext: NSManagedObjectContext
     ) {
-        self.viewController = viewController
+        self.presenter = presenter
         self.managedObjectContext = managedObjectContext
     }
 
@@ -64,7 +64,7 @@ class UserActionRunner {
                     Event.current.send("completed user action")
                 case let .failure(error):
                     Event.current.error = error
-                    self.viewController?.present(error: error)
+                    self.presenter?.present(error: error)
                     Event.current.send(.error, "completed user action")
                 }
 

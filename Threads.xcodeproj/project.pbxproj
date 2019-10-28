@@ -46,6 +46,9 @@
 		C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */; };
 		C95028E32362BCC800BB02C4 /* ReactiveViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */; };
 		C95028E72366070200BB02C4 /* ReplaySubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95028E62366070200BB02C4 /* ReplaySubject.swift */; };
+		C95028EF2366AD0100BB02C4 /* MyThreadsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95028EE2366AD0100BB02C4 /* MyThreadsViewModel.swift */; };
+		C95028F12366B29700BB02C4 /* UserActionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95028F02366B29700BB02C4 /* UserActionPresenter.swift */; };
+		C95028F32366B74700BB02C4 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95028F22366B74700BB02C4 /* ViewModel.swift */; };
 		C955EDE6234013DC000ACC39 /* FetchedObjectList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */; };
 		C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE7234028A8000ACC39 /* ViewControllers.swift */; };
 		C9571DF62353EF5400CCA56B /* AddThreadSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */; };
@@ -154,6 +157,9 @@
 		C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
 		C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveViewControllers.swift; sourceTree = "<group>"; };
 		C95028E62366070200BB02C4 /* ReplaySubject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplaySubject.swift; sourceTree = "<group>"; };
+		C95028EE2366AD0100BB02C4 /* MyThreadsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewModel.swift; sourceTree = "<group>"; };
+		C95028F02366B29700BB02C4 /* UserActionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionPresenter.swift; sourceTree = "<group>"; };
+		C95028F22366B74700BB02C4 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedObjectList.swift; sourceTree = "<group>"; };
 		C955EDE7234028A8000ACC39 /* ViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllers.swift; sourceTree = "<group>"; };
 		C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadSceneDelegate.swift; sourceTree = "<group>"; };
@@ -361,6 +367,7 @@
 				C97FCDBB232D78AA000B1590 /* Localizable.stringsdict */,
 				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
 				C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */,
+				C95028F22366B74700BB02C4 /* ViewModel.swift */,
 				C955EDE7234028A8000ACC39 /* ViewControllers.swift */,
 				C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */,
 				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
@@ -397,6 +404,7 @@
 			children = (
 				C97FCDD0232DCE0F000B1590 /* MyThreads.storyboard */,
 				C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */,
+				C95028EE2366AD0100BB02C4 /* MyThreadsViewModel.swift */,
 				C97FCDE2232DD3D2000B1590 /* ThreadPreviewViewController.swift */,
 				C9491E2A231DE0070031F463 /* CollectionThreadTableViewCell.swift */,
 				C9491E2B231DE0070031F463 /* CollectionThreadTableViewCell.xib */,
@@ -443,6 +451,7 @@
 				C97FCDFD232F495F000B1590 /* UserAction.swift */,
 				C97FCDFF232F4C9F000B1590 /* UserActionContext.swift */,
 				C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */,
+				C95028F02366B29700BB02C4 /* UserActionPresenter.swift */,
 				C95028E62366070200BB02C4 /* ReplaySubject.swift */,
 				C946962C2342D69500843179 /* AlertController.swift */,
 				C97FCE03232F4E13000B1590 /* ThreadActions.swift */,
@@ -631,6 +640,7 @@
 				C946962D2342D69500843179 /* AlertController.swift in Sources */,
 				C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */,
 				C97FCDEC232E014D000B1590 /* NSManagedObjectContext.swift in Sources */,
+				C95028EF2366AD0100BB02C4 /* MyThreadsViewModel.swift in Sources */,
 				C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */,
 				C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */,
 				C97FCDF1232EA234000B1590 /* ProjectImage.swift in Sources */,
@@ -668,9 +678,11 @@
 				C97FCE08233073AA000B1590 /* ProjectActions.swift in Sources */,
 				C906E3BB23527C61003EE053 /* SplitViewController.swift in Sources */,
 				C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */,
+				C95028F12366B29700BB02C4 /* UserActionPresenter.swift in Sources */,
 				C9491E372320C67A0031F463 /* SwatchView.swift in Sources */,
 				C97FCDE3232DD3D2000B1590 /* ThreadPreviewViewController.swift in Sources */,
 				C97FCDEE232E941D000B1590 /* Cells.swift in Sources */,
+				C95028F32366B74700BB02C4 /* ViewModel.swift in Sources */,
 				C97FCDFE232F495F000B1590 /* UserAction.swift in Sources */,
 				C97FCDAE232C8796000B1590 /* Project+UIActivityItemSource.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,

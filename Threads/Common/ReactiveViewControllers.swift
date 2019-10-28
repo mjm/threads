@@ -19,7 +19,7 @@ class ReactiveViewController: UIViewController {
         super.viewDidLoad()
 
         actionRunner
-            = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
+            = UserActionRunner(presenter: self, managedObjectContext: managedObjectContext)
 
         userActivity = currentUserActivity?.userActivity
     }
@@ -76,7 +76,7 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
         super.viewDidLoad()
 
         actionRunner
-            = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
+            = UserActionRunner(presenter: self, managedObjectContext: managedObjectContext)
 
         registerCellTypes()
 
@@ -188,7 +188,7 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
         super.viewDidLoad()
 
         actionRunner
-            = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
+            = UserActionRunner(presenter: self, managedObjectContext: managedObjectContext)
 
         registerCellTypes()
 

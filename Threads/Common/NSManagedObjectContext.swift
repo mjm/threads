@@ -8,9 +8,13 @@
 
 import Combine
 import CoreData
-import Foundation
+import UIKit
 
 extension NSManagedObjectContext {
+    class var view: NSManagedObjectContext {
+        (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
+    }
+
     func commit() {
         processPendingChanges()
         if hasChanges {
