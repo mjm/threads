@@ -214,9 +214,11 @@ extension MyThreadsViewController {
         _ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath,
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
-        guard let thread = dataSource.itemIdentifier(for: indexPath)?.thread else {
+        guard let cell = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
+
+        let thread = cell.thread
 
         return UIContextMenuConfiguration(
             identifier: thread.objectID,
@@ -226,22 +228,14 @@ extension MyThreadsViewController {
                 }
             }
         ) { suggestedActions in
-            var markActions: [UIMenuElement] = []
-
-            if thread.amountInCollection == 0 {
-                markActions.append(self.actionRunner.menuAction(MarkInStockAction(thread: thread)))
-            } else {
-                if thread.onBobbin {
-                    markActions.append(
-                        self.actionRunner.menuAction(MarkOffBobbinAction(thread: thread)))
-                } else {
-                    markActions.append(
-                        self.actionRunner.menuAction(MarkOnBobbinAction(thread: thread)))
+            let markActions: [UIMenuElement] =
+                self.viewModel.markActions(for: cell).map { action in
+                    UIAction(title: action.title,
+                             attributes: action.canPerform() ? [] : .disabled) { _ in
+                        action.perform()
+                    }
                 }
 
-                markActions.append(
-                    self.actionRunner.menuAction(MarkOutOfStockAction(thread: thread)))
-            }
             let markMenu = UIMenu(title: "", options: .displayInline, children: markActions)
 
             // Load projects for submenu

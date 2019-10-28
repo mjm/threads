@@ -108,3 +108,35 @@ extension MyThreadsViewModel {
         }
     }
 }
+
+// MARK: - Context Menu Actions
+extension MyThreadsViewModel {
+    struct Action {
+        var title: String
+        var canPerform: () -> Bool
+        var perform: () -> Void
+    }
+
+    private func action<A: UserAction>(_ title: String, _ action: A) -> Action {
+        Action(
+            title: title,
+            canPerform: { action.canPerform },
+            perform: { self.actionRunner.perform(action) }
+        )
+    }
+
+    func markActions(for cell: Cell) -> [Action] {
+        let thread = cell.thread
+
+        if thread.amountInCollection == 0 {
+            return [action(Localized.markInStock, MarkInStockAction(thread: thread))]
+        } else {
+            return [
+                thread.onBobbin
+                    ? action(Localized.markOffBobbin, MarkOffBobbinAction(thread: thread))
+                    : action(Localized.markOnBobbin, MarkOnBobbinAction(thread: thread)),
+                action(Localized.markOutOfStock, MarkOutOfStockAction(thread: thread))
+            ]
+        }
+    }
+}
