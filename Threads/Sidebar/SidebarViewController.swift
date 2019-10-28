@@ -44,6 +44,14 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewController.S
             managedObjectContext: managedObjectContext
         )
         
+        snapshot.apply(to: dataSource, animate: false).store(in: &cancellables)
+        
+        projectsList.objectPublisher().sink { [weak self] project in
+            self?.updateCell(project)
+        }.store(in: &cancellables)
+    }
+    
+    var snapshot: AnyPublisher<Snapshot, Never> {
         projectsList.objectsPublisher().map { projects in
             var snapshot = Snapshot()
             
@@ -52,11 +60,7 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewController.S
             snapshot.appendItems(projects.map { .project($0) })
 
             return snapshot
-        }.apply(to: dataSource, animate: false).store(in: &cancellables)
-        
-        projectsList.objectPublisher().sink { [weak self] project in
-            self?.updateCell(project)
-        }.store(in: &cancellables)
+        }.eraseToAnyPublisher()
     }
     
     override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {
@@ -94,7 +98,8 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewController.S
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        selectionSubscription = rootViewController.$selection.sink { [weak self] selection in
+        let selection = rootViewController.$selection.combineLatest(snapshot) { selection, _ in selection }
+        selectionSubscription = selection.sink { [weak self] selection in
             let indexPath = self?.dataSource.indexPath(for: selection)
             self?.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         }
@@ -123,7 +128,9 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewController.S
                 self.actionRunner.menuAction(DeleteProjectAction(project: project),
                                              title: Localized.delete,
                                              image: UIImage(systemName: "trash"),
-                                             attributes: .destructive)
+                                             attributes: .destructive) {
+                    self.updateSelectionAfterDeletingProject(at: indexPath)
+                }
             ])
         }
     }
@@ -141,6 +148,22 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewController.S
     
     private var rootViewController: SplitViewController {
         splitViewController as! SplitViewController
+    }
+    
+    func selectionAfterDeletingItem(at indexPath: IndexPath) -> SidebarSelection {
+        dataSource.itemIdentifier(for: IndexPath(row: indexPath.row + 1,
+                                                 section: indexPath.section)) ??
+            dataSource.itemIdentifier(for: IndexPath(row: indexPath.row - 1,
+                                                     section: indexPath.section)) ??
+            .collection
+    }
+    
+    func updateSelectionAfterDeletingProject(at indexPath: IndexPath) {
+        guard tableView.indexPathForSelectedRow == indexPath else {
+            return
+        }
+        
+        rootViewController.selection = selectionAfterDeletingItem(at: indexPath)
     }
 }
 
@@ -177,17 +200,8 @@ extension SidebarViewController {
             return
         }
         
-        let nextSelection: SidebarSelection
-        if let selection = dataSource.itemIdentifier(for: IndexPath(row: indexPath.row + 1, section: indexPath.section)) {
-            nextSelection = selection
-        } else if let selection = dataSource.itemIdentifier(for: IndexPath(row: indexPath.row - 1, section: indexPath.section)) {
-            nextSelection = selection
-        } else {
-            nextSelection = .collection
-        }
-        
         actionRunner.perform(DeleteProjectAction(project: project)) {
-            self.rootViewController.selection = nextSelection
+            self.updateSelectionAfterDeletingProject(at: indexPath)
         }
     }
 }
