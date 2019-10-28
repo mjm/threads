@@ -92,11 +92,44 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             managedObjectContext: project.managedObjectContext!
         )
         
+        snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        project.publisher(for: \.name).assign(to: \.title, on: navigationItem).store(in: &cancellables)
+        
+        // Editing changes
+        $_editing.map { editing in
+            editing ? .never : .automatic
+        }.assign(to: \.largeTitleDisplayMode, on: navigationItem).store(in: &cancellables)
+
+        let barButtonItems = $_editing.map { [weak self] editing -> [UIBarButtonItem] in
+            guard let self = self else { return [] }
+            return editing ? [self.editButtonItem] : [self.actionsButtonItem]
+        }
+        barButtonItems.combineLatest($animate).sink { [weak self] items, animate in
+            self?.navigationItem.setRightBarButtonItems(items, animated: animate)
+        }.store(in: &cancellables)
+        
+        $_editing.sink { [weak self] _ 	in
+            if let rootViewController = self?.splitViewController as? SplitViewController {
+                rootViewController.updateToolbar()
+            }
+        }.store(in: &cancellables)
+        
+        threads.sink { [weak self] threads in
+            guard let self = self else { return }
+            let text = self.sectionHeaderText(for: threads)
+            self.setThreadsSectionHeaderText(text)
+        }.store(in: &cancellables)
+    }
+    
+    var threads: AnyPublisher<[ProjectThread], Never> {
+        threadsList.objectsPublisher()
+    }
+    
+    var snapshot: AnyPublisher<Snapshot, Never> {
         let notes = project.publisher(for: \.notes)
-        let threads = threadsList.objectsPublisher()
         let images = imagesList.objectsPublisher()
         
-        let snapshot = threads.combineLatest(images, notes, $_editing) { threads, images, notes, editing -> Snapshot in
+        return threads.combineLatest(images, notes, $_editing) { threads, images, notes, editing -> Snapshot in
             var snapshot = Snapshot()
             
             if editing {
@@ -132,38 +165,9 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             #endif
             
             return snapshot
-        }
-        
-        let barButtonItems = $_editing.map { [weak self] editing -> [UIBarButtonItem] in
-            guard let self = self else { return [] }
-            return editing ? [self.editButtonItem] : [self.actionsButtonItem]
-        }
-        
-        snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
-        project.publisher(for: \.name).assign(to: \.title, on: navigationItem).store(in: &cancellables)
-        
-        // Editing changes
-        $_editing.map { editing in
-            editing ? .never : .automatic
-        }.assign(to: \.largeTitleDisplayMode, on: navigationItem).store(in: &cancellables)
-        
-        barButtonItems.combineLatest($animate).sink { [weak self] items, animate in
-            self?.navigationItem.setRightBarButtonItems(items, animated: animate)
-        }.store(in: &cancellables)
-        
-        $_editing.sink { [weak self] _ 	in
-            if let rootViewController = self?.splitViewController as? SplitViewController {
-                rootViewController.updateToolbar()
-            }
-        }.store(in: &cancellables)
-        
-        threads.sink { [weak self] threads in
-            guard let self = self else { return }
-            let text = self.sectionHeaderText(for: threads)
-            self.setThreadsSectionHeaderText(text)
-        }.store(in: &cancellables)
+        }.eraseToAnyPublisher()
     }
-
+    
     override var currentUserActivity: UserActivity? { .showProject(project) }
 
     override func dataSourceWillInitialize() {

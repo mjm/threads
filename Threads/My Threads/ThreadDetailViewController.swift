@@ -81,21 +81,39 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
             fetchRequest: ProjectThread.fetchRequest(for: thread),
             managedObjectContext: thread.managedObjectContext!
         )
-        
-        let projectThreads = projectsList.objectsPublisher()
-        let inShoppingList = thread.publisher(for: \.inShoppingList)
-        
-        // Updating the snapshot, even if it hasn't changed, causes the table view
-        // to animate the potential height change in the details cell.
-        let updateDetails = thread.publisher(for: \.onBobbin)
-            .combineLatest(thread.publisher(for: \.amountInCollection)) { _, _ in }
-        
+                
         let updateProject = projectsList.objectPublisher()
             .merge(with: managedObjectContext.publisher(type: Project.self).compactMap { project in
                 self.projectsList.objects.first { $0.project == project }
             })
         
-        projectThreads.combineLatest(inShoppingList, updateDetails) { projectThreads, inShoppingList, _ in
+        snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        
+        updateDetails.sink { [weak self] _ in
+            self?.updateDetailsCell()
+        }.store(in: &cancellables)
+        updateProject.sink { [weak self] projectThread in
+            self?.updateCell(projectThread)
+        }.store(in: &cancellables)
+    }
+    
+    var projectThreads: AnyPublisher<[ProjectThread], Never> {
+        projectsList.objectsPublisher()
+    }
+    
+    var updateDetails: AnyPublisher<Void, Never> {
+        // Updating the snapshot, even if it hasn't changed, causes the table view
+        // to animate the potential height change in the details cell, so this is
+        // also used to trigger updating the snapshot
+        thread.publisher(for: \.onBobbin)
+            .combineLatest(thread.publisher(for: \.amountInCollection)) { _, _ in }
+            .eraseToAnyPublisher()
+    }
+    
+    var snapshot: AnyPublisher<Snapshot, Never> {
+        let inShoppingList = thread.publisher(for: \.inShoppingList)
+        
+        return projectThreads.combineLatest(inShoppingList, updateDetails) { projectThreads, inShoppingList, _ in
             var snapshot = Snapshot()
             
             snapshot.appendSections([.details])
@@ -112,14 +130,7 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
             }
             
             return snapshot
-        }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
-        
-        updateDetails.sink { [weak self] _ in
-            self?.updateDetails()
-        }.store(in: &cancellables)
-        updateProject.sink { [weak self] projectThread in
-            self?.updateCell(projectThread)
-        }.store(in: &cancellables)
+        }.eraseToAnyPublisher()
     }
 
     override var currentUserActivity: UserActivity? { .showThread(thread) }
@@ -193,7 +204,7 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
         navigationController?.navigationBar.tintColor = nil
     }
 
-    func updateDetails() {
+    func updateDetailsCell() {
         guard let cell = dataSource.indexPath(for: .details).flatMap({ tableView.cellForRow(at: $0) as? ThreadDetailsTableViewCell }) else {
             return
         }

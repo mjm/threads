@@ -46,28 +46,7 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewCo
             managedObjectContext: managedObjectContext
         )
         
-        let threads = threadsList.objectsPublisher()
-        
-        let partitionedThreads = threads.combineLatest($pendingPurchases) { threads, pendingPurchases -> (ArraySlice<Thread>, ArraySlice<Thread>) in
-            var partitioned = threads
-            let pivot = partitioned.stablePartition {
-                $0.purchased && !pendingPurchases.contains($0)
-            }
-            
-            let unpurchased = partitioned[..<pivot]
-            let purchased = partitioned[pivot...]
-            return (unpurchased, purchased)
-        }
-
-        partitionedThreads.map { (unpurchased, purchased) in
-            var snapshot = Snapshot()
-            
-            snapshot.appendSections(Section.allCases)
-            snapshot.appendItems(unpurchased.map { .thread($0) }, toSection: .unpurchased)
-            snapshot.appendItems(purchased.map { .thread($0) }, toSection: .purchased)
-            
-            return snapshot
-        }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
         
         threads.sink { [weak self] threads in
             self?.setShowEmptyView(threads.isEmpty)
@@ -82,6 +61,33 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewCo
             self?.setTabBarCount(unpurchased: threads.filter { !$0.purchased }.count)
         }.store(in: &cancellables)
         #endif
+    }
+    
+    var threads: AnyPublisher<[Thread], Never> {
+        threadsList.objectsPublisher()
+    }
+    
+    var snapshot: AnyPublisher<Snapshot, Never> {
+        let partitionedThreads = threads.combineLatest($pendingPurchases) { threads, pendingPurchases -> (ArraySlice<Thread>, ArraySlice<Thread>) in
+            var partitioned = threads
+            let pivot = partitioned.stablePartition {
+                $0.purchased && !pendingPurchases.contains($0)
+            }
+            
+            let unpurchased = partitioned[..<pivot]
+            let purchased = partitioned[pivot...]
+            return (unpurchased, purchased)
+        }
+
+        return partitionedThreads.map { (unpurchased, purchased) in
+            var snapshot = Snapshot()
+            
+            snapshot.appendSections(Section.allCases)
+            snapshot.appendItems(unpurchased.map { .thread($0) }, toSection: .unpurchased)
+            snapshot.appendItems(purchased.map { .thread($0) }, toSection: .purchased)
+            
+            return snapshot
+        }.eraseToAnyPublisher()
     }
 
     override var currentUserActivity: UserActivity? { .showShoppingList }

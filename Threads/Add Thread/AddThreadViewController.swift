@@ -83,7 +83,24 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewControll
     override func subscribe() {
         let addButton = navigationItem.rightBarButtonItems!.first!
         
-        let filteredThreads = $query.combineLatest($selectedThreads) { query, selectedThreads -> [Thread] in
+        snapshot.apply(to: dataSource, animate: false).store(in: &cancellables)
+        
+        $query.combineLatest(filteredThreads) { query, threads -> Thread? in
+            threads.first { $0.number?.lowercased() == query }
+        }.assign(to: \.threadToAdd, on: self).store(in: &cancellables)
+        
+        $threadToAdd.map { $0 != nil}
+            .assign(to: \.isEnabled, on: quickAddButton).store(in: &cancellables)
+        
+        $selectedThreads.map { !$0.isEmpty }
+            .assign(to: \.isEnabled, on: addButton).store(in: &cancellables)
+        $selectedThreads.map { threads in
+            String.localizedStringWithFormat(Localized.addBatchButton, threads.count)
+        }.assign(to: \.title, on: addButton).store(in: &cancellables)
+    }
+    
+    var filteredThreads: AnyPublisher<[Thread], Never> {
+        $query.combineLatest($selectedThreads) { query, selectedThreads -> [Thread] in
             if query.isEmpty {
                 return []
             } else {
@@ -92,8 +109,10 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewControll
                         $0.number!.lowercased().hasPrefix(query)
                 }
             }
-        }
-        
+        }.eraseToAnyPublisher()
+    }
+    
+    var snapshot: AnyPublisher<Snapshot, Never> {
         $selectedThreads.combineLatest(filteredThreads).map { input in
             let (selected, filtered) = input
             var snapshot = Snapshot()
@@ -109,20 +128,7 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewControll
             }
             
             return snapshot
-        }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
-        
-        $query.combineLatest(filteredThreads) { query, threads -> Thread? in
-            threads.first { $0.number?.lowercased() == query }
-        }.assign(to: \.threadToAdd, on: self).store(in: &cancellables)
-        
-        $threadToAdd.map { $0 != nil}
-            .assign(to: \.isEnabled, on: quickAddButton).store(in: &cancellables)
-        
-        $selectedThreads.map { !$0.isEmpty }
-            .assign(to: \.isEnabled, on: addButton).store(in: &cancellables)
-        $selectedThreads.map { threads in
-            String.localizedStringWithFormat(Localized.addBatchButton, threads.count)
-        }.assign(to: \.title, on: addButton).store(in: &cancellables)
+        }.eraseToAnyPublisher()
     }
 
     override func dataSourceWillInitialize() {

@@ -37,18 +37,29 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewControll
             managedObjectContext: managedObjectContext
         )
         
-        threadsList.objectsPublisher().map { threads in
+        snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+            
+        isEmpty.sink { [weak self] isEmpty in
+            self?.setShowEmptyView(isEmpty)
+        }.store(in: &cancellables)
+    }
+    
+    var snapshot: AnyPublisher<Snapshot, Never> {
+        threadsList.objectsPublisher().map { threads -> Snapshot in
             var snapshot = Snapshot()
             
             snapshot.appendSections([.threads])
             snapshot.appendItems(threads.map { .thread($0) }, toSection: .threads)
             
             return snapshot
-        }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
-            
-        threadsList.objectsPublisher().map { $0.isEmpty }.removeDuplicates().sink { [weak self] isEmpty in
-            self?.setShowEmptyView(isEmpty)
-        }.store(in: &cancellables)
+        }.eraseToAnyPublisher()
+    }
+    
+    var isEmpty: AnyPublisher<Bool, Never> {
+        threadsList.objectsPublisher()
+            .map { $0.isEmpty }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     override func dataSourceWillInitialize() {
@@ -86,14 +97,6 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewControll
             let cell = cell as! CollectionThreadTableViewCell
             cell.bind(thread)
         }
-    }
-
-    private func cellForThread(_ thread: Thread) -> CollectionThreadTableViewCell? {
-        guard let indexPath = dataSource.indexPath(for: .thread(thread)) else {
-            return nil
-        }
-
-        return tableView.cellForRow(at: indexPath) as? CollectionThreadTableViewCell
     }
     
     @objc func buyPremium(_ sender: Any) {
