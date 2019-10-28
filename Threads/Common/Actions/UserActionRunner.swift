@@ -6,10 +6,10 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
-import CoreData
 import Combine
+import CoreData
 import Events
+import UIKit
 
 extension Event.Key {
     static let undoActionName: Event.Key = "undo_action"
@@ -22,8 +22,10 @@ class UserActionRunner {
     weak var viewController: UIViewController?
     let managedObjectContext: NSManagedObjectContext
 
-    init(viewController: UIViewController,
-         managedObjectContext: NSManagedObjectContext) {
+    init(
+        viewController: UIViewController,
+        managedObjectContext: NSManagedObjectContext
+    ) {
         self.viewController = viewController
         self.managedObjectContext = managedObjectContext
     }
@@ -41,32 +43,33 @@ class UserActionRunner {
             source: source,
             willPerform: willPerform
         )
-        
+
         let publisher = context!.subject
             .subscribe(on: RunLoop.main)
             .receive(on: RunLoop.main)
             .eraseToAnyPublisher()
 
-        publisher.handle(receiveCompletion: { completion in
-            switch completion {
-            case .finished:
-                if action.saveAfterComplete {
-                    self.managedObjectContext.commit()
+        publisher.handle(
+            receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    if action.saveAfterComplete {
+                        self.managedObjectContext.commit()
+                    }
+                    Event.current[.saved] = action.saveAfterComplete
+
+                    Event.current.send("completed user action")
+                case .failure(UserActionError.canceled):
+                    Event.current[.canceled] = true
+                    Event.current.send("completed user action")
+                case let .failure(error):
+                    Event.current.error = error
+                    self.viewController?.present(error: error)
+                    Event.current.send(.error, "completed user action")
                 }
-                Event.current[.saved] = action.saveAfterComplete
-                
-                Event.current.send("completed user action")
-            case .failure(UserActionError.canceled):
-                Event.current[.canceled] = true
-                Event.current.send("completed user action")
-            case let .failure(error):
-                Event.current.error = error
-                self.viewController?.present(error: error)
-                Event.current.send(.error, "completed user action")
-            }
-            
-            context = nil
-        }, receiveValue: { _ in })
+
+                context = nil
+            }, receiveValue: { _ in })
 
         // The goal here is to get dynamic dispatch, so that destructive actions can do their confirmation
         // behavior. So we ask the action to run itself, though it delegates most of the real work by calling
@@ -75,13 +78,13 @@ class UserActionRunner {
         // Concrete action types shouldn't override `run(on:context:)`, it should only be implemented in a
         // protocol extension.
         action.run(on: self, context: context!)
-        
+
         return publisher
     }
 
     func reallyPerform<Action: UserAction>(_ action: Action, context: UserActionContext<Action>) {
         Event.current[.actionName] = String(describing: Action.self)
-        
+
         context.willPerformHandler()
 
         if let undoActionName = action.undoActionName {
@@ -118,12 +121,17 @@ class UserActionRunner {
         completion: @escaping (Action.ResultType) -> Void = { _ in }
     ) -> UIAction {
         guard let title = title ?? action.undoActionName else {
-            preconditionFailure("Could not find a title for menu action for \(action). Either pass a title: argument or set the undoActionName on the action.")
+            preconditionFailure(
+                "Could not find a title for menu action for \(action). Either pass a title: argument or set the undoActionName on the action."
+            )
         }
 
         let extraAttributes: UIMenuElement.Attributes = action.canPerform ? [] : .disabled
-        return UIAction(title: title, image: image, attributes: attributes.union(extraAttributes), state: state) { _ in
-            self.perform(action, source: source, willPerform: willPerform).ignoreError().handle(receiveValue: completion)
+        return UIAction(
+            title: title, image: image, attributes: attributes.union(extraAttributes), state: state
+        ) { _ in
+            self.perform(action, source: source, willPerform: willPerform).ignoreError().handle(
+                receiveValue: completion)
         }
     }
 
@@ -135,25 +143,34 @@ class UserActionRunner {
         completion: @escaping (Action.ResultType) -> Void = { _ in }
     ) -> UIAlertAction {
         guard let title = title ?? action.undoActionName else {
-            preconditionFailure("Could not find a title for alert action for \(action). Either pass a title: argument or set the undoActionName on the action.")
+            preconditionFailure(
+                "Could not find a title for alert action for \(action). Either pass a title: argument or set the undoActionName on the action."
+            )
         }
 
         return UIAlertAction(title: title, style: style) { _ in
-            self.perform(action, willPerform: willPerform).ignoreError().handle(receiveValue: completion)
+            self.perform(action, willPerform: willPerform).ignoreError().handle(
+                receiveValue: completion)
         }
     }
 }
 
 extension Publisher {
-    func handle(receiveCompletion: @escaping (Subscribers.Completion<Failure>) -> Void, receiveValue: @escaping (Output) -> Void) {
+    func handle(
+        receiveCompletion: @escaping (Subscribers.Completion<Failure>) -> Void,
+        receiveValue: @escaping (Output) -> Void
+    ) {
         var cancellable: AnyCancellable?
-        cancellable = sink(receiveCompletion: { completion in
-            receiveCompletion(completion)
-            cancellable?.cancel()
-        }, receiveValue: receiveValue)
+        cancellable
+            = sink(
+                receiveCompletion: { completion in
+                    receiveCompletion(completion)
+                    cancellable?.cancel()
+                }, receiveValue: receiveValue)
     }
-    
-    func perform<Action: UserAction>(on runner: UserActionRunner) -> AnyCancellable where Output == Action, Failure == Never {
+
+    func perform<Action: UserAction>(on runner: UserActionRunner) -> AnyCancellable
+    where Output == Action, Failure == Never {
         sink { action in
             runner.perform(action)
         }

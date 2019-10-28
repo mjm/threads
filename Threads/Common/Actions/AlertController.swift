@@ -16,11 +16,15 @@ extension UIAlertController {
             objc_getAssociatedObject(self, &actionRunnerHandle) as? UserActionRunner
         }
         set {
-            objc_setAssociatedObject(self, &actionRunnerHandle, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self, &actionRunnerHandle, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
-    convenience init(actionRunner: UserActionRunner, title: String? = nil, message: String? = nil, preferredStyle: UIAlertController.Style) {
+    convenience init(
+        actionRunner: UserActionRunner, title: String? = nil, message: String? = nil,
+        preferredStyle: UIAlertController.Style
+    ) {
         self.init(title: title, message: message, preferredStyle: preferredStyle)
         self.actionRunner = actionRunner
     }
@@ -32,6 +36,9 @@ extension UIAlertController {
         willPerform: @escaping () -> Void = {},
         completion: @escaping (Action.ResultType) -> Void = { _ in }
     ) {
-        addAction(actionRunner.alertAction(action, title: title, style: style, willPerform: willPerform, completion: completion))
+        addAction(
+            actionRunner.alertAction(
+                action, title: title, style: style, willPerform: willPerform, completion: completion
+            ))
     }
 }

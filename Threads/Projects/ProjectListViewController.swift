@@ -6,11 +6,14 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
-import CoreData
 import Combine
+import CoreData
+import UIKit
 
-class ProjectListViewController: ReactiveCollectionViewController<ProjectListViewController.Section, ProjectListViewController.Cell> {
+class ProjectListViewController: ReactiveCollectionViewController<
+    ProjectListViewController.Section, ProjectListViewController.Cell
+>
+{
     enum Section: CaseIterable {
         case projects
     }
@@ -24,29 +27,30 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
     private var projectsList: FetchedObjectList<Project>!
 
     override func subscribe() {
-        projectsList = FetchedObjectList(
-            fetchRequest: Project.allProjectsFetchRequest(),
-            managedObjectContext: managedObjectContext
-        )
-        
+        projectsList
+            = FetchedObjectList(
+                fetchRequest: Project.allProjectsFetchRequest(),
+                managedObjectContext: managedObjectContext
+            )
+
         let projects = projectsList.objectsPublisher()
-        
+
         projects.map { projects in
             var snapshot = Snapshot()
-            
+
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems(projects.map { .project($0) }, toSection: .projects)
 
             return snapshot
         }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
-        
+
         projects.sink { [weak self] projects in
             self?.setShowEmptyView(projects.isEmpty)
         }.store(in: &cancellables)
     }
 
     override var currentUserActivity: UserActivity? { .showProjects }
-    
+
     private func setShowEmptyView(_ showEmptyView: Bool) {
         if showEmptyView {
             let emptyView = EmptyView()
@@ -55,17 +59,21 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
             collectionView.backgroundView = emptyView
 
             NSLayoutConstraint.activate([
-                emptyView.leadingAnchor.constraint(equalTo: collectionView.safeAreaLayoutGuide.leadingAnchor),
-                emptyView.trailingAnchor.constraint(equalTo: collectionView.safeAreaLayoutGuide.trailingAnchor),
-                emptyView.topAnchor.constraint(equalTo: collectionView.safeAreaLayoutGuide.topAnchor),
-                emptyView.bottomAnchor.constraint(equalTo: collectionView.safeAreaLayoutGuide.bottomAnchor),
+                emptyView.leadingAnchor.constraint(
+                    equalTo: collectionView.safeAreaLayoutGuide.leadingAnchor),
+                emptyView.trailingAnchor.constraint(
+                    equalTo: collectionView.safeAreaLayoutGuide.trailingAnchor),
+                emptyView.topAnchor.constraint(
+                    equalTo: collectionView.safeAreaLayoutGuide.topAnchor),
+                emptyView.bottomAnchor.constraint(
+                    equalTo: collectionView.safeAreaLayoutGuide.bottomAnchor),
             ])
         } else {
             collectionView.backgroundView = nil
         }
     }
 
-    override var cellTypes: [String : RegisteredCellType<UICollectionViewCell>] {
+    override var cellTypes: [String: RegisteredCellType<UICollectionViewCell>] {
         ["Project": .nib(ProjectCollectionViewCell.self)]
     }
 
@@ -76,7 +84,7 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
             cell.bind(project)
         }
     }
-    
+
     override func createLayout() -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let containerSize = layoutEnvironment.container.effectiveContentSize
@@ -84,28 +92,32 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
 
             let minimumColumnWidth: CGFloat = 160.0
             let spacing: CGFloat = 15
-            let sectionInsets = NSDirectionalEdgeInsets(top: spacing,
-                                                        leading: spacing,
-                                                        bottom: spacing,
-                                                        trailing: spacing)
-            
+            let sectionInsets = NSDirectionalEdgeInsets(
+                top: spacing,
+                leading: spacing,
+                bottom: spacing,
+                trailing: spacing)
+
             // how much space do we have to play with?
-            let fixedHorizontalSpacing = insets.leading + insets.trailing + sectionInsets.leading + sectionInsets.trailing
+            let fixedHorizontalSpacing = insets.leading + insets.trailing + sectionInsets.leading
+                + sectionInsets.trailing
             let widthForItems = containerSize.width - fixedHorizontalSpacing
-            
+
             // how many items can we fit in that space with a reasonable width?
             let numberOfItems = floor(widthForItems / minimumColumnWidth)
-            
-            
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .estimated(minimumColumnWidth))
+
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(minimumColumnWidth))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .estimated(200))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: Int(numberOfItems))
+
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(200))
+            let group = NSCollectionLayoutGroup.horizontal(
+                layoutSize: groupSize, subitem: item, count: Int(numberOfItems))
             group.interItemSpacing = .fixed(spacing)
-            
+
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = spacing
             section.contentInsets = sectionInsets
@@ -115,14 +127,18 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
 
     @IBAction func unwindDeleteProject(segue: UIStoryboardSegue) {
     }
-    
-    @IBSegueAction func makeDetailController(coder: NSCoder, sender: ProjectDetail) -> UIViewController? {
-        ProjectDetailViewController(coder: coder, project: sender.project, editing: sender.isEditing)
+
+    @IBSegueAction func makeDetailController(coder: NSCoder, sender: ProjectDetail)
+        -> UIViewController?
+    {
+        ProjectDetailViewController(
+            coder: coder, project: sender.project, editing: sender.isEditing)
     }
-    
+
     func showDetail(for project: Project, editing: Bool = false) {
-        performSegue(withIdentifier: "ProjectDetail",
-                     sender: ProjectDetail(project: project, isEditing: editing))
+        performSegue(
+            withIdentifier: "ProjectDetail",
+            sender: ProjectDetail(project: project, isEditing: editing))
     }
 }
 
@@ -147,41 +163,60 @@ extension ProjectListViewController {
 
 // MARK: - Collection View Delegate
 extension ProjectListViewController {
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    override func collectionView(
+        _ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath
+    ) {
         if case let .project(project) = dataSource.itemIdentifier(for: indexPath) {
             showDetail(for: project)
         }
     }
-    
-    override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+
+    override func collectionView(
+        _ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
         guard case let .project(project) = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
-        
-        return UIContextMenuConfiguration(identifier: project.objectID, previewProvider: {
-            self.storyboard!.instantiateViewController(identifier: "ProjectPreview") { coder in
-                ProjectPreviewViewController(coder: coder, project: project)
+
+        return UIContextMenuConfiguration(
+            identifier: project.objectID,
+            previewProvider: {
+                self.storyboard!.instantiateViewController(identifier: "ProjectPreview") { coder in
+                    ProjectPreviewViewController(coder: coder, project: project)
+                }
             }
-        }) { suggestedActions in
-            UIMenu(title: "", children: [
-                UIAction(title: Localized.edit, image: UIImage(systemName: "pencil")) { _ in
-                    self.showDetail(for: project, editing: true)
-                },
-                self.actionRunner.menuAction(AddProjectToShoppingListAction(project: project),
-                                             image: UIImage(systemName: "cart.badge.plus")),
-                self.actionRunner.menuAction(ShareProjectAction(project: project),
-                                             title: Localized.share,
-                                             image: UIImage(systemName: "square.and.arrow.up")),
-                self.actionRunner.menuAction(DeleteProjectAction(project: project),
-                                             title: Localized.delete,
-                                             image: UIImage(systemName: "trash"),
-                                             attributes: .destructive)
-            ])
+        ) { suggestedActions in
+            UIMenu(
+                title: "",
+                children: [
+                    UIAction(title: Localized.edit, image: UIImage(systemName: "pencil")) { _ in
+                        self.showDetail(for: project, editing: true)
+                    },
+                    self.actionRunner.menuAction(
+                        AddProjectToShoppingListAction(project: project),
+                        image: UIImage(systemName: "cart.badge.plus")),
+                    self.actionRunner.menuAction(
+                        ShareProjectAction(project: project),
+                        title: Localized.share,
+                        image: UIImage(systemName: "square.and.arrow.up")),
+                    self.actionRunner.menuAction(
+                        DeleteProjectAction(project: project),
+                        title: Localized.delete,
+                        image: UIImage(systemName: "trash"),
+                        attributes: .destructive),
+                ])
         }
     }
-    
-    override func collectionView(_ collectionView: UICollectionView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
-        let project = managedObjectContext.object(with: configuration.identifier as! NSManagedObjectID) as! Project
+
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration,
+        animator: UIContextMenuInteractionCommitAnimating
+    ) {
+        let project
+            = managedObjectContext.object(with: configuration.identifier as! NSManagedObjectID)
+            as! Project
         animator.addAnimations {
             self.showDetail(for: project)
         }

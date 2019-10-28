@@ -6,10 +6,10 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
-import CoreData
 import Combine
+import CoreData
 import Events
+import UIKit
 
 extension Event.Key {
     static let threadNumber: Event.Key = "thread_num"
@@ -85,7 +85,7 @@ struct RemoveThreadAction: ReactiveUserAction, DestructiveUserAction {
 
     func publisher(context: UserActionContext<RemoveThreadAction>) -> AnyPublisher<Void, Error> {
         Event.current[.threadNumber] = thread.number
-        
+
         return Future { promise in
             UserActivity.showThread(self.thread).delete {
                 RunLoop.main.perform {
@@ -102,7 +102,7 @@ struct AddThreadAction: AsyncUserAction {
         case collection
         case shoppingList
         case project(Project)
-        
+
         func makeDelegate(context: NSManagedObjectContext) -> AddThreadViewControllerDelegate {
             switch self {
             case .collection:
@@ -114,28 +114,31 @@ struct AddThreadAction: AsyncUserAction {
             }
         }
     }
-    
+
     let mode: Mode
 
     let undoActionName: String? = nil
 
     #if targetEnvironment(macCatalyst)
-    
+
     func performAsync(_ context: UserActionContext<AddThreadAction>) {
         let activity = UserActivity.addThreads(mode).userActivity
-        UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: nil)
+        UIApplication.shared.requestSceneSessionActivation(
+            nil, userActivity: activity, options: nil)
     }
-    
+
     #else
-    
+
     let coordinator = Coordinator()
-    
+
     func performAsync(_ context: UserActionContext<AddThreadAction>) {
         let storyboard = UIStoryboard(name: "AddThread", bundle: nil)
-        let navController = storyboard.instantiateViewController(identifier: "NavController") as! UINavigationController
+        let navController = storyboard.instantiateViewController(identifier: "NavController")
+            as! UINavigationController
         let addThreadController = navController.viewControllers[0] as! AddThreadViewController
 
-        coordinator.addThreadsDelegate = mode.makeDelegate(context: addThreadController.managedObjectContext)
+        coordinator.addThreadsDelegate
+            = mode.makeDelegate(context: addThreadController.managedObjectContext)
         addThreadController.delegate = coordinator.addThreadsDelegate
         addThreadController.onDismiss = {
             context.completeAndDismiss()
@@ -147,13 +150,16 @@ struct AddThreadAction: AsyncUserAction {
 
     class Coordinator: NSObject, UIAdaptivePresentationControllerDelegate {
         var addThreadsDelegate: AddThreadViewControllerDelegate?
-        
-        func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-            let navController = presentationController.presentedViewController as! UINavigationController
+
+        func presentationControllerShouldDismiss(_ presentationController: UIPresentationController)
+            -> Bool
+        {
+            let navController = presentationController.presentedViewController
+                as! UINavigationController
             let addThreadController = navController.viewControllers[0] as! AddThreadViewController
             return addThreadController.canDismiss
         }
     }
-    
+
     #endif
 }

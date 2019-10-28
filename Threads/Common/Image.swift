@@ -6,12 +6,14 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
 import AVFoundation
+import UIKit
 
 extension UIImage {
     func resized(toFit size: CGSize) -> UIImage {
-        let realSize = AVMakeRect(aspectRatio: self.size, insideRect: CGRect(origin: .zero, size: size)).size
+        let realSize = AVMakeRect(
+            aspectRatio: self.size, insideRect: CGRect(origin: .zero, size: size))
+            .size
         let renderer = UIGraphicsImageRenderer(size: realSize)
         return renderer.image { context in
             self.draw(in: CGRect(origin: .zero, size: realSize))
@@ -38,14 +40,16 @@ extension UIImage {
             offset = CGPoint(x: 0, y: delta / 2)
         }
 
-        let clipRect = CGRect(x: -offset.x, y: -offset.y, width: ratio * size.width, height: ratio * size.height)
+        let clipRect = CGRect(
+            x: -offset.x, y: -offset.y, width: ratio * size.width, height: ratio * size.height)
 
         let format = UIGraphicsImageRendererFormat()
         format.scale = 0
         format.opaque = true
-        return UIGraphicsImageRenderer(bounds: CGRect(origin: .zero, size: newSize), format: format).image { context in
-            context.clip(to: clipRect)
-            draw(in: clipRect)
-        }
+        return UIGraphicsImageRenderer(bounds: CGRect(origin: .zero, size: newSize), format: format)
+            .image { context in
+                context.clip(to: clipRect)
+                draw(in: clipRect)
+            }
     }
 }

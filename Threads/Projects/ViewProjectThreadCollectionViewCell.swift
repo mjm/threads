@@ -13,7 +13,7 @@ class ViewProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
 
     func bind(_ projectThread: ProjectThread, isLastItem: Bool = false) {
         super.bind(projectThread)
-        
+
         separatorLeadingConstraint.constant = isLastItem ? 0 : 15
     }
 }

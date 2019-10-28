@@ -7,15 +7,15 @@ final class ReplaySubject<Input, Failure: Error>: Subject {
     private let stream = PassthroughSubject<Input, Failure>()
     private let maxValues: Int
     private var counter = 0
-    
+
     init(maxValues: Int = 0) {
         self.maxValues = maxValues
     }
-    
+
     func send(subscription: Subscription) {
         subscription.request(maxValues == 0 ? .unlimited : .max(maxValues))
     }
-    
+
     func send(_ value: Input) {
         recording.receive(value)
         stream.send(value)
@@ -23,7 +23,7 @@ final class ReplaySubject<Input, Failure: Error>: Subject {
             send(completion: .finished)
         }
     }
-    
+
     func send(completion: Subscribers.Completion<Failure>) {
         if !isCompleted {
             recording.receive(completion: completion)
@@ -31,7 +31,7 @@ final class ReplaySubject<Input, Failure: Error>: Subject {
             isCompleted = true
         }
     }
-    
+
     func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Input == S.Input {
         Record(recording: self.recording)
             .append(self.stream)

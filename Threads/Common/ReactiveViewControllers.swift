@@ -6,9 +6,9 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
-import CoreData
 import Combine
+import CoreData
+import UIKit
 
 // MARK: - View Controller
 
@@ -18,7 +18,8 @@ class ReactiveViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
+        actionRunner
+            = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
 
         userActivity = currentUserActivity?.userActivity
     }
@@ -60,7 +61,8 @@ class ReactiveViewController: UIViewController {
 
 // MARK: - Table View Controller
 
-class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>: UITableViewController {
+class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>: UITableViewController
+{
     typealias DataSource = TableViewDiffableDataSource<SectionType, CellType>
     typealias Snapshot = NSDiffableDataSourceSnapshot<SectionType, CellType>
 
@@ -73,19 +75,22 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
+        actionRunner
+            = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
 
         registerCellTypes()
 
-        dataSource = DataSource(tableView: tableView) { [weak self] tableView, indexPath, item in
-            guard let self = self else {
-                return nil
-            }
+        dataSource
+            = DataSource(tableView: tableView) { [weak self] tableView, indexPath, item in
+                guard let self = self else {
+                    return nil
+                }
 
-            let cell = tableView.dequeueReusableCell(withIdentifier: item.cellIdentifier, for: indexPath)
-            self.populate(cell: cell, item: item)
-            return cell
-        }
+                let cell = tableView.dequeueReusableCell(
+                    withIdentifier: item.cellIdentifier, for: indexPath)
+                self.populate(cell: cell, item: item)
+                return cell
+            }
 
         dataSourceWillInitialize()
 
@@ -96,17 +101,17 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         #if !targetEnvironment(macCatalyst)
         becomeFirstResponder()
         #endif
-        
+
         animate = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         #if !targetEnvironment(macCatalyst)
         resignFirstResponder()
         #endif
@@ -134,12 +139,12 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
             }
         }
     }
-    
+
     var selectedCell: CellType? {
         guard let indexPath = tableView.indexPathForSelectedRow else {
             return nil
         }
-        
+
         return dataSource.itemIdentifier(for: indexPath)
     }
 
@@ -166,10 +171,10 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
     func subscribe() {}
 }
 
-
 // MARK: - Collection View Controller
 
-class ReactiveCollectionViewController<SectionType: Hashable, CellType: ReusableCell>: UICollectionViewController {
+class ReactiveCollectionViewController<SectionType: Hashable, CellType: ReusableCell>: UICollectionViewController
+{
     typealias DataSource = UICollectionViewDiffableDataSource<SectionType, CellType>
     typealias Snapshot = NSDiffableDataSourceSnapshot<SectionType, CellType>
 
@@ -182,23 +187,27 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        actionRunner = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
+        actionRunner
+            = UserActionRunner(viewController: self, managedObjectContext: managedObjectContext)
 
         registerCellTypes()
 
-        dataSource = DataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
-            guard let self = self else {
-                return nil
-            }
+        dataSource
+            = DataSource(collectionView: collectionView) {
+                [weak self] collectionView, indexPath, item in
+                guard let self = self else {
+                    return nil
+                }
 
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: item.cellIdentifier, for: indexPath)
-            self.populate(cell: cell, item: item)
-            return cell
-        }
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: item.cellIdentifier, for: indexPath)
+                self.populate(cell: cell, item: item)
+                return cell
+            }
 
         dataSourceWillInitialize()
         collectionView.collectionViewLayout = createLayout()
-        
+
         subscribe()
 
         userActivity = currentUserActivity?.userActivity
@@ -206,17 +215,17 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         #if !targetEnvironment(macCatalyst)
         becomeFirstResponder()
         #endif
-        
+
         animate = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         #if !targetEnvironment(macCatalyst)
         resignFirstResponder()
         #endif
@@ -280,21 +289,31 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
 }
 
 extension Publisher {
-    func apply<Section, Item>(to dataSource: UITableViewDiffableDataSource<Section, Item>, animate: Bool = true) -> AnyCancellable where Output == NSDiffableDataSourceSnapshot<Section, Item>, Failure == Never {
+    func apply<Section, Item>(
+        to dataSource: UITableViewDiffableDataSource<Section, Item>, animate: Bool = true
+    ) -> AnyCancellable
+    where Output == NSDiffableDataSourceSnapshot<Section, Item>, Failure == Never {
         combineLatest(Just(animate)).apply(to: dataSource)
     }
-    
-    func apply<Section, Item>(to dataSource: UITableViewDiffableDataSource<Section, Item>) -> AnyCancellable where Output == (NSDiffableDataSourceSnapshot<Section, Item>, Bool), Failure == Never {
+
+    func apply<Section, Item>(to dataSource: UITableViewDiffableDataSource<Section, Item>)
+        -> AnyCancellable
+    where Output == (NSDiffableDataSourceSnapshot<Section, Item>, Bool), Failure == Never {
         sink { (snapshot, animate) in
             dataSource.apply(snapshot, animatingDifferences: animate)
         }
     }
-    
-    func apply<Section, Item>(to dataSource: UICollectionViewDiffableDataSource<Section, Item>, animate: Bool = true) -> AnyCancellable where Output == NSDiffableDataSourceSnapshot<Section, Item>, Failure == Never {
+
+    func apply<Section, Item>(
+        to dataSource: UICollectionViewDiffableDataSource<Section, Item>, animate: Bool = true
+    ) -> AnyCancellable
+    where Output == NSDiffableDataSourceSnapshot<Section, Item>, Failure == Never {
         combineLatest(Just(animate)).apply(to: dataSource)
     }
-    
-    func apply<Section, Item>(to dataSource: UICollectionViewDiffableDataSource<Section, Item>) -> AnyCancellable where Output == (NSDiffableDataSourceSnapshot<Section, Item>, Bool), Failure == Never {
+
+    func apply<Section, Item>(to dataSource: UICollectionViewDiffableDataSource<Section, Item>)
+        -> AnyCancellable
+    where Output == (NSDiffableDataSourceSnapshot<Section, Item>, Bool), Failure == Never {
         sink { (snapshot, animate) in
             dataSource.apply(snapshot, animatingDifferences: animate)
         }

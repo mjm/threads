@@ -13,14 +13,14 @@ class ViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         threadsController.sortDescriptors = [
             NSSortDescriptor(keyPath: \Thread.number, ascending: true) { a, b in
                 let a = a as! String
                 let b = b as! String
-                
+
                 return a.compare(b, options: [.caseInsensitive, .numeric])
-            }
+            },
         ]
 
         do {
@@ -31,13 +31,13 @@ class ViewController: NSViewController {
             NSApp.presentError(error)
         }
     }
-    
+
     let encoder: JSONEncoder = {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
         return encoder
     }()
-    
+
     @objc func saveDocument(_ sender: Any?) {
         do {
             let data = try encoder.encode(threadsController.arrangedObjects as! [Thread])
@@ -46,7 +46,7 @@ class ViewController: NSViewController {
             NSApp.presentError(error)
         }
     }
-    
+
     @objc func newDocument(_ sender: Any?) {
         threadsController.add(sender)
     }

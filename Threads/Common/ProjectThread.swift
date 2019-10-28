@@ -6,9 +6,9 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Foundation
-import CoreData
 import CloudKit
+import CoreData
+import Foundation
 
 extension ProjectThread {
     class func fetchRequest(for project: Project) -> NSFetchRequest<ProjectThread> {

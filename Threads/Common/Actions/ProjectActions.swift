@@ -6,10 +6,10 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
-import CoreServices
 import Combine
+import CoreServices
 import Events
+import UIKit
 
 extension Event.Key {
     static let projectName: Event.Key = "project_name"
@@ -24,20 +24,24 @@ struct CreateProjectAction: AsyncUserAction {
 
     #if targetEnvironment(macCatalyst)
     func performAsync(_ context: UserActionContext<CreateProjectAction>) {
-        let alert = UIAlertController(title: "Create a Project", message: "Enter a name for your new project:", preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: "Create a Project", message: "Enter a name for your new project:",
+            preferredStyle: .alert)
         alert.addTextField(configurationHandler: nil)
-        alert.addAction(UIAlertAction(title: Localized.cancel, style: .cancel) { _ in
-            context.complete(error: UserActionError.canceled)
-        })
-        alert.addAction(UIAlertAction(title: "Create", style: .default) { _ in
-            let project = Project(context: context.managedObjectContext)
-            project.name = alert.textFields?[0].text
-            
-            Event.current[.projectName] = project.name
-            
-            context.complete(project)
-        })
-        
+        alert.addAction(
+            UIAlertAction(title: Localized.cancel, style: .cancel) { _ in
+                context.complete(error: UserActionError.canceled)
+            })
+        alert.addAction(
+            UIAlertAction(title: "Create", style: .default) { _ in
+                let project = Project(context: context.managedObjectContext)
+                project.name = alert.textFields?[0].text
+
+                Event.current[.projectName] = project.name
+
+                context.complete(project)
+            })
+
         context.present(alert)
     }
     #else
@@ -78,7 +82,7 @@ struct AddToProjectAction: SyncUserAction {
     func perform(_ context: UserActionContext<AddToProjectAction>) throws {
         Event.current[.threadCount] = threads.count
         Event.current[.projectName] = project.name
-        
+
         for thread in threads {
             thread.add(to: project)
         }
@@ -86,7 +90,8 @@ struct AddToProjectAction: SyncUserAction {
         if showBanner {
             let projectName = project.name ?? Localized.unnamedProject
             let message = threads.count == 1
-                ? String(format: Localized.addToProjectBannerNumber, threads[0].number!, projectName)
+                ? String(
+                    format: Localized.addToProjectBannerNumber, threads[0].number!, projectName)
                 : String(format: Localized.addToProjectBannerCount, threads.count, projectName)
             context.present(BannerController(message: message))
         }
@@ -104,7 +109,7 @@ struct AddProjectToShoppingListAction: SyncUserAction {
 
         let threads = (project.threads as! Set<ProjectThread>).compactMap { $0.thread }
         Event.current[.threadCount] = threads.count
-        
+
         let message = threads.count == 1
             ? String(format: Localized.addToShoppingListBannerNumber, threads[0].number!)
             : String(format: Localized.addToShoppingListBannerCount, threads.count)
@@ -123,7 +128,7 @@ struct DeleteProjectAction: DestructiveUserAction {
 
     func performAsync(_ context: UserActionContext<DeleteProjectAction>) {
         Event.current[.projectName] = project.name
-        
+
         UserActivity.showProject(project).delete {
             context.managedObjectContext.delete(self.project)
             context.complete()
@@ -140,26 +145,28 @@ struct ShareProjectAction: ReactiveUserAction {
 
     func publisher(context: UserActionContext<ShareProjectAction>) -> AnyPublisher<Void, Error> {
         Event.current[.projectName] = project.name
-        
-        let activityController = UIActivityViewController(activityItems: [ProjectActivity(project: project)],
-                                                          applicationActivities: [OpenInSafariActivity()])
-        
+
+        let activityController = UIActivityViewController(
+            activityItems: [ProjectActivity(project: project)],
+            applicationActivities: [OpenInSafariActivity()])
+
         return Future { promise in
-            activityController.completionWithItemsHandler = { activityType, completed, items, error in
+            activityController.completionWithItemsHandler = {
+                activityType, completed, items, error in
                 if let error = error {
                     promise(.failure(error))
                     return
                 }
-                
+
                 Event.current[.activityType] = activityType?.rawValue
-                
+
                 if completed {
                     promise(.success(()))
                 } else {
                     promise(.failure(UserActionError.canceled))
                 }
             }
-            
+
             context.present(activityController)
         }.eraseToAnyPublisher()
     }
@@ -171,10 +178,12 @@ struct AddImageToProjectAction: ReactiveUserAction {
     let coordinator = Coordinator()
 
     let undoActionName: String? = Localized.addImage
-    
-    func publisher(context: UserActionContext<AddImageToProjectAction>) -> AnyPublisher<Void, Swift.Error> {
+
+    func publisher(context: UserActionContext<AddImageToProjectAction>) -> AnyPublisher<
+        Void, Swift.Error
+    > {
         Event.current[.projectName] = project.name
-        
+
         coordinator.project = project
 
         let imagePickerController = UIImagePickerController()
@@ -183,7 +192,7 @@ struct AddImageToProjectAction: ReactiveUserAction {
         imagePickerController.mediaTypes = [kUTTypeImage as String]
 
         context.present(imagePickerController)
-        
+
         return coordinator.subject.handleEvents(receiveCompletion: { _ in
             context.dismiss()
         }).eraseToAnyPublisher()
@@ -192,8 +201,11 @@ struct AddImageToProjectAction: ReactiveUserAction {
     class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         var project: Project!
         let subject = PassthroughSubject<Void, Swift.Error>()
-        
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
+        func imagePickerController(
+            _ picker: UIImagePickerController,
+            didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
+        ) {
             if let url = info[.imageURL] as? URL {
                 do {
                     let data = try Data(contentsOf: url)
@@ -214,14 +226,15 @@ struct AddImageToProjectAction: ReactiveUserAction {
             subject.send(completion: .failure(UserActionError.canceled))
         }
     }
-    
+
     enum Error: LocalizedError {
         case noImageURL
-        
+
         var errorDescription: String? {
             switch self {
             case .noImageURL:
-                return "The chosen media could not be added to the project because it is not a valid image."
+                return
+                    "The chosen media could not be added to the project because it is not a valid image."
             }
         }
     }
@@ -236,7 +249,7 @@ struct MoveProjectImageAction: SyncUserAction {
 
     func perform(_ context: UserActionContext<MoveProjectImageAction>) throws {
         Event.current[.projectName] = project.name
-        
+
         var images = project.orderedImages
 
         let image = images.remove(at: sourceIndex)

@@ -31,7 +31,8 @@ class ProjectPreviewViewController: UIViewController {
         backgroundImageView.image = project.primaryImage?.image
         nameLabel.font = nameFont
         nameLabel.text = project.name ?? Localized.unnamedProject
-        notesLabel.attributedText = project.notes?.replacing(font: .preferredFont(forTextStyle: .body), color: .label)
+        notesLabel.attributedText
+            = project.notes?.replacing(font: .preferredFont(forTextStyle: .body), color: .label)
 
         for subview in swatchesStackView.arrangedSubviews {
             subview.removeFromSuperview()
@@ -39,7 +40,8 @@ class ProjectPreviewViewController: UIViewController {
 
         let threads: [ProjectThread]
         do {
-            threads = try project.managedObjectContext!.fetch(ProjectThread.fetchRequest(for: project))
+            threads = try project.managedObjectContext!.fetch(
+                ProjectThread.fetchRequest(for: project))
         } catch {
             present(error: error)
             threads = []

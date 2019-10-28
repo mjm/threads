@@ -16,17 +16,17 @@ class SwatchView: RoundedShadowView {
             contentView.backgroundColor = color
         }
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         configure()
     }
-    
+
     private func configure() {
         // I think it's probably clear why we don't want thread swatches to be inverted
         accessibilityIgnoresInvertColors = true

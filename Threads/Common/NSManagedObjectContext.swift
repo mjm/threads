@@ -6,9 +6,9 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Foundation
-import CoreData
 import Combine
+import CoreData
+import Foundation
 
 extension NSManagedObjectContext {
     func commit() {
@@ -24,8 +24,8 @@ extension NSManagedObjectContext {
             }
         }
     }
-    
-    func publisher<T: NSManagedObject>(type: T.Type) -> AnyPublisher<T, Never>  {
+
+    func publisher<T: NSManagedObject>(type: T.Type) -> AnyPublisher<T, Never> {
         return NotificationCenter.default.publisher(
             for: .NSManagedObjectContextObjectsDidChange,
             object: self

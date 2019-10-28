@@ -6,9 +6,9 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
-import CoreData
 import CloudKit
+import CoreData
+import UIKit
 
 @objc(ProjectImage)
 public class ProjectImage: NSManagedObject {
@@ -56,9 +56,10 @@ public class ProjectImage: NSManagedObject {
             return (CKRecord.Reference(recordID: id, action: .none), nil)
         } else {
             let record = CKRecord(recordType: "ProjectImage")
-            _ = thumbnailImage // ensure the thumbnail data is set
+            _ = thumbnailImage  // ensure the thumbnail data is set
 
-            let destination = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+            let destination = FileManager.default.temporaryDirectory.appendingPathComponent(
+                UUID().uuidString)
             do {
                 try thumbnailData!.write(to: destination)
                 record["thumbnail"] = CKAsset(fileURL: destination)

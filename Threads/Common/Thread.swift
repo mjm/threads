@@ -6,9 +6,9 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
 import CoreData
 import Events
+import UIKit
 
 extension Event.Key {
     static let mergedThreadCount: Event.Key = "merged_thread_count"
@@ -23,19 +23,19 @@ public class Thread: NSManagedObject {
         request.predicate = NSPredicate(format: "inCollection = YES")
         return request
     }
-    
+
     class func notInCollectionFetchRequest() -> NSFetchRequest<Thread> {
         let request = sortedByNumberFetchRequest()
         request.predicate = NSPredicate(format: "inCollection = NO")
         return request
     }
-    
+
     class func inShoppingListFetchRequest() -> NSFetchRequest<Thread> {
         let request = sortedByNumberFetchRequest()
         request.predicate = NSPredicate(format: "inShoppingList = YES")
         return request
     }
-    
+
     class func notInShoppingListFetchRequest() -> NSFetchRequest<Thread> {
         let request = sortedByNumberFetchRequest()
         request.predicate = NSPredicate(format: "inShoppingList = NO")
@@ -47,43 +47,45 @@ public class Thread: NSManagedObject {
         request.predicate = NSPredicate(format: "inShoppingList = YES AND purchased = YES")
         return request
     }
-    
+
     class func fetchRequest(for project: Project) -> NSFetchRequest<Thread> {
         let request = sortedByNumberFetchRequest()
         request.predicate = NSPredicate(format: "%@ IN projects.project", project)
         return request
     }
-    
+
     class func sortedByNumberFetchRequest() -> NSFetchRequest<Thread> {
         let request: NSFetchRequest<Thread> = fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "number", ascending: true)]
         return request
     }
-    
+
     class func withNumber(_ number: String, context: NSManagedObjectContext) throws -> Thread? {
         let request: NSFetchRequest<Thread> = fetchRequest()
         request.predicate = NSPredicate(format: "number = %@", number)
         request.fetchLimit = 1
-        
+
         let results = try context.fetch(request)
         return results.first
     }
-    
-    class func importThreads(_ threads: [DMCThread], context: NSManagedObjectContext, event: inout EventBuilder) throws {
+
+    class func importThreads(
+        _ threads: [DMCThread], context: NSManagedObjectContext, event: inout EventBuilder
+    ) throws {
         // assumes the threads are already sorted by number
-        
+
         let existingThreads = try context.fetch(sortedByNumberFetchRequest())
-        
+
         var leftIter = existingThreads.makeIterator()
         var rightIter = threads.makeIterator()
-        
+
         var leftItem = leftIter.next()
         var rightItem = rightIter.next()
-        
+
         var createdCount = 0
         var extraCount = 0
         var updatedCount = 0
-        
+
         while leftItem != nil && rightItem != nil {
             if leftItem!.number! > rightItem!.number {
                 // We don't have a local thread for this one, so make one
@@ -98,48 +100,48 @@ public class Thread: NSManagedObject {
                 // Update existing threads
                 leftItem!.label = rightItem!.label
                 leftItem!.colorHex = rightItem!.colorHex
-                
+
                 leftItem = leftIter.next()
                 rightItem = rightIter.next()
                 updatedCount += 1
             }
         }
-        
+
         // Create any remaining threads we don't already have
         while rightItem != nil {
             _ = Thread(dmcThread: rightItem!, context: context)
             rightItem = rightIter.next()
             createdCount += 1
         }
-        
+
         event[.createdThreadCount] = createdCount
         event[.extraThreadCount] = extraCount
         event[.updatedThreadCount] = updatedCount
     }
-    
+
     class func mergeThreads(context: NSManagedObjectContext, event: inout EventBuilder) throws {
         let threads = try context.fetch(sortedByNumberFetchRequest())
-        
+
         var currentThread: Thread?
         var mergedThreads = 0
-        
+
         for thread in threads {
             if let currentThread = currentThread, thread.number == currentThread.number {
                 // if we have multiple threads with the same number, merge all properties
                 // and relationships into the first one and delete the extras
-                
+
                 currentThread.merge(thread)
                 context.delete(thread)
-                
+
                 mergedThreads += 1
             } else {
                 currentThread = thread
             }
         }
-        
+
         event[.mergedThreadCount] = mergedThreads
     }
-    
+
     func merge(_ other: Thread) {
         amountInCollection += other.amountInCollection
         inCollection = inCollection || other.inCollection
@@ -148,7 +150,7 @@ public class Thread: NSManagedObject {
         amountInShoppingList += other.amountInShoppingList
         inShoppingList = inShoppingList || other.inShoppingList
         purchased = purchased || other.purchased
-        
+
         let otherProjectThreads = (other.projects?.allObjects ?? []) as! [ProjectThread]
         for projectThread in otherProjectThreads {
             guard let project = projectThread.project else { continue }
@@ -174,7 +176,7 @@ public class Thread: NSManagedObject {
             onBobbin = false
         }
     }
-    
+
     func removeFromCollection() {
         inCollection = false
         amountInCollection = 0
@@ -205,21 +207,22 @@ public class Thread: NSManagedObject {
 
         purchased = !purchased
     }
-    
+
     @discardableResult func add(to project: Project) -> ProjectThread {
         if let projectThread = inProject(project) {
             return projectThread
         }
-        
+
         let projectThread = ProjectThread(context: managedObjectContext!)
         projectThread.project = project
         projectThread.amount = 1
         addToProjects(projectThread)
         return projectThread
     }
-    
+
     func inProject(_ project: Project) -> ProjectThread? {
-        return projects?.first(where: { ($0 as! ProjectThread).project == project }) as? ProjectThread
+        return projects?.first(where: { ($0 as! ProjectThread).project == project })
+            as? ProjectThread
     }
 
     var colorImage: UIImage? {

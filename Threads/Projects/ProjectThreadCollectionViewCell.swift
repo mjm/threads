@@ -6,20 +6,20 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
 import Combine
+import UIKit
 
 class ProjectThreadCollectionViewCell: UICollectionViewCell {
     @IBOutlet var colorView: SwatchView!
     @IBOutlet var labelLabel: UILabel!
     @IBOutlet var numberLabel: UILabel!
     @IBOutlet var quantityLabel: UILabel!
-    
+
     var cancellables = Set<AnyCancellable>()
 
     func bind(_ projectThread: ProjectThread) {
         backgroundColor = .systemBackground
-        
+
         projectThread.publisher(for: \.thread?.color)
             .replaceNil(with: .systemBackground)
             .assign(to: \.color, on: colorView)
@@ -32,7 +32,7 @@ class ProjectThreadCollectionViewCell: UICollectionViewCell {
         projectThread.publisher(for: \.thread?.label)
             .assign(to: \.text, on: labelLabel)
             .store(in: &cancellables)
-        
+
         projectThread.publisher(for: \.amount)
             .map { "\($0)" }
             .assign(to: \.text, on: quantityLabel)
@@ -42,10 +42,10 @@ class ProjectThreadCollectionViewCell: UICollectionViewCell {
         labelLabel.textColor = .label
         quantityLabel.textColor = .label
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+
         cancellables.removeAll()
     }
 }

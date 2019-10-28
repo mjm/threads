@@ -84,8 +84,10 @@ class RoundedShadowView: UIView {
 
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
-        layer.shadowPath = UIBezierPath(roundedRect: layer.bounds,
-                                        cornerRadius: cornerRadius).cgPath
+        layer.shadowPath
+            = UIBezierPath(
+                roundedRect: layer.bounds,
+                cornerRadius: cornerRadius).cgPath
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

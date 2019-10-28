@@ -46,8 +46,10 @@ class BannerController: UIViewController {
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding),
-            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding),
+            stackView.topAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding),
+            stackView.bottomAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding),
         ])
 
         self.view = view
@@ -58,7 +60,10 @@ class BannerController: UIViewController {
 private let presentationManager = BannerPresentationManager()
 
 class BannerPresentationManager: NSObject, UIViewControllerTransitioningDelegate {
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+    func presentationController(
+        forPresented presented: UIViewController, presenting: UIViewController?,
+        source: UIViewController
+    ) -> UIPresentationController? {
         BannerPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }
@@ -99,15 +104,17 @@ class BannerPresentationController: UIPresentationController {
             containerView!.bottomAnchor.constraint(equalTo: touchForwardingView.bottomAnchor),
         ])
 
-        presentedView!.widthAnchor.constraint(equalToConstant: containerView!.bounds.size.width).isActive = true
+        presentedView!.widthAnchor.constraint(equalToConstant: containerView!.bounds.size.width)
+            .isActive = true
     }
 
     override func presentationTransitionDidEnd(_ completed: Bool) {
         if completed {
             dismissalTimer?.invalidate()
-            dismissalTimer = Timer.scheduledTimer(withTimeInterval: 4, repeats: false) { [weak self] _ in
-                self?.presentingViewController.dismiss(animated: true)
-            }
+            dismissalTimer
+                = Timer.scheduledTimer(withTimeInterval: 4, repeats: false) { [weak self] _ in
+                    self?.presentingViewController.dismiss(animated: true)
+                }
         }
     }
 }
@@ -123,7 +130,9 @@ class TouchForwardingView: UIView {
         }
 
         for passthroughView in passthroughViews {
-            if let hitView = passthroughView.hitTest(convert(point, to: passthroughView), with: event) {
+            if let hitView = passthroughView.hitTest(
+                convert(point, to: passthroughView), with: event)
+            {
                 return hitView
             }
         }

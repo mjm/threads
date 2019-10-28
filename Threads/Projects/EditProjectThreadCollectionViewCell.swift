@@ -6,15 +6,15 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
 import Combine
+import UIKit
 
 class EditProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
     enum Action {
         case increment
         case decrement
     }
-    
+
     @IBOutlet var decreaseButton: UIButton!
     @IBOutlet var increaseButton: UIButton!
 
@@ -22,7 +22,7 @@ class EditProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
 
     override func bind(_ projectThread: ProjectThread) {
         super.bind(projectThread)
-        
+
         projectThread.publisher(for: \.amount)
             .map { $0 == 1 ? "trash" : "minus.square" }
             .map { UIImage(systemName: $0) }
@@ -30,7 +30,7 @@ class EditProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
                 decreaseButton?.setImage(image, for: .normal)
             }.store(in: &cancellables)
     }
-    
+
     func actionPublisher() -> AnyPublisher<Action, Never> {
         onAction.eraseToAnyPublisher()
     }

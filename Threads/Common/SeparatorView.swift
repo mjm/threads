@@ -20,12 +20,12 @@ class SeparatorView: UIView {
         super.init(frame: frame)
         configure()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         configure()
     }
-    
+
     private func configure() {
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .separator

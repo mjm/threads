@@ -25,7 +25,7 @@ class RoundedShadowImageView: RoundedShadowView {
     private func configure() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = .clear
-        
+
         contentView.addSubview(imageView)
 
         NSLayoutConstraint.activate([

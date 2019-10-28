@@ -10,16 +10,17 @@ import UIKit
 
 class CollectionThreadTableViewCell: ThreadTableViewCell {
     @IBOutlet var statusLabel: UILabel!
-    
+
     override func bind(_ thread: Thread) {
         super.bind(thread)
-        
+
         let inCollection = thread.publisher(for: \.inCollection)
-        let isOutOfStock = inCollection.combineLatest(thread.publisher(for: \.amountInCollection)) { inCollection, amount in
+        let isOutOfStock = inCollection.combineLatest(thread.publisher(for: \.amountInCollection)) {
+            inCollection, amount in
             inCollection && amount == 0
         }
         let onBobbin = thread.publisher(for: \.onBobbin)
-        
+
         isOutOfStock.combineLatest(onBobbin) { !($0 || $1) }
             .assign(to: \.isHidden, on: statusLabel)
             .store(in: &cancellables)
@@ -32,16 +33,17 @@ class CollectionThreadTableViewCell: ThreadTableViewCell {
                 return nil
             }
         }.assign(to: \.text, on: statusLabel).store(in: &cancellables)
-        
+
         isOutOfStock.map { $0 ? UIColor.secondarySystemBackground : UIColor.systemBackground }
             .assign(to: \.backgroundColor, on: self)
             .store(in: &cancellables)
-        
+
         selectedOrHighlighted.map { $0 ? UIColor.lightText : UIColor.secondaryLabel }
             .assign(to: \.textColor, on: statusLabel)
             .store(in: &cancellables)
-        
-        let labelColor = isOutOfStock.combineLatest(selectedOrHighlighted) { outOfStock, selected -> UIColor in
+
+        let labelColor = isOutOfStock.combineLatest(selectedOrHighlighted) {
+            outOfStock, selected -> UIColor in
             if selected {
                 return .lightText
             } else if outOfStock {

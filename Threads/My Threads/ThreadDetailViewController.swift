@@ -6,22 +6,25 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
-import CoreData
 import Combine
+import CoreData
+import UIKit
 
-class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewController.Section, ThreadDetailViewController.Cell> {
+class ThreadDetailViewController: ReactiveTableViewController<
+    ThreadDetailViewController.Section, ThreadDetailViewController.Cell
+>
+{
     enum Section: CaseIterable {
         case details
         case shoppingList
         case projects
     }
-    
+
     enum Cell: ReusableCell {
         case details
         case shoppingList
         case project(ProjectThread)
-        
+
         var cellIdentifier: String {
             switch self {
             case .details: return "Details"
@@ -30,18 +33,18 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
             }
         }
     }
-    
+
     let thread: Thread
 
     private var projectsList: FetchedObjectList<ProjectThread>!
-    
+
     @IBOutlet var actionsButtonItem: UIBarButtonItem!
-    
+
     init?(coder: NSCoder, thread: Thread) {
         self.thread = thread
         super.init(coder: coder)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("ThreadDetailViewController should be created in an IBSegueAction")
     }
@@ -49,10 +52,10 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
     override var managedObjectContext: NSManagedObjectContext {
         thread.managedObjectContext!
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         navigationItem.title = String(format: Localized.dmcNumber, thread.number!)
 
         if let color = thread.color {
@@ -63,11 +66,12 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
             appearance.backgroundColor = color
             appearance.titleTextAttributes[.foregroundColor] = textColor
             appearance.largeTitleTextAttributes[.foregroundColor] = textColor
-            appearance.largeTitleTextAttributes[.font] = {
-                let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .largeTitle)
-                let font = UIFont.systemFont(ofSize: desc.pointSize, weight: .heavy)
-                return UIFontMetrics(forTextStyle: .largeTitle).scaledFont(for: font)
-            }()
+            appearance.largeTitleTextAttributes[.font]
+                = {
+                    let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .largeTitle)
+                    let font = UIFont.systemFont(ofSize: desc.pointSize, weight: .heavy)
+                    return UIFontMetrics(forTextStyle: .largeTitle).scaledFont(for: font)
+                }()
             appearance.buttonAppearance.normal.titleTextAttributes[.foregroundColor] = textColor
             navigationItem.standardAppearance = appearance.copy()
 
@@ -75,20 +79,22 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
             navigationItem.scrollEdgeAppearance = appearance.copy()
         }
     }
-    
+
     override func subscribe() {
-        projectsList = FetchedObjectList(
-            fetchRequest: ProjectThread.fetchRequest(for: thread),
-            managedObjectContext: thread.managedObjectContext!
-        )
-                
+        projectsList
+            = FetchedObjectList(
+                fetchRequest: ProjectThread.fetchRequest(for: thread),
+                managedObjectContext: thread.managedObjectContext!
+            )
+
         let updateProject = projectsList.objectPublisher()
-            .merge(with: managedObjectContext.publisher(type: Project.self).compactMap { project in
-                self.projectsList.objects.first { $0.project == project }
-            })
-        
+            .merge(
+                with: managedObjectContext.publisher(type: Project.self).compactMap { project in
+                    self.projectsList.objects.first { $0.project == project }
+                })
+
         snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
-        
+
         updateDetails.sink { [weak self] _ in
             self?.updateDetailsCell()
         }.store(in: &cancellables)
@@ -96,11 +102,11 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
             self?.updateCell(projectThread)
         }.store(in: &cancellables)
     }
-    
+
     var projectThreads: AnyPublisher<[ProjectThread], Never> {
         projectsList.objectsPublisher()
     }
-    
+
     var updateDetails: AnyPublisher<Void, Never> {
         // Updating the snapshot, even if it hasn't changed, causes the table view
         // to animate the potential height change in the details cell, so this is
@@ -109,13 +115,14 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
             .combineLatest(thread.publisher(for: \.amountInCollection)) { _, _ in }
             .eraseToAnyPublisher()
     }
-    
+
     var snapshot: AnyPublisher<Snapshot, Never> {
         let inShoppingList = thread.publisher(for: \.inShoppingList)
-        
-        return projectThreads.combineLatest(inShoppingList, updateDetails) { projectThreads, inShoppingList, _ in
+
+        return projectThreads.combineLatest(inShoppingList, updateDetails) {
+            projectThreads, inShoppingList, _ in
             var snapshot = Snapshot()
-            
+
             snapshot.appendSections([.details])
             snapshot.appendItems([.details], toSection: .details)
 
@@ -128,7 +135,7 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
                 snapshot.appendSections([.projects])
                 snapshot.appendItems(projectThreads.map { .project($0) }, toSection: .projects)
             }
-            
+
             return snapshot
         }.eraseToAnyPublisher()
     }
@@ -148,13 +155,13 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
         }
     }
 
-    override var cellTypes: [String : RegisteredCellType<UITableViewCell>] {
+    override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
         [
             "ShoppingList": .nib(ShoppingListThreadTableViewCell.self),
             "Project": .class(UITableViewCell.self),
         ]
     }
-    
+
     private var shoppingListSubscription: AnyCancellable?
 
     override func populate(cell: UITableViewCell, item: ThreadDetailViewController.Cell) {
@@ -165,22 +172,25 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
         case .details:
             let cell = cell as! ThreadDetailsTableViewCell
             cell.populate(thread)
-            
+
         case .shoppingList:
             let cell = cell as! ShoppingListThreadTableViewCell
             cell.bind(thread)
-            
-            shoppingListSubscription = cell.actionPublisher().sink { [weak self] action in
-                switch action {
-                case .purchase:
-                    self?.actionRunner.perform(TogglePurchasedAction(thread: thread))
-                case .increment:
-                    self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment))
-                case .decrement:
-                    self?.actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .decrement))
+
+            shoppingListSubscription
+                = cell.actionPublisher().sink { [weak self] action in
+                    switch action {
+                    case .purchase:
+                        self?.actionRunner.perform(TogglePurchasedAction(thread: thread))
+                    case .increment:
+                        self?.actionRunner.perform(
+                            ChangeShoppingListAmountAction(thread: thread, change: .increment))
+                    case .decrement:
+                        self?.actionRunner.perform(
+                            ChangeShoppingListAmountAction(thread: thread, change: .decrement))
+                    }
                 }
-            }
-            
+
         case let .project(projectThread):
             cell.textLabel?.text = projectThread.project?.name
         }
@@ -198,14 +208,18 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewCo
         super.viewWillAppear(animated)
         navigationController?.navigationBar.tintColor = thread.color?.labelColor
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.tintColor = nil
     }
 
     func updateDetailsCell() {
-        guard let cell = dataSource.indexPath(for: .details).flatMap({ tableView.cellForRow(at: $0) as? ThreadDetailsTableViewCell }) else {
+        guard
+            let cell = dataSource.indexPath(for: .details).flatMap({
+                tableView.cellForRow(at: $0) as? ThreadDetailsTableViewCell
+            })
+        else {
             return
         }
 
@@ -252,7 +266,7 @@ extension ThreadDetailViewController {
 
             sheet.addAction(MarkOutOfStockAction(thread: thread))
         }
-        
+
         sheet.addAction(
             RemoveThreadAction(thread: thread),
             title: Localized.removeFromCollection,
@@ -272,7 +286,9 @@ extension ThreadDetailViewController {
 
 // MARK: - Table View Delegate
 extension ThreadDetailViewController {
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath)
+        -> IndexPath?
+    {
         guard let item = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
@@ -288,7 +304,8 @@ extension ThreadDetailViewController {
         switch dataSource.itemIdentifier(for: indexPath) {
         case let .project(projectThread):
             guard let project = projectThread.project,
-                let scene = view.window?.windowScene else {
+                let scene = view.window?.windowScene
+            else {
                 return
             }
 

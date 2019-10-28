@@ -6,8 +6,8 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
 import Combine
+import UIKit
 
 protocol UserAction {
     /// The type of value this action returns when it completes successfully.
@@ -98,13 +98,15 @@ protocol DestructiveUserAction: UserAction {
 
 extension DestructiveUserAction {
     func run(on runner: UserActionRunner, context: UserActionContext<Self>) {
-        let alert = UIAlertController(title: confirmationTitle,
-                                      message: confirmationMessage,
-                                      preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: confirmationTitle,
+            message: confirmationMessage,
+            preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
-        alert.addAction(UIAlertAction(title: confirmationButtonTitle, style: .destructive) { _ in
-            runner.reallyPerform(self, context: context)
-        })
+        alert.addAction(
+            UIAlertAction(title: confirmationButtonTitle, style: .destructive) { _ in
+                runner.reallyPerform(self, context: context)
+            })
 
         context.present(alert)
     }
@@ -115,7 +117,7 @@ enum UserActionError: LocalizedError {
     ///
     /// Unlike most errors, the action runner won't show an alert for this error.
     case canceled
-    
+
     var errorDescription: String? {
         switch self {
         case .canceled:

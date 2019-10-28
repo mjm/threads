@@ -6,27 +6,32 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
 import CoreData
 import Events
+import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    func scene(
+        _ scene: UIScene, willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
         guard let _ = (scene as? UIWindowScene) else { return }
-        
-        if let activity = connectionOptions.userActivities.first ?? scene.session.stateRestorationActivity {
+
+        if let activity = connectionOptions.userActivities.first
+            ?? scene.session.stateRestorationActivity
+        {
             restoreActivity(activity, animated: false)
         }
 
         window?.tintColor = .systemIndigo
-        
+
         // Force shopping list to load so it can set its badge value
         let shoppingListController = getTab(type: ShoppingListViewController.self)
         shoppingListController.loadViewIfNeeded()
-        
+
         Event.current.send("connecting scene")
     }
 
@@ -38,7 +43,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext.commit()
     }
-    
+
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         restoreActivity(userActivity, animated: scene.activationState == .foregroundActive)
         Event.current.send("continuing activity")
@@ -46,7 +51,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
         guard let window = window else { return nil }
-        
+
         let tabController = window.rootViewController as! UITabBarController
         let navController = tabController.selectedViewController as! UINavigationController
         let displayedController = navController.topViewController
@@ -56,16 +61,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             Event.current.send("saving activity")
             return activity
         }
-        
+
         return nil
     }
-    
+
     private func restoreActivity(_ activity: NSUserActivity, animated: Bool) {
         Event.current[.activityType] = activity.activityType
-        
+
         let userActivity = UserActivity(userActivity: activity, context: managedObjectContext)
         userActivity?.addToCurrentEvent()
-        
+
         switch userActivity {
         case .showMyThreads:
             selectTab(type: MyThreadsViewController.self)
@@ -76,40 +81,50 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         case let .showThread(thread):
             let myThreadsController = selectTab(type: MyThreadsViewController.self)
             if let threadDetailController = topViewController as? ThreadDetailViewController,
-                threadDetailController.thread == thread {
+                threadDetailController.thread == thread
+            {
                 return
             }
-            
+
             navigationController.popToRootViewController(animated: animated)
-            let detailViewController = myThreadsController.storyboard!.instantiateViewController(identifier: "ThreadDetail") { coder in
+            let detailViewController = myThreadsController.storyboard!.instantiateViewController(
+                identifier: "ThreadDetail"
+            ) { coder in
                 myThreadsController.makeDetailController(coder: coder, sender: thread)
             }
             navigationController.pushViewController(detailViewController, animated: animated)
         case let .showProject(project):
             let projectListController = selectTab(type: ProjectListViewController.self)
             if let projectDetailController = topViewController as? ProjectDetailViewController,
-                projectDetailController.project == project {
+                projectDetailController.project == project
+            {
                 return
             }
-            
+
             navigationController.popToRootViewController(animated: animated)
-            let detailViewController = projectListController.storyboard!.instantiateViewController(identifier: "ProjectDetail") { coder in
-                projectListController.makeDetailController(coder: coder, sender: ProjectDetail(project: project))
+            let detailViewController = projectListController.storyboard!.instantiateViewController(
+                identifier: "ProjectDetail"
+            ) { coder in
+                projectListController.makeDetailController(
+                    coder: coder, sender: ProjectDetail(project: project))
             }
             navigationController.pushViewController(detailViewController, animated: animated)
         case .addThreads:
             preconditionFailure("SceneDelegate should not have to handle an addThreads activity")
         case .none:
-            NSLog("Was not able to load the activity. It may have referenced an object that no longer exists, or it may be a new activity type handed off to us from a newer version of the app (though I'm not sure the system will let that last one happen).")
+            NSLog(
+                "Was not able to load the activity. It may have referenced an object that no longer exists, or it may be a new activity type handed off to us from a newer version of the app (though I'm not sure the system will let that last one happen)."
+            )
         }
     }
-    
-    @discardableResult private func selectTab<T: UIViewController>(type controllerType: T.Type) -> T {
+
+    @discardableResult private func selectTab<T: UIViewController>(type controllerType: T.Type) -> T
+    {
         let rootViewController = getTab(type: controllerType)
         tabBarController.selectedViewController = rootViewController.navigationController
         return rootViewController
     }
-    
+
     private func getTab<T: UIViewController>(type: T.Type) -> T {
         for vc in tabBarController.viewControllers ?? [] {
             let navController = vc as! UINavigationController
@@ -117,24 +132,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 return rootController
             }
         }
-        
+
         fatalError("Could not find a tab whose root view controller was \(type)")
     }
-    
+
     private var tabBarController: UITabBarController {
         return window!.rootViewController as! UITabBarController
     }
-    
+
     private var navigationController: UINavigationController {
         return tabBarController.selectedViewController as! UINavigationController
     }
-    
+
     private var topViewController: UIViewController {
         return navigationController.topViewController!
     }
-    
+
     private var managedObjectContext: NSManagedObjectContext {
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     }
 }
-

@@ -6,10 +6,10 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Foundation
 import Combine
-import StoreKit
 import Events
+import Foundation
+import StoreKit
 
 extension Event.Key {
     static let fetchProductsTime: Event.Key = "fetch_products_ms"
@@ -17,8 +17,9 @@ extension Event.Key {
 
 struct BuyPremiumAction: ReactiveUserAction {
     let undoActionName: String? = nil
-    
-    func publisher(context: UserActionContext<BuyPremiumAction>) -> AnyPublisher<Void, Swift.Error> {
+
+    func publisher(context: UserActionContext<BuyPremiumAction>) -> AnyPublisher<Void, Swift.Error>
+    {
         Event.current.startTimer(.fetchProductsTime)
         return StoreObserver.default.fetch(products: [.premium])
             .handleEvents(receiveCompletion: { _ in
@@ -31,10 +32,10 @@ struct BuyPremiumAction: ReactiveUserAction {
                 }
             }.print().map { _ in () }.eraseToAnyPublisher()
     }
-    
+
     enum Error: LocalizedError {
         case productInvalid
-        
+
         var errorDescription: String? {
             switch self {
             case .productInvalid:

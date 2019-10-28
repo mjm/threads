@@ -8,7 +8,8 @@
 
 import Cocoa
 
-let allThreadsURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Projects/Threads/Threads/AllThreads.json")
+let allThreadsURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(
+    "Projects/Threads/Threads/AllThreads.json")
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -34,7 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             colorHex = newValue?.hexString ?? ""
         }
     }
-    
+
     override init() {
         number = ""
         label = ""

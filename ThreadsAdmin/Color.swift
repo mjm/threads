@@ -13,26 +13,26 @@ extension NSColor {
         let normalized = hex
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .trimmingCharacters(in: .init(charactersIn: "#"))
-        
+
         let scanner = Scanner(string: normalized)
-        
+
         var rgb: UInt64 = 0
         scanner.scanHexInt64(&rgb)
-        
+
         let red = CGFloat((rgb & 0xff0000) >> 16) / 255.0
         let green = CGFloat((rgb & 0xff00) >> 8) / 255.0
         let blue = CGFloat(rgb & 0xff) / 255.0
-        
+
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }
-    
+
     var hexString: String {
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
-        
+
         getRed(&red, green: &green, blue: &blue, alpha: nil)
-        
+
         return String(format: "#%02X%02X%02X", red.colorValue, green.colorValue, blue.colorValue)
     }
 }

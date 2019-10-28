@@ -50,9 +50,11 @@ class EmptyView: UIView {
 
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-            stackView.topAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.topAnchor, constant: padding),
-            stackView.bottomAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.bottomAnchor, constant: -padding),
-            stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
+            stackView.topAnchor.constraint(
+                greaterThanOrEqualTo: safeAreaLayoutGuide.topAnchor, constant: padding),
+            stackView.bottomAnchor.constraint(
+                lessThanOrEqualTo: safeAreaLayoutGuide.bottomAnchor, constant: -padding),
+            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }
 }

@@ -6,8 +6,8 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Foundation
 import Events
+import Foundation
 
 extension Event.Key {
     static let oldAmount: Event.Key = "old_amount"
@@ -41,7 +41,7 @@ struct AddToShoppingListAction: SyncUserAction {
 
     func perform(_ context: UserActionContext<AddToShoppingListAction>) throws {
         Event.current[.threadCount] = threads.count
-        
+
         for thread in threads {
             thread.addToShoppingList()
         }
@@ -61,7 +61,7 @@ struct AddPurchasedToCollectionAction: SyncUserAction {
     func perform(_ context: UserActionContext<AddPurchasedToCollectionAction>) throws {
         let request = Thread.purchasedFetchRequest()
         let threads = try context.managedObjectContext.fetch(request)
-        
+
         Event.current[.threadCount] = threads.count
 
         for thread in threads {
@@ -102,7 +102,7 @@ struct ChangeShoppingListAmountAction: SyncUserAction {
     func perform(_ context: UserActionContext<ChangeShoppingListAmountAction>) throws {
         Event.current[.threadNumber] = thread.number
         Event.current[.oldAmount] = thread.amountInShoppingList
-        
+
         switch change {
         case .increment:
             thread.amountInShoppingList += 1
@@ -114,16 +114,16 @@ struct ChangeShoppingListAmountAction: SyncUserAction {
                 thread.amountInShoppingList -= 1
             }
         }
-        
+
         Event.current[.newAmount] = thread.amountInShoppingList
     }
 }
 
 struct RemoveFromShoppingListAction: SyncUserAction {
     let thread: Thread
-    
+
     let undoActionName: String? = Localized.removeFromShoppingList
-    
+
     func perform(_ context: UserActionContext<RemoveFromShoppingListAction>) throws {
         Event.current[.threadNumber] = thread.number
         thread.removeFromShoppingList()

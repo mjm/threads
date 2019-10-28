@@ -6,9 +6,9 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import UIKit
-import CoreData
 import Combine
+import CoreData
+import UIKit
 
 enum UserActionSource {
     case barButtonItem(UIBarButtonItem)
@@ -21,7 +21,7 @@ class UserActionContext<Action: UserAction> {
     let action: Action
     let source: UserActionSource?
     let willPerformHandler: () -> Void
-    
+
     let subject = ReplaySubject<Action.ResultType, Error>()
 
     init(
@@ -58,7 +58,7 @@ class UserActionContext<Action: UserAction> {
     func complete(error: Error) {
         subject.send(completion: .failure(error))
     }
-    
+
     fileprivate var completeSubscription: AnyCancellable?
 
     /// Signal that the action has completed its work successfully, and dismiss a previously presented view controller.
@@ -98,7 +98,7 @@ class UserActionContext<Action: UserAction> {
         default:
             break
         }
-        
+
         runner.viewController?.present(viewController, animated: true)
     }
 
@@ -114,7 +114,9 @@ class UserActionContext<Action: UserAction> {
     /// - Parameters:
     ///     - action: The new action to run.
     ///     - completion: A completion handler to run when the new action completes successfully.
-    func perform<OtherAction: UserAction>(_ action: OtherAction) -> AnyPublisher<OtherAction.ResultType, Error> {
+    func perform<OtherAction: UserAction>(_ action: OtherAction) -> AnyPublisher<
+        OtherAction.ResultType, Error
+    > {
         runner.perform(action)
     }
 }
@@ -140,8 +142,9 @@ extension Publisher {
     func ignoreError() -> Publishers.Catch<Self, Empty<Output, Never>> {
         self.catch { _ in Empty(completeImmediately: false) }
     }
-    
-    func complete<Action>(_ context: UserActionContext<Action>) where Output == Action.ResultType, Failure == Error {
+
+    func complete<Action>(_ context: UserActionContext<Action>)
+    where Output == Action.ResultType, Failure == Error {
         context.completeSubscription = receive(on: RunLoop.main).subscribe(context.subject)
     }
 }

@@ -6,12 +6,12 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
+import CoreData
+import CoreServices
+import CoreSpotlight
+import Events
 import Foundation
 import UIKit
-import CoreData
-import CoreSpotlight
-import CoreServices
-import Events
 
 extension Event.Key {
     static let activityID: Event.Key = "activity_id"
@@ -30,7 +30,7 @@ enum UserActivityType: String {
     case showThread = "com.mattmoriarity.Threads.ShowThread"
     case showProject = "com.mattmoriarity.Threads.ShowProject"
     case addThreads = "com.mattmoriarity.Threads.AddThreads"
-    
+
     fileprivate func create() -> NSUserActivity {
         return NSUserActivity(activityType: rawValue)
     }
@@ -43,7 +43,7 @@ enum UserActivity {
     case showThread(Thread)
     case showProject(Project)
     case addThreads(AddThreadAction.Mode)
-    
+
     init?(userActivity: NSUserActivity, context: NSManagedObjectContext) {
         switch UserActivityType(rawValue: userActivity.activityType) {
         case .showMyThreads:
@@ -54,37 +54,46 @@ enum UserActivity {
             self = .showProjects
         case .showThread:
             if let threadURL = userActivity.userInfo?[threadURLKey] as? URL,
-                let threadID = context.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: threadURL),
-                let thread = context.object(with: threadID) as? Thread {
+                let threadID = context.persistentStoreCoordinator!.managedObjectID(
+                    forURIRepresentation: threadURL),
+                let thread = context.object(with: threadID) as? Thread
+            {
                 self = .showThread(thread)
             } else if let threadNumber = userActivity.userInfo?[threadNumberKey] as? String,
-                let thread = try? Thread.withNumber(threadNumber, context: context) {
+                let thread = try? Thread.withNumber(threadNumber, context: context)
+            {
                 self = .showThread(thread)
             } else {
                 return nil
             }
         case .showProject:
             if let projectURL = userActivity.userInfo?[projectURLKey] as? URL,
-                let projectID = context.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: projectURL),
-                let project = context.object(with: projectID) as? Project {
+                let projectID = context.persistentStoreCoordinator!.managedObjectID(
+                    forURIRepresentation: projectURL),
+                let project = context.object(with: projectID) as? Project
+            {
                 self = .showProject(project)
             } else if let projectName = userActivity.userInfo?[projectNameKey] as? String,
-                let project = try? Project.withName(projectName, context: context) {
+                let project = try? Project.withName(projectName, context: context)
+            {
                 self = .showProject(project)
             } else {
                 return nil
             }
         case .addThreads:
-            guard let mode = AddThreadAction.Mode(activityUserInfo: userActivity.userInfo, context: context) else {
+            guard
+                let mode = AddThreadAction.Mode(
+                    activityUserInfo: userActivity.userInfo, context: context)
+            else {
                 return nil
             }
-            
+
             self = .addThreads(mode)
         case .none:
             return nil
         }
     }
-    
+
     private var userActivityType: UserActivityType {
         switch self {
         case .showMyThreads: return .showMyThreads
@@ -95,10 +104,10 @@ enum UserActivity {
         case .addThreads: return .addThreads
         }
     }
-    
+
     var userActivity: NSUserActivity {
         let activity = userActivityType.create()
-        
+
         // these are generally true and can be turned off as needed
         activity.isEligibleForHandoff = true
         activity.isEligibleForSearch = true
@@ -106,7 +115,7 @@ enum UserActivity {
         if let identifier = persistentIdentifier {
             activity.persistentIdentifier = identifier
         }
-        
+
         switch self {
         case .showMyThreads:
             activity.title = Localized.myThreads
@@ -133,7 +142,9 @@ enum UserActivity {
             activity.title = project.name ?? Localized.unnamedProject
             let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
             if let image = project.primaryImage?.image,
-                let data = image.resized(toFit: CGSize(width: 180, height: 270)).jpegData(compressionQuality: 0.7) {
+                let data = image.resized(toFit: CGSize(width: 180, height: 270)).jpegData(
+                    compressionQuality: 0.7)
+            {
                 attributes.thumbnailData = data
             }
             activity.contentAttributeSet = attributes
@@ -145,10 +156,10 @@ enum UserActivity {
             activity.isEligibleForPrediction = false
             activity.userInfo = mode.userInfo
         }
-        
+
         return activity
     }
-    
+
     var persistentIdentifier: String? {
         switch self {
         case let .showThread(thread):
@@ -159,20 +170,21 @@ enum UserActivity {
             return nil
         }
     }
-    
+
     func update(_ activity: NSUserActivity) {
         guard activity.activityType == userActivityType.rawValue,
-            activity.persistentIdentifier == persistentIdentifier else {
+            activity.persistentIdentifier == persistentIdentifier
+        else {
             return
         }
-        
+
         let newActivity = userActivity
         activity.title = newActivity.title
         if let userInfo = newActivity.userInfo {
             activity.addUserInfoEntries(from: userInfo)
         }
     }
-    
+
     func delete(completion: @escaping () -> Void = {}) {
         if let identifier = persistentIdentifier {
             NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [identifier]) {
@@ -181,11 +193,11 @@ enum UserActivity {
             }
         }
     }
-    
+
     func addToCurrentEvent() {
         Event.current[.activityType] = userActivityType.rawValue
         Event.current[.activityID] = persistentIdentifier
-        
+
         switch self {
         case let .showProject(project):
             Event.current[.projectName] = project.name
@@ -202,7 +214,7 @@ extension AddThreadAction.Mode {
         guard let userInfo = activityUserInfo else {
             return nil
         }
-        
+
         switch userInfo[addThreadModeNameKey] as? String {
         case "collection":
             self = .collection
@@ -210,11 +222,14 @@ extension AddThreadAction.Mode {
             self = .shoppingList
         case "project":
             if let projectURL = userInfo[projectURLKey] as? URL,
-                let projectID = context.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: projectURL),
-                let project = context.object(with: projectID) as? Project {
+                let projectID = context.persistentStoreCoordinator!.managedObjectID(
+                    forURIRepresentation: projectURL),
+                let project = context.object(with: projectID) as? Project
+            {
                 self = .project(project)
             } else if let projectName = userInfo[projectNameKey] as? String,
-                let project = try? Project.withName(projectName, context: context) {
+                let project = try? Project.withName(projectName, context: context)
+            {
                 self = .project(project)
             } else {
                 return nil
@@ -223,7 +238,7 @@ extension AddThreadAction.Mode {
             return nil
         }
     }
-    
+
     var userInfo: [AnyHashable: Any]? {
         switch self {
         case .collection:
