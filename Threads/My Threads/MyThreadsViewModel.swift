@@ -35,8 +35,12 @@ final class MyThreadsViewModel: ViewModel {
         super.init(context: context)
     }
 
+    var threads: AnyPublisher<[Thread], Never> {
+        threadsList.objectsPublisher()
+    }
+
     var snapshot: AnyPublisher<Snapshot, Never> {
-        threadsList.objectsPublisher().map { threads -> Snapshot in
+        threads.map { threads -> Snapshot in
             var snapshot = Snapshot()
 
             snapshot.appendSections([.threads])
@@ -47,7 +51,7 @@ final class MyThreadsViewModel: ViewModel {
     }
 
     var isEmpty: AnyPublisher<Bool, Never> {
-        threadsList.objectsPublisher()
+        threads
             .map { $0.isEmpty }
             .removeDuplicates()
             .eraseToAnyPublisher()

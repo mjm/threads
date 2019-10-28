@@ -10,9 +10,11 @@ import UIKit
 
 protocol UserActionPresenter: class {
     func present(_ viewControllerToPresent: UIViewController, animated flag: Bool)
+
     func present(
         _ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)?
     )
+
     func dismiss(animated flag: Bool)
     func dismiss(animated flag: Bool, completion: (() -> Void)?)
 }
