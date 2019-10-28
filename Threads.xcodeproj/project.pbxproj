@@ -288,8 +288,10 @@
 			children = (
 				C97FCDE4232DFBE9000B1590 /* Common */,
 				C97FCDE5232DFC03000B1590 /* My Threads */,
+				C95028EC2366AC8100BB02C4 /* Thread Detail */,
 				C97FCDE6232DFC5F000B1590 /* Shopping List */,
 				C97FCDE7232DFC7E000B1590 /* Projects */,
+				C95028ED2366ACA000BB02C4 /* Project Detail */,
 				C97FCDE8232DFCB2000B1590 /* Add Thread */,
 				C942E44B2336C72300987EAB /* Banner */,
 				C906E3B72352728C003EE053 /* Sidebar */,
@@ -321,6 +323,31 @@
 				C9491E28231DDBC60031F463 /* ColorTests.swift */,
 			);
 			path = ThreadsTests;
+			sourceTree = "<group>";
+		};
+		C95028EC2366AC8100BB02C4 /* Thread Detail */ = {
+			isa = PBXGroup;
+			children = (
+				C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */,
+			);
+			path = "Thread Detail";
+			sourceTree = "<group>";
+		};
+		C95028ED2366ACA000BB02C4 /* Project Detail */ = {
+			isa = PBXGroup;
+			children = (
+				C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */,
+				C97FCDE9232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift */,
+				C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */,
+				C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */,
+				C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */,
+				C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */,
+				C97FCDF2232EA845000B1590 /* EditImageCollectionViewCell.swift */,
+				C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */,
+				C97FCDF6232EB846000B1590 /* ViewImageCollectionViewCell.swift */,
+				C97FCDF7232EB846000B1590 /* ViewImageCollectionViewCell.xib */,
+			);
+			path = "Project Detail";
 			sourceTree = "<group>";
 		};
 		C97FCDE4232DFBE9000B1590 /* Common */ = {
@@ -357,6 +384,7 @@
 				C97FCDC2232DA92E000B1590 /* NSAttributedString.swift */,
 				C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */,
 				C97FCDED232E941D000B1590 /* Cells.swift */,
+				C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */,
 				C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */,
 				C99677EF235B496100AE2F5C /* In-App Purchase */,
 				C97FCDFC232F4945000B1590 /* Actions */,
@@ -369,7 +397,6 @@
 			children = (
 				C97FCDD0232DCE0F000B1590 /* MyThreads.storyboard */,
 				C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */,
-				C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */,
 				C97FCDE2232DD3D2000B1590 /* ThreadPreviewViewController.swift */,
 				C9491E2A231DE0070031F463 /* CollectionThreadTableViewCell.swift */,
 				C9491E2B231DE0070031F463 /* CollectionThreadTableViewCell.xib */,
@@ -393,20 +420,9 @@
 			children = (
 				C97FCDDA232DCE6B000B1590 /* Projects.storyboard */,
 				C9491E4123248B940031F463 /* ProjectListViewController.swift */,
-				C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */,
 				C98F07C72333093800BAB311 /* ProjectPreviewViewController.swift */,
 				C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */,
 				C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */,
-				C97FCDE9232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift */,
-				C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */,
-				C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */,
-				C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */,
-				C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */,
-				C97FCDF2232EA845000B1590 /* EditImageCollectionViewCell.swift */,
-				C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */,
-				C97FCDF6232EB846000B1590 /* ViewImageCollectionViewCell.swift */,
-				C97FCDF7232EB846000B1590 /* ViewImageCollectionViewCell.xib */,
-				C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */,
 			);
 			path = Projects;
 			sourceTree = "<group>";
