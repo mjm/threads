@@ -228,56 +228,71 @@ extension MyThreadsViewController {
                 }
             }
         ) { suggestedActions in
-            let markActions: [UIMenuElement] =
-                self.viewModel.markActions(for: cell).map { action in
-                    UIAction(title: action.title,
-                             attributes: action.canPerform() ? [] : .disabled) { _ in
-                        action.perform()
-                    }
-                }
 
-            let markMenu = UIMenu(title: "", options: .displayInline, children: markActions)
+            let addToShoppingListAction = self.viewModel.addToShoppingListAction(for: cell)
+            let addToShoppingList = UIAction(
+                title: addToShoppingListAction.title,
+                image: UIImage(systemName: "cart.badge.plus"),
+                attributes: addToShoppingListAction.canPerform() ? [] : .disabled
+            ) { _ in
+                addToShoppingListAction.perform()
+            }
 
             // Load projects for submenu
             let addToProjectMenu: UIMenuElement
-            do {
-                let request = Project.allProjectsFetchRequest()
-                let projects = try self.managedObjectContext.fetch(request)
-                addToProjectMenu
-                    = UIMenu(
-                        title: Localized.addToProjectMenu,
-                        image: UIImage(systemName: "rectangle.3.offgrid"),
-                        children: projects.map { project in
-                            let action = AddToProjectAction(
-                                thread: thread, project: project, showBanner: true)
-                            return self.actionRunner.menuAction(
-                                action,
-                                title: project.name ?? Localized.unnamedProject,
-                                state: action.canPerform ? .off : .on)
-                        })
-            } catch {
-                self.present(error: error)
+
+            let projectActions = self.viewModel.projectActions(for: cell)
+            if projectActions.isEmpty {
                 addToProjectMenu
                     = UIAction(
                         title: Localized.addToProjectMenu,
                         image: UIImage(systemName: "rectangle.3.offgrid"),
                         attributes: .disabled
                     ) { _ in }
+            } else {
+                addToProjectMenu
+                    = UIMenu(
+                        title: Localized.addToProjectMenu,
+                        image: UIImage(systemName: "rectangle.3.offgrid"),
+                        children: projectActions.map { action in
+                            UIAction(
+                                title: action.title,
+                                image: UIImage(systemName: "rectangle.3.offgrid"),
+                                attributes: action.canPerform() ? [] : .disabled,
+                                state: action.canPerform() ? .off : .on
+                            ) { _ in
+                                action.perform()
+                            }
+                        })
+            }
+
+            let markMenu = UIMenu(
+                title: "", options: .displayInline,
+                children: self.viewModel.markActions(for: cell).map { action in
+                    UIAction(
+                        title: action.title,
+                        attributes: action.canPerform() ? [] : .disabled
+                    ) { _ in
+                        action.perform()
+                    }
+                })
+
+            let removeAction = self.viewModel.removeAction(for: cell)
+            let remove = UIAction(
+                title: removeAction.title,
+                image: UIImage(systemName: "trash"),
+                attributes: .destructive
+            ) { _ in
+                removeAction.perform()
             }
 
             return UIMenu(
                 title: "",
                 children: [
-                    self.actionRunner.menuAction(
-                        AddToShoppingListAction(thread: thread, showBanner: true),
-                        image: UIImage(systemName: "cart.badge.plus")),
+                    addToShoppingList,
                     addToProjectMenu,
                     markMenu,
-                    self.actionRunner.menuAction(
-                        RemoveThreadAction(thread: thread),
-                        title: Localized.removeFromCollection,
-                        image: UIImage(systemName: "trash"),
-                        attributes: .destructive),
+                    remove,
                 ])
         }
     }

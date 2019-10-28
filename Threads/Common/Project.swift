@@ -100,6 +100,10 @@ extension Project {
         ["notes"]
     }
 
+    var displayName: String {
+        name ?? Localized.unnamedProject
+    }
+
     static let placeholderURL = URL(string: "https://threads-demo.glitch.me/projects/example")!
 
     var publishedURL: URL? {

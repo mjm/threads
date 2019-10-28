@@ -135,8 +135,38 @@ extension MyThreadsViewModel {
                 thread.onBobbin
                     ? action(Localized.markOffBobbin, MarkOffBobbinAction(thread: thread))
                     : action(Localized.markOnBobbin, MarkOnBobbinAction(thread: thread)),
-                action(Localized.markOutOfStock, MarkOutOfStockAction(thread: thread))
+                action(Localized.markOutOfStock, MarkOutOfStockAction(thread: thread)),
             ]
         }
+    }
+
+    func projectActions(for cell: Cell) -> [Action] {
+        let thread = cell.thread
+
+        do {
+            let request = Project.allProjectsFetchRequest()
+            let projects = try context.fetch(request)
+
+            return projects.map { project in
+                action(
+                    project.displayName,
+                    AddToProjectAction(thread: thread, project: project, showBanner: true))
+            }
+        } catch {
+            presenter?.present(error: error)
+            return []
+        }
+    }
+
+    func addToShoppingListAction(for cell: Cell) -> Action {
+        action(
+            Localized.addToShoppingList,
+            AddToShoppingListAction(thread: cell.thread, showBanner: true))
+    }
+
+    func removeAction(for cell: Cell) -> Action {
+        action(
+            Localized.removeFromCollection,
+            RemoveThreadAction(thread: cell.thread))
     }
 }
