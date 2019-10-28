@@ -39,6 +39,13 @@ struct BuyPremiumAction: ReactiveUserAction {
         var errorDescription: String? {
             switch self {
             case .productInvalid:
+                return "Cannot Buy Threads Premium"
+            }
+        }
+
+        var failureReason: String? {
+            switch self {
+            case .productInvalid:
                 return "The premium product is invalid and could not be found."
             }
         }

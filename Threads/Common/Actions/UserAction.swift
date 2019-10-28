@@ -121,7 +121,14 @@ enum UserActionError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .canceled:
-            return "The user canceled the action."
+            return "Action Canceled"
+        }
+    }
+
+    var failureReason: String? {
+        switch self {
+        case .canceled:
+            return "The user canceled the action"
         }
     }
 }

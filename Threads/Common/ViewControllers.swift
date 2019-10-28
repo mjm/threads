@@ -29,9 +29,11 @@ class NavigationController: UINavigationController {
 
 extension UIViewController {
     func present(error: Error, animated: Bool = true) {
+        let error = error as NSError
+
         let alert = UIAlertController(
-            title: Localized.errorOccurred,
-            message: error.localizedDescription,
+            title: error.localizedDescription,
+            message: error.localizedFailureReason,
             preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Localized.dismiss, style: .cancel))
 

@@ -233,6 +233,13 @@ struct AddImageToProjectAction: ReactiveUserAction {
         var errorDescription: String? {
             switch self {
             case .noImageURL:
+                return "Invalid Project Image"
+            }
+        }
+
+        var failureReason: String? {
+            switch self {
+            case .noImageURL:
                 return
                     "The chosen media could not be added to the project because it is not a valid image."
             }
