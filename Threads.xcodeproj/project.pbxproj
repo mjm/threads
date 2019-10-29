@@ -13,6 +13,8 @@
 		C906E3BB23527C61003EE053 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3BA23527C61003EE053 /* SplitViewController.swift */; };
 		C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3BC23528E82003EE053 /* DetailViewController.swift */; };
 		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
+		C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */; };
+		C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */; };
 		C946962B2340EF1B00843179 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946962A2340EF1B00843179 /* EmptyView.swift */; };
 		C946962D2342D69500843179 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946962C2342D69500843179 /* AlertController.swift */; };
 		C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491DF3231D897B0031F463 /* AppDelegate.swift */; };
@@ -119,6 +121,8 @@
 		C906E3BA23527C61003EE053 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		C906E3BC23528E82003EE053 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
+		C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewModelTests.swift; sourceTree = "<group>"; };
+		C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTestCase.swift; sourceTree = "<group>"; };
 		C946962A2340EF1B00843179 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		C946962C2342D69500843179 /* AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
 		C9491DF0231D897B0031F463 /* Threads.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Threads.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -267,6 +271,15 @@
 			path = Banner;
 			sourceTree = "<group>";
 		};
+		C944A955236776C800C1B2A1 /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */,
+				C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */,
+			);
+			path = "View Models";
+			sourceTree = "<group>";
+		};
 		C9491DE7231D897A0031F463 = {
 			isa = PBXGroup;
 			children = (
@@ -325,6 +338,7 @@
 		C9491E1F231DDBB70031F463 /* ThreadsTests */ = {
 			isa = PBXGroup;
 			children = (
+				C944A955236776C800C1B2A1 /* View Models */,
 				C9491E22231DDBB70031F463 /* Info.plist */,
 				C9491E28231DDBC60031F463 /* ColorTests.swift */,
 			);
@@ -709,6 +723,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */,
+				C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */,
 				C9491E29231DDBC60031F463 /* ColorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

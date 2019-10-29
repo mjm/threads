@@ -98,6 +98,11 @@ protocol DestructiveUserAction: UserAction {
 
 extension DestructiveUserAction {
     func run(on runner: UserActionRunner, context: UserActionContext<Self>) {
+        guard runner.presenter != nil else {
+            runner.reallyPerform(self, context: context)
+            return
+        }
+
         let alert = UIAlertController(
             title: confirmationTitle,
             message: confirmationMessage,
