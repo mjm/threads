@@ -34,7 +34,8 @@ class ProjectListViewController: ReactiveCollectionViewController<
             self?.setShowEmptyView(empty)
         }.store(in: &cancellables)
 
-        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(in: &cancellables)
+        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(
+            in: &cancellables)
     }
 
     private func setShowEmptyView(_ showEmptyView: Bool) {
