@@ -15,6 +15,8 @@
 		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
 		C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */; };
 		C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */; };
+		C944A95B2367C69D00C1B2A1 /* AddThreadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */; };
+		C944A95D2367D44E00C1B2A1 /* AddThreadViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A95C2367D44E00C1B2A1 /* AddThreadViewModelTests.swift */; };
 		C946962B2340EF1B00843179 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946962A2340EF1B00843179 /* EmptyView.swift */; };
 		C946962D2342D69500843179 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946962C2342D69500843179 /* AlertController.swift */; };
 		C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491DF3231D897B0031F463 /* AppDelegate.swift */; };
@@ -123,6 +125,8 @@
 		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
 		C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewModelTests.swift; sourceTree = "<group>"; };
 		C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTestCase.swift; sourceTree = "<group>"; };
+		C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadViewModel.swift; sourceTree = "<group>"; };
+		C944A95C2367D44E00C1B2A1 /* AddThreadViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadViewModelTests.swift; sourceTree = "<group>"; };
 		C946962A2340EF1B00843179 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		C946962C2342D69500843179 /* AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
 		C9491DF0231D897B0031F463 /* Threads.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Threads.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -275,6 +279,7 @@
 			isa = PBXGroup;
 			children = (
 				C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */,
+				C944A95C2367D44E00C1B2A1 /* AddThreadViewModelTests.swift */,
 				C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */,
 			);
 			path = "View Models";
@@ -454,6 +459,7 @@
 			children = (
 				C97FCDDF232DCE86000B1590 /* AddThread.storyboard */,
 				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
+				C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */,
 				C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */,
 			);
 			path = "Add Thread";
@@ -677,6 +683,7 @@
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,
 				C97FCDFB232F3BC3000B1590 /* Image.swift in Sources */,
 				C97FCDB0232C8ED7000B1590 /* UserActivity.swift in Sources */,
+				C944A95B2367C69D00C1B2A1 /* AddThreadViewModel.swift in Sources */,
 				C97FCDF8232EB846000B1590 /* ViewImageCollectionViewCell.swift in Sources */,
 				C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */,
 				C9491E4223248B940031F463 /* ProjectListViewController.swift in Sources */,
@@ -723,6 +730,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C944A95D2367D44E00C1B2A1 /* AddThreadViewModelTests.swift in Sources */,
 				C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */,
 				C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */,
 				C9491E29231DDBC60031F463 /* ColorTests.swift in Sources */,

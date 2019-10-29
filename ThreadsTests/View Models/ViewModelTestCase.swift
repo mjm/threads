@@ -70,6 +70,11 @@ class ViewModelTestCase: XCTestCase {
         try Thread.importThreads(DMCThread.all, context: context, event: &event)
         try context.save()
     }
+
+    func await(_ predicateString: String, view: Any, timeout: TimeInterval = 3.0) {
+        let exp = expectation(for: NSPredicate(format: predicateString), evaluatedWith: view)
+        wait(for: [exp], timeout: timeout)
+    }
 }
 
 extension Event.Key {

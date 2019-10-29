@@ -11,57 +11,26 @@ import CoreData
 import UIKit
 
 class AddThreadViewController: ReactiveTableViewController<
-    AddThreadViewController.Section, AddThreadViewController.Cell
+    AddThreadViewModel.Section, AddThreadViewModel.Cell
 >
 {
-    enum Section: CaseIterable {
-        case results
-        case selected
-    }
-
-    enum Cell: ReusableCell {
-        case thread(Thread, isResult: Bool)
-
-        var cellIdentifier: String { "Thread" }
-
-        static func == (lhs: Cell, rhs: Cell) -> Bool {
-            switch (lhs, rhs) {
-            case let (.thread(left, isResult: _), .thread(right, isResult: _)):
-                return left == right
-            }
-        }
-
-        func hash(into hasher: inout Hasher) {
-            switch self {
-            case let .thread(thread, isResult: _):
-                hasher.combine(thread)
-            }
-        }
-    }
-
     weak var delegate: AddThreadViewControllerDelegate?
     var onDismiss: (() -> Void)!
 
-    private var choices: [Thread] = []
+    private(set) var canDismiss = true
 
     private var searchController: UISearchController!
-
-    @Published private var threadToAdd: Thread?
-    @Published private var query: String = ""
-    @Published private var selectedThreads: [Thread] = []
-
-    private var isAdding = false
-
-    var canDismiss: Bool {
-        return selectedThreads.isEmpty
-    }
-
     @IBOutlet var keyboardAccessoryView: UIToolbar!
     @IBOutlet var quickAddButton: UIBarButtonItem!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    let viewModel: AddThreadViewModel
 
+    required init?(coder: NSCoder) {
+        viewModel = AddThreadViewModel()
+        super.init(coder: coder)
+    }
+
+    override func viewDidLoad() {
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.automaticallyShowsCancelButton = false
@@ -75,6 +44,8 @@ class AddThreadViewController: ReactiveTableViewController<
         searchController.searchBar.delegate = self
         searchController.searchBar.searchTextField.delegate = self
 
+        super.viewDidLoad()
+
         #if targetEnvironment(macCatalyst)
         tableView.tableHeaderView = searchController.searchBar
         #else
@@ -84,55 +55,23 @@ class AddThreadViewController: ReactiveTableViewController<
     }
 
     override func subscribe() {
+        viewModel.snapshot.apply(to: dataSource, animate: false).store(in: &cancellables)
+
+        viewModel.$query.removeDuplicates().map { q -> String? in q }.assign(
+            to: \.searchBar.text, on: searchController).store(in: &cancellables)
+
+        viewModel.canQuickSelect.assign(to: \.isEnabled, on: quickAddButton).store(
+            in: &cancellables)
+
         let addButton = navigationItem.rightBarButtonItems!.first!
 
-        snapshot.apply(to: dataSource, animate: false).store(in: &cancellables)
+        viewModel.canAddSelected.assign(to: \.isEnabled, on: addButton).store(in: &cancellables)
+        viewModel.canAddSelected.map { !$0 }.assign(to: \.canDismiss, on: self).store(
+            in: &cancellables)
 
-        $query.combineLatest(filteredThreads) { query, threads -> Thread? in
-            threads.first { $0.number?.lowercased() == query }
-        }.assign(to: \.threadToAdd, on: self).store(in: &cancellables)
-
-        $threadToAdd.map { $0 != nil }
-            .assign(to: \.isEnabled, on: quickAddButton).store(in: &cancellables)
-
-        $selectedThreads.map { !$0.isEmpty }
-            .assign(to: \.isEnabled, on: addButton).store(in: &cancellables)
-        $selectedThreads.map { threads in
+        viewModel.$selectedThreads.map { threads in
             String.localizedStringWithFormat(Localized.addBatchButton, threads.count)
         }.assign(to: \.title, on: addButton).store(in: &cancellables)
-    }
-
-    var filteredThreads: AnyPublisher<[Thread], Never> {
-        $query.combineLatest($selectedThreads) { query, selectedThreads -> [Thread] in
-            if query.isEmpty {
-                return []
-            } else {
-                return self.choices.filter {
-                    return !selectedThreads.contains($0) && $0.number!.lowercased().hasPrefix(query)
-                }
-            }
-        }.eraseToAnyPublisher()
-    }
-
-    var snapshot: AnyPublisher<Snapshot, Never> {
-        $selectedThreads.combineLatest(filteredThreads).map { input in
-            let (selected, filtered) = input
-            var snapshot = Snapshot()
-
-            if !filtered.isEmpty {
-                snapshot.appendSections([.results])
-                snapshot.appendItems(
-                    filtered.map { .thread($0, isResult: true) }, toSection: .results)
-            }
-
-            if !selected.isEmpty {
-                snapshot.appendSections([.selected])
-                snapshot.appendItems(
-                    selected.map { .thread($0, isResult: false) }, toSection: .selected)
-            }
-
-            return snapshot
-        }.eraseToAnyPublisher()
     }
 
     override func dataSourceWillInitialize() {
@@ -140,14 +79,14 @@ class AddThreadViewController: ReactiveTableViewController<
 
         dataSource.sectionTitle = { _, _, section in
             switch section {
-            case .results: return NSLocalizedString("Matching Threads", comment: "")
+            case .filtered: return NSLocalizedString("Matching Threads", comment: "")
             case .selected: return NSLocalizedString("Threads to Add", comment: "")
             }
         }
 
         do {
             if let choices = try delegate?.choicesForAddingThreads(self) {
-                self.choices = choices
+                viewModel.choices = choices
             }
         } catch {
             present(error: error)
@@ -158,31 +97,25 @@ class AddThreadViewController: ReactiveTableViewController<
         ["Thread": .nib(CollectionThreadTableViewCell.self)]
     }
 
-    override func populate(cell: UITableViewCell, item: AddThreadViewController.Cell) {
-        switch item {
-        case let .thread(thread, isResult: _):
-            let cell = cell as! CollectionThreadTableViewCell
-            cell.bind(thread)
-        }
+    override func populate(cell: UITableViewCell, item: AddThreadViewModel.Cell) {
+        let cell = cell as! CollectionThreadTableViewCell
+        cell.bind(item.thread)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        searchController.searchBar.perform(
-            #selector(becomeFirstResponder), with: nil, afterDelay: 0.05)
+        RunLoop.main.schedule {
+            self.searchController.searchBar.becomeFirstResponder()
+        }
     }
 
     @IBAction func tapKeyboardShortcut(sender: UIBarButtonItem) {
-        searchController.searchBar.text = sender.title!
+        viewModel.query = sender.title!
     }
 
     @IBAction func quickAddThread() {
-        guard let thread = threadToAdd else {
-            return
-        }
-
-        addThread(thread)
+        viewModel.quickSelect()
     }
 
     @IBAction func cancel() {
@@ -190,8 +123,10 @@ class AddThreadViewController: ReactiveTableViewController<
     }
 
     @IBAction func add() {
+        // TODO get this into the view model
         delegate?.addThreadViewController(
-            self, performActionForAddingThreads: selectedThreads, actionRunner: actionRunner)
+            self, performActionForAddingThreads: viewModel.selectedThreads,
+            actionRunner: viewModel.actionRunner)
         onDismiss()
     }
 
@@ -202,7 +137,7 @@ class AddThreadViewController: ReactiveTableViewController<
 
         switch action {
         case #selector(add):
-            return !selectedThreads.isEmpty
+            return !viewModel.selectedThreads.isEmpty
         default:
             return true
         }
@@ -211,7 +146,7 @@ class AddThreadViewController: ReactiveTableViewController<
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath)
         -> IndexPath?
     {
-        guard case .thread(_, isResult: true) = dataSource.itemIdentifier(for: indexPath) else {
+        guard let item = dataSource.itemIdentifier(for: indexPath), item.section == .filtered else {
             return nil
         }
 
@@ -219,13 +154,12 @@ class AddThreadViewController: ReactiveTableViewController<
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard case let .thread(thread, isResult: true) = dataSource.itemIdentifier(for: indexPath)
-        else {
+        guard let item = dataSource.itemIdentifier(for: indexPath), item.section == .filtered else {
             return
         }
 
         tableView.deselectRow(at: indexPath, animated: true)
-        addThread(thread)
+        viewModel.select(thread: item.thread)
     }
 
     override func tableView(
@@ -234,7 +168,7 @@ class AddThreadViewController: ReactiveTableViewController<
         if tableView == self.tableView {
             let delete = UIContextualAction(style: .destructive, title: Localized.dontAdd) {
                 action, view, completionHandler in
-                self.selectedThreads.remove(at: indexPath.row)
+                self.viewModel.deselect(at: indexPath.row)
                 completionHandler(true)
             }
             delete.image = UIImage(systemName: "nosign")
@@ -246,20 +180,11 @@ class AddThreadViewController: ReactiveTableViewController<
 
         return nil
     }
-
-    private func addThread(_ thread: Thread) {
-        isAdding = true
-
-        selectedThreads.insert(thread, at: 0)
-        searchController.searchBar.text = ""
-
-        isAdding = false
-    }
 }
 
 extension AddThreadViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        query = searchController.searchBar.text?.lowercased() ?? ""
+        viewModel.query = searchController.searchBar.text ?? ""
     }
 }
 
@@ -268,7 +193,7 @@ extension AddThreadViewController: UISearchBarDelegate {
 
 extension AddThreadViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        quickAddThread()
+        viewModel.quickSelect()
         return false
     }
 
@@ -283,7 +208,7 @@ extension AddThreadViewController: UITextFieldDelegate {
 
             if range.location == existingText.length {
                 // a space at the end of the text means quick add thread
-                quickAddThread()
+                viewModel.quickSelect()
             }
 
             return false
