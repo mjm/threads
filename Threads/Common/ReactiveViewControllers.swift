@@ -21,7 +21,9 @@ class ReactiveViewController: UIViewController {
         actionRunner
             = UserActionRunner(presenter: self, managedObjectContext: managedObjectContext)
 
-        userActivity = currentUserActivity?.userActivity
+        if let activity = currentUserActivity?.userActivity {
+            userActivity = activity
+        }
     }
 
     #if !targetEnvironment(macCatalyst)
@@ -96,7 +98,9 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
 
         subscribe()
 
-        userActivity = currentUserActivity?.userActivity
+        if let activity = currentUserActivity?.userActivity {
+            userActivity = activity
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -209,7 +213,7 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
         collectionView.collectionViewLayout = createLayout()
 
         subscribe()
-        
+
         if let activity = currentUserActivity?.userActivity {
             userActivity = activity
         }
