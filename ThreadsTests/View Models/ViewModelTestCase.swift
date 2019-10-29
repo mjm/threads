@@ -71,7 +71,7 @@ class ViewModelTestCase: XCTestCase {
         try context.save()
     }
 
-    func await(_ predicateString: String, view: Any, timeout: TimeInterval = 3.0) {
+    func await(_ predicateString: String, view: Any, timeout: TimeInterval = 5.0) {
         let exp = expectation(for: NSPredicate(format: predicateString), evaluatedWith: view)
         wait(for: [exp], timeout: timeout)
     }
