@@ -103,14 +103,14 @@ struct AddThreadAction: AsyncUserAction {
         case shoppingList
         case project(Project)
 
-        func makeDelegate(context: NSManagedObjectContext) -> AddThreadViewControllerDelegate {
+        func makeMode(context: NSManagedObjectContext) -> AddThreadMode {
             switch self {
             case .collection:
-                return AddThreadsToCollectionDelegate(context: context)
+                return AddThreadsToCollectionMode(context: context)
             case .shoppingList:
-                return AddThreadsToShoppingListDelegate(context: context)
+                return AddThreadsToShoppingListMode(context: context)
             case let .project(project):
-                return AddThreadsToProjectDelegate(project: project)
+                return AddThreadsToProjectMode(project: project)
             }
         }
     }
@@ -137,9 +137,7 @@ struct AddThreadAction: AsyncUserAction {
             as! UINavigationController
         let addThreadController = navController.viewControllers[0] as! AddThreadViewController
 
-        coordinator.addThreadsDelegate
-            = mode.makeDelegate(context: addThreadController.managedObjectContext)
-        addThreadController.delegate = coordinator.addThreadsDelegate
+        addThreadController.viewModel.mode = mode.makeMode(context: context.managedObjectContext)
         addThreadController.onDismiss = {
             context.completeAndDismiss()
         }

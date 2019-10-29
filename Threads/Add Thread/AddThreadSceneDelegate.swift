@@ -12,7 +12,6 @@ import UIKit
 
 class AddThreadSceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    var addThreadsDelegate: AddThreadViewControllerDelegate?
     var toolbarDelegate: AddThreadToolbarDelegate?
 
     func scene(
@@ -52,8 +51,7 @@ class AddThreadSceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         }
 
-        addThreadsDelegate = mode.makeDelegate(context: addThreadController.managedObjectContext)
-        addThreadController.delegate = addThreadsDelegate
+        addThreadController.viewModel.mode = mode.makeMode(context: .view)
         addThreadController.onDismiss = {
             UIApplication.shared.requestSceneSessionDestruction(session, options: nil)
         }

@@ -170,3 +170,20 @@ extension MyThreadsViewModel {
             RemoveThreadAction(thread: cell.thread))
     }
 }
+
+class AddThreadsToCollectionMode: AddThreadMode {
+    let context: NSManagedObjectContext
+
+    init(context: NSManagedObjectContext) {
+        self.context = context
+    }
+
+    func addThreadChoices() throws -> [Thread] {
+        let request = Thread.notInCollectionFetchRequest()
+        return try context.fetch(request)
+    }
+
+    func add(threads: [Thread], actionRunner: UserActionRunner) {
+        actionRunner.perform(AddToCollectionAction(threads: threads))
+    }
+}

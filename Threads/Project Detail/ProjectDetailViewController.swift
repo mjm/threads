@@ -686,33 +686,3 @@ class AddThreadCollectionViewCell: UICollectionViewCell {
             ? .opaqueSeparator : .systemBackground
     }
 }
-
-class AddThreadsToProjectDelegate: NSObject, AddThreadViewControllerDelegate {
-    let project: Project
-
-    init(project: Project) {
-        self.project = project
-    }
-
-    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) throws
-        -> [Thread]
-    {
-        let projectThreads = try project.managedObjectContext!.fetch(
-            ProjectThread.fetchRequest(for: project))
-        let existingThreads = projectThreads.compactMap { $0.thread }
-
-        // Not ideal, but I haven't figured out a way in Core Data to get all the threads that
-        // aren't in a particular project. Many-to-many relationships are hard.
-        let allThreads = try project.managedObjectContext!.fetch(
-            Thread.sortedByNumberFetchRequest())
-
-        return allThreads.filter { !existingThreads.contains($0) }
-    }
-
-    func addThreadViewController(
-        _ addThreadViewController: AddThreadViewController,
-        performActionForAddingThreads threads: [Thread], actionRunner: UserActionRunner
-    ) {
-        actionRunner.perform(AddToProjectAction(threads: threads, project: project))
-    }
-}

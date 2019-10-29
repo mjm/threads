@@ -322,25 +322,3 @@ extension ShoppingListViewController {
             }
     }
 }
-
-class AddThreadsToShoppingListDelegate: NSObject, AddThreadViewControllerDelegate {
-    let context: NSManagedObjectContext
-
-    init(context: NSManagedObjectContext) {
-        self.context = context
-    }
-
-    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) throws
-        -> [Thread]
-    {
-        let request = Thread.notInShoppingListFetchRequest()
-        return try context.fetch(request)
-    }
-
-    func addThreadViewController(
-        _ addThreadViewController: AddThreadViewController,
-        performActionForAddingThreads threads: [Thread], actionRunner: UserActionRunner
-    ) {
-        actionRunner.perform(AddToShoppingListAction(threads: threads))
-    }
-}

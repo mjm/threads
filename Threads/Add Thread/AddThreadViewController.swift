@@ -14,7 +14,6 @@ class AddThreadViewController: ReactiveTableViewController<
     AddThreadViewModel.Section, AddThreadViewModel.Cell
 >
 {
-    weak var delegate: AddThreadViewControllerDelegate?
     var onDismiss: (() -> Void)!
 
     private(set) var canDismiss = true
@@ -83,14 +82,6 @@ class AddThreadViewController: ReactiveTableViewController<
             case .selected: return NSLocalizedString("Threads to Add", comment: "")
             }
         }
-
-        do {
-            if let choices = try delegate?.choicesForAddingThreads(self) {
-                viewModel.choices = choices
-            }
-        } catch {
-            present(error: error)
-        }
     }
 
     override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
@@ -123,10 +114,7 @@ class AddThreadViewController: ReactiveTableViewController<
     }
 
     @IBAction func add() {
-        // TODO get this into the view model
-        delegate?.addThreadViewController(
-            self, performActionForAddingThreads: viewModel.selectedThreads,
-            actionRunner: viewModel.actionRunner)
+        viewModel.addSelected()
         onDismiss()
     }
 
@@ -216,15 +204,4 @@ extension AddThreadViewController: UITextFieldDelegate {
 
         return true
     }
-}
-
-protocol AddThreadViewControllerDelegate: NSObjectProtocol {
-    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) throws
-        -> [Thread]
-
-    func addThreadViewController(
-        _ addThreadViewController: AddThreadViewController,
-        performActionForAddingThreads threads: [Thread],
-        actionRunner: UserActionRunner
-    )
 }

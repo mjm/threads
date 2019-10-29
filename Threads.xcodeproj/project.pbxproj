@@ -17,6 +17,8 @@
 		C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */; };
 		C944A95B2367C69D00C1B2A1 /* AddThreadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */; };
 		C944A95D2367D44E00C1B2A1 /* AddThreadViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A95C2367D44E00C1B2A1 /* AddThreadViewModelTests.swift */; };
+		C944A95F2367EC5100C1B2A1 /* ShoppingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A95E2367EC5100C1B2A1 /* ShoppingListViewModel.swift */; };
+		C944A9612367ECA700C1B2A1 /* ProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A9602367ECA700C1B2A1 /* ProjectDetailViewModel.swift */; };
 		C946962B2340EF1B00843179 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946962A2340EF1B00843179 /* EmptyView.swift */; };
 		C946962D2342D69500843179 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946962C2342D69500843179 /* AlertController.swift */; };
 		C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491DF3231D897B0031F463 /* AppDelegate.swift */; };
@@ -127,6 +129,8 @@
 		C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTestCase.swift; sourceTree = "<group>"; };
 		C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadViewModel.swift; sourceTree = "<group>"; };
 		C944A95C2367D44E00C1B2A1 /* AddThreadViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadViewModelTests.swift; sourceTree = "<group>"; };
+		C944A95E2367EC5100C1B2A1 /* ShoppingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListViewModel.swift; sourceTree = "<group>"; };
+		C944A9602367ECA700C1B2A1 /* ProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModel.swift; sourceTree = "<group>"; };
 		C946962A2340EF1B00843179 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		C946962C2342D69500843179 /* AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
 		C9491DF0231D897B0031F463 /* Threads.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Threads.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -362,6 +366,7 @@
 			isa = PBXGroup;
 			children = (
 				C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */,
+				C944A9602367ECA700C1B2A1 /* ProjectDetailViewModel.swift */,
 				C97FCDE9232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift */,
 				C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */,
 				C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */,
@@ -436,6 +441,7 @@
 			children = (
 				C97FCDD5232DCE43000B1590 /* ShoppingList.storyboard */,
 				C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */,
+				C944A95E2367EC5100C1B2A1 /* ShoppingListViewModel.swift */,
 				C9491E3823235D880031F463 /* ShoppingListThreadTableViewCell.swift */,
 				C9491E3923235D890031F463 /* ShoppingListThreadTableViewCell.xib */,
 			);
@@ -667,6 +673,7 @@
 				C99677F1235B497600AE2F5C /* StoreObserver.swift in Sources */,
 				C9491E2F231E0BE00031F463 /* Thread.swift in Sources */,
 				C9491E3E23235FBF0031F463 /* ThreadTableViewCell.swift in Sources */,
+				C944A95F2367EC5100C1B2A1 /* ShoppingListViewModel.swift in Sources */,
 				C946962B2340EF1B00843179 /* EmptyView.swift in Sources */,
 				C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */,
 				C97FCDA323296433000B1590 /* EditProjectThreadCollectionViewCell.swift in Sources */,
@@ -677,6 +684,7 @@
 				C97FCDC3232DA92E000B1590 /* NSAttributedString.swift in Sources */,
 				C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */,
 				C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */,
+				C944A9612367ECA700C1B2A1 /* ProjectDetailViewModel.swift in Sources */,
 				C97FCE02232F4CB3000B1590 /* UserActionRunner.swift in Sources */,
 				C906E3B423526FCC003EE053 /* MacSceneDelegate.swift in Sources */,
 				C9491E4023246AC80031F463 /* Partition.swift in Sources */,

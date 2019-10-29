@@ -30,6 +30,17 @@ final class AddThreadViewModel: ViewModel {
     @Published var query = ""
     @Published var selectedThreads: [Thread] = []
 
+    var mode: AddThreadMode = NoOpAddThreadMode() {
+        didSet {
+            do {
+                choices = try mode.addThreadChoices()
+            } catch {
+                presenter?.present(error: error)
+                choices = []
+            }
+        }
+    }
+
     override init(context: NSManagedObjectContext = .view) {
         super.init(context: context)
 
@@ -100,6 +111,20 @@ final class AddThreadViewModel: ViewModel {
     }
 
     func addSelected() {
-        // TODO
+        mode.add(threads: selectedThreads, actionRunner: actionRunner)
+    }
+}
+
+protocol AddThreadMode {
+    func addThreadChoices() throws -> [Thread]
+    func add(threads: [Thread], actionRunner: UserActionRunner)
+}
+
+fileprivate final class NoOpAddThreadMode: AddThreadMode {
+    func addThreadChoices() throws -> [Thread] {
+        []
+    }
+
+    func add(threads: [Thread], actionRunner: UserActionRunner) {
     }
 }

@@ -310,25 +310,3 @@ extension MyThreadsViewController {
         }
     }
 }
-
-class AddThreadsToCollectionDelegate: NSObject, AddThreadViewControllerDelegate {
-    let context: NSManagedObjectContext
-
-    init(context: NSManagedObjectContext) {
-        self.context = context
-    }
-
-    func choicesForAddingThreads(_ addThreadViewController: AddThreadViewController) throws
-        -> [Thread]
-    {
-        let request = Thread.notInCollectionFetchRequest()
-        return try context.fetch(request)
-    }
-
-    func addThreadViewController(
-        _ addThreadViewController: AddThreadViewController,
-        performActionForAddingThreads threads: [Thread], actionRunner: UserActionRunner
-    ) {
-        actionRunner.perform(AddToCollectionAction(threads: threads))
-    }
-}

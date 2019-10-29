@@ -6,6 +6,7 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
+import CoreData
 import XCTest
 
 @testable import Threads
@@ -29,6 +30,7 @@ private let choiceNumbers = [
 final class AddThreadViewModelTests: ViewModelTestCase {
     var subject: AddThreadViewModel!
     var fakeView: FakeView!
+    var fakeMode: FakeAddThreadMode!
 
     var choices: [Threads.Thread]!
 
@@ -36,17 +38,9 @@ final class AddThreadViewModelTests: ViewModelTestCase {
         super.setUp()
         subject = AddThreadViewModel(context: context)
         fakeView = FakeView()
+        fakeMode = FakeAddThreadMode(context: context)
 
-        let request = Threads.Thread.sortedByNumberFetchRequest()
-        request.predicate = NSPredicate(format: "number IN %@", choiceNumbers)
-
-        do {
-            choices = try context.fetch(request)
-        } catch {
-            XCTFail("Error loading thread choices: \(error)")
-        }
-
-        subject.choices = choices
+        subject.mode = fakeMode
     }
 
     func testStartsEmpty() {
@@ -147,6 +141,17 @@ final class AddThreadViewModelTests: ViewModelTestCase {
         XCTAssertEqual(fakeView.filteredThreads.map { $0.number! }, ["150", "152"])
     }
 
+    func testAddSelected() {
+        bindView()
+
+        subject.select(thread: subject.choices.first { $0.number == "15" }!)
+        subject.select(thread: subject.choices.first { $0.number == "151" }!)
+
+        subject.addSelected()
+
+        XCTAssertEqual(fakeMode.addedThreads.count, 2)
+    }
+
     private func bindView() {
         subject.snapshot.map { s -> AddThreadViewModel.Snapshot? in s }.assign(
             to: \.snapshot, on: fakeView).store(in: &cancellables)
@@ -187,6 +192,25 @@ final class AddThreadViewModelTests: ViewModelTestCase {
             else { return 0 }
 
             return snapshot.numberOfItems(inSection: .selected)
+        }
+    }
+
+    class FakeAddThreadMode: AddThreadMode {
+        let context: NSManagedObjectContext
+        var addedThreads: [Threads.Thread] = []
+
+        init(context: NSManagedObjectContext) {
+            self.context = context
+        }
+
+        func addThreadChoices() throws -> [Threads.Thread] {
+            let request = Threads.Thread.sortedByNumberFetchRequest()
+            request.predicate = NSPredicate(format: "number IN %@", choiceNumbers)
+            return try context.fetch(request)
+        }
+
+        func add(threads: [Threads.Thread], actionRunner: UserActionRunner) {
+            addedThreads.append(contentsOf: threads)
         }
     }
 }
