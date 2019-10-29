@@ -10,12 +10,12 @@ import Combine
 import CoreData
 import UIKit
 
-extension MyThreadsViewModel.Cell: ReusableCell {
+extension MyThreadsViewModel.Item: ReusableCell {
     var cellIdentifier: String { "Thread" }
 }
 
 class MyThreadsViewController: ReactiveTableViewController<
-    MyThreadsViewModel.Section, MyThreadsViewModel.Cell
+    MyThreadsViewModel.Section, MyThreadsViewModel.Item
 >
 {
     let viewModel: MyThreadsViewModel
@@ -78,7 +78,7 @@ class MyThreadsViewController: ReactiveTableViewController<
         ["Thread": .nib(CollectionThreadTableViewCell.self)]
     }
 
-    override func populate(cell: UITableViewCell, item: MyThreadsViewModel.Cell) {
+    override func populate(cell: UITableViewCell, item: MyThreadsViewModel.Item) {
         let cell = cell as! CollectionThreadTableViewCell
         cell.bind(item.thread)
     }

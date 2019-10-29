@@ -13,15 +13,15 @@ import UIKit
 final class MyThreadsViewModel: ViewModel {
     enum Section { case threads }
 
-    struct Cell: Hashable {
+    struct Item: Hashable {
         var thread: Thread
     }
 
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Cell>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     private let threadsList: FetchedObjectList<Thread>
 
-    @Published var selectedCell: Cell?
+    @Published var selectedCell: Item?
 
     override init(context: NSManagedObjectContext = .view) {
         threadsList
@@ -42,7 +42,7 @@ final class MyThreadsViewModel: ViewModel {
             var snapshot = Snapshot()
 
             snapshot.appendSections([.threads])
-            snapshot.appendItems(threads.map { Cell(thread: $0) }, toSection: .threads)
+            snapshot.appendItems(threads.map { Item(thread: $0) }, toSection: .threads)
 
             return snapshot
         }.eraseToAnyPublisher()
@@ -127,8 +127,8 @@ extension MyThreadsViewModel {
         )
     }
 
-    func markActions(for cell: Cell) -> [Action] {
-        let thread = cell.thread
+    func markActions(for item: Item) -> [Action] {
+        let thread = item.thread
 
         if thread.amountInCollection == 0 {
             return [action(Localized.markInStock, MarkInStockAction(thread: thread))]
@@ -142,8 +142,8 @@ extension MyThreadsViewModel {
         }
     }
 
-    func projectActions(for cell: Cell) -> [Action] {
-        let thread = cell.thread
+    func projectActions(for item: Item) -> [Action] {
+        let thread = item.thread
 
         do {
             let request = Project.allProjectsFetchRequest()
@@ -160,16 +160,16 @@ extension MyThreadsViewModel {
         }
     }
 
-    func addToShoppingListAction(for cell: Cell) -> Action {
+    func addToShoppingListAction(for item: Item) -> Action {
         action(
             Localized.addToShoppingList,
-            AddToShoppingListAction(thread: cell.thread, showBanner: true))
+            AddToShoppingListAction(thread: item.thread, showBanner: true))
     }
 
-    func removeAction(for cell: Cell) -> Action {
+    func removeAction(for item: Item) -> Action {
         action(
             Localized.removeFromCollection,
-            RemoveThreadAction(thread: cell.thread))
+            RemoveThreadAction(thread: item.thread))
     }
 }
 

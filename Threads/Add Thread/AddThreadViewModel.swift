@@ -16,12 +16,12 @@ final class AddThreadViewModel: ViewModel {
         case selected
     }
 
-    struct Cell: Hashable {
+    struct Item: Hashable {
         var thread: Thread
         var section: Section
     }
 
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Cell>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     @Published var choices: [Thread] = []
     @Published var threadToSelect: Thread?
@@ -72,13 +72,13 @@ final class AddThreadViewModel: ViewModel {
             if !filtered.isEmpty {
                 snapshot.appendSections([.filtered])
                 snapshot.appendItems(
-                    filtered.map { Cell(thread: $0, section: .filtered) }, toSection: .filtered)
+                    filtered.map { Item(thread: $0, section: .filtered) }, toSection: .filtered)
             }
 
             if !selected.isEmpty {
                 snapshot.appendSections([.selected])
                 snapshot.appendItems(
-                    selected.map { Cell(thread: $0, section: .selected) }, toSection: .selected)
+                    selected.map { Item(thread: $0, section: .selected) }, toSection: .selected)
             }
 
             return snapshot
