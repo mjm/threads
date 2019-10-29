@@ -18,6 +18,12 @@ class ViewModelTestCase: XCTestCase {
 
     var cancellables = Set<AnyCancellable>()
 
+    override class func setUp() {
+        super.setUp()
+
+        Event.global[.environment] = AppEnvironment.test
+    }
+
     override func setUp() {
         super.setUp()
 
@@ -60,4 +66,13 @@ class ViewModelTestCase: XCTestCase {
         try Thread.importThreads(DMCThread.all, context: context, event: &event)
         try context.save()
     }
+}
+
+extension Event.Key {
+    static let environment: Event.Key = "env"
+}
+
+enum AppEnvironment: String, Encodable {
+    case production
+    case test
 }
