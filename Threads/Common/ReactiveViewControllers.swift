@@ -209,8 +209,10 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
         collectionView.collectionViewLayout = createLayout()
 
         subscribe()
-
-        userActivity = currentUserActivity?.userActivity
+        
+        if let activity = currentUserActivity?.userActivity {
+            userActivity = activity
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {

@@ -11,45 +11,25 @@ import CoreData
 import UIKit
 
 class ProjectListViewController: ReactiveCollectionViewController<
-    ProjectListViewController.Section, ProjectListViewController.Cell
+    ProjectListViewModel.Section, ProjectListViewModel.Item
 >
 {
-    enum Section: CaseIterable {
-        case projects
+    let viewModel: ProjectListViewModel
+
+    required init?(coder: NSCoder) {
+        viewModel = ProjectListViewModel()
+        super.init(coder: coder)
     }
-
-    enum Cell: ReusableCell {
-        case project(Project)
-
-        var cellIdentifier: String { "Project" }
-    }
-
-    private var projectsList: FetchedObjectList<Project>!
 
     override func subscribe() {
-        projectsList
-            = FetchedObjectList(
-                fetchRequest: Project.allProjectsFetchRequest(),
-                managedObjectContext: managedObjectContext
-            )
+        viewModel.snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
 
-        let projects = projectsList.objectsPublisher()
-
-        projects.map { projects in
-            var snapshot = Snapshot()
-
-            snapshot.appendSections(Section.allCases)
-            snapshot.appendItems(projects.map { .project($0) }, toSection: .projects)
-
-            return snapshot
-        }.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
-
-        projects.sink { [weak self] projects in
-            self?.setShowEmptyView(projects.isEmpty)
+        viewModel.isEmpty.sink { [weak self] empty in
+            self?.setShowEmptyView(empty)
         }.store(in: &cancellables)
-    }
 
-    override var currentUserActivity: UserActivity? { .showProjects }
+        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(in: &cancellables)
+    }
 
     private func setShowEmptyView(_ showEmptyView: Bool) {
         if showEmptyView {
@@ -77,12 +57,9 @@ class ProjectListViewController: ReactiveCollectionViewController<
         ["Project": .nib(ProjectCollectionViewCell.self)]
     }
 
-    override func populate(cell: UICollectionViewCell, item: ProjectListViewController.Cell) {
-        switch item {
-        case let .project(project):
-            let cell = cell as! ProjectCollectionViewCell
-            cell.bind(project)
-        }
+    override func populate(cell: UICollectionViewCell, item: ProjectListViewModel.Item) {
+        let cell = cell as! ProjectCollectionViewCell
+        cell.bind(item.project)
     }
 
     override func createLayout() -> UICollectionViewLayout {
@@ -155,7 +132,7 @@ class ProjectListViewController: ReactiveCollectionViewController<
 // MARK: - Actions
 extension ProjectListViewController {
     @IBAction func createProject() {
-        actionRunner.perform(CreateProjectAction()).ignoreError().handle { project in
+        viewModel.createProject().handle { project in
             self.showDetail(for: project, editing: true)
         }
     }
@@ -166,7 +143,7 @@ extension ProjectListViewController {
     override func collectionView(
         _ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath
     ) {
-        if case let .project(project) = dataSource.itemIdentifier(for: indexPath) {
+        if let project = dataSource.itemIdentifier(for: indexPath)?.project {
             showDetail(for: project)
         }
     }
@@ -175,12 +152,14 @@ extension ProjectListViewController {
         _ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath,
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
-        guard case let .project(project) = dataSource.itemIdentifier(for: indexPath) else {
+        guard let item = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
 
+        let project = item.project
+
         return UIContextMenuConfiguration(
-            identifier: project.objectID,
+            identifier: viewModel.identifier(for: item),
             previewProvider: {
                 self.storyboard!.instantiateViewController(identifier: "ProjectPreview") { coder in
                     ProjectPreviewViewController(coder: coder, project: project)
@@ -214,9 +193,10 @@ extension ProjectListViewController {
         willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration,
         animator: UIContextMenuInteractionCommitAnimating
     ) {
-        let project
-            = managedObjectContext.object(with: configuration.identifier as! NSManagedObjectID)
-            as! Project
+        guard let project = viewModel.project(for: configuration.identifier) else {
+            return
+        }
+
         animator.addAnimations {
             self.showDetail(for: project)
         }
