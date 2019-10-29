@@ -54,6 +54,8 @@ class AddThreadViewController: ReactiveTableViewController<
     }
 
     override func subscribe() {
+        viewModel.presenter = self
+
         viewModel.snapshot.apply(to: dataSource, animate: false).store(in: &cancellables)
 
         viewModel.$query.removeDuplicates().map { q -> String? in q }.assign(

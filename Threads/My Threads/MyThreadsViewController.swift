@@ -16,8 +16,6 @@ class MyThreadsViewController: ReactiveTableViewController<
 {
     let viewModel: MyThreadsViewModel
 
-    override var currentUserActivity: UserActivity? { .showMyThreads }
-
     required init?(coder: NSCoder) {
         viewModel = MyThreadsViewModel()
         super.init(coder: coder)
@@ -40,6 +38,8 @@ class MyThreadsViewController: ReactiveTableViewController<
         viewModel.isEmpty.sink { [weak self] isEmpty in
             self?.setShowEmptyView(isEmpty)
         }.store(in: &cancellables)
+
+        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(in: &cancellables)
     }
 
     override func dataSourceWillInitialize() {

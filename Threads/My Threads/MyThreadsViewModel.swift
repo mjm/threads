@@ -58,6 +58,10 @@ final class MyThreadsViewModel: ViewModel {
     }
 
     var selectedThread: Thread? { selectedCell?.thread }
+
+    var userActivity: AnyPublisher<UserActivity, Never> {
+        Just(.showMyThreads).eraseToAnyPublisher()
+    }
 }
 
 // MARK: - Actions

@@ -22,6 +22,8 @@ class ProjectListViewController: ReactiveCollectionViewController<
     }
 
     override func subscribe() {
+        viewModel.presenter = self
+
         viewModel.snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
 
         viewModel.isEmpty.sink { [weak self] empty in
