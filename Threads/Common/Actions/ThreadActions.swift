@@ -147,8 +147,6 @@ struct AddThreadAction: AsyncUserAction {
     }
 
     class Coordinator: NSObject, UIAdaptivePresentationControllerDelegate {
-        var addThreadsDelegate: AddThreadViewControllerDelegate?
-
         func presentationControllerShouldDismiss(_ presentationController: UIPresentationController)
             -> Bool
         {
