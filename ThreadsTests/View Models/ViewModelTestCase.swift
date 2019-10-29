@@ -9,8 +9,9 @@
 import Combine
 import CoreData
 import Events
-@testable import Threads
 import XCTest
+
+@testable import Threads
 
 class ViewModelTestCase: XCTestCase {
     var persistentContainer: NSPersistentContainer!
@@ -44,10 +45,13 @@ class ViewModelTestCase: XCTestCase {
     }
 
     private func createContainer() {
-        let managedObjectModel = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.managedObjectModel
+        let managedObjectModel = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+            .managedObjectModel
 
-        persistentContainer = NSPersistentContainer(name: "Threads",
-                                                    managedObjectModel: managedObjectModel)
+        persistentContainer
+            = NSPersistentContainer(
+                name: "Threads",
+                managedObjectModel: managedObjectModel)
 
         let description = NSPersistentStoreDescription()
         description.type = NSInMemoryStoreType
