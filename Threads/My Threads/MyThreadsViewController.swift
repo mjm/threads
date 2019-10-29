@@ -151,7 +151,7 @@ extension MyThreadsViewController {
         viewModel.selectedCell = dataSource.itemIdentifier(for: indexPath)
 
         #if !targetEnvironment(macCatalyst)
-        if case let .thread(thread) = dataSource.itemIdentifier(for: indexPath)! {
+        if let thread = viewModel.selectedThread {
             showDetail(for: thread)
         }
         #endif
