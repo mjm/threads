@@ -10,6 +10,10 @@ import Combine
 import CoreData
 import UIKit
 
+extension AddThreadViewModel.Cell: ReusableCell {
+    var cellIdentifier: String { "Thread" }
+}
+
 class AddThreadViewController: ReactiveTableViewController<
     AddThreadViewModel.Section, AddThreadViewModel.Cell
 >

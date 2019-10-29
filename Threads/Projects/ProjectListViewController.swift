@@ -10,6 +10,10 @@ import Combine
 import CoreData
 import UIKit
 
+extension ProjectListViewModel.Item: ReusableCell {
+    var cellIdentifier: String { "Project" }
+}
+
 class ProjectListViewController: ReactiveCollectionViewController<
     ProjectListViewModel.Section, ProjectListViewModel.Item
 >

@@ -13,10 +13,8 @@ import UIKit
 final class MyThreadsViewModel: ViewModel {
     enum Section { case threads }
 
-    struct Cell: Hashable, ReusableCell {
+    struct Cell: Hashable {
         var thread: Thread
-
-        var cellIdentifier: String { "Thread" }
     }
 
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Cell>

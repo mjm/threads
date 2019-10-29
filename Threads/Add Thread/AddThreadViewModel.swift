@@ -16,11 +16,9 @@ final class AddThreadViewModel: ViewModel {
         case selected
     }
 
-    struct Cell: Hashable, ReusableCell {
+    struct Cell: Hashable {
         var thread: Thread
         var section: Section
-
-        var cellIdentifier: String { "Thread" }
     }
 
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Cell>

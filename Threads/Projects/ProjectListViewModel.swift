@@ -13,10 +13,8 @@ import UIKit
 final class ProjectListViewModel: ViewModel {
     enum Section { case projects }
 
-    struct Item: Hashable, ReusableCell {
+    struct Item: Hashable {
         var project: Project
-
-        var cellIdentifier: String { "Project" }
     }
 
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
