@@ -71,7 +71,7 @@ class SplitViewController: UISplitViewController {
     }
 
     @objc func addThreads(_ sender: Any) {
-        guard let currentController = detailViewController.selectedViewController else {
+        guard let currentController = detailViewController?.selectedViewController else {
             return
         }
 
@@ -119,7 +119,7 @@ class SplitViewController: UISplitViewController {
             #selector(addProjectToShoppingList(_:)):
             return projectDetailViewController != nil
         case #selector(addThreads(_:)):
-            guard let currentController = detailViewController.selectedViewController else {
+            guard let currentController = detailViewController?.selectedViewController else {
                 return false
             }
 
@@ -146,17 +146,19 @@ class SplitViewController: UISplitViewController {
         }
     }
 
-    var sidebarViewController: SidebarViewController {
-        viewControllers[0] as! SidebarViewController
+    var sidebarViewController: SidebarViewController! {
+        guard viewControllers.count >= 1 else { return nil }
+        return viewControllers[0] as? SidebarViewController
     }
 
-    var detailViewController: DetailViewController {
-        viewControllers[1] as! DetailViewController
+    var detailViewController: DetailViewController! {
+        guard viewControllers.count >= 2 else { return nil }
+        return viewControllers[1] as? DetailViewController
     }
 
     var projectDetailViewController: ProjectDetailViewController? {
         if case .project = selection {
-            return detailViewController.projectDetailViewController
+            return detailViewController?.projectDetailViewController
         }
 
         return nil
