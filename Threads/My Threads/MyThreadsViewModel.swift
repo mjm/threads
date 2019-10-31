@@ -13,14 +13,13 @@ import UIKit
 final class MyThreadsViewModel: ViewModel {
     enum Section { case threads }
 
-    struct Item: Hashable {
-        var thread: Thread
-    }
+    typealias Item = CollectionThreadCellViewModel
 
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     private let threadsList: FetchedObjectList<Thread>
 
+    @Published private(set) var threadViewModels: [Item] = []
     @Published var selectedCell: Item?
 
     override init(context: NSManagedObjectContext = .view) {
@@ -31,25 +30,25 @@ final class MyThreadsViewModel: ViewModel {
             )
 
         super.init(context: context)
-    }
 
-    var threads: AnyPublisher<[Thread], Never> {
-        threadsList.objectsPublisher()
+        $threadViewModels.applyingDifferences(threadsList.differences) { thread in
+            CollectionThreadCellViewModel(thread: thread)
+        }.assign(to: \.threadViewModels, on: self).store(in: &cancellables)
     }
 
     var snapshot: AnyPublisher<Snapshot, Never> {
-        threads.map { threads -> Snapshot in
+        $threadViewModels.map { threadModels -> Snapshot in
             var snapshot = Snapshot()
 
             snapshot.appendSections([.threads])
-            snapshot.appendItems(threads.map { Item(thread: $0) }, toSection: .threads)
+            snapshot.appendItems(threadModels, toSection: .threads)
 
             return snapshot
         }.eraseToAnyPublisher()
     }
 
     var isEmpty: AnyPublisher<Bool, Never> {
-        threads
+        $threadViewModels
             .map { $0.isEmpty }
             .removeDuplicates()
             .eraseToAnyPublisher()

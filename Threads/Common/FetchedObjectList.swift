@@ -45,6 +45,17 @@ class FetchedObjectList<ObjectType: NSManagedObject>: NSObject, NSFetchedResults
         objectsSubject.eraseToAnyPublisher()
     }
 
+    var differences: AnyPublisher<CollectionDifference<ObjectType>, Never> {
+        objectsPublisher().scan(([ObjectType](), [ObjectType]())) { previous, new in
+            let (_, old) = previous
+            return (old: Array(old), new: Array(new))
+        }.map { (old, new) in
+            new.difference(from: old)
+        }.compactMap { diff in
+            diff.isEmpty ? nil : diff
+        }.eraseToAnyPublisher()
+    }
+
     func objectPublisher() -> AnyPublisher<ObjectType, Never> {
         objectSubject.eraseToAnyPublisher()
     }

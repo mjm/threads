@@ -12,6 +12,11 @@
 		C906E3B9235272A0003EE053 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3B8235272A0003EE053 /* SidebarViewController.swift */; };
 		C906E3BB23527C61003EE053 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3BA23527C61003EE053 /* SplitViewController.swift */; };
 		C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3BC23528E82003EE053 /* DetailViewController.swift */; };
+		C9082F57236922BF00768CA1 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F56236922BF00768CA1 /* Helpers.swift */; };
+		C9082F592369245E00768CA1 /* FetchedObjectListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F582369245E00768CA1 /* FetchedObjectListTests.swift */; };
+		C9082F5C2369262500768CA1 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F5B2369262500768CA1 /* Operators.swift */; };
+		C9082F5F2369415400768CA1 /* AddThreadCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F5E2369415400768CA1 /* AddThreadCellViewModel.swift */; };
+		C9082F61236941D400768CA1 /* AddThreadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F60236941D400768CA1 /* AddThreadTableViewCell.swift */; };
 		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
 		C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */; };
 		C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */; };
@@ -94,6 +99,9 @@
 		C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE03232F4E13000B1590 /* ThreadActions.swift */; };
 		C97FCE06233068C0000B1590 /* ShoppingListActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE05233068C0000B1590 /* ShoppingListActions.swift */; };
 		C97FCE08233073AA000B1590 /* ProjectActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE07233073AA000B1590 /* ProjectActions.swift */; };
+		C983AC452368FC1D00AA930F /* CollectionThreadCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC442368FC1D00AA930F /* CollectionThreadCellViewModel.swift */; };
+		C983AC472368FF8C00AA930F /* ReactiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */; };
+		C983AC4A23691D6400AA930F /* ShoppingListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC4923691D6400AA930F /* ShoppingListCellViewModel.swift */; };
 		C98F07C82333093800BAB311 /* ProjectPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07C72333093800BAB311 /* ProjectPreviewViewController.swift */; };
 		C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07C92334716F00BAB311 /* RoundedShadowView.swift */; };
 		C98F07CC2334745400BAB311 /* RoundedShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07CB2334745400BAB311 /* RoundedShadowImageView.swift */; };
@@ -125,6 +133,11 @@
 		C906E3B8235272A0003EE053 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
 		C906E3BA23527C61003EE053 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		C906E3BC23528E82003EE053 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		C9082F56236922BF00768CA1 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		C9082F582369245E00768CA1 /* FetchedObjectListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedObjectListTests.swift; sourceTree = "<group>"; };
+		C9082F5B2369262500768CA1 /* Operators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
+		C9082F5E2369415400768CA1 /* AddThreadCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadCellViewModel.swift; sourceTree = "<group>"; };
+		C9082F60236941D400768CA1 /* AddThreadTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadTableViewCell.swift; sourceTree = "<group>"; };
 		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
 		C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewModelTests.swift; sourceTree = "<group>"; };
 		C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTestCase.swift; sourceTree = "<group>"; };
@@ -218,6 +231,9 @@
 		C97FCE03232F4E13000B1590 /* ThreadActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadActions.swift; sourceTree = "<group>"; };
 		C97FCE05233068C0000B1590 /* ShoppingListActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActions.swift; sourceTree = "<group>"; };
 		C97FCE07233073AA000B1590 /* ProjectActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectActions.swift; sourceTree = "<group>"; };
+		C983AC442368FC1D00AA930F /* CollectionThreadCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionThreadCellViewModel.swift; sourceTree = "<group>"; };
+		C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveTableViewCell.swift; sourceTree = "<group>"; };
+		C983AC4923691D6400AA930F /* ShoppingListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListCellViewModel.swift; sourceTree = "<group>"; };
 		C98F07C72333093800BAB311 /* ProjectPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectPreviewViewController.swift; sourceTree = "<group>"; };
 		C98F07C92334716F00BAB311 /* RoundedShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowView.swift; sourceTree = "<group>"; };
 		C98F07CB2334745400BAB311 /* RoundedShadowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowImageView.swift; sourceTree = "<group>"; };
@@ -271,6 +287,23 @@
 				C906E3BC23528E82003EE053 /* DetailViewController.swift */,
 			);
 			path = Sidebar;
+			sourceTree = "<group>";
+		};
+		C9082F5A2369261C00768CA1 /* Combine */ = {
+			isa = PBXGroup;
+			children = (
+				C9082F5B2369262500768CA1 /* Operators.swift */,
+			);
+			path = Combine;
+			sourceTree = "<group>";
+		};
+		C9082F5D2369414300768CA1 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C9082F5E2369415400768CA1 /* AddThreadCellViewModel.swift */,
+				C9082F60236941D400768CA1 /* AddThreadTableViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		C942E44B2336C72300987EAB /* Banner */ = {
@@ -351,7 +384,9 @@
 			children = (
 				C944A955236776C800C1B2A1 /* View Models */,
 				C9491E22231DDBB70031F463 /* Info.plist */,
+				C9082F56236922BF00768CA1 /* Helpers.swift */,
 				C9491E28231DDBC60031F463 /* ColorTests.swift */,
+				C9082F582369245E00768CA1 /* FetchedObjectListTests.swift */,
 			);
 			path = ThreadsTests;
 			sourceTree = "<group>";
@@ -396,6 +431,7 @@
 				C95028F22366B74700BB02C4 /* ViewModel.swift */,
 				C955EDE7234028A8000ACC39 /* ViewControllers.swift */,
 				C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */,
+				C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */,
 				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
 				C946962A2340EF1B00843179 /* EmptyView.swift */,
 				C9491E362320C67A0031F463 /* SwatchView.swift */,
@@ -419,6 +455,7 @@
 				C97FCDED232E941D000B1590 /* Cells.swift */,
 				C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */,
 				C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */,
+				C9082F5A2369261C00768CA1 /* Combine */,
 				C99677EF235B496100AE2F5C /* In-App Purchase */,
 				C97FCDFC232F4945000B1590 /* Actions */,
 			);
@@ -428,12 +465,11 @@
 		C97FCDE5232DFC03000B1590 /* My Threads */ = {
 			isa = PBXGroup;
 			children = (
+				C983AC432368FB8D00AA930F /* Cells */,
 				C97FCDD0232DCE0F000B1590 /* MyThreads.storyboard */,
 				C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */,
 				C95028EE2366AD0100BB02C4 /* MyThreadsViewModel.swift */,
 				C97FCDE2232DD3D2000B1590 /* ThreadPreviewViewController.swift */,
-				C9491E2A231DE0070031F463 /* CollectionThreadTableViewCell.swift */,
-				C9491E2B231DE0070031F463 /* CollectionThreadTableViewCell.xib */,
 			);
 			path = "My Threads";
 			sourceTree = "<group>";
@@ -441,11 +477,10 @@
 		C97FCDE6232DFC5F000B1590 /* Shopping List */ = {
 			isa = PBXGroup;
 			children = (
+				C983AC4823691D3F00AA930F /* Cells */,
 				C97FCDD5232DCE43000B1590 /* ShoppingList.storyboard */,
 				C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */,
 				C944A95E2367EC5100C1B2A1 /* ShoppingListViewModel.swift */,
-				C9491E3823235D880031F463 /* ShoppingListThreadTableViewCell.swift */,
-				C9491E3923235D890031F463 /* ShoppingListThreadTableViewCell.xib */,
 			);
 			path = "Shopping List";
 			sourceTree = "<group>";
@@ -466,6 +501,7 @@
 		C97FCDE8232DFCB2000B1590 /* Add Thread */ = {
 			isa = PBXGroup;
 			children = (
+				C9082F5D2369414300768CA1 /* Cells */,
 				C97FCDDF232DCE86000B1590 /* AddThread.storyboard */,
 				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
 				C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */,
@@ -488,6 +524,26 @@
 				C97FCE07233073AA000B1590 /* ProjectActions.swift */,
 			);
 			path = Actions;
+			sourceTree = "<group>";
+		};
+		C983AC432368FB8D00AA930F /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C9491E2A231DE0070031F463 /* CollectionThreadTableViewCell.swift */,
+				C9491E2B231DE0070031F463 /* CollectionThreadTableViewCell.xib */,
+				C983AC442368FC1D00AA930F /* CollectionThreadCellViewModel.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		C983AC4823691D3F00AA930F /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C9491E3823235D880031F463 /* ShoppingListThreadTableViewCell.swift */,
+				C9491E3923235D890031F463 /* ShoppingListThreadTableViewCell.xib */,
+				C983AC4923691D6400AA930F /* ShoppingListCellViewModel.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		C99677EF235B496100AE2F5C /* In-App Purchase */ = {
@@ -678,12 +734,15 @@
 				C9491E3E23235FBF0031F463 /* ThreadTableViewCell.swift in Sources */,
 				C944A95F2367EC5100C1B2A1 /* ShoppingListViewModel.swift in Sources */,
 				C946962B2340EF1B00843179 /* EmptyView.swift in Sources */,
+				C9082F61236941D400768CA1 /* AddThreadTableViewCell.swift in Sources */,
 				C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */,
 				C97FCDA323296433000B1590 /* EditProjectThreadCollectionViewCell.swift in Sources */,
 				C97FCDBD232D79E7000B1590 /* Localized.swift in Sources */,
 				C97FCE06233068C0000B1590 /* ShoppingListActions.swift in Sources */,
 				C9571DF62353EF5400CCA56B /* AddThreadSceneDelegate.swift in Sources */,
 				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
+				C9082F5F2369415400768CA1 /* AddThreadCellViewModel.swift in Sources */,
+				C983AC4A23691D6400AA930F /* ShoppingListCellViewModel.swift in Sources */,
 				C97FCDC3232DA92E000B1590 /* NSAttributedString.swift in Sources */,
 				C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */,
 				C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */,
@@ -694,6 +753,7 @@
 				C944A9632367F05B00C1B2A1 /* ProjectListViewModel.swift in Sources */,
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,
 				C97FCDFB232F3BC3000B1590 /* Image.swift in Sources */,
+				C983AC452368FC1D00AA930F /* CollectionThreadCellViewModel.swift in Sources */,
 				C97FCDB0232C8ED7000B1590 /* UserActivity.swift in Sources */,
 				C944A95B2367C69D00C1B2A1 /* AddThreadViewModel.swift in Sources */,
 				C97FCDF8232EB846000B1590 /* ViewImageCollectionViewCell.swift in Sources */,
@@ -703,6 +763,7 @@
 				C955EDE6234013DC000ACC39 /* FetchedObjectList.swift in Sources */,
 				C97FCDF4232EA845000B1590 /* EditImageCollectionViewCell.swift in Sources */,
 				C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */,
+				C9082F5C2369262500768CA1 /* Operators.swift in Sources */,
 				C97FCDEA232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
 				C98F07C82333093800BAB311 /* ProjectPreviewViewController.swift in Sources */,
@@ -722,6 +783,7 @@
 				C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */,
 				C906E3B9235272A0003EE053 /* SidebarViewController.swift in Sources */,
 				C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */,
+				C983AC472368FF8C00AA930F /* ReactiveTableViewCell.swift in Sources */,
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
 				C95028E32362BCC800BB02C4 /* ReactiveViewControllers.swift in Sources */,
 				C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */,
@@ -742,7 +804,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9082F592369245E00768CA1 /* FetchedObjectListTests.swift in Sources */,
 				C944A95D2367D44E00C1B2A1 /* AddThreadViewModelTests.swift in Sources */,
+				C9082F57236922BF00768CA1 /* Helpers.swift in Sources */,
 				C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */,
 				C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */,
 				C9491E29231DDBC60031F463 /* ColorTests.swift in Sources */,

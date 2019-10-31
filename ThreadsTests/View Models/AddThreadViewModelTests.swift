@@ -133,8 +133,8 @@ final class AddThreadViewModelTests: ViewModelTestCase {
     func testFilterExcludesAlreadySelected() {
         bindView()
 
-        subject.select(thread: subject.choices.first { $0.number == "15" }!)
-        subject.select(thread: subject.choices.first { $0.number == "151" }!)
+        subject.select(thread: subject.choices.first { $0.thread.number == "15" }!.thread)
+        subject.select(thread: subject.choices.first { $0.thread.number == "151" }!.thread)
 
         subject.query = "15"
         await("filteredCount = 2", view: fakeView!)
@@ -144,8 +144,8 @@ final class AddThreadViewModelTests: ViewModelTestCase {
     func testAddSelected() {
         bindView()
 
-        subject.select(thread: subject.choices.first { $0.number == "15" }!)
-        subject.select(thread: subject.choices.first { $0.number == "151" }!)
+        subject.select(thread: subject.choices.first { $0.thread.number == "15" }!.thread)
+        subject.select(thread: subject.choices.first { $0.thread.number == "151" }!.thread)
 
         subject.addSelected()
 

@@ -81,7 +81,7 @@ class MyThreadsViewController: ReactiveTableViewController<
 
     override func populate(cell: UITableViewCell, item: MyThreadsViewModel.Item) {
         let cell = cell as! CollectionThreadTableViewCell
-        cell.bind(item.thread)
+        cell.bind(item)
     }
 
     @objc func buyPremium(_ sender: Any) {

@@ -16,22 +16,20 @@ final class AddThreadViewModel: ViewModel {
         case selected
     }
 
-    struct Item: Hashable {
-        var thread: Thread
-        var section: Section
-    }
+    typealias Item = AddThreadCellViewModel
 
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
-    @Published var choices: [Thread] = []
+    @Published private(set) var choices: [Item] = []
     @Published var threadToSelect: Thread?
     @Published var query = ""
-    @Published var selectedThreads: [Thread] = []
+    @Published private(set) var selectedItems: [Item] = []
 
     var mode: AddThreadMode = NoOpAddThreadMode() {
         didSet {
             do {
-                choices = try mode.addThreadChoices()
+                let threadChoices = try mode.addThreadChoices()
+                choices = threadChoices.map { Item(thread: $0, section: .filtered) }
             } catch {
                 presenter?.present(error: error)
                 choices = []
@@ -42,8 +40,8 @@ final class AddThreadViewModel: ViewModel {
     override init(context: NSManagedObjectContext = .view) {
         super.init(context: context)
 
-        normalizedQuery.combineLatest(filteredThreads) { query, threads -> Thread? in
-            threads.first { $0.number?.lowercased() == query }
+        normalizedQuery.combineLatest(filteredChoices) { query, choices -> Thread? in
+            choices.first { $0.thread.number?.lowercased() == query }?.thread
         }.assign(to: \.threadToSelect, on: self).store(in: &cancellables)
     }
 
@@ -51,34 +49,33 @@ final class AddThreadViewModel: ViewModel {
         $query.map { $0.lowercased() }.eraseToAnyPublisher()
     }
 
-    var filteredThreads: AnyPublisher<[Thread], Never> {
-        normalizedQuery.combineLatest($choices, $selectedThreads) {
-            query, choices, selectedThreads -> [Thread] in
+    var filteredChoices: AnyPublisher<[Item], Never> {
+        normalizedQuery.combineLatest($choices, $selectedItems) {
+            query, choices, selectedItems -> [Item] in
             if query.isEmpty {
                 return []
             } else {
-                return choices.filter {
-                    return !selectedThreads.contains($0) && $0.number!.lowercased().hasPrefix(query)
+                return choices.filter { choice in
+                    return !selectedItems.contains(where: { $0.thread == choice.thread })
+                        && choice.thread.number!.lowercased().hasPrefix(query)
                 }
             }
         }.eraseToAnyPublisher()
     }
 
     var snapshot: AnyPublisher<Snapshot, Never> {
-        $selectedThreads.combineLatest(filteredThreads).map { input in
+        $selectedItems.combineLatest(filteredChoices).map { input in
             let (selected, filtered) = input
             var snapshot = Snapshot()
 
             if !filtered.isEmpty {
                 snapshot.appendSections([.filtered])
-                snapshot.appendItems(
-                    filtered.map { Item(thread: $0, section: .filtered) }, toSection: .filtered)
+                snapshot.appendItems(filtered, toSection: .filtered)
             }
 
             if !selected.isEmpty {
                 snapshot.appendSections([.selected])
-                snapshot.appendItems(
-                    selected.map { Item(thread: $0, section: .selected) }, toSection: .selected)
+                snapshot.appendItems(selected, toSection: .selected)
             }
 
             return snapshot
@@ -90,16 +87,16 @@ final class AddThreadViewModel: ViewModel {
     }
 
     var canAddSelected: AnyPublisher<Bool, Never> {
-        $selectedThreads.map { !$0.isEmpty }.eraseToAnyPublisher()
+        $selectedItems.map { !$0.isEmpty }.eraseToAnyPublisher()
     }
 
     func select(thread: Thread) {
-        selectedThreads.insert(thread, at: 0)
+        selectedItems.insert(Item(thread: thread, section: .selected), at: 0)
         query = ""
     }
 
     func deselect(at row: Int) {
-        selectedThreads.remove(at: row)
+        selectedItems.remove(at: row)
     }
 
     func quickSelect() {
@@ -109,7 +106,7 @@ final class AddThreadViewModel: ViewModel {
     }
 
     func addSelected() {
-        mode.add(threads: selectedThreads, actionRunner: actionRunner)
+        mode.add(threads: selectedItems.map { $0.thread }, actionRunner: actionRunner)
     }
 }
 

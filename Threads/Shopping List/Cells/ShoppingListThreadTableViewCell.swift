@@ -9,51 +9,42 @@
 import Combine
 import UIKit
 
-class ShoppingListThreadTableViewCell: ThreadTableViewCell {
-    enum Action {
-        case purchase
-        case increment
-        case decrement
-    }
-
+class ShoppingListThreadTableViewCell: ThreadTableViewCell<ShoppingListCellViewModel> {
     @IBOutlet var checkButton: UIButton!
     @IBOutlet var quantityLabel: UILabel!
     @IBOutlet var decreaseButton: UIButton!
     @IBOutlet var increaseButton: UIButton!
 
-    private let onAction = PassthroughSubject<Action, Never>()
+    private var model: ShoppingListCellViewModel?
 
-    override func bind(_ thread: Thread) {
-        super.bind(thread)
+    override func bind(_ model: ShoppingListCellViewModel) {
+        bindCommonProperties(model)
+        self.model = model
 
-        let isPurchased = thread.publisher(for: \.purchased)
-        let amount = thread.publisher(for: \.amountInShoppingList)
+        model.amountText.assign(to: \.text, on: quantityLabel).store(in: &cancellables)
 
-        amount.map { "\($0)" }
-            .assign(to: \.text, on: quantityLabel)
-            .store(in: &cancellables)
-
-        amount.map { $0 == 1 ? "trash" : "minus.square" }
+        model.willRemoveOnDecrement
+            .map { $0 ? "trash" : "minus.square" }
             .map { UIImage(systemName: $0) }
             .sink { [decreaseButton] image in
                 decreaseButton?.setImage(image, for: .normal)
             }.store(in: &cancellables)
 
-        isPurchased.map { $0 ? "checkmark.square" : "square" }
+        model.isPurchased.map { $0 ? "checkmark.square" : "square" }
             .map { UIImage(systemName: $0) }
             .sink { [checkButton] image in
                 checkButton?.setImage(image, for: .normal)
             }.store(in: &cancellables)
 
-        let isNotPurchased = isPurchased.map { !$0 }
+        let isNotPurchased = model.isPurchased.map { !$0 }
         isNotPurchased.assign(to: \.isEnabled, on: decreaseButton).store(in: &cancellables)
         isNotPurchased.assign(to: \.isEnabled, on: increaseButton).store(in: &cancellables)
 
-        isPurchased.map { $0 ? UIColor.secondarySystemBackground : UIColor.systemBackground }
+        model.isPurchased.map { $0 ? UIColor.secondarySystemBackground : UIColor.systemBackground }
             .assign(to: \.backgroundColor, on: self)
             .store(in: &cancellables)
 
-        let purchasedSelected = isPurchased.combineLatest(selectedOrHighlighted)
+        let purchasedSelected = model.isPurchased.combineLatest(selectedOrHighlighted)
 
         let labelColor = purchasedSelected.map { purchased, selected -> UIColor in
             if selected {
@@ -82,19 +73,20 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell {
         buttonTintColor.assign(to: \.tintColor, on: increaseButton).store(in: &cancellables)
     }
 
-    func actionPublisher() -> AnyPublisher<Action, Never> {
-        onAction.eraseToAnyPublisher()
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        model = nil
     }
 
     @IBAction func checkButtonPressed() {
-        onAction.send(.purchase)
+        model?.togglePurchased()
     }
 
     @IBAction func increaseQuantity() {
-        onAction.send(.increment)
+        model?.increaseQuantity()
     }
 
     @IBAction func decreaseQuantity() {
-        onAction.send(.decrement)
+        model?.decreaseQuantity()
     }
 }

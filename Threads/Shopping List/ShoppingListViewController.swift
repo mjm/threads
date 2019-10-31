@@ -10,27 +10,23 @@ import Combine
 import CoreData
 import UIKit
 
+extension ShoppingListViewModel.Item: ReusableCell {
+    var cellIdentifier: String { "Thread" }
+}
+
 class ShoppingListViewController: ReactiveTableViewController<
-    ShoppingListViewController.Section, ShoppingListViewController.Cell
+    ShoppingListViewModel.Section, ShoppingListViewModel.Item
 >
 {
-    enum Section: CaseIterable {
-        case unpurchased
-        case purchased
-    }
-
-    enum Cell: ReusableCell {
-        case thread(Thread)
-
-        var cellIdentifier: String { "Thread" }
-    }
-
-    private var threadsList: FetchedObjectList<Thread>!
-
-    private var purchaseDelayTimer: Timer?
-    @Published private var pendingPurchases = Set<Thread>()
+    let viewModel: ShoppingListViewModel
 
     @IBOutlet var addCheckedButton: UIButton!
+    private var canAddPurchased = false
+
+    required init?(coder: NSCoder) {
+        viewModel = ShoppingListViewModel()
+        super.init(coder: coder)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,59 +40,29 @@ class ShoppingListViewController: ReactiveTableViewController<
     }
 
     override func subscribe() {
-        threadsList
-            = FetchedObjectList(
-                fetchRequest: Thread.inShoppingListFetchRequest(),
-                managedObjectContext: managedObjectContext
-            )
+        viewModel.presenter = self
 
-        snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        viewModel.snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
 
-        threads.sink { [weak self] threads in
-            self?.setShowEmptyView(threads.isEmpty)
+        viewModel.isEmpty.sink { [weak self] isEmpty in
+            self?.setShowEmptyView(isEmpty)
         }.store(in: &cancellables)
+
+        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(
+            in: &cancellables)
 
         #if !targetEnvironment(macCatalyst)
-        threads.combineLatest($animate).sink { [weak self] threads, animate in
-            self?.setShowAddToCollectionButton(
-                !threads.filter { $0.purchased }.isEmpty, animated: animate)
+        viewModel.canAddPurchasedToCollection.combineLatest($animate).sink { [weak self] showButton, animate in
+            self?.setShowAddToCollectionButton(showButton, animated: animate)
         }.store(in: &cancellables)
 
-        threads.sink { [weak self] threads in
-            self?.setTabBarCount(unpurchased: threads.filter { !$0.purchased }.count)
+        viewModel.unpurchasedCount.sink { [weak self] count in
+            self?.setTabBarCount(unpurchased: count)
         }.store(in: &cancellables)
+        #else
+        viewModel.canAddPurchasedToCollection.assign(to: \.canAddPurchased, on: self).store(in: &cancellables)
         #endif
     }
-
-    var threads: AnyPublisher<[Thread], Never> {
-        threadsList.objectsPublisher()
-    }
-
-    var snapshot: AnyPublisher<Snapshot, Never> {
-        let partitionedThreads = threads.combineLatest($pendingPurchases) {
-            threads, pendingPurchases -> (ArraySlice<Thread>, ArraySlice<Thread>) in
-            var partitioned = threads
-            let pivot = partitioned.stablePartition {
-                $0.purchased && !pendingPurchases.contains($0)
-            }
-
-            let unpurchased = partitioned[..<pivot]
-            let purchased = partitioned[pivot...]
-            return (unpurchased, purchased)
-        }
-
-        return partitionedThreads.map { (unpurchased, purchased) in
-            var snapshot = Snapshot()
-
-            snapshot.appendSections(Section.allCases)
-            snapshot.appendItems(unpurchased.map { .thread($0) }, toSection: .unpurchased)
-            snapshot.appendItems(purchased.map { .thread($0) }, toSection: .purchased)
-
-            return snapshot
-        }.eraseToAnyPublisher()
-    }
-
-    override var currentUserActivity: UserActivity? { .showShoppingList }
 
     #if !targetEnvironment(macCatalyst)
     private func setShowAddToCollectionButton(_ showButton: Bool, animated: Bool) {
@@ -159,94 +125,40 @@ class ShoppingListViewController: ReactiveTableViewController<
 
     private var threadCellObservers: [NSManagedObjectID: AnyCancellable] = [:]
 
-    override func populate(cell: UITableViewCell, item: ShoppingListViewController.Cell) {
-        switch item {
-        case let .thread(thread):
-            let cell = cell as! ShoppingListThreadTableViewCell
-            cell.bind(thread)
+    override func populate(cell: UITableViewCell, item: ShoppingListViewModel.Item) {
+        let cell = cell as! ShoppingListThreadTableViewCell
+        cell.bind(item)
+    }
 
-            threadCellObservers[thread.objectID]
-                = cell.actionPublisher().sink { [weak self] action in
-                    switch action {
-                    case .purchase:
-                        self?.actionRunner.perform(
-                            TogglePurchasedAction(thread: thread),
-                            willPerform: {
-                                self?.delayPurchase(thread)
-                            })
-                    case .increment:
-                        self?.actionRunner.perform(
-                            ChangeShoppingListAmountAction(thread: thread, change: .increment),
-                            willPerform: {
-                                self?.resetDelayedPurchaseTimer()
-                            })
-                    case .decrement:
-                        self?.actionRunner.perform(
-                            ChangeShoppingListAmountAction(thread: thread, change: .decrement),
-                            willPerform: {
-                                self?.resetDelayedPurchaseTimer()
-                            })
-                    }
-                }
-        }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.selectedItem = dataSource.itemIdentifier(for: indexPath)
     }
 }
 
 // MARK: - Actions
 extension ShoppingListViewController {
     @IBAction func addThreads(_ sender: Any) {
-        actionRunner.perform(AddThreadAction(mode: .shoppingList))
+        viewModel.addThreads()
     }
 
     @IBAction func addCheckedToCollection(_ sender: Any) {
-        actionRunner.perform(AddPurchasedToCollectionAction())
+        viewModel.addPurchasedThreadsToCollection()
     }
 
     @objc func toggleThreadPurchased(_ sender: Any) {
-        guard case let .thread(thread) = selectedCell else {
-            return
-        }
-
-        // move the thread immediately if triggered by keyboard shortcut or menu item
-        let willPerform = sender is UIKeyCommand
-            ? {}
-            : {
-                self.delayPurchase(thread)
-            }
-
-        actionRunner.perform(TogglePurchasedAction(thread: thread), willPerform: willPerform)
+        viewModel.togglePurchasedSelected(immediate: sender is UIKeyCommand)
     }
 
     @objc func incrementThreadQuantity(_ sender: Any) {
-        guard case let .thread(thread) = selectedCell else {
-            return
-        }
-
-        actionRunner.perform(
-            ChangeShoppingListAmountAction(thread: thread, change: .increment),
-            willPerform: {
-                self.resetDelayedPurchaseTimer()
-            })
+        viewModel.incrementQuantityOfSelected()
     }
 
     @objc func decrementThreadQuantity(_ sender: Any) {
-        guard case let .thread(thread) = selectedCell else {
-            return
-        }
-
-        actionRunner.perform(
-            ChangeShoppingListAmountAction(thread: thread, change: .decrement),
-            willPerform: {
-                self.resetDelayedPurchaseTimer()
-            })
+        viewModel.decrementQuantityOfSelected()
     }
 
     override func delete(_ sender: Any?) {
-        guard case let .thread(thread) = selectedCell else {
-            return
-        }
-
-        actionRunner.perform(RemoveFromShoppingListAction(thread: thread))
+        viewModel.removeSelected()
     }
 
     override var keyCommands: [UIKeyCommand]? {
@@ -262,10 +174,11 @@ extension ShoppingListViewController {
 
         switch action {
         case #selector(addCheckedToCollection(_:)):
-            return !threadsList.objects.filter { $0.purchased }.isEmpty
-        case #selector(incrementThreadQuantity(_:)),
-            #selector(delete(_:)):
-            return selectedCell != nil
+            return canAddPurchased
+        case #selector(incrementThreadQuantity(_:)):
+            return viewModel.canIncrementQuantityOfSelected
+        case #selector(delete(_:)):
+            return viewModel.canRemoveSelected
         default:
             return true
         }
@@ -276,49 +189,13 @@ extension ShoppingListViewController {
 
         switch command.action {
         case #selector(toggleThreadPurchased(_:)):
-            if case let .thread(thread) = selectedCell {
-                command.state = thread.purchased ? .on : .off
-                command.attributes = []
-            } else {
-                command.state = .off
-                command.attributes = .disabled
-            }
+            command.state = (viewModel.selectedThread?.purchased ?? false) ? .on : .off
+            command.attributes = viewModel.canTogglePurchasedSelected ? [] : .disabled
         case #selector(decrementThreadQuantity(_:)):
-            if case let .thread(thread) = selectedCell {
-                command.title = thread.amountInShoppingList > 1
-                    ? "Decrease Quantity" : "Remove from Shopping List"
-                command.attributes = []
-            } else {
-                command.title = "Decrease Quantity"
-                command.attributes = .disabled
-            }
+            command.title = viewModel.willRemoveSelectedOnDecrement ? "Remove from Shopping List" : "Decrease Quantity"
+            command.attributes = viewModel.canDecrementQuantityOfSelected ? [] : .disabled
         default:
             return
         }
-    }
-}
-
-// MARK: - Purchase Delay
-extension ShoppingListViewController {
-    private func delayPurchase(_ thread: Thread) {
-        // Delaying will happen before `purchased` is toggled, so we're checking the start state, not the end state.
-        if !thread.purchased {
-            pendingPurchases.insert(thread)
-        }
-
-        resetDelayedPurchaseTimer()
-    }
-
-    private func resetDelayedPurchaseTimer() {
-        // if we had a previous timer going, cancel so we don't produce too much UI churn
-        if let existingTimer = purchaseDelayTimer {
-            existingTimer.invalidate()
-        }
-
-        purchaseDelayTimer
-            = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { _ in
-                self.pendingPurchases.removeAll()
-                self.purchaseDelayTimer = nil
-            }
     }
 }

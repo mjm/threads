@@ -74,7 +74,7 @@ class AddThreadViewController: ReactiveTableViewController<
         viewModel.canAddSelected.map { !$0 }.assign(to: \.canDismiss, on: self).store(
             in: &cancellables)
 
-        viewModel.$selectedThreads.map { threads in
+        viewModel.$selectedItems.map { threads in
             String.localizedStringWithFormat(Localized.addBatchButton, threads.count)
         }.assign(to: \.title, on: addButton).store(in: &cancellables)
     }
@@ -96,7 +96,7 @@ class AddThreadViewController: ReactiveTableViewController<
 
     override func populate(cell: UITableViewCell, item: AddThreadViewModel.Item) {
         let cell = cell as! CollectionThreadTableViewCell
-        cell.bind(item.thread)
+        cell.bind(item)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -131,7 +131,7 @@ class AddThreadViewController: ReactiveTableViewController<
 
         switch action {
         case #selector(add):
-            return !viewModel.selectedThreads.isEmpty
+            return !viewModel.selectedItems.isEmpty
         default:
             return true
         }

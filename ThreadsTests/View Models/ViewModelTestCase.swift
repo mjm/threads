@@ -28,12 +28,8 @@ class ViewModelTestCase: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        do {
-            createContainer()
-            try importThreads()
-        } catch {
-            XCTFail("Error setting up test: \(error)")
-        }
+        persistentContainer = createPersistentContainer()
+        context = persistentContainer.viewContext
 
         cancellables = []
     }
@@ -42,33 +38,6 @@ class ViewModelTestCase: XCTestCase {
         cancellables.removeAll()
 
         super.tearDown()
-    }
-
-    private func createContainer() {
-        let managedObjectModel = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-            .managedObjectModel
-
-        persistentContainer
-            = NSPersistentContainer(
-                name: "Threads",
-                managedObjectModel: managedObjectModel)
-
-        let description = NSPersistentStoreDescription()
-        description.type = NSInMemoryStoreType
-        description.shouldAddStoreAsynchronously = false
-        persistentContainer.persistentStoreDescriptions = [description]
-
-        persistentContainer.loadPersistentStores { _, error in
-            XCTAssertNil(error)
-        }
-
-        context = persistentContainer.viewContext
-    }
-
-    private func importThreads() throws {
-        var event = EventBuilder()
-        try Thread.importThreads(DMCThread.all, context: context, event: &event)
-        try context.save()
     }
 
     func await(_ predicateString: String, view: Any, timeout: TimeInterval = 5.0) {

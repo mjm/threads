@@ -35,6 +35,7 @@ class ThreadDetailViewController: ReactiveTableViewController<
     }
 
     let thread: Thread
+    let shoppingListItem: ShoppingListCellViewModel
 
     private var projectsList: FetchedObjectList<ProjectThread>!
 
@@ -42,6 +43,7 @@ class ThreadDetailViewController: ReactiveTableViewController<
 
     init?(coder: NSCoder, thread: Thread) {
         self.thread = thread
+        self.shoppingListItem = ShoppingListCellViewModel(thread: thread)
         super.init(coder: coder)
     }
 
@@ -100,6 +102,22 @@ class ThreadDetailViewController: ReactiveTableViewController<
         }.store(in: &cancellables)
         updateProject.sink { [weak self] projectThread in
             self?.updateCell(projectThread)
+        }.store(in: &cancellables)
+
+        shoppingListItem.actions.sink { [weak self] action in
+            guard let thread = self?.thread else { return }
+
+            switch action {
+            case .togglePurchased:
+                self?.actionRunner.perform(TogglePurchasedAction(thread: thread))
+            case .increment:
+                self?.actionRunner.perform(
+                    ChangeShoppingListAmountAction(thread: thread, change: .increment))
+            case .decrement:
+                self?.actionRunner.perform(
+                    ChangeShoppingListAmountAction(thread: thread, change: .decrement))
+            }
+
         }.store(in: &cancellables)
     }
 
@@ -175,21 +193,7 @@ class ThreadDetailViewController: ReactiveTableViewController<
 
         case .shoppingList:
             let cell = cell as! ShoppingListThreadTableViewCell
-            cell.bind(thread)
-
-            shoppingListSubscription
-                = cell.actionPublisher().sink { [weak self] action in
-                    switch action {
-                    case .purchase:
-                        self?.actionRunner.perform(TogglePurchasedAction(thread: thread))
-                    case .increment:
-                        self?.actionRunner.perform(
-                            ChangeShoppingListAmountAction(thread: thread, change: .increment))
-                    case .decrement:
-                        self?.actionRunner.perform(
-                            ChangeShoppingListAmountAction(thread: thread, change: .decrement))
-                    }
-                }
+            cell.bind(shoppingListItem)
 
         case let .project(projectThread):
             cell.textLabel?.text = projectThread.project?.name
