@@ -100,8 +100,12 @@ extension Project {
         ["notes"]
     }
 
-    var displayName: String {
+    @objc dynamic var displayName: String {
         name ?? Localized.unnamedProject
+    }
+
+    @objc class func keyPathsForValuesAffectingDisplayName() -> Set<String> {
+        ["name"]
     }
 
     static let placeholderURL = URL(string: "https://threads-demo.glitch.me/projects/example")!

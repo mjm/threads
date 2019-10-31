@@ -54,6 +54,14 @@ extension UserAction {
     func run(on runner: UserActionRunner, context: UserActionContext<Self>) {
         runner.reallyPerform(self, context: context)
     }
+
+    func bind(
+        to runner: UserActionRunner,
+        title: String? = nil,
+        options: BoundUserActionOptions = []
+    ) -> BoundUserAction<ResultType> {
+        BoundUserAction(self, runner: runner, title: title, options: options)
+    }
 }
 
 protocol AsyncUserAction: UserAction {}

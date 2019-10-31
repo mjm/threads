@@ -81,7 +81,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         case let .showThread(thread):
             let myThreadsController = selectTab(type: MyThreadsViewController.self)
             if let threadDetailController = topViewController as? ThreadDetailViewController,
-                threadDetailController.thread == thread
+                threadDetailController.viewModel.thread == thread
             {
                 return
             }

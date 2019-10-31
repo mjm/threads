@@ -37,3 +37,9 @@ extension Publisher {
         }.eraseToAnyPublisher()
     }
 }
+
+extension Publisher where Output == Bool {
+    func invert() -> AnyPublisher<Self.Output, Self.Failure> {
+        map { !$0 }.eraseToAnyPublisher()
+    }
+}

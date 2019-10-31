@@ -10,40 +10,26 @@ import Combine
 import CoreData
 import UIKit
 
-class ThreadDetailViewController: ReactiveTableViewController<
-    ThreadDetailViewController.Section, ThreadDetailViewController.Cell
->
-{
-    enum Section: CaseIterable {
-        case details
-        case shoppingList
-        case projects
-    }
-
-    enum Cell: ReusableCell {
-        case details
-        case shoppingList
-        case project(ProjectThread)
-
-        var cellIdentifier: String {
-            switch self {
-            case .details: return "Details"
-            case .shoppingList: return "ShoppingList"
-            case .project: return "Project"
-            }
+extension ThreadDetailViewModel.Item: ReusableCell {
+    var cellIdentifier: String {
+        switch self {
+        case .details: return "Details"
+        case .shoppingList: return "ShoppingList"
+        case .project: return "Project"
         }
     }
+}
 
-    let thread: Thread
-    let shoppingListItem: ShoppingListCellViewModel
-
-    private var projectsList: FetchedObjectList<ProjectThread>!
+class ThreadDetailViewController: ReactiveTableViewController<
+    ThreadDetailViewModel.Section, ThreadDetailViewModel.Item
+>
+{
+    let viewModel: ThreadDetailViewModel
 
     @IBOutlet var actionsButtonItem: UIBarButtonItem!
 
     init?(coder: NSCoder, thread: Thread) {
-        self.thread = thread
-        self.shoppingListItem = ShoppingListCellViewModel(thread: thread)
+        viewModel = ThreadDetailViewModel(thread: thread)
         super.init(coder: coder)
     }
 
@@ -52,15 +38,13 @@ class ThreadDetailViewController: ReactiveTableViewController<
     }
 
     override var managedObjectContext: NSManagedObjectContext {
-        thread.managedObjectContext!
+        viewModel.context
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = String(format: Localized.dmcNumber, thread.number!)
-
-        if let color = thread.color {
+        if let color = viewModel.thread.color {
             let textColor = color.labelColor
 
             let appearance = navigationController!.navigationBar.standardAppearance.copy()
@@ -83,82 +67,16 @@ class ThreadDetailViewController: ReactiveTableViewController<
     }
 
     override func subscribe() {
-        projectsList
-            = FetchedObjectList(
-                fetchRequest: ProjectThread.fetchRequest(for: thread),
-                managedObjectContext: thread.managedObjectContext!
-            )
+        viewModel.presenter = self
 
-        let updateProject = projectsList.objectPublisher()
-            .merge(
-                with: managedObjectContext.publisher(type: Project.self).compactMap { project in
-                    self.projectsList.objects.first { $0.project == project }
-                })
+        viewModel.number.map { number in
+            String(format: Localized.dmcNumber, number!)
+        }.assign(to: \.title, on: navigationItem).store(in: &cancellables)
 
-        snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        viewModel.snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
 
-        updateDetails.sink { [weak self] _ in
-            self?.updateDetailsCell()
-        }.store(in: &cancellables)
-        updateProject.sink { [weak self] projectThread in
-            self?.updateCell(projectThread)
-        }.store(in: &cancellables)
-
-        shoppingListItem.actions.sink { [weak self] action in
-            guard let thread = self?.thread else { return }
-
-            switch action {
-            case .togglePurchased:
-                self?.actionRunner.perform(TogglePurchasedAction(thread: thread))
-            case .increment:
-                self?.actionRunner.perform(
-                    ChangeShoppingListAmountAction(thread: thread, change: .increment))
-            case .decrement:
-                self?.actionRunner.perform(
-                    ChangeShoppingListAmountAction(thread: thread, change: .decrement))
-            }
-
-        }.store(in: &cancellables)
+        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(in: &cancellables)
     }
-
-    var projectThreads: AnyPublisher<[ProjectThread], Never> {
-        projectsList.objectsPublisher()
-    }
-
-    var updateDetails: AnyPublisher<Void, Never> {
-        // Updating the snapshot, even if it hasn't changed, causes the table view
-        // to animate the potential height change in the details cell, so this is
-        // also used to trigger updating the snapshot
-        thread.publisher(for: \.onBobbin)
-            .combineLatest(thread.publisher(for: \.amountInCollection)) { _, _ in }
-            .eraseToAnyPublisher()
-    }
-
-    var snapshot: AnyPublisher<Snapshot, Never> {
-        let inShoppingList = thread.publisher(for: \.inShoppingList)
-
-        return projectThreads.combineLatest(inShoppingList, updateDetails) {
-            projectThreads, inShoppingList, _ in
-            var snapshot = Snapshot()
-
-            snapshot.appendSections([.details])
-            snapshot.appendItems([.details], toSection: .details)
-
-            if inShoppingList {
-                snapshot.appendSections([.shoppingList])
-                snapshot.appendItems([.shoppingList], toSection: .shoppingList)
-            }
-
-            if !projectThreads.isEmpty {
-                snapshot.appendSections([.projects])
-                snapshot.appendItems(projectThreads.map { .project($0) }, toSection: .projects)
-            }
-
-            return snapshot
-        }.eraseToAnyPublisher()
-    }
-
-    override var currentUserActivity: UserActivity? { .showThread(thread) }
 
     override func dataSourceWillInitialize() {
         dataSource.sectionTitle = { _, _, section in
@@ -176,32 +94,31 @@ class ThreadDetailViewController: ReactiveTableViewController<
     override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
         [
             "ShoppingList": .nib(ShoppingListThreadTableViewCell.self),
-            "Project": .class(UITableViewCell.self),
+            "Project": .class(ThreadProjectTableViewCell.self),
         ]
     }
 
     private var shoppingListSubscription: AnyCancellable?
 
-    override func populate(cell: UITableViewCell, item: ThreadDetailViewController.Cell) {
-        let thread = self.thread
-
+    override func populate(cell: UITableViewCell, item: ThreadDetailViewModel.Item) {
         switch item {
 
-        case .details:
+        case .details(let model):
             let cell = cell as! ThreadDetailsTableViewCell
-            cell.populate(thread)
+            cell.bind(model)
 
-        case .shoppingList:
+        case .shoppingList(let model):
             let cell = cell as! ShoppingListThreadTableViewCell
-            cell.bind(shoppingListItem)
+            cell.bind(model)
 
-        case let .project(projectThread):
-            cell.textLabel?.text = projectThread.project?.name
+        case .project(let model):
+            let cell = cell as! ThreadProjectTableViewCell
+            cell.bind(model)
         }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        if let textColor = thread.color?.labelColor, textColor == .white {
+        if let textColor = viewModel.thread.color?.labelColor, textColor == .white {
             return .lightContent
         } else {
             return .darkContent
@@ -210,77 +127,30 @@ class ThreadDetailViewController: ReactiveTableViewController<
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.tintColor = thread.color?.labelColor
+        navigationController?.navigationBar.tintColor = viewModel.thread.color?.labelColor
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.tintColor = nil
     }
-
-    func updateDetailsCell() {
-        guard
-            let cell = dataSource.indexPath(for: .details).flatMap({
-                tableView.cellForRow(at: $0) as? ThreadDetailsTableViewCell
-            })
-        else {
-            return
-        }
-
-        cell.populate(thread)
-    }
-
-    func updateCell(_ projectThread: ProjectThread) {
-        guard let cell = cellForProjectThread(projectThread) else {
-            return
-        }
-
-        cell.textLabel?.text = projectThread.project?.name
-    }
-
-    private func cellForProjectThread(_ projectThread: ProjectThread) -> UITableViewCell? {
-        guard let indexPath = dataSource.indexPath(for: .project(projectThread)) else {
-            return nil
-        }
-
-        return tableView.cellForRow(at: indexPath)
-    }
 }
 
 // MARK: - Actions
 extension ThreadDetailViewController {
     @IBAction func showActions() {
-        let sheet = UIAlertController(actionRunner: actionRunner, preferredStyle: .actionSheet)
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.popoverPresentationController?.barButtonItem = actionsButtonItem
 
-        if !thread.inShoppingList {
-            sheet.addAction(AddToShoppingListAction(thread: thread))
+        for action in viewModel.menuActions {
+            sheet.addAction(action.alertAction())
         }
 
-        // TODO add to project
-
-        if thread.amountInCollection == 0 {
-            sheet.addAction(MarkInStockAction(thread: thread))
-        } else {
-            if thread.onBobbin {
-                sheet.addAction(MarkOffBobbinAction(thread: thread))
-            } else {
-                sheet.addAction(MarkOnBobbinAction(thread: thread))
-            }
-
-            sheet.addAction(MarkOutOfStockAction(thread: thread))
-        }
-
-        sheet.addAction(
-            RemoveThreadAction(thread: thread),
-            title: Localized.removeFromCollection,
-            style: .destructive,
-            willPerform: {
-                self.userActivity = nil
-            }
-        ) {
+        sheet.addAction(viewModel.removeAction.alertAction(willPerform: {
+            self.userActivity = nil
+        }) {
             self.performSegue(withIdentifier: "DeleteThread", sender: nil)
-        }
+        })
 
         sheet.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
 
@@ -306,63 +176,18 @@ extension ThreadDetailViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch dataSource.itemIdentifier(for: indexPath) {
-        case let .project(projectThread):
-            guard let project = projectThread.project,
+        case let .project(model):
+            guard let activity = model.destinationActivity,
                 let scene = view.window?.windowScene
             else {
                 return
             }
 
-            let activity = UserActivity.showProject(project)
             let sceneDelegate = scene.delegate as! SceneDelegate
             sceneDelegate.scene(scene, continue: activity.userActivity)
 
         default:
             return
-        }
-    }
-}
-
-// MARK: -
-class ThreadDetailsTableViewCell: UITableViewCell {
-    @IBOutlet var labelLabel: UILabel!
-    @IBOutlet var statusStackView: UIStackView!
-    @IBOutlet var onBobbinStackView: UIStackView!
-    @IBOutlet var onBobbinImageView: UIImageView!
-    @IBOutlet var onBobbinLabel: UILabel!
-    @IBOutlet var outOfStockStackView: UIStackView!
-    @IBOutlet var outOfStockImageView: UIImageView!
-    @IBOutlet var outOfStockLabel: UILabel!
-
-    func populate(_ thread: Thread) {
-        labelLabel.text = thread.label
-
-        let background = thread.color ?? .systemBackground
-        backgroundColor = background
-
-        let foreground = background.labelColor
-        labelLabel.textColor = foreground
-
-        onBobbinStackView.isHidden = !thread.onBobbin
-        onBobbinImageView.tintColor = foreground
-        onBobbinLabel.textColor = foreground
-
-        outOfStockStackView.isHidden = thread.amountInCollection > 0
-        outOfStockImageView.tintColor = foreground
-        outOfStockLabel.textColor = foreground
-
-        // hide whole stack if none are visible
-        statusStackView.isHidden = statusStackView.arrangedSubviews.allSatisfy { $0.isHidden }
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        // hide top separator for this one
-        for view in subviews {
-            if view != contentView && view.frame.origin.y == 0.0 {
-                view.isHidden = true
-            }
         }
     }
 }

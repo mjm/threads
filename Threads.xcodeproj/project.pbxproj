@@ -17,6 +17,12 @@
 		C9082F5C2369262500768CA1 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F5B2369262500768CA1 /* Operators.swift */; };
 		C9082F5F2369415400768CA1 /* AddThreadCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F5E2369415400768CA1 /* AddThreadCellViewModel.swift */; };
 		C9082F61236941D400768CA1 /* AddThreadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F60236941D400768CA1 /* AddThreadTableViewCell.swift */; };
+		C9082F63236A6D1F00768CA1 /* ThreadDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F62236A6D1F00768CA1 /* ThreadDetailViewModel.swift */; };
+		C9082F66236A6D9B00768CA1 /* ThreadDetailsCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F65236A6D9B00768CA1 /* ThreadDetailsCellViewModel.swift */; };
+		C9082F68236A6DC500768CA1 /* ThreadProjectCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F67236A6DC500768CA1 /* ThreadProjectCellViewModel.swift */; };
+		C9082F6A236A6FA500768CA1 /* ThreadDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F69236A6FA500768CA1 /* ThreadDetailsTableViewCell.swift */; };
+		C9082F6C236A76F700768CA1 /* ThreadProjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F6B236A76F700768CA1 /* ThreadProjectTableViewCell.swift */; };
+		C9082F6E236A7BCC00768CA1 /* BoundUserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F6D236A7BCC00768CA1 /* BoundUserAction.swift */; };
 		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
 		C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */; };
 		C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */; };
@@ -138,6 +144,12 @@
 		C9082F5B2369262500768CA1 /* Operators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		C9082F5E2369415400768CA1 /* AddThreadCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadCellViewModel.swift; sourceTree = "<group>"; };
 		C9082F60236941D400768CA1 /* AddThreadTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadTableViewCell.swift; sourceTree = "<group>"; };
+		C9082F62236A6D1F00768CA1 /* ThreadDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailViewModel.swift; sourceTree = "<group>"; };
+		C9082F65236A6D9B00768CA1 /* ThreadDetailsCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailsCellViewModel.swift; sourceTree = "<group>"; };
+		C9082F67236A6DC500768CA1 /* ThreadProjectCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadProjectCellViewModel.swift; sourceTree = "<group>"; };
+		C9082F69236A6FA500768CA1 /* ThreadDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailsTableViewCell.swift; sourceTree = "<group>"; };
+		C9082F6B236A76F700768CA1 /* ThreadProjectTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadProjectTableViewCell.swift; sourceTree = "<group>"; };
+		C9082F6D236A7BCC00768CA1 /* BoundUserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundUserAction.swift; sourceTree = "<group>"; };
 		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
 		C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewModelTests.swift; sourceTree = "<group>"; };
 		C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTestCase.swift; sourceTree = "<group>"; };
@@ -306,6 +318,17 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		C9082F64236A6D8700768CA1 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C9082F69236A6FA500768CA1 /* ThreadDetailsTableViewCell.swift */,
+				C9082F65236A6D9B00768CA1 /* ThreadDetailsCellViewModel.swift */,
+				C9082F6B236A76F700768CA1 /* ThreadProjectTableViewCell.swift */,
+				C9082F67236A6DC500768CA1 /* ThreadProjectCellViewModel.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		C942E44B2336C72300987EAB /* Banner */ = {
 			isa = PBXGroup;
 			children = (
@@ -394,7 +417,9 @@
 		C95028EC2366AC8100BB02C4 /* Thread Detail */ = {
 			isa = PBXGroup;
 			children = (
+				C9082F64236A6D8700768CA1 /* Cells */,
 				C9491E30231F4C8B0031F463 /* ThreadDetailViewController.swift */,
+				C9082F62236A6D1F00768CA1 /* ThreadDetailViewModel.swift */,
 			);
 			path = "Thread Detail";
 			sourceTree = "<group>";
@@ -518,6 +543,7 @@
 				C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */,
 				C95028F02366B29700BB02C4 /* UserActionPresenter.swift */,
 				C95028E62366070200BB02C4 /* ReplaySubject.swift */,
+				C9082F6D236A7BCC00768CA1 /* BoundUserAction.swift */,
 				C946962C2342D69500843179 /* AlertController.swift */,
 				C97FCE03232F4E13000B1590 /* ThreadActions.swift */,
 				C97FCE05233068C0000B1590 /* ShoppingListActions.swift */,
@@ -746,15 +772,18 @@
 				C97FCDC3232DA92E000B1590 /* NSAttributedString.swift in Sources */,
 				C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */,
 				C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */,
+				C9082F66236A6D9B00768CA1 /* ThreadDetailsCellViewModel.swift in Sources */,
 				C944A9612367ECA700C1B2A1 /* ProjectDetailViewModel.swift in Sources */,
 				C97FCE02232F4CB3000B1590 /* UserActionRunner.swift in Sources */,
 				C906E3B423526FCC003EE053 /* MacSceneDelegate.swift in Sources */,
+				C9082F68236A6DC500768CA1 /* ThreadProjectCellViewModel.swift in Sources */,
 				C9491E4023246AC80031F463 /* Partition.swift in Sources */,
 				C944A9632367F05B00C1B2A1 /* ProjectListViewModel.swift in Sources */,
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,
 				C97FCDFB232F3BC3000B1590 /* Image.swift in Sources */,
 				C983AC452368FC1D00AA930F /* CollectionThreadCellViewModel.swift in Sources */,
 				C97FCDB0232C8ED7000B1590 /* UserActivity.swift in Sources */,
+				C9082F63236A6D1F00768CA1 /* ThreadDetailViewModel.swift in Sources */,
 				C944A95B2367C69D00C1B2A1 /* AddThreadViewModel.swift in Sources */,
 				C97FCDF8232EB846000B1590 /* ViewImageCollectionViewCell.swift in Sources */,
 				C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */,
@@ -775,8 +804,11 @@
 				C95028F12366B29700BB02C4 /* UserActionPresenter.swift in Sources */,
 				C9491E372320C67A0031F463 /* SwatchView.swift in Sources */,
 				C97FCDE3232DD3D2000B1590 /* ThreadPreviewViewController.swift in Sources */,
+				C9082F6E236A7BCC00768CA1 /* BoundUserAction.swift in Sources */,
 				C97FCDEE232E941D000B1590 /* Cells.swift in Sources */,
 				C95028F32366B74700BB02C4 /* ViewModel.swift in Sources */,
+				C9082F6C236A76F700768CA1 /* ThreadProjectTableViewCell.swift in Sources */,
+				C9082F6A236A6FA500768CA1 /* ThreadDetailsTableViewCell.swift in Sources */,
 				C97FCDFE232F495F000B1590 /* UserAction.swift in Sources */,
 				C97FCDAE232C8796000B1590 /* Project+UIActivityItemSource.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,
