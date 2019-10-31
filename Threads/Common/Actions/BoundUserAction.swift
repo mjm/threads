@@ -43,6 +43,8 @@ struct BoundUserAction<ResultType> {
         }
     }
 
+    var isDestructive: Bool { options.contains(.destructive) }
+
     var canPerform: Bool { canPerformBlock() }
 
     @discardableResult
@@ -88,6 +90,21 @@ extension BoundUserAction {
             self.perform(willPerform: willPerform)
                 .ignoreError()
                 .handle(receiveValue: completion)
+        }
+    }
+
+    func contextualAction(
+        willPerform: @escaping () -> Void = {},
+        completion: @escaping (ResultType) -> Void = { _ in }
+    ) -> UIContextualAction {
+        let style: UIContextualAction.Style = options.contains(.destructive) ? .destructive : .normal
+        return UIContextualAction(style: style, title: title) { _, _, contextualActionCompletion in
+            self.perform(willPerform: willPerform)
+                .ignoreError()
+                .handle(receiveValue: { value in
+                    completion(value)
+                    contextualActionCompletion(true)
+                })
         }
     }
 }

@@ -157,6 +157,33 @@ extension MyThreadsViewModel {
     }
 }
 
+// MARK: - Swipe Actions
+extension MyThreadsViewModel {
+    func bobbinAction(for item: Item) -> BoundUserAction<Void>? {
+        guard item.thread.amountInCollection > 0 else {
+            return nil
+        }
+
+        if item.thread.onBobbin {
+            return MarkOffBobbinAction(thread: item.thread)
+                .bind(to: actionRunner, title: Localized.offBobbin)
+        } else {
+            return MarkOnBobbinAction(thread: item.thread)
+                .bind(to: actionRunner, title: Localized.onBobbin)
+        }
+    }
+
+    func stockAction(for item: Item) -> BoundUserAction<Void> {
+        if item.thread.amountInCollection == 0 {
+            return MarkInStockAction(thread: item.thread)
+                .bind(to: actionRunner, title: Localized.inStock)
+        } else {
+            return MarkOutOfStockAction(thread: item.thread)
+                .bind(to: actionRunner, title: Localized.outOfStock, options: .destructive)
+        }
+    }
+}
+
 class AddThreadsToCollectionMode: AddThreadMode {
     let context: NSManagedObjectContext
 

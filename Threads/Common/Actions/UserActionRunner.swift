@@ -44,10 +44,7 @@ class UserActionRunner {
             willPerform: willPerform
         )
 
-        let publisher = context!.subject
-            .subscribe(on: RunLoop.main)
-            .receive(on: RunLoop.main)
-            .eraseToAnyPublisher()
+        let publisher = context!.subject.eraseToAnyPublisher()
 
         publisher.handle(
             receiveCompletion: { completion in

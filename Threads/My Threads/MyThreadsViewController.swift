@@ -165,24 +165,12 @@ extension MyThreadsViewController {
     override func tableView(
         _ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
     ) -> UISwipeActionsConfiguration? {
-        guard let thread = dataSource.itemIdentifier(for: indexPath)?.thread else {
+        guard let item = dataSource.itemIdentifier(for: indexPath),
+            let bobbinAction = viewModel.bobbinAction(for: item) else {
             return nil
         }
 
-        if thread.amountInCollection == 0 {
-            return nil
-        }
-
-        let bobbin: UIContextualAction
-        if thread.onBobbin {
-            bobbin
-                = actionRunner.contextualAction(
-                    MarkOffBobbinAction(thread: thread), title: Localized.offBobbin)
-        } else {
-            bobbin
-                = actionRunner.contextualAction(
-                    MarkOnBobbinAction(thread: thread), title: Localized.onBobbin)
-        }
+        let bobbin = bobbinAction.contextualAction()
         bobbin.backgroundColor = UIColor(named: "BobbinSwipe")
 
         let config = UISwipeActionsConfiguration(actions: [bobbin])
@@ -193,21 +181,14 @@ extension MyThreadsViewController {
     override func tableView(
         _ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
     ) -> UISwipeActionsConfiguration? {
-        guard let thread = dataSource.itemIdentifier(for: indexPath)?.thread else {
+        guard let item = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
 
-        let stock: UIContextualAction
-        if thread.amountInCollection == 0 {
-            stock
-                = actionRunner.contextualAction(
-                    MarkInStockAction(thread: thread), title: Localized.inStock)
+        let stockAction = viewModel.stockAction(for: item)
+        let stock = stockAction.contextualAction()
+        if !stockAction.isDestructive {
             stock.backgroundColor = UIColor(named: "InStockSwipe")
-        } else {
-            stock
-                = actionRunner.contextualAction(
-                    MarkOutOfStockAction(thread: thread), title: Localized.outOfStock,
-                    style: .destructive)
         }
 
         let config = UISwipeActionsConfiguration(actions: [stock])

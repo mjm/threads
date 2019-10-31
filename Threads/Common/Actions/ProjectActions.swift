@@ -117,7 +117,7 @@ struct AddProjectToShoppingListAction: SyncUserAction {
     }
 }
 
-struct DeleteProjectAction: DestructiveUserAction {
+struct DeleteProjectAction: ReactiveUserAction, DestructiveUserAction {
     let project: Project
 
     let undoActionName: String? = Localized.deleteProject
@@ -126,13 +126,17 @@ struct DeleteProjectAction: DestructiveUserAction {
     let confirmationMessage: String = Localized.deleteProjectPrompt
     let confirmationButtonTitle: String = Localized.delete
 
-    func performAsync(_ context: UserActionContext<DeleteProjectAction>) {
+    func publisher(context: UserActionContext<DeleteProjectAction>) -> AnyPublisher<Void, Error> {
         Event.current[.projectName] = project.name
 
-        UserActivity.showProject(project).delete {
-            context.managedObjectContext.delete(self.project)
-            context.complete()
-        }
+        return Future { promise in
+            UserActivity.showProject(self.project).delete {
+                RunLoop.main.perform {
+                    context.managedObjectContext.delete(self.project)
+                    promise(.success(()))
+                }
+            }
+        }.eraseToAnyPublisher()
     }
 }
 
