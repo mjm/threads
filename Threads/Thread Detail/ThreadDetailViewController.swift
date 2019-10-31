@@ -75,7 +75,8 @@ class ThreadDetailViewController: ReactiveTableViewController<
 
         viewModel.snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
 
-        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(in: &cancellables)
+        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(
+            in: &cancellables)
     }
 
     override func dataSourceWillInitialize() {
@@ -146,11 +147,12 @@ extension ThreadDetailViewController {
             sheet.addAction(action.alertAction())
         }
 
-        sheet.addAction(viewModel.removeAction.alertAction(willPerform: {
-            self.userActivity = nil
-        }) {
-            self.performSegue(withIdentifier: "DeleteThread", sender: nil)
-        })
+        sheet.addAction(
+            viewModel.removeAction.alertAction(willPerform: {
+                self.userActivity = nil
+            }) {
+                self.performSegue(withIdentifier: "DeleteThread", sender: nil)
+            })
 
         sheet.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
 

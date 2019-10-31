@@ -166,7 +166,8 @@ extension MyThreadsViewController {
         _ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
     ) -> UISwipeActionsConfiguration? {
         guard let item = dataSource.itemIdentifier(for: indexPath),
-            let bobbinAction = viewModel.bobbinAction(for: item) else {
+            let bobbinAction = viewModel.bobbinAction(for: item)
+        else {
             return nil
         }
 
@@ -236,8 +237,9 @@ extension MyThreadsViewController {
                         title: Localized.addToProjectMenu,
                         image: projectImage,
                         children: projectActions.map { action in
-                            action.menuAction(image: projectImage,
-                                              state: action.canPerform ? .off : .on)
+                            action.menuAction(
+                                image: projectImage,
+                                state: action.canPerform ? .off : .on)
                         })
             }
 

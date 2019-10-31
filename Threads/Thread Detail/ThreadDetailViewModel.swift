@@ -36,10 +36,11 @@ final class ThreadDetailViewModel: ViewModel {
     init(thread: Thread) {
         self.thread = thread
 
-        projectsList = FetchedObjectList(
-            fetchRequest: ProjectThread.fetchRequest(for: thread),
-            managedObjectContext: thread.managedObjectContext!
-        )
+        projectsList
+            = FetchedObjectList(
+                fetchRequest: ProjectThread.fetchRequest(for: thread),
+                managedObjectContext: thread.managedObjectContext!
+            )
 
         detailsViewModel = ThreadDetailCellViewModel(thread: thread)
         shoppingListViewModel = ShoppingListCellViewModel(thread: thread)
@@ -59,7 +60,8 @@ final class ThreadDetailViewModel: ViewModel {
         let detailModel = detailsViewModel
         let shoppingListModel = shoppingListViewModel
 
-        return $projectViewModels.combineLatest(isInShoppingList, detailsViewModel.onUpdate) { projectModels, inShoppingList, _ in
+        return $projectViewModels.combineLatest(isInShoppingList, detailsViewModel.onUpdate) {
+            projectModels, inShoppingList, _ in
             var snapshot = Snapshot()
 
             snapshot.appendSections([.details])
@@ -119,9 +121,10 @@ final class ThreadDetailViewModel: ViewModel {
 
     var removeAction: BoundUserAction<Void> {
         RemoveThreadAction(thread: thread)
-            .bind(to: actionRunner,
-                  title: Localized.removeFromCollection,
-                  options: .destructive)
+            .bind(
+                to: actionRunner,
+                title: Localized.removeFromCollection,
+                options: .destructive)
     }
 
     private func handleShoppingAction(_ action: ShoppingListCellViewModel.Action) {

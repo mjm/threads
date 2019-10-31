@@ -20,6 +20,7 @@ final class ThreadDetailCellViewModel {
     var color: AnyPublisher<UIColor?, Never> { publish(\.color) }
 
     var onBobbin: AnyPublisher<Bool, Never> { publish(\.onBobbin) }
+
     var outOfStock: AnyPublisher<Bool, Never> {
         publish(\.amountInCollection).map { $0 == 0 }.eraseToAnyPublisher()
     }

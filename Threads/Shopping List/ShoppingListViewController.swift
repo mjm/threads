@@ -52,7 +52,8 @@ class ShoppingListViewController: ReactiveTableViewController<
             in: &cancellables)
 
         #if !targetEnvironment(macCatalyst)
-        viewModel.canAddPurchasedToCollection.combineLatest($animate).sink { [weak self] showButton, animate in
+        viewModel.canAddPurchasedToCollection.combineLatest($animate).sink {
+            [weak self] showButton, animate in
             self?.setShowAddToCollectionButton(showButton, animated: animate)
         }.store(in: &cancellables)
 
@@ -60,7 +61,8 @@ class ShoppingListViewController: ReactiveTableViewController<
             self?.setTabBarCount(unpurchased: count)
         }.store(in: &cancellables)
         #else
-        viewModel.canAddPurchasedToCollection.assign(to: \.canAddPurchased, on: self).store(in: &cancellables)
+        viewModel.canAddPurchasedToCollection.assign(to: \.canAddPurchased, on: self).store(
+            in: &cancellables)
         #endif
     }
 
@@ -192,7 +194,8 @@ extension ShoppingListViewController {
             command.state = (viewModel.selectedThread?.purchased ?? false) ? .on : .off
             command.attributes = viewModel.canTogglePurchasedSelected ? [] : .disabled
         case #selector(decrementThreadQuantity(_:)):
-            command.title = viewModel.willRemoveSelectedOnDecrement ? "Remove from Shopping List" : "Decrease Quantity"
+            command.title = viewModel.willRemoveSelectedOnDecrement
+                ? "Remove from Shopping List" : "Decrease Quantity"
             command.attributes = viewModel.canDecrementQuantityOfSelected ? [] : .disabled
         default:
             return

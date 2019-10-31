@@ -151,9 +151,10 @@ extension MyThreadsViewModel {
 
     func removeAction(for item: Item) -> BoundUserAction<Void> {
         RemoveThreadAction(thread: item.thread)
-            .bind(to: actionRunner,
-                  title: Localized.removeFromCollection,
-                  options: .destructive)
+            .bind(
+                to: actionRunner,
+                title: Localized.removeFromCollection,
+                options: .destructive)
     }
 }
 

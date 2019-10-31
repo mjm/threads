@@ -11,6 +11,7 @@ import UIKit
 
 struct BoundUserActionOptions: OptionSet {
     let rawValue: Int
+
     init(rawValue: Int) {
         self.rawValue = rawValue
     }
@@ -73,7 +74,7 @@ extension BoundUserAction {
         completion: @escaping (ResultType) -> Void = { _ in }
     ) -> UIAction {
         var attributes: UIMenuElement.Attributes = []
-        
+
         if !canPerform {
             attributes.insert(.disabled)
         }
@@ -97,7 +98,8 @@ extension BoundUserAction {
         willPerform: @escaping () -> Void = {},
         completion: @escaping (ResultType) -> Void = { _ in }
     ) -> UIContextualAction {
-        let style: UIContextualAction.Style = options.contains(.destructive) ? .destructive : .normal
+        let style: UIContextualAction.Style = options.contains(.destructive)
+            ? .destructive : .normal
         return UIContextualAction(style: style, title: title) { _, _, contextualActionCompletion in
             self.perform(willPerform: willPerform)
                 .ignoreError()

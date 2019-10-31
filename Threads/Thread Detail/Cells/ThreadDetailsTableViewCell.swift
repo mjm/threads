@@ -28,15 +28,18 @@ class ThreadDetailsTableViewCell: ReactiveTableViewCell {
         let foreground = background.map { $0?.labelColor }
         foreground.assign(to: \.textColor, on: labelLabel).store(in: &cancellables)
 
-        model.onBobbin.invert().assign(to: \.isHidden, on: onBobbinStackView).store(in: &cancellables)
+        model.onBobbin.invert().assign(to: \.isHidden, on: onBobbinStackView).store(
+            in: &cancellables)
         foreground.assign(to: \.tintColor, on: onBobbinImageView).store(in: &cancellables)
         foreground.assign(to: \.textColor, on: onBobbinLabel).store(in: &cancellables)
 
-        model.outOfStock.invert().assign(to: \.isHidden, on: outOfStockStackView).store(in: &cancellables)
+        model.outOfStock.invert().assign(to: \.isHidden, on: outOfStockStackView).store(
+            in: &cancellables)
         foreground.assign(to: \.tintColor, on: outOfStockImageView).store(in: &cancellables)
         foreground.assign(to: \.textColor, on: outOfStockLabel).store(in: &cancellables)
 
-        model.hasStatus.invert().assign(to: \.isHidden, on: statusStackView).store(in: &cancellables)
+        model.hasStatus.invert().assign(to: \.isHidden, on: statusStackView).store(
+            in: &cancellables)
     }
 
     override func layoutSubviews() {

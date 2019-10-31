@@ -110,6 +110,7 @@ final class ShoppingListViewModel: ViewModel {
     }
 
     var canTogglePurchasedSelected: Bool { selectedThread != nil }
+
     func togglePurchasedSelected(immediate: Bool = false) {
         if let thread = selectedThread {
             togglePurchased(thread, immediate: immediate)
@@ -117,6 +118,7 @@ final class ShoppingListViewModel: ViewModel {
     }
 
     var canIncrementQuantityOfSelected: Bool { selectedThread != nil }
+
     func incrementQuantityOfSelected() {
         if let thread = selectedThread {
             incrementQuantity(thread)
@@ -124,6 +126,7 @@ final class ShoppingListViewModel: ViewModel {
     }
 
     var canDecrementQuantityOfSelected: Bool { selectedThread != nil }
+
     func decrementQuantityOfSelected() {
         if let thread = selectedThread {
             decrementQuantity(thread)
@@ -131,6 +134,7 @@ final class ShoppingListViewModel: ViewModel {
     }
 
     var canRemoveSelected: Bool { selectedThread != nil }
+
     func removeSelected() {
         if let thread = selectedThread {
             actionRunner.perform(RemoveFromShoppingListAction(thread: thread))
