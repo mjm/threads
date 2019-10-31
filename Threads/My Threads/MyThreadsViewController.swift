@@ -234,62 +234,38 @@ extension MyThreadsViewController {
             }
         ) { suggestedActions in
 
-            let addToShoppingListAction = self.viewModel.addToShoppingListAction(for: cell)
-            let addToShoppingList = UIAction(
-                title: addToShoppingListAction.title,
-                image: UIImage(systemName: "cart.badge.plus"),
-                attributes: addToShoppingListAction.canPerform() ? [] : .disabled
-            ) { _ in
-                addToShoppingListAction.perform()
-            }
+            let addToShoppingList = self.viewModel.addToShoppingListAction(for: cell)
+                .menuAction(image: UIImage(systemName: "cart.badge.plus"))
 
             // Load projects for submenu
             let addToProjectMenu: UIMenuElement
+            let projectImage = UIImage(systemName: "rectangle.3.offgrid")
 
             let projectActions = self.viewModel.projectActions(for: cell)
             if projectActions.isEmpty {
                 addToProjectMenu
                     = UIAction(
                         title: Localized.addToProjectMenu,
-                        image: UIImage(systemName: "rectangle.3.offgrid"),
+                        image: projectImage,
                         attributes: .disabled
                     ) { _ in }
             } else {
                 addToProjectMenu
                     = UIMenu(
                         title: Localized.addToProjectMenu,
-                        image: UIImage(systemName: "rectangle.3.offgrid"),
+                        image: projectImage,
                         children: projectActions.map { action in
-                            UIAction(
-                                title: action.title,
-                                image: UIImage(systemName: "rectangle.3.offgrid"),
-                                attributes: action.canPerform() ? [] : .disabled,
-                                state: action.canPerform() ? .off : .on
-                            ) { _ in
-                                action.perform()
-                            }
+                            action.menuAction(image: projectImage,
+                                              state: action.canPerform ? .off : .on)
                         })
             }
 
             let markMenu = UIMenu(
                 title: "", options: .displayInline,
-                children: self.viewModel.markActions(for: cell).map { action in
-                    UIAction(
-                        title: action.title,
-                        attributes: action.canPerform() ? [] : .disabled
-                    ) { _ in
-                        action.perform()
-                    }
-                })
+                children: self.viewModel.markActions(for: cell).map { $0.menuAction() })
 
-            let removeAction = self.viewModel.removeAction(for: cell)
-            let remove = UIAction(
-                title: removeAction.title,
-                image: UIImage(systemName: "trash"),
-                attributes: .destructive
-            ) { _ in
-                removeAction.perform()
-            }
+            let remove = self.viewModel.removeAction(for: cell)
+                .menuAction(image: UIImage(systemName: "trash"))
 
             return UIMenu(
                 title: "",

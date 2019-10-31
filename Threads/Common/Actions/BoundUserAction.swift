@@ -63,4 +63,31 @@ extension BoundUserAction {
                 .handle(receiveValue: completion)
         }
     }
+
+    func menuAction(
+        image: UIImage? = nil,
+        state: UIMenuElement.State = .off,
+        willPerform: @escaping () -> Void = {},
+        completion: @escaping (ResultType) -> Void = { _ in }
+    ) -> UIAction {
+        var attributes: UIMenuElement.Attributes = []
+        
+        if !canPerform {
+            attributes.insert(.disabled)
+        }
+        if options.contains(.destructive) {
+            attributes.insert(.destructive)
+        }
+
+        return UIAction(
+            title: title,
+            image: image,
+            attributes: attributes,
+            state: state
+        ) { _ in
+            self.perform(willPerform: willPerform)
+                .ignoreError()
+                .handle(receiveValue: completion)
+        }
+    }
 }

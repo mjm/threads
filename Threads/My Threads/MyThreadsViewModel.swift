@@ -112,36 +112,22 @@ extension MyThreadsViewModel {
 
 // MARK: - Context Menu Actions
 extension MyThreadsViewModel {
-    struct Action {
-        var title: String
-        var canPerform: () -> Bool
-        var perform: () -> Void
-    }
-
-    private func action<A: UserAction>(_ title: String, _ action: A) -> Action {
-        Action(
-            title: title,
-            canPerform: { action.canPerform },
-            perform: { self.actionRunner.perform(action) }
-        )
-    }
-
-    func markActions(for item: Item) -> [Action] {
+    func markActions(for item: Item) -> [BoundUserAction<Void>] {
         let thread = item.thread
 
         if thread.amountInCollection == 0 {
-            return [action(Localized.markInStock, MarkInStockAction(thread: thread))]
+            return [MarkInStockAction(thread: thread).bind(to: actionRunner)]
         } else {
             return [
                 thread.onBobbin
-                    ? action(Localized.markOffBobbin, MarkOffBobbinAction(thread: thread))
-                    : action(Localized.markOnBobbin, MarkOnBobbinAction(thread: thread)),
-                action(Localized.markOutOfStock, MarkOutOfStockAction(thread: thread)),
+                    ? MarkOffBobbinAction(thread: thread).bind(to: actionRunner)
+                    : MarkOnBobbinAction(thread: thread).bind(to: actionRunner),
+                MarkOutOfStockAction(thread: thread).bind(to: actionRunner),
             ]
         }
     }
 
-    func projectActions(for item: Item) -> [Action] {
+    func projectActions(for item: Item) -> [BoundUserAction<Void>] {
         let thread = item.thread
 
         do {
@@ -149,9 +135,8 @@ extension MyThreadsViewModel {
             let projects = try context.fetch(request)
 
             return projects.map { project in
-                action(
-                    project.displayName,
-                    AddToProjectAction(thread: thread, project: project, showBanner: true))
+                AddToProjectAction(thread: thread, project: project, showBanner: true)
+                    .bind(to: actionRunner, title: project.displayName)
             }
         } catch {
             presenter?.present(error: error)
@@ -159,16 +144,16 @@ extension MyThreadsViewModel {
         }
     }
 
-    func addToShoppingListAction(for item: Item) -> Action {
-        action(
-            Localized.addToShoppingList,
-            AddToShoppingListAction(thread: item.thread, showBanner: true))
+    func addToShoppingListAction(for item: Item) -> BoundUserAction<Void> {
+        AddToShoppingListAction(thread: item.thread, showBanner: true)
+            .bind(to: actionRunner)
     }
 
-    func removeAction(for item: Item) -> Action {
-        action(
-            Localized.removeFromCollection,
-            RemoveThreadAction(thread: item.thread))
+    func removeAction(for item: Item) -> BoundUserAction<Void> {
+        RemoveThreadAction(thread: item.thread)
+            .bind(to: actionRunner,
+                  title: Localized.removeFromCollection,
+                  options: .destructive)
     }
 }
 
