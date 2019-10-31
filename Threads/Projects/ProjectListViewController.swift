@@ -66,7 +66,7 @@ class ProjectListViewController: ReactiveCollectionViewController<
 
     override func populate(cell: UICollectionViewCell, item: ProjectListViewModel.Item) {
         let cell = cell as! ProjectCollectionViewCell
-        cell.bind(item.project)
+        cell.bind(item)
     }
 
     override func createLayout() -> UICollectionViewLayout {

@@ -23,6 +23,8 @@
 		C9082F6A236A6FA500768CA1 /* ThreadDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F69236A6FA500768CA1 /* ThreadDetailsTableViewCell.swift */; };
 		C9082F6C236A76F700768CA1 /* ThreadProjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F6B236A76F700768CA1 /* ThreadProjectTableViewCell.swift */; };
 		C9082F6E236A7BCC00768CA1 /* BoundUserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F6D236A7BCC00768CA1 /* BoundUserAction.swift */; };
+		C9082F71236A9ADE00768CA1 /* ProjectCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F70236A9ADE00768CA1 /* ProjectCellViewModel.swift */; };
+		C9082F73236A9C3700768CA1 /* ReactiveCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */; };
 		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
 		C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */; };
 		C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */; };
@@ -150,6 +152,8 @@
 		C9082F69236A6FA500768CA1 /* ThreadDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailsTableViewCell.swift; sourceTree = "<group>"; };
 		C9082F6B236A76F700768CA1 /* ThreadProjectTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadProjectTableViewCell.swift; sourceTree = "<group>"; };
 		C9082F6D236A7BCC00768CA1 /* BoundUserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundUserAction.swift; sourceTree = "<group>"; };
+		C9082F70236A9ADE00768CA1 /* ProjectCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCellViewModel.swift; sourceTree = "<group>"; };
+		C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveCollectionViewCell.swift; sourceTree = "<group>"; };
 		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
 		C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewModelTests.swift; sourceTree = "<group>"; };
 		C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTestCase.swift; sourceTree = "<group>"; };
@@ -329,6 +333,16 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		C9082F6F236A9A2C00768CA1 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */,
+				C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */,
+				C9082F70236A9ADE00768CA1 /* ProjectCellViewModel.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		C942E44B2336C72300987EAB /* Banner */ = {
 			isa = PBXGroup;
 			children = (
@@ -457,6 +471,7 @@
 				C955EDE7234028A8000ACC39 /* ViewControllers.swift */,
 				C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */,
 				C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */,
+				C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */,
 				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
 				C946962A2340EF1B00843179 /* EmptyView.swift */,
 				C9491E362320C67A0031F463 /* SwatchView.swift */,
@@ -513,12 +528,11 @@
 		C97FCDE7232DFC7E000B1590 /* Projects */ = {
 			isa = PBXGroup;
 			children = (
+				C9082F6F236A9A2C00768CA1 /* Cells */,
 				C97FCDDA232DCE6B000B1590 /* Projects.storyboard */,
 				C9491E4123248B940031F463 /* ProjectListViewController.swift */,
 				C944A9622367F05B00C1B2A1 /* ProjectListViewModel.swift */,
 				C98F07C72333093800BAB311 /* ProjectPreviewViewController.swift */,
-				C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */,
-				C94EB3002325E6A900D4CF56 /* ProjectCollectionViewCell.xib */,
 			);
 			path = Projects;
 			sourceTree = "<group>";
@@ -754,6 +768,7 @@
 				C95028EF2366AD0100BB02C4 /* MyThreadsViewModel.swift in Sources */,
 				C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */,
 				C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */,
+				C9082F71236A9ADE00768CA1 /* ProjectCellViewModel.swift in Sources */,
 				C97FCDF1232EA234000B1590 /* ProjectImage.swift in Sources */,
 				C99677F1235B497600AE2F5C /* StoreObserver.swift in Sources */,
 				C9491E2F231E0BE00031F463 /* Thread.swift in Sources */,
@@ -824,6 +839,7 @@
 				C942E44D2336C7F400987EAB /* BannerController.swift in Sources */,
 				C97FCE00232F4C9F000B1590 /* UserActionContext.swift in Sources */,
 				C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */,
+				C9082F73236A9C3700768CA1 /* ReactiveCollectionViewCell.swift in Sources */,
 				C9491E44232491D90031F463 /* Project.swift in Sources */,
 				C97FCDBF232D9FD0000B1590 /* TextViewCollectionViewCell.swift in Sources */,
 				C95028E72366070200BB02C4 /* ReplaySubject.swift in Sources */,

@@ -10,11 +10,9 @@ import Combine
 import UIKit
 
 @IBDesignable
-class ProjectCollectionViewCell: UICollectionViewCell {
+class ProjectCollectionViewCell: ReactiveCollectionViewCell {
     @IBOutlet var imageView: RoundedShadowImageView!
     @IBOutlet var nameLabel: UILabel!
-
-    var cancellables = Set<AnyCancellable>()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -30,13 +28,11 @@ class ProjectCollectionViewCell: UICollectionViewCell {
             }
     }
 
-    func bind(_ project: Project) {
-        project.publisher(for: \.name)
-            .assign(to: \.text, on: nameLabel)
-            .store(in: &cancellables)
+    func bind(_ model: ProjectCellViewModel) {
+        model.name.assign(to: \.text, on: nameLabel).store(in: &cancellables)
 
-        project.publisher(for: \.primaryImage).sink { [weak self] image in
-            if let image = image?.thumbnailImage {
+        model.image.sink { [weak self] image in
+            if let image = image {
                 self?.imageView.imageView.contentMode = .scaleAspectFill
                 self?.imageView.imageView.image = image
             } else {
@@ -46,11 +42,5 @@ class ProjectCollectionViewCell: UICollectionViewCell {
 
             self?.imageView.setNeedsLayout()
         }.store(in: &cancellables)
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-        cancellables.removeAll()
     }
 }

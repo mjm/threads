@@ -13,13 +13,13 @@ import UIKit
 final class ProjectListViewModel: ViewModel {
     enum Section { case projects }
 
-    struct Item: Hashable {
-        var project: Project
-    }
+    typealias Item = ProjectCellViewModel
 
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     private let projectsList: FetchedObjectList<Project>
+
+    @Published private(set) var projectViewModels: [ProjectCellViewModel] = []
 
     override init(context: NSManagedObjectContext = .view) {
         projectsList
@@ -29,25 +29,25 @@ final class ProjectListViewModel: ViewModel {
             )
 
         super.init(context: context)
-    }
 
-    var projects: AnyPublisher<[Project], Never> {
-        projectsList.objectsPublisher()
+        $projectViewModels.applyingDifferences(projectsList.differences) { project in
+            ProjectCellViewModel(project: project)
+        }.assign(to: \.projectViewModels, on: self).store(in: &cancellables)
     }
 
     var snapshot: AnyPublisher<Snapshot, Never> {
-        projects.map { projects in
+        $projectViewModels.map { projectModels in
             var snapshot = Snapshot()
 
             snapshot.appendSections([.projects])
-            snapshot.appendItems(projects.map(Item.init(project:)), toSection: .projects)
+            snapshot.appendItems(projectModels, toSection: .projects)
 
             return snapshot
         }.eraseToAnyPublisher()
     }
 
     var isEmpty: AnyPublisher<Bool, Never> {
-        projects.map { $0.isEmpty }.eraseToAnyPublisher()
+        $projectViewModels.map { $0.isEmpty }.eraseToAnyPublisher()
     }
 
     var userActivity: AnyPublisher<UserActivity, Never> {
