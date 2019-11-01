@@ -20,8 +20,6 @@ final class ShoppingListViewModel: ViewModel {
 
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
-    private let threadsList: FetchedObjectList<Thread>
-
     @Published private(set) var threadViewModels: [Item] = []
     @Published var selectedItem: Item?
     @Published private var pendingPurchases = Set<Thread>()
@@ -30,13 +28,9 @@ final class ShoppingListViewModel: ViewModel {
     private let pendingPurchaseTick = PassthroughSubject<(), Never>()
 
     override init(context: NSManagedObjectContext = .view) {
-        threadsList
-            = FetchedObjectList(
-                fetchRequest: Thread.inShoppingListFetchRequest(), managedObjectContext: context)
-
         super.init(context: context)
 
-        $threadViewModels.applyingDifferences(threadsList.differences) { [weak self] thread in
+        $threadViewModels.applyingDifferences(threadChanges.ignoreError()) { [weak self] thread in
             let model = ShoppingListCellViewModel(thread: thread)
             model.actions.sink { [weak self] action in
                 self?.handleAction(action, for: thread)
@@ -49,6 +43,10 @@ final class ShoppingListViewModel: ViewModel {
         $selectedItem.flatMap { itemModel -> AnyPublisher<Bool, Never> in
             itemModel?.willRemoveOnDecrement ?? Just(false).eraseToAnyPublisher()
         }.assign(to: \.willRemoveSelectedOnDecrement, on: self).store(in: &cancellables)
+    }
+
+    var threadChanges: ManagedObjectChangesPublisher<Thread> {
+        context.changesPublisher(for: Thread.inShoppingListFetchRequest())
     }
 
     var snapshot: AnyPublisher<Snapshot, Never> {

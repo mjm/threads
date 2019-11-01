@@ -7,14 +7,13 @@
 //
 
 import Combine
+import CoreData
 import UIKit
 
 final class EditProjectDetailViewModel: ProjectDetailMode {
     typealias Snapshot = ProjectDetailViewModel.Snapshot
 
     let project: Project
-    private let imagesList: FetchedObjectList<ProjectImage>
-    private let threadsList: FetchedObjectList<ProjectThread>
     private let actionRunner: UserActionRunner
 
     @Published private(set) var imageViewModels: [EditProjectImageCellViewModel] = []
@@ -23,25 +22,33 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
     private var cancellables = Set<AnyCancellable>()
 
     init(project: Project,
-         imagesList: FetchedObjectList<ProjectImage>,
-         threadsList: FetchedObjectList<ProjectThread>,
          actionRunner: UserActionRunner) {
         self.project = project
-        self.imagesList = imagesList
-        self.threadsList = threadsList
         self.actionRunner = actionRunner
 
-        $imageViewModels.applyingDifferences(imagesList.differences) { projectImage in
+        $imageViewModels.applyingDifferences(imageChanges.ignoreError()) { projectImage in
             EditProjectImageCellViewModel(projectImage: projectImage, actionRunner: actionRunner)
         }.assign(to: \.imageViewModels, on: self).store(in: &cancellables)
 
-        $threadViewModels.applyingDifferences(threadsList.differences) { [weak self] projectThread in
+        $threadViewModels.applyingDifferences(threadChanges.ignoreError()) { [weak self] projectThread in
             let model = EditProjectThreadCellViewModel(projectThread: projectThread)
             model.actions.sink { [weak self] action in
                 self?.handleAction(action, for: projectThread)
             }.store(in: &model.cancellables)
             return model
         }.assign(to: \.threadViewModels, on: self).store(in: &cancellables)
+    }
+
+    private var context: NSManagedObjectContext {
+        project.managedObjectContext!
+    }
+
+    var imageChanges: ManagedObjectChangesPublisher<ProjectImage> {
+        context.changesPublisher(for: ProjectImage.fetchRequest(for: project))
+    }
+
+    var threadChanges: ManagedObjectChangesPublisher<ProjectThread> {
+        context.changesPublisher(for: ProjectThread.fetchRequest(for: project))
     }
 
     var snapshot: AnyPublisher<ProjectDetailViewModel.Snapshot, Never> {

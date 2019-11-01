@@ -14,28 +14,34 @@ final class ViewProjectDetailViewModel: ProjectDetailMode {
     typealias Snapshot = ProjectDetailViewModel.Snapshot
 
     let project: Project
-    private let imagesList: FetchedObjectList<ProjectImage>
-    private let threadsList: FetchedObjectList<ProjectThread>
 
     @Published private(set) var imageViewModels: [ViewProjectImageCellViewModel] = []
     @Published private(set) var threadViewModels: [ViewProjectThreadCellViewModel] = []
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(project: Project,
-         imagesList: FetchedObjectList<ProjectImage>,
-         threadsList: FetchedObjectList<ProjectThread>) {
+    init(project: Project) {
         self.project = project
-        self.imagesList = imagesList
-        self.threadsList = threadsList
 
-        $imageViewModels.applyingDifferences(imagesList.differences) { projectImage in
+        $imageViewModels.applyingDifferences(imageChanges.ignoreError()) { projectImage in
             ViewProjectImageCellViewModel(projectImage: projectImage)
         }.assign(to: \.imageViewModels, on: self).store(in: &cancellables)
 
-        $threadViewModels.applyingDifferences(threadsList.differences) { projectThread in
+        $threadViewModels.applyingDifferences(threadChanges.ignoreError()) { projectThread in
             ViewProjectThreadCellViewModel(projectThread: projectThread)
         }.assign(to: \.threadViewModels, on: self).store(in: &cancellables)
+    }
+
+    private var context: NSManagedObjectContext {
+        project.managedObjectContext!
+    }
+
+    var imageChanges: ManagedObjectChangesPublisher<ProjectImage> {
+        context.changesPublisher(for: ProjectImage.fetchRequest(for: project))
+    }
+
+    var threadChanges: ManagedObjectChangesPublisher<ProjectThread> {
+        context.changesPublisher(for: ProjectThread.fetchRequest(for: project))
     }
 
     var snapshot: AnyPublisher<ProjectDetailViewModel.Snapshot, Never> {

@@ -17,22 +17,18 @@ final class ProjectListViewModel: ViewModel {
 
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
-    private let projectsList: FetchedObjectList<Project>
-
     @Published private(set) var projectViewModels: [ProjectCellViewModel] = []
 
     override init(context: NSManagedObjectContext = .view) {
-        projectsList
-            = FetchedObjectList(
-                fetchRequest: Project.allProjectsFetchRequest(),
-                managedObjectContext: context
-            )
-
         super.init(context: context)
 
-        $projectViewModels.applyingDifferences(projectsList.differences) { project in
+        $projectViewModels.applyingDifferences(projectChanges.ignoreError()) { project in
             ProjectCellViewModel(project: project)
         }.assign(to: \.projectViewModels, on: self).store(in: &cancellables)
+    }
+
+    var projectChanges: ManagedObjectChangesPublisher<Project> {
+        context.changesPublisher(for: Project.allProjectsFetchRequest())
     }
 
     var snapshot: AnyPublisher<Snapshot, Never> {

@@ -25,8 +25,6 @@ final class ThreadDetailViewModel: ViewModel {
 
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
-    private let projectsList: FetchedObjectList<ProjectThread>
-
     let thread: Thread
 
     let detailsViewModel: ThreadDetailCellViewModel
@@ -36,24 +34,22 @@ final class ThreadDetailViewModel: ViewModel {
     init(thread: Thread) {
         self.thread = thread
 
-        projectsList
-            = FetchedObjectList(
-                fetchRequest: ProjectThread.fetchRequest(for: thread),
-                managedObjectContext: thread.managedObjectContext!
-            )
-
         detailsViewModel = ThreadDetailCellViewModel(thread: thread)
         shoppingListViewModel = ShoppingListCellViewModel(thread: thread)
 
         super.init(context: thread.managedObjectContext!)
 
-        $projectViewModels.applyingDifferences(projectsList.differences) { projectThread in
+        $projectViewModels.applyingDifferences(projectChanges.ignoreError()) { projectThread in
             ThreadProjectCellViewModel(projectThread: projectThread)
         }.assign(to: \.projectViewModels, on: self).store(in: &cancellables)
 
         shoppingListViewModel.actions.sink { [weak self] action in
             self?.handleShoppingAction(action)
         }.store(in: &cancellables)
+    }
+
+    var projectChanges: ManagedObjectChangesPublisher<ProjectThread> {
+        context.changesPublisher(for: ProjectThread.fetchRequest(for: thread))
     }
 
     var snapshot: AnyPublisher<Snapshot, Never> {

@@ -41,34 +41,14 @@ final class ProjectDetailViewModel: ViewModel {
     var viewModeModel: ViewProjectDetailViewModel!
     var editModeModel: EditProjectDetailViewModel!
 
-    private let imagesList: FetchedObjectList<ProjectImage>
-    private let threadsList: FetchedObjectList<ProjectThread>
-
     init(project: Project, editing: Bool = false) {
         self.project = project
         self.isEditing = editing
 
-        imagesList
-            = FetchedObjectList(
-                fetchRequest: ProjectImage.fetchRequest(for: project),
-                managedObjectContext: project.managedObjectContext!
-            )
-
-        threadsList
-            = FetchedObjectList(
-                fetchRequest: ProjectThread.fetchRequest(for: project),
-                managedObjectContext: project.managedObjectContext!
-            )
-
         super.init(context: project.managedObjectContext!)
 
-        viewModeModel = ViewProjectDetailViewModel(project: project,
-                                                   imagesList: imagesList,
-                                                   threadsList: threadsList)
-
+        viewModeModel = ViewProjectDetailViewModel(project: project)
         editModeModel = EditProjectDetailViewModel(project: project,
-                                                   imagesList: imagesList,
-                                                   threadsList: threadsList,
                                                    actionRunner: actionRunner)
 
         $isEditing.sink { [weak self] editing in
@@ -96,7 +76,7 @@ final class ProjectDetailViewModel: ViewModel {
     }
 
     var threadCount: AnyPublisher<Int, Never> {
-        threadsList.objectsPublisher().map { $0.count }.eraseToAnyPublisher()
+        viewModeModel.$threadViewModels.map { $0.count }.eraseToAnyPublisher()
     }
 
     var userActivity: AnyPublisher<UserActivity, Never> {

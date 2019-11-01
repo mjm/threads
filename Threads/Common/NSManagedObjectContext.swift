@@ -98,6 +98,7 @@ struct ManagedObjectChangesPublisher<Object: NSManagedObject>: Publisher {
 
             do {
                 try fetchedResultsController!.performFetch()
+                updateDiff()
             } catch {
                 downstream.receive(completion: .failure(error))
             }
@@ -119,18 +120,22 @@ struct ManagedObjectChangesPublisher<Object: NSManagedObject>: Publisher {
             }
         }
 
+        private func updateDiff() {
+            currentDifferences = Array(fetchedResultsController?.fetchedObjects ?? []).difference(from: lastSentState)
+            fulfillDemand()
+        }
+
         func cancel() {
             fetchedResultsController?.delegate = nil
             fetchedResultsController = nil
         }
 
         func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-            currentDifferences = Array(fetchedResultsController?.fetchedObjects ?? []).difference(from: lastSentState)
-            fulfillDemand()
+            updateDiff()
         }
 
         override var description: String {
-            "ManagedObjectChanges"
+            "ManagedObjectChanges(\(Object.self))"
         }
     }
 }
