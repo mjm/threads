@@ -10,11 +10,7 @@ import Combine
 import CoreData
 import UIKit
 
-enum SidebarSelection: Hashable {
-    case collection
-    case shoppingList
-    case project(Project)
-
+extension SplitViewModel.Selection {
     var toolbarTitle: String {
         switch self {
         case .collection: return "My Threads"
@@ -27,6 +23,13 @@ enum SidebarSelection: Hashable {
 class SplitViewController: UISplitViewController {
     private var actionRunner: UserActionRunner!
 
+    let viewModel: SplitViewModel
+
+    required init?(coder: NSCoder) {
+        viewModel = SplitViewModel()
+        super.init(coder: coder)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -34,40 +37,33 @@ class SplitViewController: UISplitViewController {
             = UserActionRunner(presenter: self, managedObjectContext: managedObjectContext)
 
         primaryBackgroundStyle = .sidebar
+
+        viewModel.bind(to: sidebarViewController.viewModel)
     }
 
-    @Published var selection: SidebarSelection = .collection
     private var toolbarSubscription: AnyCancellable?
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         toolbarSubscription
-            = $selection.sink { [weak self] selection in
+            = viewModel.$selection.sink { [weak self] selection in
                 self?.updateToolbar(selection)
             }
     }
 
     @objc func addProject(_ sender: Any) {
         actionRunner.perform(CreateProjectAction()).ignoreError().handle { project in
-            self.showProject(project)
+            self.viewModel.selection = .project(project)
         }
     }
 
     @objc func viewMyThreads(_ sender: Any) {
-        selection = .collection
+        viewModel.selection = .collection
     }
 
     @objc func viewShoppingList(_ sender: Any) {
-        selection = .shoppingList
-    }
-
-    @objc func showProject(_ sender: Any) {
-        guard let project = sender as? Project else {
-            preconditionFailure("Sender for showProject(_:) should be a Project")
-        }
-
-        selection = .project(project)
+        viewModel.selection = .shoppingList
     }
 
     @objc func addThreads(_ sender: Any) {
@@ -157,14 +153,14 @@ class SplitViewController: UISplitViewController {
     }
 
     var projectDetailViewController: ProjectDetailViewController? {
-        if case .project = selection {
+        if case .project = viewModel.selection {
             return detailViewController?.projectDetailViewController
         }
 
         return nil
     }
 
-    func updateToolbar(_ selection: SidebarSelection? = nil) {
+    func updateToolbar(_ selection: SplitViewModel.Selection? = nil) {
         #if targetEnvironment(macCatalyst)
         guard let scene = view.window?.windowScene, let titlebar = scene.titlebar,
             let toolbar = titlebar.toolbar
@@ -172,7 +168,7 @@ class SplitViewController: UISplitViewController {
             return
         }
 
-        let selection = selection ?? self.selection
+        let selection = selection ?? viewModel.selection
 
         var desiredState: [NSToolbarItem.Identifier] = [
             .addProject, .title, .flexibleSpace, .addThreads, .share,

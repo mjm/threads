@@ -21,7 +21,7 @@ struct BoundUserActionOptions: OptionSet {
 
 struct BoundUserAction<ResultType> {
     typealias CanPerformHandler = () -> Bool
-    typealias PerformHandler = (@escaping () -> Void) -> AnyPublisher<ResultType, Error>
+    typealias PerformHandler = (UserActionSource?, @escaping () -> Void) -> AnyPublisher<ResultType, Error>
 
     private var title: String
     private var options: BoundUserActionOptions
@@ -56,8 +56,8 @@ struct BoundUserAction<ResultType> {
             title: title,
             options: options,
             canPerform: { action.canPerform },
-            perform: { willPerform in
-                runner.perform(action, willPerform: willPerform)
+            perform: { source, willPerform in
+                runner.perform(action, source: source, willPerform: willPerform)
             }
         )
     }
@@ -67,8 +67,8 @@ struct BoundUserAction<ResultType> {
     var canPerform: Bool { canPerformBlock() }
 
     @discardableResult
-    func perform(willPerform: @escaping () -> Void = {}) -> AnyPublisher<ResultType, Error> {
-        performBlock(willPerform)
+    func perform(source: UserActionSource? = nil, willPerform: @escaping () -> Void = {}) -> AnyPublisher<ResultType, Error> {
+        performBlock(source, willPerform)
     }
 }
 
@@ -88,6 +88,7 @@ extension BoundUserAction {
     func menuAction(
         image: UIImage? = nil,
         state: UIMenuElement.State = .off,
+        source: UserActionSource? = nil,
         willPerform: @escaping () -> Void = {},
         completion: @escaping (ResultType) -> Void = { _ in }
     ) -> UIAction {
@@ -106,7 +107,7 @@ extension BoundUserAction {
             attributes: attributes,
             state: state
         ) { _ in
-            self.perform(willPerform: willPerform)
+            self.perform(source: source, willPerform: willPerform)
                 .ignoreError()
                 .handle(receiveValue: completion)
         }

@@ -9,16 +9,22 @@
 import Combine
 import UIKit
 
+extension SidebarViewModel.Item: ReusableCell {
+    var cellIdentifier: String {
+        "Cell"
+    }
+}
+
 class SidebarViewController: ReactiveTableViewController<
-    SidebarViewController.Section, SidebarSelection
+    SidebarViewModel.Section, SidebarViewModel.Item
 >
 {
-    enum Section: CaseIterable {
-        case threads
-        case projects
-    }
+    let viewModel: SidebarViewModel
 
-    private var projectsList: FetchedObjectList<Project>!
+    required init?(coder: NSCoder) {
+        viewModel = SidebarViewModel()
+        super.init(coder: coder)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,38 +48,27 @@ class SidebarViewController: ReactiveTableViewController<
     }
 
     override func subscribe() {
-        projectsList
-            = FetchedObjectList(
-                fetchRequest: Project.allProjectsFetchRequest(),
-                managedObjectContext: managedObjectContext
-            )
+        viewModel.presenter = self
 
-        snapshot.apply(to: dataSource, animate: false).store(in: &cancellables)
+        viewModel.snapshot.apply(to: dataSource, animate: false).store(in: &cancellables)
 
-        projectsList.objectPublisher().sink { [weak self] project in
-            self?.updateCell(project)
+        viewModel.$selectedItem.sink { [weak self] item in
+            guard let self = self else { return }
+
+            let indexPath = self.dataSource.indexPath(for: item)
+            self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         }.store(in: &cancellables)
-    }
-
-    var snapshot: AnyPublisher<Snapshot, Never> {
-        projectsList.objectsPublisher().map { projects in
-            var snapshot = Snapshot()
-
-            snapshot.appendSections(Section.allCases)
-            snapshot.appendItems([.collection, .shoppingList], toSection: .threads)
-            snapshot.appendItems(projects.map { .project($0) })
-
-            return snapshot
-        }.eraseToAnyPublisher()
     }
 
     override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
         [
-            "Cell": .class(UITableViewCell.self),
+            "Cell": .class(ReactiveTableViewCell.self),
         ]
     }
 
-    override func populate(cell: UITableViewCell, item: SidebarSelection) {
+    override func populate(cell: UITableViewCell, item: SidebarViewModel.Item) {
+        let cell = cell as! ReactiveTableViewCell
+
         switch item {
         case .collection:
             cell.imageView?.image = UIImage(systemName: "tray.full")
@@ -81,73 +76,37 @@ class SidebarViewController: ReactiveTableViewController<
         case .shoppingList:
             cell.imageView?.image = UIImage(systemName: "cart")
             cell.textLabel?.text = Localized.shoppingList
-        case let .project(project):
+        case let .project(model):
             cell.imageView?.image = UIImage(systemName: "rectangle.3.offgrid.fill")
             cell.imageView?.tintColor = .systemGray
-            cell.textLabel?.text = project.name ?? Localized.unnamedProject
+            model.name.assign(to: \.text, on: cell.textLabel!).store(in: &cell.cancellables)
         }
-    }
-
-    func updateCell(_ project: Project) {
-        let cell = cellForProject(project)
-        cell?.textLabel?.text = project.name ?? Localized.unnamedProject
-    }
-
-    private func cellForProject(_ project: Project) -> UITableViewCell? {
-        dataSource.indexPath(for: .project(project)).flatMap { tableView.cellForRow(at: $0) }
-    }
-
-    private var selectionSubscription: AnyCancellable?
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        let selection = rootViewController.$selection.combineLatest(snapshot) { selection, _ in
-            selection
-        }
-        selectionSubscription
-            = selection.sink { [weak self] selection in
-                let indexPath = self?.dataSource.indexPath(for: selection)
-                self?.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-            }
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-        selectionSubscription = nil
     }
 
     override func tableView(
         _ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath,
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
-        guard case let .project(project) = dataSource.itemIdentifier(for: indexPath),
+        guard case let .project(model) = dataSource.itemIdentifier(for: indexPath),
             let cell = tableView.cellForRow(at: indexPath)
         else {
             return nil
         }
 
-        return UIContextMenuConfiguration(identifier: project.objectID, previewProvider: nil) {
+        let updateSelectionAfterDelete = viewModel.selectedItem == .project(model)
+
+        return UIContextMenuConfiguration(identifier: model.project.objectID, previewProvider: nil) {
             suggestedActions in
             UIMenu(
                 title: "",
                 children: [
-                    self.actionRunner.menuAction(
-                        AddProjectToShoppingListAction(project: project),
-                        image: UIImage(systemName: "cart.badge.plus")),
-                    self.actionRunner.menuAction(
-                        ShareProjectAction(project: project),
-                        title: Localized.share,
-                        image: UIImage(systemName: "square.and.arrow.up"),
-                        source: .view(cell)),
-                    self.actionRunner.menuAction(
-                        DeleteProjectAction(project: project),
-                        title: Localized.delete,
-                        image: UIImage(systemName: "trash"),
-                        attributes: .destructive
-                    ) {
-                        self.updateSelectionAfterDeletingProject(at: indexPath)
+                    model.addToShoppingListAction.menuAction(image: UIImage(systemName: "cart.badge.plus")),
+                    model.shareAction.menuAction(image: UIImage(systemName: "square.and.arrow.up"),
+                                                 source: .view(cell)),
+                    model.deleteAction.menuAction(image: UIImage(systemName: "trash")) {
+                        if updateSelectionAfterDelete {
+                            self.updateSelectionAfterDeletingProject(at: indexPath)
+                        }
                     },
                 ])
         }
@@ -161,18 +120,13 @@ class SidebarViewController: ReactiveTableViewController<
             return
         }
 
-        tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-        rootViewController.selection = item
+        viewModel.selectedItem = item
     }
 
-    private var rootViewController: SplitViewController {
-        splitViewController as! SplitViewController
-    }
-
-    func selectionAfterDeletingItem(at indexPath: IndexPath) -> SidebarSelection {
+    func selectionAfterDeletingItem(at indexPath: IndexPath) -> SidebarViewModel.Item {
         dataSource.itemIdentifier(
             for: IndexPath(
-                row: indexPath.row + 1,
+                row: indexPath.row,
                 section: indexPath.section))
             ?? dataSource.itemIdentifier(
                 for: IndexPath(
@@ -181,55 +135,6 @@ class SidebarViewController: ReactiveTableViewController<
     }
 
     func updateSelectionAfterDeletingProject(at indexPath: IndexPath) {
-        guard tableView.indexPathForSelectedRow == indexPath else {
-            return
-        }
-
-        rootViewController.selection = selectionAfterDeletingItem(at: indexPath)
-    }
-}
-
-extension SidebarViewController {
-    override var keyCommands: [UIKeyCommand]? {
-        [
-            UIKeyCommand(title: "Delete", action: #selector(delete(_:)), input: "\u{8}"),  // Delete key
-        ]
-    }
-
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        if !super.canPerformAction(action, withSender: sender) {
-            return false
-        }
-
-        switch action {
-        case #selector(delete(_:)):
-            if case .project = rootViewController.selection {
-                return true
-            }
-
-            return false
-        default:
-            return true
-        }
-    }
-
-    override func delete(_ sender: Any?) {
-        guard case let .project(project) = rootViewController.selection else {
-            return
-        }
-
-        guard let indexPath = dataSource.indexPath(for: .project(project)) else {
-            return
-        }
-
-        actionRunner.perform(DeleteProjectAction(project: project)) {
-            self.updateSelectionAfterDeletingProject(at: indexPath)
-        }
-    }
-}
-
-extension SidebarSelection: ReusableCell {
-    var cellIdentifier: String {
-        "Cell"
+        viewModel.selectedItem = selectionAfterDeletingItem(at: indexPath)
     }
 }

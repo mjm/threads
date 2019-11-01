@@ -18,7 +18,7 @@ class DetailViewController: UITabBarController {
         tabBar.isHidden = true
 
         selectionSubscription
-            = rootViewController.$selection.sink { [weak self] selection in
+            = rootViewController.viewModel.$selection.sink { [weak self] selection in
                 switch selection {
                 case .collection:
                     self?.selectedIndex = 0

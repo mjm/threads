@@ -110,7 +110,7 @@ extension ProjectDetailViewModel {
     }
 
     private var editAction: BoundUserAction<Void> {
-        BoundUserAction(title: Localized.edit) { _ in
+        BoundUserAction(title: Localized.edit) { _, _ in
             self.isEditing = true
             return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
