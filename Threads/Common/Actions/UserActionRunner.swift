@@ -153,29 +153,10 @@ class UserActionRunner {
 }
 
 extension Publisher {
-    func handle(
-        receiveCompletion: @escaping (Subscribers.Completion<Failure>) -> Void,
-        receiveValue: @escaping (Output) -> Void
-    ) {
-        var cancellable: AnyCancellable?
-        cancellable
-            = sink(
-                receiveCompletion: { completion in
-                    receiveCompletion(completion)
-                    cancellable?.cancel()
-                }, receiveValue: receiveValue)
-    }
-
     func perform<Action: UserAction>(on runner: UserActionRunner) -> AnyCancellable
     where Output == Action, Failure == Never {
         sink { action in
             runner.perform(action)
         }
-    }
-}
-
-extension Publisher where Failure == Never {
-    func handle(receiveValue: @escaping (Output) -> Void) {
-        handle(receiveCompletion: { _ in }, receiveValue: receiveValue)
     }
 }

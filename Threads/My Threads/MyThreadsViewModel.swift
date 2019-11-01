@@ -17,23 +17,19 @@ final class MyThreadsViewModel: ViewModel {
 
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
-    private let threadsList: FetchedObjectList<Thread>
-
     @Published private(set) var threadViewModels: [Item] = []
     @Published var selectedCell: Item?
 
     override init(context: NSManagedObjectContext = .view) {
-        threadsList
-            = FetchedObjectList(
-                fetchRequest: Thread.inCollectionFetchRequest(),
-                managedObjectContext: context
-            )
-
         super.init(context: context)
 
-        $threadViewModels.applyingDifferences(threadsList.differences) { thread in
+        $threadViewModels.applyingDifferences(threadChanges.ignoreError()) { thread in
             CollectionThreadCellViewModel(thread: thread)
         }.assign(to: \.threadViewModels, on: self).store(in: &cancellables)
+    }
+
+    var threadChanges: ManagedObjectChangesPublisher<Thread> {
+        context.changesPublisher(for: Thread.inCollectionFetchRequest())
     }
 
     var snapshot: AnyPublisher<Snapshot, Never> {

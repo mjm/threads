@@ -139,10 +139,6 @@ extension UserActionContext where Action.ResultType == Void {
 }
 
 extension Publisher {
-    func ignoreError() -> Publishers.Catch<Self, Empty<Output, Never>> {
-        self.catch { _ in Empty(completeImmediately: false) }
-    }
-
     func complete<Action>(_ context: UserActionContext<Action>)
     where Output == Action.ResultType, Failure == Error {
         context.completeSubscription = receive(on: RunLoop.main).subscribe(context.subject)
