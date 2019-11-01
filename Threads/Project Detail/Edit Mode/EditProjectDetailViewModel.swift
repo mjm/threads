@@ -21,8 +21,10 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(project: Project,
-         actionRunner: UserActionRunner) {
+    init(
+        project: Project,
+        actionRunner: UserActionRunner
+    ) {
         self.project = project
         self.actionRunner = actionRunner
 
@@ -30,7 +32,8 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
             EditProjectImageCellViewModel(projectImage: projectImage, actionRunner: actionRunner)
         }.assign(to: \.imageViewModels, on: self).store(in: &cancellables)
 
-        $threadViewModels.applyingDifferences(threadChanges.ignoreError()) { [weak self] projectThread in
+        $threadViewModels.applyingDifferences(threadChanges.ignoreError()) {
+            [weak self] projectThread in
             let model = EditProjectThreadCellViewModel(projectThread: projectThread)
             model.actions.sink { [weak self] action in
                 self?.handleAction(action, for: projectThread)
@@ -76,7 +79,9 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
         project.publisher(for: \.notes).eraseToAnyPublisher()
     }
 
-    private func handleAction(_ action: EditProjectThreadCellViewModel.Action, for projectThread: ProjectThread) {
+    private func handleAction(
+        _ action: EditProjectThreadCellViewModel.Action, for projectThread: ProjectThread
+    ) {
         switch action {
         case .increment:
             projectThread.amount += 1

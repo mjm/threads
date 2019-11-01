@@ -48,8 +48,10 @@ final class ProjectDetailViewModel: ViewModel {
         super.init(context: project.managedObjectContext!)
 
         viewModeModel = ViewProjectDetailViewModel(project: project)
-        editModeModel = EditProjectDetailViewModel(project: project,
-                                                   actionRunner: actionRunner)
+        editModeModel
+            = EditProjectDetailViewModel(
+                project: project,
+                actionRunner: actionRunner)
 
         $isEditing.sink { [weak self] editing in
             self?.context.commit()
@@ -66,7 +68,8 @@ final class ProjectDetailViewModel: ViewModel {
     }
 
     var snapshot: AnyPublisher<Snapshot, Never> {
-        $isEditing.combineLatest(viewModeModel.snapshot, editModeModel.snapshot) { editing, viewSnapshot, editSnapshot in
+        $isEditing.combineLatest(viewModeModel.snapshot, editModeModel.snapshot) {
+            editing, viewSnapshot, editSnapshot in
             editing ? editSnapshot : viewSnapshot
         }.eraseToAnyPublisher()
     }

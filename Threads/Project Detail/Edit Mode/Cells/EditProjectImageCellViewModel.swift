@@ -33,7 +33,8 @@ final class EditProjectImageCellViewModel {
 }
 
 extension EditProjectImageCellViewModel: Hashable {
-    static func == (lhs: EditProjectImageCellViewModel, rhs: EditProjectImageCellViewModel) -> Bool {
+    static func == (lhs: EditProjectImageCellViewModel, rhs: EditProjectImageCellViewModel) -> Bool
+    {
         lhs.projectImage == rhs.projectImage
     }
 

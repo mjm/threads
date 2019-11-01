@@ -12,11 +12,11 @@ extension Publisher {
     func ignoreError() -> Publishers.Catch<Self, Empty<Output, Never>> {
         self.catch { _ in Empty(completeImmediately: true) }
     }
-    
+
     func optionally() -> AnyPublisher<Self.Output?, Self.Failure> {
         map { o -> Output? in o }.eraseToAnyPublisher()
     }
-    
+
     func handle(
         receiveCompletion: @escaping (Subscribers.Completion<Failure>) -> Void,
         receiveValue: @escaping (Output) -> Void

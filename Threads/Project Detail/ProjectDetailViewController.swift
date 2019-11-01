@@ -59,7 +59,8 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.combineLatest($animate).receive(on: RunLoop.main).apply(to: dataSource).store(in: &cancellables)
+        viewModel.snapshot.combineLatest($animate).receive(on: RunLoop.main).apply(to: dataSource)
+            .store(in: &cancellables)
         viewModel.name.assign(to: \.title, on: navigationItem).store(
             in: &cancellables)
 
@@ -88,7 +89,8 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
             }
         }.store(in: &cancellables)
 
-        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(in: &cancellables)
+        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(
+            in: &cancellables)
     }
 
     override func dataSourceWillInitialize() {
@@ -367,11 +369,14 @@ extension ProjectDetailViewController {
             sheet.addAction(action.alertAction())
         }
 
-        sheet.addAction(viewModel.deleteAction.alertAction(willPerform: {
-            self.userActivity = nil
-        }, completion: {
-            self.performSegue(withIdentifier: "DeleteProject", sender: nil)
-        }))
+        sheet.addAction(
+            viewModel.deleteAction.alertAction(
+                willPerform: {
+                    self.userActivity = nil
+                },
+                completion: {
+                    self.performSegue(withIdentifier: "DeleteProject", sender: nil)
+                }))
 
         sheet.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
 

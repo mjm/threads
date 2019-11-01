@@ -95,14 +95,17 @@ class SidebarViewController: ReactiveTableViewController<
 
         let updateSelectionAfterDelete = viewModel.selectedItem == .project(model)
 
-        return UIContextMenuConfiguration(identifier: model.project.objectID, previewProvider: nil) {
+        return UIContextMenuConfiguration(identifier: model.project.objectID, previewProvider: nil)
+        {
             suggestedActions in
             UIMenu(
                 title: "",
                 children: [
-                    model.addToShoppingListAction.menuAction(image: UIImage(systemName: "cart.badge.plus")),
-                    model.shareAction.menuAction(image: UIImage(systemName: "square.and.arrow.up"),
-                                                 source: .view(cell)),
+                    model.addToShoppingListAction.menuAction(
+                        image: UIImage(systemName: "cart.badge.plus")),
+                    model.shareAction.menuAction(
+                        image: UIImage(systemName: "square.and.arrow.up"),
+                        source: .view(cell)),
                     model.deleteAction.menuAction(image: UIImage(systemName: "trash")) {
                         if updateSelectionAfterDelete {
                             self.updateSelectionAfterDeletingProject(at: indexPath)

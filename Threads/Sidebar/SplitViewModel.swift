@@ -35,7 +35,8 @@ final class SplitViewModel: ViewModel {
             }
         }.removeDuplicates().assign(to: \.selection, on: self).store(in: &cancellables)
 
-        $selection.removeDuplicates().combineLatest(sidebarModel.$projectViewModels).compactMap { selection, projectModels -> SidebarViewModel.Item? in
+        $selection.removeDuplicates().combineLatest(sidebarModel.$projectViewModels).compactMap {
+            selection, projectModels -> SidebarViewModel.Item? in
             switch selection {
             case .collection:
                 return .collection

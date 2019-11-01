@@ -42,9 +42,9 @@ class ReactiveViewController: UIViewController {
         managedObjectContext.undoManager
     }
 
-//    override func updateUserActivityState(_ activity: NSUserActivity) {
-//        currentUserActivity?.update(activity)
-//    }
+    //    override func updateUserActivityState(_ activity: NSUserActivity) {
+    //        currentUserActivity?.update(activity)
+    //    }
 
     // MARK: - Subclasses can override
 
@@ -117,9 +117,9 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
         managedObjectContext.undoManager
     }
 
-//    override func updateUserActivityState(_ activity: NSUserActivity) {
-//        currentUserActivity?.update(activity)
-//    }
+    //    override func updateUserActivityState(_ activity: NSUserActivity) {
+    //        currentUserActivity?.update(activity)
+    //    }
 
     private func registerCellTypes() {
         for (identifier, type) in cellTypes {
@@ -223,9 +223,9 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
         collectionView.collectionViewLayout.invalidateLayout()
     }
 
-//    override func updateUserActivityState(_ activity: NSUserActivity) {
-//        currentUserActivity?.update(activity)
-//    }
+    //    override func updateUserActivityState(_ activity: NSUserActivity) {
+    //        currentUserActivity?.update(activity)
+    //    }
 
     private func registerCellTypes() {
         for (identifier, type) in cellTypes {

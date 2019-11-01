@@ -20,7 +20,9 @@ final class ViewProjectThreadCellViewModel: ProjectThreadCellViewModel {
 }
 
 extension ViewProjectThreadCellViewModel: Hashable {
-    static func == (lhs: ViewProjectThreadCellViewModel, rhs: ViewProjectThreadCellViewModel) -> Bool {
+    static func == (lhs: ViewProjectThreadCellViewModel, rhs: ViewProjectThreadCellViewModel)
+        -> Bool
+    {
         lhs.projectThread == rhs.projectThread
     }
 

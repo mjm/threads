@@ -29,7 +29,9 @@ extension NSManagedObjectContext {
         }
     }
 
-    func changesPublisher<T: NSManagedObject>(for request: NSFetchRequest<T>) -> ManagedObjectChangesPublisher<T> {
+    func changesPublisher<T: NSManagedObject>(for request: NSFetchRequest<T>)
+        -> ManagedObjectChangesPublisher<T>
+    {
         ManagedObjectChangesPublisher(request: request, context: self)
     }
 }
@@ -46,19 +48,21 @@ struct ManagedObjectChangesPublisher<Object: NSManagedObject>: Publisher {
         self.context = context
     }
 
-    func receive<S>(subscriber: S) where S : Subscriber, Failure == S.Failure, Output == S.Input {
+    func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
         let inner = Inner(downstream: subscriber, request: request, context: context)
         subscriber.receive(subscription: inner)
     }
 
-    private final class Inner<Downstream: Subscriber>: NSObject, Combine.Subscription, NSFetchedResultsControllerDelegate
+    private final class Inner<Downstream: Subscriber>: NSObject, Combine.Subscription,
+        NSFetchedResultsControllerDelegate
     where Downstream.Input == CollectionDifference<Object>, Downstream.Failure == Error {
         private let downstream: Downstream
         private var fetchedResultsController: NSFetchedResultsController<Object>?
 
         private var demand: Subscribers.Demand = .none
         private var lastSentState: [Object] = []
-        private var currentDifferences: CollectionDifference<Object> = [Object]().difference(from: [Object]())
+        private var currentDifferences: CollectionDifference<Object> = [Object]().difference(
+            from: [Object]())
 
         init(
             downstream: Downstream,
@@ -66,8 +70,8 @@ struct ManagedObjectChangesPublisher<Object: NSManagedObject>: Publisher {
             context: NSManagedObjectContext
         ) {
             self.downstream = downstream
-            fetchedResultsController =
-                NSFetchedResultsController(
+            fetchedResultsController
+                = NSFetchedResultsController(
                     fetchRequest: request,
                     managedObjectContext: context,
                     sectionNameKeyPath: nil,
@@ -102,7 +106,9 @@ struct ManagedObjectChangesPublisher<Object: NSManagedObject>: Publisher {
         }
 
         private func updateDiff() {
-            currentDifferences = Array(fetchedResultsController?.fetchedObjects ?? []).difference(from: lastSentState)
+            currentDifferences
+                = Array(fetchedResultsController?.fetchedObjects ?? []).difference(
+                    from: lastSentState)
             fulfillDemand()
         }
 
@@ -111,7 +117,9 @@ struct ManagedObjectChangesPublisher<Object: NSManagedObject>: Publisher {
             fetchedResultsController = nil
         }
 
-        func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        func controllerDidChangeContent(
+            _ controller: NSFetchedResultsController<NSFetchRequestResult>
+        ) {
             updateDiff()
         }
 

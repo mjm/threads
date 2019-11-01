@@ -21,7 +21,9 @@ struct BoundUserActionOptions: OptionSet {
 
 struct BoundUserAction<ResultType> {
     typealias CanPerformHandler = () -> Bool
-    typealias PerformHandler = (UserActionSource?, @escaping () -> Void) -> AnyPublisher<ResultType, Error>
+    typealias PerformHandler = (UserActionSource?, @escaping () -> Void) -> AnyPublisher<
+        ResultType, Error
+    >
 
     private var title: String
     private var options: BoundUserActionOptions
@@ -67,7 +69,9 @@ struct BoundUserAction<ResultType> {
     var canPerform: Bool { canPerformBlock() }
 
     @discardableResult
-    func perform(source: UserActionSource? = nil, willPerform: @escaping () -> Void = {}) -> AnyPublisher<ResultType, Error> {
+    func perform(source: UserActionSource? = nil, willPerform: @escaping () -> Void = {})
+        -> AnyPublisher<ResultType, Error>
+    {
         performBlock(source, willPerform)
     }
 }

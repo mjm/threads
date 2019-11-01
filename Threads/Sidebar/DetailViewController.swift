@@ -47,7 +47,9 @@ class DetailViewController: UITabBarController {
     var projectDetailViewController: ProjectDetailViewController?
 
     func showProject(_ project: Project, editing: Bool = false) {
-        if let currentProject = projectDetailViewController?.viewModel.project, currentProject == project {
+        if let currentProject = projectDetailViewController?.viewModel.project,
+            currentProject == project
+        {
             // nothing to do but make sure it's the currently visible controller
             selectedViewController = projectDetailViewController
             return
