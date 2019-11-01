@@ -92,21 +92,6 @@ class UserActionRunner {
         action.performAsync(context)
     }
 
-    func contextualAction<Action: UserAction>(
-        _ action: Action,
-        title: String? = nil,
-        style: UIContextualAction.Style = .normal,
-        willPerform: @escaping () -> Void = {},
-        completion: @escaping (Action.ResultType) -> Void = { _ in }
-    ) -> UIContextualAction {
-        UIContextualAction(style: style, title: title) { _, _, contextualActionCompletion in
-            self.perform(action, willPerform: willPerform).ignoreError().handle { value in
-                completion(value)
-                contextualActionCompletion(true)
-            }
-        }
-    }
-
     func menuAction<Action: UserAction>(
         _ action: Action,
         title: String? = nil,
@@ -128,25 +113,6 @@ class UserActionRunner {
             title: title, image: image, attributes: attributes.union(extraAttributes), state: state
         ) { _ in
             self.perform(action, source: source, willPerform: willPerform).ignoreError().handle(
-                receiveValue: completion)
-        }
-    }
-
-    func alertAction<Action: UserAction>(
-        _ action: Action,
-        title: String? = nil,
-        style: UIAlertAction.Style = .default,
-        willPerform: @escaping () -> Void = {},
-        completion: @escaping (Action.ResultType) -> Void = { _ in }
-    ) -> UIAlertAction {
-        guard let title = title ?? action.undoActionName else {
-            preconditionFailure(
-                "Could not find a title for alert action for \(action). Either pass a title: argument or set the undoActionName on the action."
-            )
-        }
-
-        return UIAlertAction(title: title, style: style) { _ in
-            self.perform(action, willPerform: willPerform).ignoreError().handle(
                 receiveValue: completion)
         }
     }

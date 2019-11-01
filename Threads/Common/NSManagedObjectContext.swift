@@ -29,25 +29,6 @@ extension NSManagedObjectContext {
         }
     }
 
-    func publisher<T: NSManagedObject>(type: T.Type) -> AnyPublisher<T, Never> {
-        return NotificationCenter.default.publisher(
-            for: .NSManagedObjectContextObjectsDidChange,
-            object: self
-        ).receive(on: RunLoop.main).flatMap { note -> AnyPublisher<T, Never> in
-            guard let userInfo = note.userInfo else {
-                return Empty().eraseToAnyPublisher()
-            }
-
-            var changedObjects = Set<NSManagedObject>()
-            changedObjects.formUnion(userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject> ?? [])
-            changedObjects.formUnion(userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject> ?? [])
-            changedObjects.formUnion(userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> ?? [])
-
-            let objects = Set(changedObjects.compactMap { $0 as? T })
-            return Publishers.Sequence(sequence: objects).eraseToAnyPublisher()
-        }.eraseToAnyPublisher()
-    }
-
     func changesPublisher<T: NSManagedObject>(for request: NSFetchRequest<T>) -> ManagedObjectChangesPublisher<T> {
         ManagedObjectChangesPublisher(request: request, context: self)
     }

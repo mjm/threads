@@ -26,8 +26,4 @@ extension UICollectionViewCell {
     class var nib: UINib {
         UINib(nibName: String(describing: self), bundle: nil)
     }
-
-    class func makePrototype() -> Self {
-        return nib.instantiate(withOwner: nil, options: nil).first as! Self
-    }
 }

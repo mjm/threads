@@ -360,7 +360,7 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
 // MARK: - Actions
 extension ProjectDetailViewController {
     @IBAction func showActions() {
-        let sheet = UIAlertController(actionRunner: actionRunner, preferredStyle: .actionSheet)
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.popoverPresentationController?.barButtonItem = actionsButtonItem
 
         for action in viewModel.sheetActions {

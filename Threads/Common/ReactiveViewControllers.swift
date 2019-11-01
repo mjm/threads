@@ -20,10 +20,6 @@ class ReactiveViewController: UIViewController {
 
         actionRunner
             = UserActionRunner(presenter: self, managedObjectContext: managedObjectContext)
-
-        if let activity = currentUserActivity?.userActivity {
-            userActivity = activity
-        }
     }
 
     #if !targetEnvironment(macCatalyst)
@@ -46,18 +42,14 @@ class ReactiveViewController: UIViewController {
         managedObjectContext.undoManager
     }
 
-    override func updateUserActivityState(_ activity: NSUserActivity) {
-        currentUserActivity?.update(activity)
-    }
+//    override func updateUserActivityState(_ activity: NSUserActivity) {
+//        currentUserActivity?.update(activity)
+//    }
 
     // MARK: - Subclasses can override
 
     var managedObjectContext: NSManagedObjectContext {
         return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
-    }
-
-    var currentUserActivity: UserActivity? {
-        return nil
     }
 }
 
@@ -97,10 +89,6 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
         dataSourceWillInitialize()
 
         subscribe()
-
-        if let activity = currentUserActivity?.userActivity {
-            userActivity = activity
-        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -129,9 +117,9 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
         managedObjectContext.undoManager
     }
 
-    override func updateUserActivityState(_ activity: NSUserActivity) {
-        currentUserActivity?.update(activity)
-    }
+//    override func updateUserActivityState(_ activity: NSUserActivity) {
+//        currentUserActivity?.update(activity)
+//    }
 
     private func registerCellTypes() {
         for (identifier, type) in cellTypes {
@@ -144,22 +132,10 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
         }
     }
 
-    var selectedCell: CellType? {
-        guard let indexPath = tableView.indexPathForSelectedRow else {
-            return nil
-        }
-
-        return dataSource.itemIdentifier(for: indexPath)
-    }
-
     // MARK: - Subclasses can override
 
     var managedObjectContext: NSManagedObjectContext {
         return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
-    }
-
-    var currentUserActivity: UserActivity? {
-        return nil
     }
 
     var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
@@ -213,10 +189,6 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
         collectionView.collectionViewLayout = createLayout()
 
         subscribe()
-
-        if let activity = currentUserActivity?.userActivity {
-            userActivity = activity
-        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -251,9 +223,9 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
         collectionView.collectionViewLayout.invalidateLayout()
     }
 
-    override func updateUserActivityState(_ activity: NSUserActivity) {
-        currentUserActivity?.update(activity)
-    }
+//    override func updateUserActivityState(_ activity: NSUserActivity) {
+//        currentUserActivity?.update(activity)
+//    }
 
     private func registerCellTypes() {
         for (identifier, type) in cellTypes {
@@ -270,10 +242,6 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
 
     var managedObjectContext: NSManagedObjectContext {
         return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
-    }
-
-    var currentUserActivity: UserActivity? {
-        return nil
     }
 
     var cellTypes: [String: RegisteredCellType<UICollectionViewCell>] {

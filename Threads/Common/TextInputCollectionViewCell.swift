@@ -19,13 +19,9 @@ class TextInputCollectionViewCell: ReactiveCollectionViewCell {
     private let onChange = PassthroughSubject<String?, Never>()
     private let onAction = PassthroughSubject<Action, Never>()
 
-    func textPublisher() -> AnyPublisher<String?, Never> {
-        onChange.eraseToAnyPublisher()
-    }
-
     func bind<Root: NSObject>(to path: ReferenceWritableKeyPath<Root, String?>, on root: Root) {
         root.publisher(for: path).assign(to: \.text, on: textField).store(in: &cancellables)
-        textPublisher().assign(to: path, on: root).store(in: &cancellables)
+        onChange.assign(to: path, on: root).store(in: &cancellables)
     }
 
     @IBAction func textChanged() {

@@ -14,16 +14,12 @@ class TextViewCollectionViewCell: ReactiveCollectionViewCell {
 
     let onChange = PassthroughSubject<NSAttributedString?, Never>()
 
-    func textPublisher() -> AnyPublisher<NSAttributedString?, Never> {
-        onChange.eraseToAnyPublisher()
-    }
-
     func bind<Root: NSObject>(
         to path: ReferenceWritableKeyPath<Root, NSAttributedString?>, on root: Root
     ) {
         root.publisher(for: path).assign(to: \.attributedText, on: textView).store(
             in: &cancellables)
-        textPublisher().assign(to: path, on: root).store(in: &cancellables)
+        onChange.assign(to: path, on: root).store(in: &cancellables)
     }
 }
 
