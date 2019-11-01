@@ -207,7 +207,7 @@ class SplitViewController: UISplitViewController {
 
 extension SplitViewController: UIActivityItemsConfigurationReading {
     var itemProvidersForActivityItemsConfiguration: [NSItemProvider] {
-        if let project = projectDetailViewController?.project {
+        if let project = projectDetailViewController?.viewModel.project {
             return [project.itemProvider]
         }
 

@@ -10,36 +10,28 @@ import Combine
 import UIKit
 
 class EditProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
-    enum Action {
-        case increment
-        case decrement
-    }
-
     @IBOutlet var decreaseButton: UIButton!
     @IBOutlet var increaseButton: UIButton!
 
-    private let onAction = PassthroughSubject<Action, Never>()
+    private var model: EditProjectThreadCellViewModel?
 
-    override func bind(_ projectThread: ProjectThread) {
-        super.bind(projectThread)
+    func bind(_ model: EditProjectThreadCellViewModel) {
+        bindCommonProperties(model)
+        self.model = model
 
-        projectThread.publisher(for: \.amount)
-            .map { $0 == 1 ? "trash" : "minus.square" }
+        model.willRemoveOnDecrement
+            .map { $0 ? "trash" : "minus.square" }
             .map { UIImage(systemName: $0) }
             .sink { [decreaseButton] image in
                 decreaseButton?.setImage(image, for: .normal)
             }.store(in: &cancellables)
     }
 
-    func actionPublisher() -> AnyPublisher<Action, Never> {
-        onAction.eraseToAnyPublisher()
-    }
-
     @IBAction func increaseQuantity() {
-        onAction.send(.increment)
+        model?.increaseQuantity()
     }
 
     @IBAction func decreaseQuantity() {
-        onAction.send(.decrement)
+        model?.decreaseQuantity()
     }
 }

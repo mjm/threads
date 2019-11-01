@@ -11,9 +11,11 @@ import UIKit
 class ViewProjectThreadCollectionViewCell: ProjectThreadCollectionViewCell {
     @IBOutlet var separatorLeadingConstraint: NSLayoutConstraint!
 
-    func bind(_ projectThread: ProjectThread, isLastItem: Bool = false) {
-        super.bind(projectThread)
+    func bind(_ model: ViewProjectThreadCellViewModel) {
+        bindCommonProperties(model)
 
-        separatorLeadingConstraint.constant = isLastItem ? 0 : 15
+        model.$isLastItem.map { $0 ? 0 : 15 }
+            .assign(to: \.constant, on: separatorLeadingConstraint)
+            .store(in: &cancellables)
     }
 }

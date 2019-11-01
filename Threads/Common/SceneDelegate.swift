@@ -96,7 +96,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         case let .showProject(project):
             let projectListController = selectTab(type: ProjectListViewController.self)
             if let projectDetailController = topViewController as? ProjectDetailViewController,
-                projectDetailController.project == project
+                projectDetailController.viewModel.project == project
             {
                 return
             }

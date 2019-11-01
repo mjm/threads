@@ -6,7 +6,158 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
+import Combine
 import CoreData
+import UIKit
+
+final class ProjectDetailViewModel: ViewModel {
+    enum Section {
+        case viewImages
+        case editImages
+        case details
+        case notes
+        case threads
+    }
+
+    enum Item: Hashable {
+        case viewImage(ViewProjectImageCellViewModel)
+        case viewNotes
+        case viewThread(ViewProjectThreadCellViewModel)
+
+        case editImage(EditProjectImageCellViewModel)
+        case imagePlaceholder
+        case editName
+        case editNotes
+        case editThread(EditProjectThreadCellViewModel)
+        case add
+    }
+
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+
+    let project: Project
+
+    @Published var isEditing = false
+
+    var viewModeModel: ViewProjectDetailViewModel!
+    var editModeModel: EditProjectDetailViewModel!
+
+    private let imagesList: FetchedObjectList<ProjectImage>
+    private let threadsList: FetchedObjectList<ProjectThread>
+
+    init(project: Project, editing: Bool = false) {
+        self.project = project
+        self.isEditing = editing
+
+        imagesList
+            = FetchedObjectList(
+                fetchRequest: ProjectImage.fetchRequest(for: project),
+                managedObjectContext: project.managedObjectContext!
+            )
+
+        threadsList
+            = FetchedObjectList(
+                fetchRequest: ProjectThread.fetchRequest(for: project),
+                managedObjectContext: project.managedObjectContext!
+            )
+
+        super.init(context: project.managedObjectContext!)
+
+        viewModeModel = ViewProjectDetailViewModel(project: project,
+                                                   imagesList: imagesList,
+                                                   threadsList: threadsList)
+
+        editModeModel = EditProjectDetailViewModel(project: project,
+                                                   imagesList: imagesList,
+                                                   threadsList: threadsList,
+                                                   actionRunner: actionRunner)
+
+        $isEditing.sink { [weak self] editing in
+            self?.context.commit()
+        }.store(in: &cancellables)
+    }
+
+    var currentMode: AnyPublisher<ProjectDetailMode, Never> {
+        let viewModeModel = self.viewModeModel!
+        let editModeModel = self.editModeModel!
+
+        return $isEditing.removeDuplicates().map { editing -> ProjectDetailMode in
+            editing ? editModeModel : viewModeModel
+        }.eraseToAnyPublisher()
+    }
+
+    var snapshot: AnyPublisher<Snapshot, Never> {
+        $isEditing.combineLatest(viewModeModel.snapshot, editModeModel.snapshot) { editing, viewSnapshot, editSnapshot in
+            editing ? editSnapshot : viewSnapshot
+        }.eraseToAnyPublisher()
+    }
+
+    var name: AnyPublisher<String?, Never> {
+        project.publisher(for: \.displayName).optionally().eraseToAnyPublisher()
+    }
+
+    var threadCount: AnyPublisher<Int, Never> {
+        threadsList.objectsPublisher().map { $0.count }.eraseToAnyPublisher()
+    }
+
+    var userActivity: AnyPublisher<UserActivity, Never> {
+        Just(.showProject(project)).eraseToAnyPublisher()
+    }
+}
+
+// MARK: - Actions
+extension ProjectDetailViewModel {
+    var sheetActions: [BoundUserAction<Void>] {
+        [
+            editAction,
+            shareAction,
+            addToShoppingListAction,
+        ]
+    }
+
+    var shareAction: BoundUserAction<Void> {
+        ShareProjectAction(project: project)
+            .bind(to: actionRunner, title: Localized.share)
+    }
+
+    var addToShoppingListAction: BoundUserAction<Void> {
+        AddProjectToShoppingListAction(project: project)
+            .bind(to: actionRunner)
+    }
+
+    var deleteAction: BoundUserAction<Void> {
+        DeleteProjectAction(project: project)
+            .bind(to: actionRunner, title: Localized.delete, options: .destructive)
+    }
+
+    private var editAction: BoundUserAction<Void> {
+        BoundUserAction(title: Localized.edit) { _ in
+            self.isEditing = true
+            return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+        }
+    }
+
+    func addThreads() {
+        actionRunner.perform(AddThreadAction(mode: .project(project)))
+    }
+
+    func addImage() {
+        actionRunner.perform(AddImageToProjectAction(project: project))
+    }
+
+    func moveImage(from source: Int, to destination: Int, completion: @escaping () -> Void) {
+        actionRunner.perform(
+            MoveProjectImageAction(
+                project: project,
+                sourceIndex: source,
+                destinationIndex: destination),
+            willPerform: completion
+        ).ignoreError().receive(on: RunLoop.main).handle(receiveValue: completion)
+    }
+}
+
+protocol ProjectDetailMode {
+    var snapshot: AnyPublisher<ProjectDetailViewModel.Snapshot, Never> { get }
+}
 
 class AddThreadsToProjectMode: AddThreadMode {
     let project: Project

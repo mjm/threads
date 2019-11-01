@@ -9,11 +9,11 @@
 import UIKit
 
 @IBDesignable
-class ViewImageCollectionViewCell: UICollectionViewCell {
+class ViewImageCollectionViewCell: ReactiveCollectionViewCell {
     @IBOutlet var imageView: RoundedShadowImageView!
 
-    func populate(_ image: ProjectImage) {
+    func bind(_ model: ViewProjectImageCellViewModel) {
         imageView.imageView.contentMode = .scaleAspectFill
-        imageView.imageView.image = image.thumbnailImage
+        model.thumbnail.assign(to: \.image, on: imageView.imageView).store(in: &cancellables)
     }
 }

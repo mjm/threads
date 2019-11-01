@@ -36,7 +36,7 @@ final class ShoppingListViewModel: ViewModel {
 
         super.init(context: context)
 
-        $threadViewModels.applyingDifferences(threadsList.differences) { thread in
+        $threadViewModels.applyingDifferences(threadsList.differences) { [weak self] thread in
             let model = ShoppingListCellViewModel(thread: thread)
             model.actions.sink { [weak self] action in
                 self?.handleAction(action, for: thread)

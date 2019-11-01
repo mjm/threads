@@ -28,7 +28,7 @@ public class ProjectImage: NSManagedObject {
         }
     }
 
-    var thumbnailImage: UIImage? {
+    @objc dynamic var thumbnailImage: UIImage? {
         if let thumbnailData = thumbnailData {
             return UIImage(data: thumbnailData)
         } else if let image = image {
@@ -38,6 +38,10 @@ public class ProjectImage: NSManagedObject {
         } else {
             return nil
         }
+    }
+
+    class func keyPathsForValuesAffectingThumbnailImage() -> Set<String> {
+        ["thumbnailData", "data"]
     }
 
     func delete() {

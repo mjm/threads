@@ -20,10 +20,25 @@ struct BoundUserActionOptions: OptionSet {
 }
 
 struct BoundUserAction<ResultType> {
+    typealias CanPerformHandler = () -> Bool
+    typealias PerformHandler = (@escaping () -> Void) -> AnyPublisher<ResultType, Error>
+
     private var title: String
     private var options: BoundUserActionOptions
-    private var canPerformBlock: () -> Bool
-    private var performBlock: (@escaping () -> Void) -> AnyPublisher<ResultType, Error>
+    private var canPerformBlock: CanPerformHandler
+    private var performBlock: PerformHandler
+
+    init(
+        title: String,
+        options: BoundUserActionOptions = [],
+        canPerform: @escaping CanPerformHandler = { true },
+        perform: @escaping PerformHandler
+    ) {
+        self.title = title
+        self.options = options
+        self.canPerformBlock = canPerform
+        self.performBlock = perform
+    }
 
     init<Action: UserAction>(
         _ action: Action,
@@ -36,12 +51,15 @@ struct BoundUserAction<ResultType> {
                 "Could not find a title for \(action). Either pass a title: argument or set the undoActionName on the action."
             )
         }
-        self.title = title
-        self.options = options
-        canPerformBlock = { action.canPerform }
-        performBlock = { willPerform in
-            runner.perform(action, willPerform: willPerform)
-        }
+
+        self.init(
+            title: title,
+            options: options,
+            canPerform: { action.canPerform },
+            perform: { willPerform in
+                runner.perform(action, willPerform: willPerform)
+            }
+        )
     }
 
     var isDestructive: Bool { options.contains(.destructive) }

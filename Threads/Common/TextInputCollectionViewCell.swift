@@ -9,14 +9,12 @@
 import Combine
 import UIKit
 
-class TextInputCollectionViewCell: UICollectionViewCell {
+class TextInputCollectionViewCell: ReactiveCollectionViewCell {
     enum Action {
         case `return`
     }
 
     @IBOutlet var textField: UITextField!
-
-    var cancellables = Set<AnyCancellable>()
 
     private let onChange = PassthroughSubject<String?, Never>()
     private let onAction = PassthroughSubject<Action, Never>()
@@ -36,12 +34,6 @@ class TextInputCollectionViewCell: UICollectionViewCell {
 
     func actionPublisher() -> AnyPublisher<Action, Never> {
         onAction.eraseToAnyPublisher()
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-        cancellables.removeAll()
     }
 }
 

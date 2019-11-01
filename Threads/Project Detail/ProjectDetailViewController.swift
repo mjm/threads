@@ -11,57 +11,34 @@ import CoreData
 import CoreServices
 import UIKit
 
-class ProjectDetailViewController: ReactiveCollectionViewController<
-    ProjectDetailViewController.Section, ProjectDetailViewController.Cell
->
-{
-    enum Section: CaseIterable {
-        case viewImages
-        case editImages
-        case details
-        case notes
-        case threads
-    }
-
-    enum Cell: ReusableCell {
-        case viewImage(ProjectImage)
-        case viewNotes
-        case viewThread(ProjectThread, isLast: Bool)
-
-        case editImage(ProjectImage)
-        case imagePlaceholder
-        case editName
-        case editNotes
-        case editThread(ProjectThread)
-        case add
-
-        var cellIdentifier: String {
-            switch self {
-            case .viewImage: return "Image"
-            case .viewNotes: return "TextView"
-            case .viewThread: return "Thread"
-            case .editImage, .imagePlaceholder: return "EditImage"
-            case .editName: return "TextInput"
-            case .editNotes: return "TextView"
-            case .editThread: return "EditThread"
-            case .add: return "Add"
-            }
+extension ProjectDetailViewModel.Item: ReusableCell {
+    var cellIdentifier: String {
+        switch self {
+        case .viewImage: return "Image"
+        case .viewNotes: return "TextView"
+        case .viewThread: return "Thread"
+        case .editImage, .imagePlaceholder: return "EditImage"
+        case .editName: return "TextInput"
+        case .editNotes: return "TextView"
+        case .editThread: return "EditThread"
+        case .add: return "Add"
         }
     }
+}
 
-    let project: Project
-    var forceEditMode: Bool
+class ProjectDetailViewController: ReactiveCollectionViewController<
+    ProjectDetailViewModel.Section, ProjectDetailViewModel.Item
+>
+{
+    let viewModel: ProjectDetailViewModel
 
-    @Published private var _editing = false
-
-    private var threadsList: FetchedObjectList<ProjectThread>!
-    private var imagesList: FetchedObjectList<ProjectImage>!
+    private var editNameOnAppear: Bool
 
     @IBOutlet var actionsButtonItem: UIBarButtonItem!
 
     init?(coder: NSCoder, project: Project, editing: Bool = false) {
-        self.project = project
-        self.forceEditMode = editing
+        viewModel = ProjectDetailViewModel(project: project, editing: editing)
+        editNameOnAppear = editing
         super.init(coder: coder)
     }
 
@@ -70,43 +47,34 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
     }
 
     override var managedObjectContext: NSManagedObjectContext {
-        project.managedObjectContext!
+        viewModel.context
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = project.name
         navigationItem.rightBarButtonItems = [actionsButtonItem]
-
-        if forceEditMode {
-            setEditing(true, animated: false)
-        }
     }
 
     override func subscribe() {
-        threadsList
-            = FetchedObjectList(
-                fetchRequest: ProjectThread.fetchRequest(for: project),
-                managedObjectContext: project.managedObjectContext!
-            )
+        viewModel.presenter = self
 
-        imagesList
-            = FetchedObjectList(
-                fetchRequest: ProjectImage.fetchRequest(for: project),
-                managedObjectContext: project.managedObjectContext!
-            )
-
-        snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
-        project.publisher(for: \.name).assign(to: \.title, on: navigationItem).store(
+        viewModel.snapshot.combineLatest($animate).receive(on: RunLoop.main).apply(to: dataSource).store(in: &cancellables)
+        viewModel.name.assign(to: \.title, on: navigationItem).store(
             in: &cancellables)
 
         // Editing changes
-        $_editing.map { editing in
+        let isEditing = viewModel.$isEditing.removeDuplicates()
+
+        isEditing.combineLatest($animate).sink { [weak self] editing, animated in
+            self?.setEditing(editing, animated: animated)
+        }.store(in: &cancellables)
+
+        isEditing.map { editing in
             editing ? .never : .automatic
         }.assign(to: \.largeTitleDisplayMode, on: navigationItem).store(in: &cancellables)
 
-        let barButtonItems = $_editing.map { [weak self] editing -> [UIBarButtonItem] in
+        let barButtonItems = isEditing.map { [weak self] editing -> [UIBarButtonItem] in
             guard let self = self else { return [] }
             return editing ? [self.editButtonItem] : [self.actionsButtonItem]
         }
@@ -114,69 +82,14 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
             self?.navigationItem.setRightBarButtonItems(items, animated: animate)
         }.store(in: &cancellables)
 
-        $_editing.sink { [weak self] _ in
+        isEditing.sink { [weak self] _ in
             if let rootViewController = self?.splitViewController as? SplitViewController {
                 rootViewController.updateToolbar()
             }
         }.store(in: &cancellables)
 
-        threads.sink { [weak self] threads in
-            guard let self = self else { return }
-            let text = self.sectionHeaderText(for: threads)
-            self.setThreadsSectionHeaderText(text)
-        }.store(in: &cancellables)
+        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(in: &cancellables)
     }
-
-    var threads: AnyPublisher<[ProjectThread], Never> {
-        threadsList.objectsPublisher()
-    }
-
-    var snapshot: AnyPublisher<Snapshot, Never> {
-        let notes = project.publisher(for: \.notes)
-        let images = imagesList.objectsPublisher()
-
-        return threads.combineLatest(images, notes, $_editing) {
-            threads, images, notes, editing -> Snapshot in
-            var snapshot = Snapshot()
-
-            if editing {
-                snapshot.appendSections([.editImages, .details])
-                snapshot.appendItems(images.map { .editImage($0) }, toSection: .editImages)
-                snapshot.appendItems([.imagePlaceholder], toSection: .editImages)
-                snapshot.appendItems([.editName, .editNotes], toSection: .details)
-            } else {
-                if !images.isEmpty {
-                    snapshot.appendSections([.viewImages])
-                    snapshot.appendItems(images.map { .viewImage($0) }, toSection: .viewImages)
-                }
-                if let notes = notes, notes.length > 0 {
-                    snapshot.appendSections([.notes])
-                    snapshot.appendItems([.viewNotes], toSection: .notes)
-                }
-            }
-
-            snapshot.appendSections([.threads])
-            snapshot.appendItems(
-                threads.enumerated().map { (index, item) in
-                    if editing {
-                        return .editThread(item)
-                    } else {
-                        let isLast = threads.index(after: index) == threads.endIndex
-                        return .viewThread(item, isLast: isLast)
-                    }
-                }, toSection: .threads)
-
-            #if !targetEnvironment(macCatalyst)
-            if editing {
-                snapshot.appendItems([.add], toSection: .threads)
-            }
-            #endif
-
-            return snapshot
-        }.eraseToAnyPublisher()
-    }
-
-    override var currentUserActivity: UserActivity? { .showProject(project) }
 
     override func dataSourceWillInitialize() {
         dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
@@ -191,7 +104,12 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
                     = collectionView.dequeueReusableSupplementaryView(
                         ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath)
                     as! SectionHeaderLabelView
-                view.textLabel.text = self?.sectionHeaderText(for: self?.threadsList.objects ?? [])
+                self?.viewModel.threadCount.map { count in
+                    String.localizedStringWithFormat(Localized.threadsSectionHeader, count)
+                }.sink { [weak view] text in
+                    view?.textLabel.text = text
+                    view?.setNeedsLayout()
+                }.store(in: &view.cancellables)
                 return view
             case (UICollectionView.elementKindSectionHeader, .details):
                 let view
@@ -217,18 +135,6 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
         collectionView.dropDelegate = self
     }
 
-    private func setThreadsSectionHeaderText(_ text: String) {
-        if let threadSectionIndex = dataSource.snapshot().indexOfSection(.threads),
-            let sectionHeader
-                = collectionView.supplementaryView(
-                    forElementKind: UICollectionView.elementKindSectionHeader,
-                    at: IndexPath(item: 0, section: threadSectionIndex)) as? SectionHeaderLabelView
-        {
-            sectionHeader.textLabel.text = text
-            sectionHeader.setNeedsLayout()
-        }
-    }
-
     override var cellTypes: [String: RegisteredCellType<UICollectionViewCell>] {
         [
             "TextInput": .nib(TextInputCollectionViewCell.self),
@@ -242,41 +148,35 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
         ]
     }
 
-    private var editThreadSubscriptions: [ObjectIdentifier: AnyCancellable] = [:]
-
-    override func populate(cell: UICollectionViewCell, item: ProjectDetailViewController.Cell) {
-        let project = self.project
-
+    override func populate(cell: UICollectionViewCell, item: ProjectDetailViewModel.Item) {
         switch item {
 
-        case let .viewImage(image):
+        case let .viewImage(model):
             let cell = cell as! ViewImageCollectionViewCell
-            cell.populate(image)
+            cell.bind(model)
 
         case .viewNotes:
             let cell = cell as! TextViewCollectionViewCell
             cell.textView.isEditable = false
             cell.textView.dataDetectorTypes = .all
-            cell.bind(to: \.formattedNotes, on: project)
+            cell.bind(to: \.formattedNotes, on: viewModel.project)
 
-        case let .viewThread(projectThread, isLast: isLast):
+        case let .viewThread(model):
             let cell = cell as! ViewProjectThreadCollectionViewCell
-            cell.bind(projectThread, isLastItem: isLast)
+            cell.bind(model)
 
-        case let .editImage(image):
+        case let .editImage(model):
             let cell = cell as! EditImageCollectionViewCell
-            cell.populate(image)
-            return
+            cell.bind(model)
 
         case .imagePlaceholder:
             let cell = cell as! EditImageCollectionViewCell
             cell.showPlaceholder()
-            return
 
         case .editName:
             let cell = cell as! TextInputCollectionViewCell
             cell.textField.placeholder = Localized.projectName
-            cell.bind(to: \.name, on: project)
+            cell.bind(to: \.name, on: viewModel.project)
             cell.actionPublisher().sink { [weak cell] action in
                 switch action {
                 case .return:
@@ -288,24 +188,11 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
             let cell = cell as! TextViewCollectionViewCell
             cell.textView.isEditable = true
             cell.textView.dataDetectorTypes = []
-            cell.bind(to: \.formattedNotes, on: project)
+            cell.bind(to: \.formattedNotes, on: viewModel.project)
 
-        case let .editThread(projectThread):
+        case let .editThread(model):
             let cell = cell as! EditProjectThreadCollectionViewCell
-            cell.bind(projectThread)
-            editThreadSubscriptions[ObjectIdentifier(cell)]
-                = cell.actionPublisher().sink { action in
-                    switch action {
-                    case .increment:
-                        projectThread.amount += 1
-                    case .decrement:
-                        if projectThread.amount == 1 {
-                            projectThread.managedObjectContext?.delete(projectThread)
-                        } else {
-                            projectThread.amount -= 1
-                        }
-                    }
-                }
+            cell.bind(model)
 
         case .add:
             return
@@ -315,8 +202,7 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if forceEditMode {
-            // focus the project name text field
+        if editNameOnAppear {
             if let indexPath = dataSource.indexPath(for: .editName),
                 let cell = collectionView.cellForItem(at: indexPath) as? TextInputCollectionViewCell
             {
@@ -324,24 +210,14 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
             }
 
             // don't do this again if the view disappears and reappears
-            forceEditMode = false
+            editNameOnAppear = false
         }
     }
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
-        // used to trigger subscribers
-        self._editing = editing
-
-        if editing {
-            project.managedObjectContext!.commit()
-            undoManager?.beginUndoGrouping()
-            undoManager?.setActionName(Localized.changeProject)
-        } else {
-            undoManager?.endUndoGrouping()
-            project.managedObjectContext!.commit()
-        }
+        viewModel.isEditing = editing
     }
 
     override func createLayout() -> UICollectionViewLayout {
@@ -479,10 +355,6 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
             }
         }
     }
-
-    private func sectionHeaderText(for threads: [ProjectThread]) -> String {
-        String.localizedStringWithFormat(Localized.threadsSectionHeader, threads.count)
-    }
 }
 
 // MARK: - Actions
@@ -491,21 +363,15 @@ extension ProjectDetailViewController {
         let sheet = UIAlertController(actionRunner: actionRunner, preferredStyle: .actionSheet)
         sheet.popoverPresentationController?.barButtonItem = actionsButtonItem
 
-        sheet.addAction(
-            UIAlertAction(title: Localized.edit, style: .default) { _ in
-                self.setEditing(true, animated: true)
-            })
-        sheet.addAction(ShareProjectAction(project: project), title: Localized.share)
-        sheet.addAction(AddProjectToShoppingListAction(project: project))
-
-        sheet.addAction(
-            DeleteProjectAction(project: project),
-            title: Localized.delete,
-            style: .destructive,
-            willPerform: { self.userActivity = nil }
-        ) {
-            self.performSegue(withIdentifier: "DeleteProject", sender: nil)
+        for action in viewModel.sheetActions {
+            sheet.addAction(action.alertAction())
         }
+
+        sheet.addAction(viewModel.deleteAction.alertAction(willPerform: {
+            self.userActivity = nil
+        }, completion: {
+            self.performSegue(withIdentifier: "DeleteProject", sender: nil)
+        }))
 
         sheet.addAction(UIAlertAction(title: Localized.cancel, style: .cancel))
 
@@ -513,15 +379,15 @@ extension ProjectDetailViewController {
     }
 
     @objc func shareProject(_ sender: Any) {
-        actionRunner.perform(ShareProjectAction(project: project))
+        viewModel.shareAction.perform()
     }
 
     @objc func addProjectToShoppingList(_ sender: Any) {
-        actionRunner.perform(AddProjectToShoppingListAction(project: project))
+        viewModel.addToShoppingListAction.perform()
     }
 
     @objc func addThreads(_ sender: Any) {
-        actionRunner.perform(AddThreadAction(mode: .project(project)))
+        viewModel.addThreads()
     }
 }
 
@@ -544,11 +410,11 @@ extension ProjectDetailViewController {
         switch item {
 
         case .add:
-            addThreads(item)
+            viewModel.addThreads()
             collectionView.deselectItem(at: indexPath, animated: true)
 
         case .imagePlaceholder:
-            actionRunner.perform(AddImageToProjectAction(project: project))
+            viewModel.addImage()
             collectionView.deselectItem(at: indexPath, animated: true)
 
         default:
@@ -560,7 +426,7 @@ extension ProjectDetailViewController {
         _ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath,
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
-        guard case let .editImage(image) = dataSource.itemIdentifier(for: indexPath) else {
+        guard case let .editImage(model) = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
 
@@ -569,11 +435,7 @@ extension ProjectDetailViewController {
             UIMenu(
                 title: "",
                 children: [
-                    self.actionRunner.menuAction(
-                        DeleteProjectImageAction(image: image),
-                        title: Localized.delete,
-                        image: UIImage(systemName: "trash"),
-                        attributes: .destructive),
+                    model.deleteAction.menuAction(image: UIImage(systemName: "trash")),
                 ])
         }
     }
@@ -585,8 +447,8 @@ extension ProjectDetailViewController: UICollectionViewDragDelegate {
         _ collectionView: UICollectionView, itemsForBeginning session: UIDragSession,
         at indexPath: IndexPath
     ) -> [UIDragItem] {
-        guard case let .editImage(image) = dataSource.itemIdentifier(for: indexPath),
-            let data = image.data
+        guard case let .editImage(model) = dataSource.itemIdentifier(for: indexPath),
+            let data = model.imageData
         else {
             return []
         }
@@ -594,7 +456,7 @@ extension ProjectDetailViewController: UICollectionViewDragDelegate {
         let itemProvider = NSItemProvider(
             item: data as NSData, typeIdentifier: kUTTypeImage as String)
         let item = UIDragItem(itemProvider: itemProvider)
-        item.localObject = image
+        item.localObject = model.projectImage
         return [item]
     }
 
@@ -616,12 +478,14 @@ extension ProjectDetailViewController: UICollectionViewDropDelegate {
             return UICollectionViewDropProposal(operation: .cancel)
         }
 
-        let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
+        let snapshot = dataSource.snapshot()
+
+        let section = snapshot.sectionIdentifiers[indexPath.section]
         guard section == .editImages else {
             return UICollectionViewDropProposal(operation: .cancel)
         }
 
-        let imageCount = imagesList.objects.count
+        let imageCount = snapshot.numberOfItems(inSection: .editImages) - 1
         if indexPath.item >= imageCount {
             return UICollectionViewDropProposal(operation: .forbidden)
         }
@@ -650,11 +514,7 @@ extension ProjectDetailViewController: UICollectionViewDropDelegate {
 
             let item = coordinator.items[0]
             if let sourceIndex = item.sourceIndexPath?.item {
-                let action = MoveProjectImageAction(
-                    project: project,
-                    sourceIndex: sourceIndex,
-                    destinationIndex: indexPath.item)
-                actionRunner.perform(action) {
+                viewModel.moveImage(from: sourceIndex, to: indexPath.item) {
                     coordinator.drop(item.dragItem, toItemAt: indexPath)
                 }
             }
@@ -666,6 +526,8 @@ extension ProjectDetailViewController: UICollectionViewDropDelegate {
 
 class SectionHeaderLabelView: UICollectionReusableView {
     @IBOutlet var textLabel: UILabel!
+
+    var cancellables = Set<AnyCancellable>()
 }
 
 class AddThreadCollectionViewCell: UICollectionViewCell {

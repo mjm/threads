@@ -9,7 +9,7 @@
 import UIKit
 
 @IBDesignable
-class EditImageCollectionViewCell: UICollectionViewCell {
+class EditImageCollectionViewCell: ReactiveCollectionViewCell {
     @IBOutlet var imageView: UIImageView!
 
     override func awakeFromNib() {
@@ -19,9 +19,9 @@ class EditImageCollectionViewCell: UICollectionViewCell {
         imageView.tintColor = .systemGray2
     }
 
-    func populate(_ image: ProjectImage) {
-        imageView.image = image.thumbnailImage
+    func bind(_ model: EditProjectImageCellViewModel) {
         imageView.contentMode = .scaleAspectFill
+        model.thumbnail.assign(to: \.image, on: imageView).store(in: &cancellables)
     }
 
     func showPlaceholder() {

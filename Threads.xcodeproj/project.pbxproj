@@ -25,6 +25,9 @@
 		C9082F6E236A7BCC00768CA1 /* BoundUserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F6D236A7BCC00768CA1 /* BoundUserAction.swift */; };
 		C9082F71236A9ADE00768CA1 /* ProjectCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F70236A9ADE00768CA1 /* ProjectCellViewModel.swift */; };
 		C9082F73236A9C3700768CA1 /* ReactiveCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */; };
+		C92064A2236A9F64002F9079 /* ViewProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92064A1236A9F64002F9079 /* ViewProjectDetailViewModel.swift */; };
+		C92064A4236AA123002F9079 /* ViewProjectThreadCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92064A3236AA123002F9079 /* ViewProjectThreadCellViewModel.swift */; };
+		C92064A6236AA152002F9079 /* ViewProjectImageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92064A5236AA152002F9079 /* ViewProjectImageCellViewModel.swift */; };
 		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
 		C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */; };
 		C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */; };
@@ -72,6 +75,9 @@
 		C955EDE6234013DC000ACC39 /* FetchedObjectList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */; };
 		C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C955EDE7234028A8000ACC39 /* ViewControllers.swift */; };
 		C9571DF62353EF5400CCA56B /* AddThreadSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */; };
+		C95D2565236B2F1F00582A05 /* EditProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D2564236B2F1F00582A05 /* EditProjectDetailViewModel.swift */; };
+		C95D2567236B2F6800582A05 /* EditProjectImageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D2566236B2F6800582A05 /* EditProjectImageCellViewModel.swift */; };
+		C95D2569236B2F8C00582A05 /* EditProjectThreadCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D2568236B2F8C00582A05 /* EditProjectThreadCellViewModel.swift */; };
 		C97FCDA323296433000B1590 /* EditProjectThreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */; };
 		C97FCDA423296433000B1590 /* EditProjectThreadCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */; };
 		C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDA52329A921000B1590 /* SeparatorView.swift */; };
@@ -154,6 +160,9 @@
 		C9082F6D236A7BCC00768CA1 /* BoundUserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundUserAction.swift; sourceTree = "<group>"; };
 		C9082F70236A9ADE00768CA1 /* ProjectCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCellViewModel.swift; sourceTree = "<group>"; };
 		C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveCollectionViewCell.swift; sourceTree = "<group>"; };
+		C92064A1236A9F64002F9079 /* ViewProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewProjectDetailViewModel.swift; sourceTree = "<group>"; };
+		C92064A3236AA123002F9079 /* ViewProjectThreadCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewProjectThreadCellViewModel.swift; sourceTree = "<group>"; };
+		C92064A5236AA152002F9079 /* ViewProjectImageCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewProjectImageCellViewModel.swift; sourceTree = "<group>"; };
 		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
 		C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewModelTests.swift; sourceTree = "<group>"; };
 		C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTestCase.swift; sourceTree = "<group>"; };
@@ -206,6 +215,9 @@
 		C955EDE5234013DC000ACC39 /* FetchedObjectList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedObjectList.swift; sourceTree = "<group>"; };
 		C955EDE7234028A8000ACC39 /* ViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllers.swift; sourceTree = "<group>"; };
 		C9571DF52353EF5400CCA56B /* AddThreadSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadSceneDelegate.swift; sourceTree = "<group>"; };
+		C95D2564236B2F1F00582A05 /* EditProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProjectDetailViewModel.swift; sourceTree = "<group>"; };
+		C95D2566236B2F6800582A05 /* EditProjectImageCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProjectImageCellViewModel.swift; sourceTree = "<group>"; };
+		C95D2568236B2F8C00582A05 /* EditProjectThreadCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProjectThreadCellViewModel.swift; sourceTree = "<group>"; };
 		C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProjectThreadCollectionViewCell.swift; sourceTree = "<group>"; };
 		C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditProjectThreadCollectionViewCell.xib; sourceTree = "<group>"; };
 		C97FCDA52329A921000B1590 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
@@ -343,6 +355,58 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		C919A3E7236BD0B7000C862D /* View Mode */ = {
+			isa = PBXGroup;
+			children = (
+				C919A3E8236BD0C5000C862D /* Cells */,
+				C92064A1236A9F64002F9079 /* ViewProjectDetailViewModel.swift */,
+			);
+			path = "View Mode";
+			sourceTree = "<group>";
+		};
+		C919A3E8236BD0C5000C862D /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C97FCDF6232EB846000B1590 /* ViewImageCollectionViewCell.swift */,
+				C97FCDF7232EB846000B1590 /* ViewImageCollectionViewCell.xib */,
+				C92064A5236AA152002F9079 /* ViewProjectImageCellViewModel.swift */,
+				C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */,
+				C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */,
+				C92064A3236AA123002F9079 /* ViewProjectThreadCellViewModel.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		C919A3E9236BD0DE000C862D /* Edit Mode */ = {
+			isa = PBXGroup;
+			children = (
+				C919A3EA236BD0F8000C862D /* Cells */,
+				C95D2564236B2F1F00582A05 /* EditProjectDetailViewModel.swift */,
+			);
+			path = "Edit Mode";
+			sourceTree = "<group>";
+		};
+		C919A3EA236BD0F8000C862D /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C97FCDF2232EA845000B1590 /* EditImageCollectionViewCell.swift */,
+				C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */,
+				C95D2566236B2F6800582A05 /* EditProjectImageCellViewModel.swift */,
+				C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */,
+				C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */,
+				C95D2568236B2F8C00582A05 /* EditProjectThreadCellViewModel.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		C92064A0236A9EFC002F9079 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C97FCDE9232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		C942E44B2336C72300987EAB /* Banner */ = {
 			isa = PBXGroup;
 			children = (
@@ -441,17 +505,11 @@
 		C95028ED2366ACA000BB02C4 /* Project Detail */ = {
 			isa = PBXGroup;
 			children = (
+				C92064A0236A9EFC002F9079 /* Cells */,
 				C94EB3032326D60600D4CF56 /* ProjectDetailViewController.swift */,
 				C944A9602367ECA700C1B2A1 /* ProjectDetailViewModel.swift */,
-				C97FCDE9232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift */,
-				C97FCDA123296433000B1590 /* EditProjectThreadCollectionViewCell.swift */,
-				C97FCDA223296433000B1590 /* EditProjectThreadCollectionViewCell.xib */,
-				C97FCDAA232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift */,
-				C97FCDA9232C7675000B1590 /* ViewProjectThreadCollectionViewCell.xib */,
-				C97FCDF2232EA845000B1590 /* EditImageCollectionViewCell.swift */,
-				C97FCDF3232EA845000B1590 /* EditImageCollectionViewCell.xib */,
-				C97FCDF6232EB846000B1590 /* ViewImageCollectionViewCell.swift */,
-				C97FCDF7232EB846000B1590 /* ViewImageCollectionViewCell.xib */,
+				C919A3E7236BD0B7000C862D /* View Mode */,
+				C919A3E9236BD0DE000C862D /* Edit Mode */,
 			);
 			path = "Project Detail";
 			sourceTree = "<group>";
@@ -807,9 +865,11 @@
 				C955EDE6234013DC000ACC39 /* FetchedObjectList.swift in Sources */,
 				C97FCDF4232EA845000B1590 /* EditImageCollectionViewCell.swift in Sources */,
 				C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */,
+				C92064A6236AA152002F9079 /* ViewProjectImageCellViewModel.swift in Sources */,
 				C9082F5C2369262500768CA1 /* Operators.swift in Sources */,
 				C97FCDEA232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
+				C92064A2236A9F64002F9079 /* ViewProjectDetailViewModel.swift in Sources */,
 				C98F07C82333093800BAB311 /* ProjectPreviewViewController.swift in Sources */,
 				C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */,
 				C97FCDB3232CAD4E000B1590 /* TextInputCollectionViewCell.swift in Sources */,
@@ -818,7 +878,9 @@
 				C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */,
 				C95028F12366B29700BB02C4 /* UserActionPresenter.swift in Sources */,
 				C9491E372320C67A0031F463 /* SwatchView.swift in Sources */,
+				C95D2567236B2F6800582A05 /* EditProjectImageCellViewModel.swift in Sources */,
 				C97FCDE3232DD3D2000B1590 /* ThreadPreviewViewController.swift in Sources */,
+				C95D2565236B2F1F00582A05 /* EditProjectDetailViewModel.swift in Sources */,
 				C9082F6E236A7BCC00768CA1 /* BoundUserAction.swift in Sources */,
 				C97FCDEE232E941D000B1590 /* Cells.swift in Sources */,
 				C95028F32366B74700BB02C4 /* ViewModel.swift in Sources */,
@@ -838,9 +900,11 @@
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
 				C942E44D2336C7F400987EAB /* BannerController.swift in Sources */,
 				C97FCE00232F4C9F000B1590 /* UserActionContext.swift in Sources */,
+				C92064A4236AA123002F9079 /* ViewProjectThreadCellViewModel.swift in Sources */,
 				C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */,
 				C9082F73236A9C3700768CA1 /* ReactiveCollectionViewCell.swift in Sources */,
 				C9491E44232491D90031F463 /* Project.swift in Sources */,
+				C95D2569236B2F8C00582A05 /* EditProjectThreadCellViewModel.swift in Sources */,
 				C97FCDBF232D9FD0000B1590 /* TextViewCollectionViewCell.swift in Sources */,
 				C95028E72366070200BB02C4 /* ReplaySubject.swift in Sources */,
 				C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */,

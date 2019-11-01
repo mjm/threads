@@ -9,10 +9,8 @@
 import Combine
 import UIKit
 
-class TextViewCollectionViewCell: UICollectionViewCell {
+class TextViewCollectionViewCell: ReactiveCollectionViewCell {
     @IBOutlet var textView: UITextView!
-
-    var cancellables = Set<AnyCancellable>()
 
     let onChange = PassthroughSubject<NSAttributedString?, Never>()
 
@@ -26,12 +24,6 @@ class TextViewCollectionViewCell: UICollectionViewCell {
         root.publisher(for: path).assign(to: \.attributedText, on: textView).store(
             in: &cancellables)
         textPublisher().assign(to: path, on: root).store(in: &cancellables)
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-        cancellables.removeAll()
     }
 }
 
