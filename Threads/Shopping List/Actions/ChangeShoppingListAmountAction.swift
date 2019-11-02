@@ -8,7 +8,7 @@
 
 import Events
 
-struct ChangeShoppingListAmountAction: SyncUserAction {
+struct ChangeShoppingListAmountAction: SimpleUserAction {
     enum Change {
         case increment
         case decrement
@@ -34,7 +34,7 @@ struct ChangeShoppingListAmountAction: SyncUserAction {
         }
     }
 
-    func perform(_ context: UserActionContext<ChangeShoppingListAmountAction>) throws {
+    func perform() throws {
         Event.current[.threadNumber] = thread.number
         Event.current[.oldAmount] = thread.amountInShoppingList
 

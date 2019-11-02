@@ -8,12 +8,12 @@
 
 import Events
 
-struct AddToCollectionAction: SyncUserAction {
+struct AddToCollectionAction: SimpleUserAction {
     let threads: [Thread]
 
     var undoActionName: String? { Localized.addToCollection }
 
-    func perform(_ context: UserActionContext<AddToCollectionAction>) throws {
+    func perform() throws {
         Event.current[.threadCount] = threads.count
         for thread in threads {
             thread.addToCollection()

@@ -8,13 +8,13 @@
 
 import Events
 
-struct MarkOnBobbinAction: SyncUserAction {
+struct MarkOnBobbinAction: SimpleUserAction {
     let thread: Thread
 
     var undoActionName: String? { Localized.markOnBobbin }
     var shortDisplayName: String? { Localized.onBobbin }
 
-    func perform(_ context: UserActionContext<MarkOnBobbinAction>) throws {
+    func perform() throws {
         Event.current[.threadNumber] = thread.number
         thread.onBobbin = true
     }

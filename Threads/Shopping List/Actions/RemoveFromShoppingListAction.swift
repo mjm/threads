@@ -8,12 +8,12 @@
 
 import Events
 
-struct RemoveFromShoppingListAction: SyncUserAction {
+struct RemoveFromShoppingListAction: SimpleUserAction {
     let thread: Thread
 
     var undoActionName: String? { Localized.removeFromShoppingList }
 
-    func perform(_ context: UserActionContext<RemoveFromShoppingListAction>) throws {
+    func perform() throws {
         Event.current[.threadNumber] = thread.number
         thread.removeFromShoppingList()
     }

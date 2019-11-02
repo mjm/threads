@@ -8,13 +8,13 @@
 
 import Events
 
-struct MarkOutOfStockAction: SyncUserAction {
+struct MarkOutOfStockAction: SimpleUserAction {
     let thread: Thread
 
     var undoActionName: String? { Localized.markOutOfStock }
     var shortDisplayName: String? { Localized.outOfStock }
 
-    func perform(_ context: UserActionContext<MarkOutOfStockAction>) throws {
+    func perform() throws {
         Event.current[.threadNumber] = thread.number
         thread.amountInCollection = 0
         thread.onBobbin = false

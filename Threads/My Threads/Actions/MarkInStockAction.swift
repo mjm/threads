@@ -8,13 +8,13 @@
 
 import Events
 
-struct MarkInStockAction: SyncUserAction {
+struct MarkInStockAction: SimpleUserAction {
     let thread: Thread
 
     var undoActionName: String? { Localized.markInStock }
     var shortDisplayName: String? { Localized.inStock }
 
-    func perform(_ context: UserActionContext<MarkInStockAction>) throws {
+    func perform() throws {
         Event.current[.threadNumber] = thread.number
         thread.amountInCollection = 1
     }

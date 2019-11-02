@@ -246,14 +246,14 @@ struct AddImageToProjectAction: ReactiveUserAction {
     }
 }
 
-struct MoveProjectImageAction: SyncUserAction {
+struct MoveProjectImageAction: SimpleUserAction {
     let project: Project
     let sourceIndex: Int
     let destinationIndex: Int
 
     let undoActionName: String? = Localized.moveImage
 
-    func perform(_ context: UserActionContext<MoveProjectImageAction>) throws {
+    func perform() throws {
         Event.current[.projectName] = project.name
 
         var images = project.orderedImages
@@ -265,12 +265,12 @@ struct MoveProjectImageAction: SyncUserAction {
     }
 }
 
-struct DeleteProjectImageAction: SyncUserAction {
+struct DeleteProjectImageAction: SimpleUserAction {
     let image: ProjectImage
 
     let undoActionName: String? = Localized.deleteImage
 
-    func perform(_ context: UserActionContext<DeleteProjectImageAction>) throws {
+    func perform() throws {
         Event.current[.projectName] = image.project?.name
         image.delete()
     }

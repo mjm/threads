@@ -8,12 +8,12 @@
 
 import Events
 
-struct TogglePurchasedAction: SyncUserAction {
+struct TogglePurchasedAction: SimpleUserAction {
     let thread: Thread
 
     var undoActionName: String? { Localized.changePurchased }
 
-    func perform(_ context: UserActionContext<TogglePurchasedAction>) throws {
+    func perform() throws {
         Event.current[.threadNumber] = thread.number
         thread.togglePurchased()
     }

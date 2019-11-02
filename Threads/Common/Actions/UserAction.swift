@@ -95,6 +95,16 @@ extension SyncUserAction {
     }
 }
 
+protocol SimpleUserAction: SyncUserAction {
+    func perform() throws -> ResultType
+}
+
+extension SimpleUserAction {
+    func perform(_ context: UserActionContext<Self>) throws -> ResultType {
+        return try perform()
+    }
+}
+
 protocol ReactiveUserAction: UserAction {
     func publisher(context: UserActionContext<Self>) -> AnyPublisher<ResultType, Error>
 }
