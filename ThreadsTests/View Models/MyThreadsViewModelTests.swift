@@ -26,14 +26,13 @@ final class MyThreadsViewModelTests: ViewModelTestCase {
         XCTAssertFalse(fakeView.showEmptyView)
 
         subject.isEmpty.assign(to: \.showEmptyView, on: fakeView).store(in: &cancellables)
-
-        await("showEmptyView = YES", view: fakeView!)
+        await(fakeView.showEmptyView)
 
         // now add a thread to our collection and it shouldn't show the empty view anymore
         let allThreads = try context.fetch(Threads.Thread.notInCollectionFetchRequest())
         actionRunner.perform(AddToCollectionAction(threads: [allThreads[0]]))
 
-        await("showEmptyView = NO", view: fakeView!)
+        await(!fakeView.showEmptyView)
     }
 
     func testSnapshot() throws {
@@ -42,19 +41,19 @@ final class MyThreadsViewModelTests: ViewModelTestCase {
         subject.snapshot.map { s -> MyThreadsViewModel.Snapshot? in s }.assign(
             to: \.snapshot, on: fakeView).store(in: &cancellables)
 
-        await("hasSnapshot = YES and threadCount = 0", view: fakeView!)
+        await(fakeView.hasSnapshot && fakeView.threadCount == 0)
 
         // now add a thread to our collection and it should update the snapshot
         let allThreads = try context.fetch(Threads.Thread.notInCollectionFetchRequest())
         let thread = allThreads[0]
         actionRunner.perform(AddToCollectionAction(threads: [thread]))
 
-        await("hasSnapshot = YES and threadCount = 1", view: fakeView!)
+        await(fakeView.threadCount == 1)
 
         // removing the thread from the collection should update the snapshot
         actionRunner.perform(RemoveThreadAction(thread: thread))
 
-        await("hasSnapshot = YES and threadCount = 0", view: fakeView!)
+        await(fakeView.hasSnapshot && fakeView.threadCount == 0)
     }
 
     @objcMembers class FakeView: NSObject {

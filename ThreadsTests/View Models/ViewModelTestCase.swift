@@ -40,21 +40,6 @@ class ViewModelTestCase: XCTestCase {
         super.tearDown()
     }
 
-    func await(_ predicateString: String, view: Any, timeout: TimeInterval = 5.0, file: StaticString = #file, line: UInt = #line) {
-        let predicate = NSPredicate(format: predicateString)
-
-        let endDate = Date(timeIntervalSinceNow: timeout)
-        while Date() < endDate {
-            if predicate.evaluate(with: view) {
-                return
-            }
-
-            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.01))
-        }
-
-        XCTFail("Timed out waiting for \(predicate) to evaluate to true", file: file, line: line)
-    }
-
     func await(_ test: @autoclosure () -> Bool, timeout: TimeInterval = 5.0, file: StaticString = #file, line: UInt = #line) {
         let endDate = Date(timeIntervalSinceNow: timeout)
         while Date() < endDate {
