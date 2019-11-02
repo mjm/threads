@@ -79,7 +79,7 @@ extension MyThreadsViewModel {
 
     func deleteSelectedThread() {
         if let thread = selectedThread {
-            actionRunner.perform(RemoveThreadAction(thread: thread))
+            actionRunner.perform(thread.removeFromCollectionAction)
         }
     }
 
@@ -93,9 +93,9 @@ extension MyThreadsViewModel {
         }
 
         if thread.onBobbin {
-            actionRunner.perform(MarkOffBobbinAction(thread: thread))
+            actionRunner.perform(thread.markOffBobbinAction)
         } else {
-            actionRunner.perform(MarkOnBobbinAction(thread: thread))
+            actionRunner.perform(thread.markOnBobbinAction)
         }
     }
 
@@ -107,9 +107,9 @@ extension MyThreadsViewModel {
         }
 
         if thread.amountInCollection > 0 {
-            actionRunner.perform(MarkOutOfStockAction(thread: thread))
+            actionRunner.perform(thread.markOutOfStockAction)
         } else {
-            actionRunner.perform(MarkInStockAction(thread: thread))
+            actionRunner.perform(thread.markInStockAction)
         }
     }
 }
@@ -138,6 +138,6 @@ class AddThreadsToCollectionMode: AddThreadMode {
     }
 
     func add(threads: [Thread], actionRunner: UserActionRunner) {
-        actionRunner.perform(AddToCollectionAction(threads: threads))
+        actionRunner.perform(threads.addToCollectionAction)
     }
 }

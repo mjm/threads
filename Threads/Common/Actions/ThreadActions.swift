@@ -168,3 +168,7 @@ extension Thread {
 
     var removeFromCollectionAction: RemoveThreadAction { RemoveThreadAction(thread: self) }
 }
+
+extension Array where Element == Thread {
+    var addToCollectionAction: AddToCollectionAction { AddToCollectionAction(threads: self) }
+}
