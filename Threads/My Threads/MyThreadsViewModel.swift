@@ -72,7 +72,7 @@ extension MyThreadsViewModel {
     }
 
     func addThreads() {
-        actionRunner.perform(AddThreadAction(mode: .collection))
+        actionRunner.perform(Thread.addToCollectionAction)
     }
 }
 

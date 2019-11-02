@@ -43,7 +43,7 @@ enum UserActivity {
     case showProjects
     case showThread(Thread)
     case showProject(Project)
-    case addThreads(AddThreadAction.Mode)
+    case addThreads(AddThreadsAction.Mode)
 
     init?(userActivity: NSUserActivity, context: NSManagedObjectContext) {
         switch UserActivityType(rawValue: userActivity.activityType) {
@@ -83,7 +83,7 @@ enum UserActivity {
             }
         case .addThreads:
             guard
-                let mode = AddThreadAction.Mode(
+                let mode = AddThreadsAction.Mode(
                     activityUserInfo: userActivity.userInfo, context: context)
             else {
                 return nil
@@ -214,7 +214,7 @@ enum UserActivity {
     }
 }
 
-extension AddThreadAction.Mode {
+extension AddThreadsAction.Mode {
     init?(activityUserInfo: [AnyHashable: Any]?, context: NSManagedObjectContext) {
         guard let userInfo = activityUserInfo else {
             return nil

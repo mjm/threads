@@ -10,7 +10,7 @@ import Combine
 import CoreData
 import UIKit
 
-struct AddThreadAction: ReactiveUserAction {
+struct AddThreadsAction: ReactiveUserAction {
     enum Mode {
         case collection
         case shoppingList
@@ -34,7 +34,7 @@ struct AddThreadAction: ReactiveUserAction {
 
     #if targetEnvironment(macCatalyst)
 
-    func publisher(context: UserActionContext<AddThreadAction>) -> AnyPublisher<(), Error> {
+    func publisher(context: UserActionContext<AddThreadsAction>) -> AnyPublisher<(), Error> {
         let activity = UserActivity.addThreads(mode).userActivity
         UIApplication.shared.requestSceneSessionActivation(
             nil, userActivity: activity, options: nil)
@@ -47,7 +47,7 @@ struct AddThreadAction: ReactiveUserAction {
 
     let coordinator = Coordinator()
 
-    func publisher(context: UserActionContext<AddThreadAction>) -> AnyPublisher<(), Error> {
+    func publisher(context: UserActionContext<AddThreadsAction>) -> AnyPublisher<(), Error> {
         let storyboard = UIStoryboard(name: "AddThread", bundle: nil)
         let navController = storyboard.instantiateViewController(identifier: "NavController")
             as! UINavigationController
@@ -83,6 +83,11 @@ struct AddThreadAction: ReactiveUserAction {
     #endif
 }
 
+extension Thread {
+    static var addToCollectionAction: AddThreadsAction { .init(mode: .collection) }
+    static var addToShoppingListAction: AddThreadsAction { .init(mode: .shoppingList) }
+}
+
 extension Project {
-    var addThreadsAction: AddThreadAction { .init(mode: .project(self)) }
+    var addThreadsAction: AddThreadsAction { .init(mode: .project(self)) }
 }

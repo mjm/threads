@@ -108,7 +108,7 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
     }
 
     func addThreads() {
-        actionRunner.perform(AddThreadAction(mode: .shoppingList))
+        actionRunner.perform(Thread.addToShoppingListAction)
     }
 
     func addPurchasedThreadsToCollection() {
