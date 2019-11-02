@@ -91,31 +91,6 @@ class UserActionRunner {
 
         action.performAsync(context)
     }
-
-    func menuAction<Action: UserAction>(
-        _ action: Action,
-        title: String? = nil,
-        image: UIImage? = nil,
-        attributes: UIMenuElement.Attributes = [],
-        state: UIMenuElement.State = .off,
-        source: UserActionSource? = nil,
-        willPerform: @escaping () -> Void = {},
-        completion: @escaping (Action.ResultType) -> Void = { _ in }
-    ) -> UIAction {
-        guard let title = title ?? action.undoActionName else {
-            preconditionFailure(
-                "Could not find a title for menu action for \(action). Either pass a title: argument or set the undoActionName on the action."
-            )
-        }
-
-        let extraAttributes: UIMenuElement.Attributes = action.canPerform ? [] : .disabled
-        return UIAction(
-            title: title, image: image, attributes: attributes.union(extraAttributes), state: state
-        ) { _ in
-            self.perform(action, source: source, willPerform: willPerform).ignoreError().handle(
-                receiveValue: completion)
-        }
-    }
 }
 
 extension Publisher {
