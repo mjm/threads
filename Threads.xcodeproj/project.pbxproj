@@ -145,6 +145,7 @@
 		C99677F1235B497600AE2F5C /* StoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677F0235B497600AE2F5C /* StoreObserver.swift */; };
 		C99677F3235B499C00AE2F5C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99677F2235B499C00AE2F5C /* StoreKit.framework */; };
 		C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9967801235C02EA00AE2F5C /* StoreActions.swift */; };
+		C9C6328D236E31690013025E /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C6328C236E31690013025E /* CoreData.swift */; };
 		C9C8C0DE235CBA7200787BEA /* Events in Frameworks */ = {isa = PBXBuildFile; productRef = C9C8C0DD235CBA7200787BEA /* Events */; };
 		C9E01488235D4AA5007B2626 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01487235D4AA5007B2626 /* AppDelegate.swift */; };
 		C9E0148A235D4AA5007B2626 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01489235D4AA5007B2626 /* ViewController.swift */; };
@@ -313,6 +314,7 @@
 		C99677F0235B497600AE2F5C /* StoreObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreObserver.swift; sourceTree = "<group>"; };
 		C99677F2235B499C00AE2F5C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		C9967801235C02EA00AE2F5C /* StoreActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreActions.swift; sourceTree = "<group>"; };
+		C9C6328C236E31690013025E /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		C9E01485235D4AA5007B2626 /* ThreadsAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThreadsAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E01487235D4AA5007B2626 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9E01489235D4AA5007B2626 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -370,6 +372,7 @@
 			isa = PBXGroup;
 			children = (
 				C9082F5B2369262500768CA1 /* Operators.swift */,
+				C9C6328C236E31690013025E /* CoreData.swift */,
 			);
 			path = Combine;
 			sourceTree = "<group>";
@@ -518,6 +521,7 @@
 				C97FCDE8232DFCB2000B1590 /* Add Thread */,
 				C942E44B2336C72300987EAB /* Banner */,
 				C906E3B72352728C003EE053 /* Sidebar */,
+				C99677EF235B496100AE2F5C /* In-App Purchase */,
 				C9491E12231DAA5D0031F463 /* AllThreads.json */,
 				C9491DFF231D897C0031F463 /* Assets.xcassets */,
 				C9491DF9231D897B0031F463 /* Main.storyboard */,
@@ -576,6 +580,12 @@
 		C97FCDE4232DFBE9000B1590 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				C97FCDFC232F4945000B1590 /* Actions */,
+				C9082F5A2369261C00768CA1 /* Combine */,
+				C9C6328F236E32350013025E /* Extensions */,
+				C9C6328A236E30670013025E /* Models */,
+				C9C6328B236E31130013025E /* Reactive UI */,
+				C9C6328E236E31E10013025E /* Views */,
 				C9491DF3231D897B0031F463 /* AppDelegate.swift */,
 				C9491DF5231D897B0031F463 /* SceneDelegate.swift */,
 				C906E3B323526FCC003EE053 /* MacSceneDelegate.swift */,
@@ -584,37 +594,10 @@
 				C97FCDBC232D79E7000B1590 /* Localized.swift */,
 				C97FCDBB232D78AA000B1590 /* Localizable.stringsdict */,
 				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
-				C95028F22366B74700BB02C4 /* ViewModel.swift */,
 				C955EDE7234028A8000ACC39 /* ViewControllers.swift */,
-				C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */,
-				C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */,
-				C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */,
 				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
-				C946962A2340EF1B00843179 /* EmptyView.swift */,
-				C9491E362320C67A0031F463 /* SwatchView.swift */,
-				C97FCDA52329A921000B1590 /* SeparatorView.swift */,
-				C98F07C92334716F00BAB311 /* RoundedShadowView.swift */,
-				C98F07CB2334745400BAB311 /* RoundedShadowImageView.swift */,
-				C97FCDB1232CAD4E000B1590 /* TextInputCollectionViewCell.swift */,
-				C97FCDB2232CAD4E000B1590 /* TextInputCollectionViewCell.xib */,
-				C97FCDBE232D9FD0000B1590 /* TextViewCollectionViewCell.swift */,
-				C97FCDC0232D9FE1000B1590 /* TextViewCollectionViewCell.xib */,
-				C9491E18231DD7D00031F463 /* Color.swift */,
-				C97FCDFA232F3BC3000B1590 /* Image.swift */,
-				C9491E10231DA9A20031F463 /* DMCThread.swift */,
-				C9491E2E231E0BE00031F463 /* Thread.swift */,
-				C9491E43232491D90031F463 /* Project.swift */,
-				C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */,
-				C97FCDF0232EA234000B1590 /* ProjectImage.swift */,
-				C9491E3F23246AC80031F463 /* Partition.swift */,
-				C97FCDC2232DA92E000B1590 /* NSAttributedString.swift */,
-				C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */,
-				C97FCDED232E941D000B1590 /* Cells.swift */,
 				C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */,
 				C99677ED235A6C5400AE2F5C /* OpenInSafariActivity.swift */,
-				C9082F5A2369261C00768CA1 /* Combine */,
-				C99677EF235B496100AE2F5C /* In-App Purchase */,
-				C97FCDFC232F4945000B1590 /* Actions */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -765,6 +748,58 @@
 				C9967801235C02EA00AE2F5C /* StoreActions.swift */,
 			);
 			path = "In-App Purchase";
+			sourceTree = "<group>";
+		};
+		C9C6328A236E30670013025E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C9491E10231DA9A20031F463 /* DMCThread.swift */,
+				C9491E2E231E0BE00031F463 /* Thread.swift */,
+				C9491E43232491D90031F463 /* Project.swift */,
+				C97FCDA7232B4F4A000B1590 /* ProjectThread.swift */,
+				C97FCDF0232EA234000B1590 /* ProjectImage.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C9C6328B236E31130013025E /* Reactive UI */ = {
+			isa = PBXGroup;
+			children = (
+				C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */,
+				C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */,
+				C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */,
+				C95028F22366B74700BB02C4 /* ViewModel.swift */,
+			);
+			path = "Reactive UI";
+			sourceTree = "<group>";
+		};
+		C9C6328E236E31E10013025E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C946962A2340EF1B00843179 /* EmptyView.swift */,
+				C9491E362320C67A0031F463 /* SwatchView.swift */,
+				C97FCDA52329A921000B1590 /* SeparatorView.swift */,
+				C98F07C92334716F00BAB311 /* RoundedShadowView.swift */,
+				C98F07CB2334745400BAB311 /* RoundedShadowImageView.swift */,
+				C97FCDB1232CAD4E000B1590 /* TextInputCollectionViewCell.swift */,
+				C97FCDB2232CAD4E000B1590 /* TextInputCollectionViewCell.xib */,
+				C97FCDBE232D9FD0000B1590 /* TextViewCollectionViewCell.swift */,
+				C97FCDC0232D9FE1000B1590 /* TextViewCollectionViewCell.xib */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C9C6328F236E32350013025E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C97FCDED232E941D000B1590 /* Cells.swift */,
+				C9491E18231DD7D00031F463 /* Color.swift */,
+				C97FCDFA232F3BC3000B1590 /* Image.swift */,
+				C97FCDC2232DA92E000B1590 /* NSAttributedString.swift */,
+				C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */,
+				C9491E3F23246AC80031F463 /* Partition.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		C9E01486235D4AA5007B2626 /* ThreadsAdmin */ = {
@@ -998,6 +1033,7 @@
 				C906E3BB23527C61003EE053 /* SplitViewController.swift in Sources */,
 				C9815E7F236E2AF600D5DDEB /* CreateProjectAction.swift in Sources */,
 				C9815E6F236E1B8500D5DDEB /* AddThreadsAction.swift in Sources */,
+				C9C6328D236E31690013025E /* CoreData.swift in Sources */,
 				C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */,
 				C95028F12366B29700BB02C4 /* UserActionPresenter.swift in Sources */,
 				C9815E88236E2D3B00D5DDEB /* ShareProjectAction.swift in Sources */,

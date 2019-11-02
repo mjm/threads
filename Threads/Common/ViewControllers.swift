@@ -8,15 +8,6 @@
 
 import UIKit
 
-enum RegisteredCellType<T> {
-    case `class`(T.Type)
-    case nib(T.Type)
-}
-
-protocol ReusableCell: Hashable {
-    var cellIdentifier: String { get }
-}
-
 // MARK: - Navigation Controller
 
 class NavigationController: UINavigationController {
