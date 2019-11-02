@@ -386,6 +386,10 @@ extension ProjectDetailViewController {
     @objc func addThreads(_ sender: Any) {
         viewModel.addThreads()
     }
+
+    @objc func addImageToProject(_ sender: Any) {
+        viewModel.addImageAction.perform()
+    }
 }
 
 // MARK: - Collection View Delegate
@@ -411,7 +415,7 @@ extension ProjectDetailViewController {
             collectionView.deselectItem(at: indexPath, animated: true)
 
         case .imagePlaceholder:
-            viewModel.addImage()
+            viewModel.addImageAction.perform()
             collectionView.deselectItem(at: indexPath, animated: true)
 
         default:

@@ -118,15 +118,15 @@ extension ProjectDetailViewModel {
         actionRunner.perform(project.addThreadsAction)
     }
 
-    func addImage() {
-        actionRunner.perform(project.addImageAction)
-    }
-
     func moveImage(from source: Int, to destination: Int, completion: @escaping () -> Void) {
         actionRunner.perform(
             project.moveImageAction(from: source, to: destination),
             willPerform: completion
         ).ignoreError().receive(on: RunLoop.main).handle(receiveValue: completion)
+    }
+
+    var addImageAction: BoundUserAction<Void> {
+        project.addImageAction.bind(to: actionRunner)
     }
 }
 

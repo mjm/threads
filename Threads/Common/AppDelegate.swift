@@ -277,6 +277,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                 action: #selector(SplitViewController.toggleEditingProject(_:)),
                                 input: "e", modifierFlags: [.command, .shift]),
                             UICommand(
+                                title: "Add Image…",
+                                action: #selector(ProjectDetailViewController.addImageToProject(_:))
+                            ),
+                            UICommand(
                                 title: "Add to Shopping List",
                                 action: #selector(SplitViewController.addProjectToShoppingList(_:))),
                         ]),
