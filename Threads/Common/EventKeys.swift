@@ -15,4 +15,8 @@ extension Event.Key {
     static let oldAmount: Event.Key = "old_amount"
     static let newAmount: Event.Key = "new_amount"
     static let removed: Event.Key = "removed"
+
+    static let projectName: Event.Key = "project_name"
+    static let byteCount: Event.Key = "byte_count"
+    static let activityType: Event.Key = "activity_type"
 }

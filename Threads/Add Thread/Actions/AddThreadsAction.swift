@@ -82,3 +82,7 @@ struct AddThreadAction: ReactiveUserAction {
 
     #endif
 }
+
+extension Project {
+    var addThreadsAction: AddThreadAction { .init(mode: .project(self)) }
+}
