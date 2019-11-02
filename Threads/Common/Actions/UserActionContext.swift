@@ -38,49 +38,10 @@ class UserActionContext<Action: UserAction> {
 
     var managedObjectContext: NSManagedObjectContext { runner.managedObjectContext }
 
-    /// Signal that the action has completed its work successfully.
-    ///
-    /// This will cause any completion handler that was provided when the action was run to be executed.
-    ///
-    /// - Parameters:
-    ///     - result: A value the action is returning to the action's completion handler.
-    func complete(_ result: Action.ResultType) {
-        subject.send(result)
-        subject.send(completion: .finished)
-    }
+    private var completeSubscription: AnyCancellable?
 
-    /// Signal that the action has completed its work with an error.
-    ///
-    /// This will cause an alert to be presented with details about the error.
-    ///
-    /// - Parameters:
-    ///     - error: The error that caused the action to fail.
-    func complete(error: Error) {
-        subject.send(completion: .failure(error))
-    }
-
-    fileprivate var completeSubscription: AnyCancellable?
-
-    /// Signal that the action has completed its work successfully, and dismiss a previously presented view controller.
-    ///
-    /// This will cause any completion handler that was provided when the action was run to be executed.
-    ///
-    /// - Parameters:
-    ///     - result: A value the action is returning to the action's completion handler.
-    func completeAndDismiss(_ result: Action.ResultType) {
-        dismiss()
-        complete(result)
-    }
-
-    /// Signal that the action has completed its work with an error, dismissing a previously presented view controller.
-    ///
-    /// This will cause an alert to be presented with details about the error.
-    ///
-    /// - Parameters:
-    ///     - error: The error that caused the action to fail.
-    func completeAndDismiss(error: Error) {
-        dismiss()
-        complete(error: error)
+    func subscribe(_ action: Action) {
+        completeSubscription = action.publisher(context: self).subscribe(subject)
     }
 
     /// Present a view controller from the context of the view controller that ran the action.
@@ -118,29 +79,5 @@ class UserActionContext<Action: UserAction> {
         OtherAction.ResultType, Error
     > {
         runner.perform(action)
-    }
-}
-
-// Cleaner API to not pass a result when the result type is void
-extension UserActionContext where Action.ResultType == Void {
-    /// Signal that the action has completed its work successfully.
-    ///
-    /// This will cause any completion handler that was provided when the action was run to be executed.
-    func complete() {
-        complete(())
-    }
-
-    /// Signal that the action has completed its work successfully, and dismiss a previously presented view controller.
-    ///
-    /// This will cause any completion handler that was provided when the action was run to be executed.
-    func completeAndDismiss() {
-        completeAndDismiss(())
-    }
-}
-
-extension Publisher {
-    func complete<Action>(_ context: UserActionContext<Action>)
-    where Output == Action.ResultType, Failure == Error {
-        context.completeSubscription = receive(on: RunLoop.main).subscribe(context.subject)
     }
 }

@@ -89,7 +89,7 @@ class UserActionRunner {
             Event.current[.undoActionName] = undoActionName
         }
 
-        action.performAsync(context)
+        context.subscribe(action)
     }
 }
 

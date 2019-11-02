@@ -41,14 +41,10 @@ protocol UserAction {
     /// This will be used to automatically disable menu actions. If not implemented, it defaults to true.
     var canPerform: Bool { get }
 
-    /// Do the action's work, possibly asynchronously.
-    ///
-    /// The action must at some point let the context know it's finished its work by calling one of its `complete`
-    /// methods. If the work will always be done immediately on the same thread, the action should probably
-    /// conform to `SyncUserAction` instead.
+    /// Do the action's work, possibly asynchronously, reporting results with a publisher.
     ///
     /// This will always be called on the main queue.
-    func performAsync(_ context: UserActionContext<Self>)
+    func publisher(context: UserActionContext<Self>) -> AnyPublisher<ResultType, Error>
 
     /// Runs this action through the given runner.
     ///
@@ -103,15 +99,7 @@ extension SimpleUserAction {
     }
 }
 
-protocol ReactiveUserAction: UserAction {
-    func publisher(context: UserActionContext<Self>) -> AnyPublisher<ResultType, Error>
-}
-
-extension ReactiveUserAction {
-    func performAsync(_ context: UserActionContext<Self>) {
-        publisher(context: context).complete(context)
-    }
-}
+protocol ReactiveUserAction: UserAction {}
 
 protocol DestructiveUserAction: UserAction {
     /// The title to use in a confirmation alert for this action.
