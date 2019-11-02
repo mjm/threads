@@ -79,7 +79,7 @@ class MacSceneDelegate: UIResponder, UIWindowSceneDelegate {
         case .showShoppingList:
             rootViewController.viewModel.selection = .shoppingList
         case let .showProject(project):
-            rootViewController.viewModel.selection = .project(project)
+            rootViewController.viewModel.selection = .project(project, editing: false)
         case .none:
             NSLog(
                 "Was not able to load the activity. It may have referenced an object that no longer exists, or it may be a new activity type handed off to us from a newer version of the app (though I'm not sure the system will let that last one happen)."

@@ -136,6 +136,12 @@ extension ProjectDetailViewModel {
     }
 }
 
+extension ProjectDetailViewModel: Equatable {
+    static func == (lhs: ProjectDetailViewModel, rhs: ProjectDetailViewModel) -> Bool {
+        ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
+}
+
 protocol ProjectDetailMode {
     var snapshot: AnyPublisher<ProjectDetailViewModel.Snapshot, Never> { get }
 }

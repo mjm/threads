@@ -20,8 +20,12 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
     @IBOutlet var addCheckedButton: UIButton!
     private var canAddPurchased = false
 
-    required init?(coder: NSCoder) {
-        viewModel = ShoppingListViewModel()
+    required convenience init?(coder: NSCoder) {
+        self.init(coder: coder, viewModel: ShoppingListViewModel())
+    }
+
+    init?(coder: NSCoder, viewModel: ShoppingListViewModel) {
+        self.viewModel = viewModel
         super.init(coder: coder)
     }
 

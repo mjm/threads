@@ -32,6 +32,8 @@
 		C92064A6236AA152002F9079 /* ViewProjectImageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92064A5236AA152002F9079 /* ViewProjectImageCellViewModel.swift */; };
 		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
 		C943E9BB236D1561003EBA2C /* ShoppingListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943E9BA236D1561003EBA2C /* ShoppingListViewModelTests.swift */; };
+		C943E9BD236D2971003EBA2C /* ToolbarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943E9BC236D2971003EBA2C /* ToolbarViewModel.swift */; };
+		C943E9BF236D2C1B003EBA2C /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943E9BE236D2C1B003EBA2C /* DetailViewModel.swift */; };
 		C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */; };
 		C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */; };
 		C944A95B2367C69D00C1B2A1 /* AddThreadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */; };
@@ -168,6 +170,8 @@
 		C92064A5236AA152002F9079 /* ViewProjectImageCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewProjectImageCellViewModel.swift; sourceTree = "<group>"; };
 		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
 		C943E9BA236D1561003EBA2C /* ShoppingListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListViewModelTests.swift; sourceTree = "<group>"; };
+		C943E9BC236D2971003EBA2C /* ToolbarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarViewModel.swift; sourceTree = "<group>"; };
+		C943E9BE236D2C1B003EBA2C /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
 		C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewModelTests.swift; sourceTree = "<group>"; };
 		C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTestCase.swift; sourceTree = "<group>"; };
 		C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadViewModel.swift; sourceTree = "<group>"; };
@@ -318,6 +322,8 @@
 				C906E3B8235272A0003EE053 /* SidebarViewController.swift */,
 				C919A3EB236BEAF7000C862D /* SidebarViewModel.swift */,
 				C906E3BC23528E82003EE053 /* DetailViewController.swift */,
+				C943E9BE236D2C1B003EBA2C /* DetailViewModel.swift */,
+				C943E9BC236D2971003EBA2C /* ToolbarViewModel.swift */,
 			);
 			path = Sidebar;
 			sourceTree = "<group>";
@@ -842,6 +848,7 @@
 				C9491E2F231E0BE00031F463 /* Thread.swift in Sources */,
 				C9491E3E23235FBF0031F463 /* ThreadTableViewCell.swift in Sources */,
 				C944A95F2367EC5100C1B2A1 /* ShoppingListViewModel.swift in Sources */,
+				C943E9BF236D2C1B003EBA2C /* DetailViewModel.swift in Sources */,
 				C946962B2340EF1B00843179 /* EmptyView.swift in Sources */,
 				C9082F61236941D400768CA1 /* AddThreadTableViewCell.swift in Sources */,
 				C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */,
@@ -853,6 +860,7 @@
 				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
 				C9082F5F2369415400768CA1 /* AddThreadCellViewModel.swift in Sources */,
 				C983AC4A23691D6400AA930F /* ShoppingListCellViewModel.swift in Sources */,
+				C943E9BD236D2971003EBA2C /* ToolbarViewModel.swift in Sources */,
 				C97FCDC3232DA92E000B1590 /* NSAttributedString.swift in Sources */,
 				C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */,
 				C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */,

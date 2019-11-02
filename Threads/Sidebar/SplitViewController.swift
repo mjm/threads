@@ -15,7 +15,7 @@ extension SplitViewModel.Selection {
         switch self {
         case .collection: return "My Threads"
         case .shoppingList: return "Shopping List"
-        case let .project(project): return project.name ?? Localized.unnamedProject
+        case let .project(project, editing: _): return project.name ?? Localized.unnamedProject
         }
     }
 }
@@ -39,6 +39,7 @@ class SplitViewController: UISplitViewController {
         primaryBackgroundStyle = .sidebar
 
         viewModel.bind(to: sidebarViewController.viewModel)
+        viewModel.bind(to: detailViewController.viewModel)
     }
 
     private var toolbarSubscription: AnyCancellable?
@@ -53,9 +54,7 @@ class SplitViewController: UISplitViewController {
     }
 
     @objc func addProject(_ sender: Any) {
-        actionRunner.perform(CreateProjectAction()).ignoreError().handle { project in
-            self.viewModel.selection = .project(project)
-        }
+        viewModel.addProject()
     }
 
     @objc func viewMyThreads(_ sender: Any) {
@@ -102,7 +101,7 @@ class SplitViewController: UISplitViewController {
     }
 
     @objc func buyPremium(_ sender: Any) {
-        actionRunner.perform(BuyPremiumAction())
+        viewModel.buyPremium()
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
@@ -219,16 +218,6 @@ extension SplitViewController: UIActivityItemsConfigurationReading {
 }
 
 #if targetEnvironment(macCatalyst)
-
-extension NSToolbarItem.Identifier {
-    static let addProject = NSToolbarItem.Identifier("addProject")
-    static let title = NSToolbarItem.Identifier("title")
-    static let addThreads = NSToolbarItem.Identifier("addThreads")
-    static let edit = NSToolbarItem.Identifier("edit")
-    static let doneEditing = NSToolbarItem.Identifier("doneEditing")
-    static let share = NSToolbarItem.Identifier("share")
-    static let addCheckedToCollection = NSToolbarItem.Identifier("addCheckedToCollection")
-}
 
 extension SplitViewController: NSToolbarDelegate {
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {

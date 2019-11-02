@@ -33,9 +33,13 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
 
     @IBOutlet var actionsButtonItem: UIBarButtonItem!
 
-    init?(coder: NSCoder, project: Project, editing: Bool = false) {
-        viewModel = ProjectDetailViewModel(project: project, editing: editing)
-        editNameOnAppear = editing
+    convenience init?(coder: NSCoder, project: Project, editing: Bool = false) {
+        self.init(coder: coder, viewModel: ProjectDetailViewModel(project: project, editing: editing))
+    }
+
+    init?(coder: NSCoder, viewModel: ProjectDetailViewModel) {
+        self.viewModel = viewModel
+        self.editNameOnAppear = viewModel.isEditing
         super.init(coder: coder)
     }
 

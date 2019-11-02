@@ -14,7 +14,7 @@ final class SplitViewModel: ViewModel {
     enum Selection: Hashable {
         case collection
         case shoppingList
-        case project(Project)
+        case project(Project, editing: Bool)
     }
 
     @Published var selection: Selection = .collection
@@ -31,7 +31,7 @@ final class SplitViewModel: ViewModel {
             case .shoppingList:
                 return .shoppingList
             case .project(let model):
-                return .project(model.project)
+                return .project(model.project, editing: false)
             }
         }.removeDuplicates().assign(to: \.selection, on: self).store(in: &cancellables)
 
@@ -42,11 +42,47 @@ final class SplitViewModel: ViewModel {
                 return .collection
             case .shoppingList:
                 return .shoppingList
-            case .project(let project):
+            case .project(let project, editing: _):
                 return projectModels.first { $0.project == project }.flatMap { .project($0) }
             }
         }.assign(to: \.selectedItem, on: sidebarModel).store(in: &cancellables)
     }
 
-    // TODO bind to detail view
+    func bind(to detailModel: DetailViewModel) {
+        detailModel.$selection.combineLatest(detailModel.$isEditingProject) { selection, isEditingProject in
+            switch selection {
+            case .collection:
+                return .collection
+            case .shoppingList:
+                return .shoppingList
+            case .project(let model):
+                return .project(model.project, editing: isEditingProject)
+            }
+        }.removeDuplicates().assign(to: \.selection, on: self).store(in: &cancellables)
+
+        $selection.removeDuplicates().combineLatest(detailModel.$selection) { selection, existingDetailSelection in
+            switch selection {
+            case .collection:
+                return .collection
+            case .shoppingList:
+                return .shoppingList
+            case .project(let project, editing: let editing):
+                if case .project(let currentProjectModel) = existingDetailSelection, currentProjectModel.project == project {
+                    return .project(currentProjectModel)
+                } else {
+                    return .project(ProjectDetailViewModel(project: project, editing: editing))
+                }
+            }
+        }.assign(to: \.selection, on: detailModel).store(in: &cancellables)
+    }
+
+    func addProject() {
+        actionRunner.perform(CreateProjectAction()).ignoreError().handle { project in
+            self.selection = .project(project, editing: true)
+        }
+    }
+
+    func buyPremium() {
+        actionRunner.perform(BuyPremiumAction())
+    }
 }

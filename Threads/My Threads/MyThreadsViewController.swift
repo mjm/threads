@@ -17,8 +17,12 @@ extension MyThreadsViewModel.Item: ReusableCell {
 class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
     let viewModel: MyThreadsViewModel
 
-    required init?(coder: NSCoder) {
-        viewModel = MyThreadsViewModel()
+    required convenience init?(coder: NSCoder) {
+        self.init(coder: coder, viewModel: MyThreadsViewModel())
+    }
+
+    init?(coder: NSCoder, viewModel: MyThreadsViewModel) {
+        self.viewModel = viewModel
         super.init(coder: coder)
     }
 
