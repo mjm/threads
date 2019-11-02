@@ -93,7 +93,13 @@ struct BoundUserAction<ResultType> {
     func perform(source: UserActionSource? = nil, willPerform: @escaping () -> Void = {})
         -> AnyPublisher<ResultType, Error>
     {
-        performBlock(source, willPerform)
+        let myWillPerform = self.willPerformBlock
+        return performBlock(
+            source,
+            {
+                myWillPerform()
+                willPerform()
+            })
     }
 
     func onWillPerform(_ block: @escaping () -> Void) -> Self {

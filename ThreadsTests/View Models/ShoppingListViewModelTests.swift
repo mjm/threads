@@ -51,7 +51,7 @@ final class ShoppingListViewModelTests: ViewModelTestCase {
         await(fakeView.threadCount == 2)
 
         XCTAssertEqual(subject.threadViewModels[0].thread, thread1)
-        subject.threadViewModels[0].togglePurchased()
+        subject.threadViewModels[0].togglePurchasedAction().perform()
         RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 0.01))
         XCTAssertEqual(fakeView.unpurchasedThreads.count, 2)
 
@@ -73,7 +73,7 @@ final class ShoppingListViewModelTests: ViewModelTestCase {
 
         XCTAssertEqual(subject.threadViewModels[0].thread, thread1)
         subject.selection = subject.threadViewModels[0]
-        subject.togglePurchasedSelected(immediate: true)
+        subject.selection?.togglePurchasedAction(immediate: true).perform()
 
         RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 0.01))
         XCTAssertEqual(fakeView.unpurchasedThreads.count, 1)
@@ -122,24 +122,24 @@ final class ShoppingListViewModelTests: ViewModelTestCase {
         subject.snapshot.optionally().assign(to: \.snapshot, on: fakeView).store(in: &cancellables)
         await(fakeView.threadCount == 2)
 
-        XCTAssertFalse(subject.canTogglePurchasedSelected)
-        XCTAssertFalse(subject.canIncrementQuantityOfSelected)
-        XCTAssertFalse(subject.canDecrementQuantityOfSelected)
-        XCTAssertFalse(subject.canRemoveSelected)
+        XCTAssertNil(subject.selection?.togglePurchasedAction())
+        XCTAssertNil(subject.selection?.increaseQuantityAction)
+        XCTAssertNil(subject.selection?.decreaseQuantityAction)
+        XCTAssertNil(subject.selection?.removeAction)
 
         subject.selection = subject.threadViewModels[0]
 
-        XCTAssertTrue(subject.canTogglePurchasedSelected)
-        XCTAssertTrue(subject.canIncrementQuantityOfSelected)
-        XCTAssertTrue(subject.canDecrementQuantityOfSelected)
-        XCTAssertTrue(subject.canRemoveSelected)
+        XCTAssertTrue(subject.selection?.togglePurchasedAction().canPerform ?? false)
+        XCTAssertTrue(subject.selection?.increaseQuantityAction.canPerform ?? false)
+        XCTAssertTrue(subject.selection?.decreaseQuantityAction.canPerform ?? false)
+        XCTAssertTrue(subject.selection?.removeAction.canPerform ?? false)
 
         subject.selection = nil
 
-        XCTAssertFalse(subject.canTogglePurchasedSelected)
-        XCTAssertFalse(subject.canIncrementQuantityOfSelected)
-        XCTAssertFalse(subject.canDecrementQuantityOfSelected)
-        XCTAssertFalse(subject.canRemoveSelected)
+        XCTAssertFalse(subject.selection?.togglePurchasedAction().canPerform ?? false)
+        XCTAssertFalse(subject.selection?.increaseQuantityAction.canPerform ?? false)
+        XCTAssertFalse(subject.selection?.decreaseQuantityAction.canPerform ?? false)
+        XCTAssertFalse(subject.selection?.removeAction.canPerform ?? false)
     }
 
     func testAddPurchasedToCollection() throws {
