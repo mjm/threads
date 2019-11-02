@@ -21,6 +21,7 @@ if ! command -v swift-format >/dev/null 2>&1; then
     exit 1
 fi
 
-echo "Formatting..."
+# Xcode doesn't like the output here
+#echo "Formatting..."
 changed_files | xargs -0 swift-format --configuration .swift-format.json -i -r
 changed_files | xargs -0 git add
