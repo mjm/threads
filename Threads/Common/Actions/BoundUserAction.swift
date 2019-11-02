@@ -21,6 +21,7 @@ struct BoundUserActionOptions: OptionSet {
 
 struct BoundUserAction<ResultType> {
     typealias CanPerformHandler = () -> Bool
+    typealias WillPerformHandler = () -> Void
 
     typealias PerformHandler = (UserActionSource?, @escaping () -> Void) -> AnyPublisher<
         ResultType, Error
@@ -30,6 +31,7 @@ struct BoundUserAction<ResultType> {
     fileprivate var shortTitle: String
     fileprivate var options: BoundUserActionOptions
     fileprivate var canPerformBlock: CanPerformHandler
+    fileprivate var willPerformBlock: WillPerformHandler = {}
     fileprivate var performBlock: PerformHandler
 
     init(
@@ -92,6 +94,18 @@ struct BoundUserAction<ResultType> {
         -> AnyPublisher<ResultType, Error>
     {
         performBlock(source, willPerform)
+    }
+
+    func onWillPerform(_ block: @escaping () -> Void) -> Self {
+        var newAction = self
+
+        let oldWillPerformBlock = willPerformBlock
+        newAction.willPerformBlock = {
+            block()
+            oldWillPerformBlock()
+        }
+
+        return newAction
     }
 }
 

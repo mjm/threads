@@ -86,6 +86,8 @@ enum Localized {
 
     static let changePurchased = NSLocalizedString("Change Purchased", comment: "")
     static let changeQuantity = NSLocalizedString("Change Quantity", comment: "")
+    static let increaseQuantity = NSLocalizedString("Increase Quantity", comment: "")
+    static let decreaseQuantity = NSLocalizedString("Decrease Quantity", comment: "")
     static let removeFromShoppingList = NSLocalizedString("Remove from Shopping List", comment: "")
 
     static let emptyCollection = NSLocalizedString(

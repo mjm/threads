@@ -26,24 +26,22 @@ final class ThreadDetailViewModel: ViewModel, SnapshotViewModel {
     let thread: Thread
 
     let detailsViewModel: ThreadDetailCellViewModel
-    let shoppingListViewModel: ShoppingListCellViewModel
+    private(set) var shoppingListViewModel: ShoppingListCellViewModel!
     @Published private(set) var projectViewModels: [ThreadProjectCellViewModel] = []
 
     init(thread: Thread) {
         self.thread = thread
 
         detailsViewModel = ThreadDetailCellViewModel(thread: thread)
-        shoppingListViewModel = ShoppingListCellViewModel(thread: thread)
 
         super.init(context: thread.managedObjectContext!)
+
+        shoppingListViewModel
+            = ShoppingListCellViewModel(thread: thread, actionRunner: actionRunner)
 
         $projectViewModels.applyingDifferences(projectChanges.ignoreError()) { projectThread in
             ThreadProjectCellViewModel(projectThread: projectThread)
         }.assign(to: \.projectViewModels, on: self).store(in: &cancellables)
-
-        shoppingListViewModel.actions.sink { [weak self] action in
-            self?.handleShoppingAction(action)
-        }.store(in: &cancellables)
     }
 
     var projectChanges: ManagedObjectChangesPublisher<ProjectThread> {
@@ -52,7 +50,7 @@ final class ThreadDetailViewModel: ViewModel, SnapshotViewModel {
 
     var snapshot: AnyPublisher<Snapshot, Never> {
         let detailModel = detailsViewModel
-        let shoppingListModel = shoppingListViewModel
+        let shoppingListModel = shoppingListViewModel!
 
         return $projectViewModels.combineLatest(isInShoppingList, detailsViewModel.onUpdate) {
             projectModels, inShoppingList, _ in
@@ -119,16 +117,5 @@ final class ThreadDetailViewModel: ViewModel, SnapshotViewModel {
                 to: actionRunner,
                 title: Localized.removeFromCollection,
                 options: .destructive)
-    }
-
-    private func handleShoppingAction(_ action: ShoppingListCellViewModel.Action) {
-        switch action {
-        case .togglePurchased:
-            actionRunner.perform(thread.togglePurchasedAction)
-        case .increment:
-            actionRunner.perform(thread.incrementShoppingListAmountAction)
-        case .decrement:
-            actionRunner.perform(thread.decrementShoppingListAmountAction)
-        }
     }
 }

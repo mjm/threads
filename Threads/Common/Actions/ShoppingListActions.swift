@@ -99,6 +99,15 @@ struct ChangeShoppingListAmountAction: SyncUserAction {
         isRemoval ? Localized.removeFromShoppingList : Localized.changeQuantity
     }
 
+    var displayName: String? {
+        switch change {
+        case .increment:
+            return Localized.increaseQuantity
+        case .decrement:
+            return isRemoval ? Localized.removeFromShoppingList : Localized.decreaseQuantity
+        }
+    }
+
     func perform(_ context: UserActionContext<ChangeShoppingListAmountAction>) throws {
         Event.current[.threadNumber] = thread.number
         Event.current[.oldAmount] = thread.amountInShoppingList

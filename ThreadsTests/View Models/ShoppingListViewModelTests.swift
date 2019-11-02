@@ -72,7 +72,7 @@ final class ShoppingListViewModelTests: ViewModelTestCase {
         await(fakeView.threadCount == 2)
 
         XCTAssertEqual(subject.threadViewModels[0].thread, thread1)
-        subject.selectedItem = subject.threadViewModels[0]
+        subject.selection = subject.threadViewModels[0]
         subject.togglePurchasedSelected(immediate: true)
 
         RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 0.01))
@@ -127,14 +127,14 @@ final class ShoppingListViewModelTests: ViewModelTestCase {
         XCTAssertFalse(subject.canDecrementQuantityOfSelected)
         XCTAssertFalse(subject.canRemoveSelected)
 
-        subject.selectedItem = subject.threadViewModels[0]
+        subject.selection = subject.threadViewModels[0]
 
         XCTAssertTrue(subject.canTogglePurchasedSelected)
         XCTAssertTrue(subject.canIncrementQuantityOfSelected)
         XCTAssertTrue(subject.canDecrementQuantityOfSelected)
         XCTAssertTrue(subject.canRemoveSelected)
 
-        subject.selectedItem = nil
+        subject.selection = nil
 
         XCTAssertFalse(subject.canTogglePurchasedSelected)
         XCTAssertFalse(subject.canIncrementQuantityOfSelected)

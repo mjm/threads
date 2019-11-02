@@ -79,14 +79,14 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell<ShoppingListCellViewM
     }
 
     @IBAction func checkButtonPressed() {
-        model?.togglePurchased()
+        model?.togglePurchasedAction().perform()
     }
 
     @IBAction func increaseQuantity() {
-        model?.increaseQuantity()
+        model?.increaseQuantityAction.perform()
     }
 
     @IBAction func decreaseQuantity() {
-        model?.decreaseQuantity()
+        model?.decreaseQuantityAction.perform()
     }
 }

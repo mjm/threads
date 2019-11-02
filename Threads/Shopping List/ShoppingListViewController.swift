@@ -137,7 +137,7 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.selectedItem = dataSource.itemIdentifier(for: indexPath)
+        viewModel.selection = dataSource.itemIdentifier(for: indexPath)
     }
 }
 
@@ -152,19 +152,20 @@ extension ShoppingListViewController {
     }
 
     @objc func toggleThreadPurchased(_ sender: Any) {
-        viewModel.togglePurchasedSelected(immediate: sender is UIKeyCommand)
+        let immediate = sender is UIKeyCommand
+        viewModel.selection?.togglePurchasedAction(immediate: immediate).perform()
     }
 
     @objc func incrementThreadQuantity(_ sender: Any) {
-        viewModel.incrementQuantityOfSelected()
+        viewModel.selection?.increaseQuantityAction.perform()
     }
 
     @objc func decrementThreadQuantity(_ sender: Any) {
-        viewModel.decrementQuantityOfSelected()
+        viewModel.selection?.decreaseQuantityAction.perform()
     }
 
     override func delete(_ sender: Any?) {
-        viewModel.removeSelected()
+        viewModel.selection?.removeAction.perform()
     }
 
     override var keyCommands: [UIKeyCommand]? {
@@ -182,9 +183,9 @@ extension ShoppingListViewController {
         case #selector(addCheckedToCollection(_:)):
             return canAddPurchased
         case #selector(incrementThreadQuantity(_:)):
-            return viewModel.canIncrementQuantityOfSelected
+            return viewModel.selection?.increaseQuantityAction.canPerform ?? false
         case #selector(delete(_:)):
-            return viewModel.canRemoveSelected
+            return viewModel.selection?.removeAction.canPerform ?? false
         default:
             return true
         }
@@ -196,11 +197,9 @@ extension ShoppingListViewController {
         switch command.action {
         case #selector(toggleThreadPurchased(_:)):
             command.state = (viewModel.selectedThread?.purchased ?? false) ? .on : .off
-            command.attributes = viewModel.canTogglePurchasedSelected ? [] : .disabled
+            command.update(viewModel.selection?.togglePurchasedAction())
         case #selector(decrementThreadQuantity(_:)):
-            command.title = viewModel.willRemoveSelectedOnDecrement
-                ? "Remove from Shopping List" : "Decrease Quantity"
-            command.attributes = viewModel.canDecrementQuantityOfSelected ? [] : .disabled
+            command.update(viewModel.selection?.decreaseQuantityAction, updateTitle: true)
         default:
             return
         }

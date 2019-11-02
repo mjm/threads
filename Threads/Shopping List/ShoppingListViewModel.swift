@@ -19,7 +19,7 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
     typealias Item = ShoppingListCellViewModel
 
     @Published private(set) var threadViewModels: [Item] = []
-    @Published var selectedItem: Item?
+    @Published var selection: Item?
     @Published private var pendingPurchases = Set<Thread>()
     @Published private(set) var willRemoveSelectedOnDecrement = false
 
@@ -32,9 +32,10 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
         self.purchaseDelay = purchaseDelay
         super.init(context: context)
 
+        let actionRunner = self.actionRunner
         let purchaseChanged = self.purchaseChanged
         $threadViewModels.applyingDifferences(threadChanges.ignoreError()) { [weak self] thread in
-            let model = ShoppingListCellViewModel(thread: thread)
+            let model = ShoppingListCellViewModel(thread: thread, actionRunner: actionRunner)
 
             model.actions.sink { [weak self] action in
                 self?.handleAction(action, for: thread)
@@ -47,7 +48,7 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
 
         resetPendingPurchases.assign(to: \.pendingPurchases, on: self).store(in: &cancellables)
 
-        $selectedItem.flatMap { itemModel -> AnyPublisher<Bool, Never> in
+        $selection.flatMap { itemModel -> AnyPublisher<Bool, Never> in
             itemModel?.willRemoveOnDecrement ?? Just(false).eraseToAnyPublisher()
         }.assign(to: \.willRemoveSelectedOnDecrement, on: self).store(in: &cancellables)
     }
@@ -103,7 +104,7 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
     }
 
     var selectedThread: Thread? {
-        selectedItem.flatMap { $0.thread }
+        selection.flatMap { $0.thread }
     }
 
     func addThreads() {
@@ -112,38 +113,6 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
 
     func addPurchasedThreadsToCollection() {
         actionRunner.perform(AddPurchasedToCollectionAction())
-    }
-
-    var canTogglePurchasedSelected: Bool { selectedThread != nil }
-
-    func togglePurchasedSelected(immediate: Bool = false) {
-        if let thread = selectedThread {
-            togglePurchased(thread, immediate: immediate)
-        }
-    }
-
-    var canIncrementQuantityOfSelected: Bool { selectedThread != nil }
-
-    func incrementQuantityOfSelected() {
-        if let thread = selectedThread {
-            incrementQuantity(thread)
-        }
-    }
-
-    var canDecrementQuantityOfSelected: Bool { selectedThread != nil }
-
-    func decrementQuantityOfSelected() {
-        if let thread = selectedThread {
-            decrementQuantity(thread)
-        }
-    }
-
-    var canRemoveSelected: Bool { selectedThread != nil }
-
-    func removeSelected() {
-        if let thread = selectedThread {
-            actionRunner.perform(thread.removeFromShoppingListAction)
-        }
     }
 
     private var resetPendingPurchases: AnyPublisher<Set<Thread>, Never> {
@@ -157,30 +126,12 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
 
     private func handleAction(_ action: ShoppingListCellViewModel.Action, for thread: Thread) {
         switch action {
-        case .togglePurchased:
-            togglePurchased(thread)
-        case .increment:
-            incrementQuantity(thread)
-        case .decrement:
-            decrementQuantity(thread)
-        }
-    }
-
-    private func togglePurchased(_ thread: Thread, immediate: Bool = false) {
-        let willPerform = immediate ? {} : { self.pendingPurchases.insert(thread) }
-
-        actionRunner.perform(thread.togglePurchasedAction, willPerform: willPerform)
-    }
-
-    private func incrementQuantity(_ thread: Thread) {
-        actionRunner.perform(thread.incrementShoppingListAmountAction) {
-            self.pendingPurchaseTick.send()
-        }
-    }
-
-    private func decrementQuantity(_ thread: Thread) {
-        actionRunner.perform(thread.decrementShoppingListAmountAction) {
-            self.pendingPurchaseTick.send()
+        case .togglePurchased(immediate: false):
+            pendingPurchases.insert(thread)
+        case .togglePurchased(immediate: true):
+            return  // nothing to do
+        case .increment, .decrement:
+            pendingPurchaseTick.send()
         }
     }
 }

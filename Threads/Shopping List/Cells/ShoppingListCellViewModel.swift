@@ -11,15 +11,17 @@ import UIKit
 
 final class ShoppingListCellViewModel: ThreadCellViewModel {
     enum Action {
-        case togglePurchased
+        case togglePurchased(immediate: Bool)
         case increment
         case decrement
     }
 
     let thread: Thread
+    let actionRunner: UserActionRunner
 
-    init(thread: Thread) {
+    init(thread: Thread, actionRunner: UserActionRunner) {
         self.thread = thread
+        self.actionRunner = actionRunner
     }
 
     var cancellables = Set<AnyCancellable>()
@@ -40,16 +42,32 @@ final class ShoppingListCellViewModel: ThreadCellViewModel {
         onAction.eraseToAnyPublisher()
     }
 
-    func togglePurchased() {
-        onAction.send(.togglePurchased)
+    func togglePurchasedAction(immediate: Bool = false) -> BoundUserAction<Void> {
+        thread.togglePurchasedAction
+            .bind(to: actionRunner)
+            .onWillPerform {
+                self.onAction.send(.togglePurchased(immediate: immediate))
+            }
     }
 
-    func increaseQuantity() {
-        onAction.send(.increment)
+    var increaseQuantityAction: BoundUserAction<Void> {
+        thread.incrementShoppingListAmountAction
+            .bind(to: actionRunner)
+            .onWillPerform {
+                self.onAction.send(.increment)
+            }
     }
 
-    func decreaseQuantity() {
-        onAction.send(.decrement)
+    var decreaseQuantityAction: BoundUserAction<Void> {
+        thread.decrementShoppingListAmountAction
+            .bind(to: actionRunner)
+            .onWillPerform {
+                self.onAction.send(.decrement)
+            }
+    }
+
+    var removeAction: BoundUserAction<Void> {
+        thread.removeFromShoppingListAction.bind(to: actionRunner)
     }
 }
 
