@@ -78,8 +78,6 @@ extension UserAction {
     }
 }
 
-protocol AsyncUserAction: UserAction {}
-
 protocol SyncUserAction: ReactiveUserAction {
     /// Do the action's work.
     ///

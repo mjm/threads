@@ -6,10 +6,11 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
+import Combine
 import CoreData
 import UIKit
 
-struct AddThreadAction: AsyncUserAction {
+struct AddThreadAction: ReactiveUserAction {
     enum Mode {
         case collection
         case shoppingList
@@ -33,32 +34,42 @@ struct AddThreadAction: AsyncUserAction {
 
     #if targetEnvironment(macCatalyst)
 
-    func performAsync(_ context: UserActionContext<AddThreadAction>) {
+    func publisher(context: UserActionContext<AddThreadAction>) -> AnyPublisher<(), Error> {
         let activity = UserActivity.addThreads(mode).userActivity
         UIApplication.shared.requestSceneSessionActivation(
             nil, userActivity: activity, options: nil)
+
+        // TODO figure out a way to report completion when the user is actually done
+        return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
 
     #else
 
     let coordinator = Coordinator()
 
-    func performAsync(_ context: UserActionContext<AddThreadAction>) {
+    func publisher(context: UserActionContext<AddThreadAction>) -> AnyPublisher<(), Error> {
         let storyboard = UIStoryboard(name: "AddThread", bundle: nil)
         let navController = storyboard.instantiateViewController(identifier: "NavController")
             as! UINavigationController
         let addThreadController = navController.viewControllers[0] as! AddThreadViewController
 
+        let onDismiss = PassthroughSubject<(), Never>()
+
         addThreadController.viewModel.mode = mode.makeMode(context: context.managedObjectContext)
         addThreadController.onDismiss = {
-            context.completeAndDismiss()
+            context.dismiss()
+            onDismiss.send()
+            onDismiss.send(completion: .finished)
         }
 
         navController.presentationController?.delegate = coordinator
         context.present(navController)
+
+        return onDismiss.setFailureType(to: Error.self).eraseToAnyPublisher()
     }
 
     class Coordinator: NSObject, UIAdaptivePresentationControllerDelegate {
+
         func presentationControllerShouldDismiss(_ presentationController: UIPresentationController)
             -> Bool
         {

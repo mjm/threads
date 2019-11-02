@@ -17,36 +17,41 @@ extension Event.Key {
     static let activityType: Event.Key = "activity_type"
 }
 
-struct CreateProjectAction: AsyncUserAction {
+struct CreateProjectAction: ReactiveUserAction {
     typealias ResultType = Project
 
     let undoActionName: String? = Localized.newProject
 
     #if targetEnvironment(macCatalyst)
-    func performAsync(_ context: UserActionContext<CreateProjectAction>) {
-        let alert = UIAlertController(
-            title: "Create a Project", message: "Enter a name for your new project:",
-            preferredStyle: .alert)
-        alert.addTextField(configurationHandler: nil)
-        alert.addAction(
-            UIAlertAction(title: Localized.cancel, style: .cancel) { _ in
-                context.complete(error: UserActionError.canceled)
-            })
-        alert.addAction(
-            UIAlertAction(title: "Create", style: .default) { _ in
-                let project = Project(context: context.managedObjectContext)
-                project.name = alert.textFields?[0].text
+    func publisher(context: UserActionContext<CreateProjectAction>) -> AnyPublisher<Project, Error>
+    {
+        Future { promise in
+            let alert = UIAlertController(
+                title: "Create a Project", message: "Enter a name for your new project:",
+                preferredStyle: .alert)
+            alert.addTextField(configurationHandler: nil)
+            alert.addAction(
+                UIAlertAction(title: Localized.cancel, style: .cancel) { _ in
+                    promise(.failure(UserActionError.canceled))
+                })
+            alert.addAction(
+                UIAlertAction(title: "Create", style: .default) { _ in
+                    let project = Project(context: context.managedObjectContext)
+                    project.name = alert.textFields?[0].text
 
-                Event.current[.projectName] = project.name
+                    Event.current[.projectName] = project.name
 
-                context.complete(project)
-            })
+                    promise(.success(project))
+                })
 
-        context.present(alert)
+            context.present(alert)
+        }.eraseToAnyPublisher()
     }
     #else
-    func performAsync(_ context: UserActionContext<CreateProjectAction>) {
-        context.complete(Project(context: context.managedObjectContext))
+    func publisher(context: UserActionContext<CreateProjectAction>) -> AnyPublisher<Project, Error>
+    {
+        let project = Project(context: context.managedObjectContext)
+        return Just(project).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
     #endif
 }
