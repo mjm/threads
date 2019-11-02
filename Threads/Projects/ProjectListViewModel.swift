@@ -22,8 +22,10 @@ final class ProjectListViewModel: ViewModel {
     override init(context: NSManagedObjectContext = .view) {
         super.init(context: context)
 
+        let actionRunner = self.actionRunner
+
         $projectViewModels.applyingDifferences(projectChanges.ignoreError()) { project in
-            ProjectCellViewModel(project: project)
+            ProjectCellViewModel(project: project, actionRunner: actionRunner)
         }.assign(to: \.projectViewModels, on: self).store(in: &cancellables)
     }
 

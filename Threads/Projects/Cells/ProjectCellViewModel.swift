@@ -11,9 +11,11 @@ import UIKit
 
 final class ProjectCellViewModel {
     let project: Project
+    let actionRunner: UserActionRunner
 
-    init(project: Project) {
+    init(project: Project, actionRunner: UserActionRunner) {
         self.project = project
+        self.actionRunner = actionRunner
     }
 
     var name: AnyPublisher<String?, Never> {
@@ -24,6 +26,21 @@ final class ProjectCellViewModel {
         project.publisher(for: \.primaryImage)
             .map { $0?.thumbnailImage }
             .eraseToAnyPublisher()
+    }
+
+    var addToShoppingListAction: BoundUserAction<Void> {
+        AddProjectToShoppingListAction(project: project)
+            .bind(to: actionRunner)
+    }
+
+    var shareAction: BoundUserAction<Void> {
+        ShareProjectAction(project: project)
+            .bind(to: actionRunner, title: Localized.share)
+    }
+
+    var deleteAction: BoundUserAction<Void> {
+        DeleteProjectAction(project: project)
+            .bind(to: actionRunner, title: Localized.delete, options: .destructive)
     }
 }
 
