@@ -142,7 +142,7 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
 
     func removeSelected() {
         if let thread = selectedThread {
-            actionRunner.perform(RemoveFromShoppingListAction(thread: thread))
+            actionRunner.perform(thread.removeFromShoppingListAction)
         }
     }
 
@@ -169,17 +169,17 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
     private func togglePurchased(_ thread: Thread, immediate: Bool = false) {
         let willPerform = immediate ? {} : { self.pendingPurchases.insert(thread) }
 
-        actionRunner.perform(TogglePurchasedAction(thread: thread), willPerform: willPerform)
+        actionRunner.perform(thread.togglePurchasedAction, willPerform: willPerform)
     }
 
     private func incrementQuantity(_ thread: Thread) {
-        actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment)) {
+        actionRunner.perform(thread.incrementShoppingListAmountAction) {
             self.pendingPurchaseTick.send()
         }
     }
 
     private func decrementQuantity(_ thread: Thread) {
-        actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .decrement)) {
+        actionRunner.perform(thread.decrementShoppingListAmountAction) {
             self.pendingPurchaseTick.send()
         }
     }
@@ -213,6 +213,6 @@ class AddThreadsToShoppingListMode: AddThreadMode {
     }
 
     func add(threads: [Thread], actionRunner: UserActionRunner) {
-        actionRunner.perform(AddToShoppingListAction(threads: threads))
+        actionRunner.perform(threads.addToShoppingListAction)
     }
 }

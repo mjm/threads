@@ -132,6 +132,24 @@ struct RemoveFromShoppingListAction: SyncUserAction {
 
 extension Thread {
     func addToShoppingListAction(showBanner: Bool = false) -> AddToShoppingListAction {
-        AddToShoppingListAction(thread: self, showBanner: showBanner)
+        .init(thread: self, showBanner: showBanner)
+    }
+
+    var togglePurchasedAction: TogglePurchasedAction { .init(thread: self) }
+
+    var incrementShoppingListAmountAction: ChangeShoppingListAmountAction {
+        .init(thread: self, change: .increment)
+    }
+
+    var decrementShoppingListAmountAction: ChangeShoppingListAmountAction {
+        .init(thread: self, change: .decrement)
+    }
+
+    var removeFromShoppingListAction: RemoveFromShoppingListAction { .init(thread: self) }
+}
+
+extension Array where Element == Thread {
+    var addToShoppingListAction: AddToShoppingListAction {
+        .init(threads: self)
     }
 }
