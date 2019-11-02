@@ -96,18 +96,15 @@ extension ProjectDetailViewModel {
     }
 
     var shareAction: BoundUserAction<Void> {
-        ShareProjectAction(project: project)
-            .bind(to: actionRunner, title: Localized.share)
+        project.shareAction.bind(to: actionRunner, title: Localized.share)
     }
 
     var addToShoppingListAction: BoundUserAction<Void> {
-        AddProjectToShoppingListAction(project: project)
-            .bind(to: actionRunner)
+        project.addToShoppingListAction.bind(to: actionRunner)
     }
 
     var deleteAction: BoundUserAction<Void> {
-        DeleteProjectAction(project: project)
-            .bind(to: actionRunner, title: Localized.delete, options: .destructive)
+        project.deleteAction.bind(to: actionRunner, title: Localized.delete, options: .destructive)
     }
 
     private var editAction: BoundUserAction<Void> {
@@ -118,19 +115,16 @@ extension ProjectDetailViewModel {
     }
 
     func addThreads() {
-        actionRunner.perform(AddThreadAction(mode: .project(project)))
+        actionRunner.perform(project.addThreadsAction)
     }
 
     func addImage() {
-        actionRunner.perform(AddImageToProjectAction(project: project))
+        actionRunner.perform(project.addImageAction)
     }
 
     func moveImage(from source: Int, to destination: Int, completion: @escaping () -> Void) {
         actionRunner.perform(
-            MoveProjectImageAction(
-                project: project,
-                sourceIndex: source,
-                destinationIndex: destination),
+            project.moveImageAction(from: source, to: destination),
             willPerform: completion
         ).ignoreError().receive(on: RunLoop.main).handle(receiveValue: completion)
     }
@@ -184,6 +178,6 @@ class AddThreadsToProjectMode: AddThreadMode {
     }
 
     func add(threads: [Thread], actionRunner: UserActionRunner) {
-        actionRunner.perform(AddToProjectAction(threads: threads, project: project))
+        actionRunner.perform(threads.addToProjectAction(project))
     }
 }

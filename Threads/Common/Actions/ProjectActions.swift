@@ -283,6 +283,31 @@ struct DeleteProjectImageAction: SyncUserAction {
 
 extension Thread {
     func addToProjectAction(_ project: Project, showBanner: Bool = false) -> AddToProjectAction {
-        AddToProjectAction(thread: self, project: project, showBanner: showBanner)
+        .init(thread: self, project: project, showBanner: showBanner)
     }
+}
+
+extension Array where Element == Thread {
+    func addToProjectAction(_ project: Project) -> AddToProjectAction {
+        .init(threads: self, project: project)
+    }
+}
+
+extension Project {
+    var addToShoppingListAction: AddProjectToShoppingListAction { .init(project: self) }
+    var shareAction: ShareProjectAction { .init(project: self) }
+    var deleteAction: DeleteProjectAction { .init(project: self) }
+
+    var addImageAction: AddImageToProjectAction { .init(project: self) }
+
+    func moveImageAction(from sourceIndex: Int, to destinationIndex: Int) -> MoveProjectImageAction
+    {
+        .init(project: self, sourceIndex: sourceIndex, destinationIndex: destinationIndex)
+    }
+
+    var addThreadsAction: AddThreadAction { .init(mode: .project(self)) }
+}
+
+extension ProjectImage {
+    var deleteAction: DeleteProjectImageAction { .init(image: self) }
 }

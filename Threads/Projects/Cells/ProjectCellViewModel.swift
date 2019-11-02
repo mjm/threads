@@ -29,17 +29,15 @@ final class ProjectCellViewModel {
     }
 
     var addToShoppingListAction: BoundUserAction<Void> {
-        AddProjectToShoppingListAction(project: project)
-            .bind(to: actionRunner)
+        project.addToShoppingListAction.bind(to: actionRunner)
     }
 
     var shareAction: BoundUserAction<Void> {
-        ShareProjectAction(project: project)
-            .bind(to: actionRunner, title: Localized.share)
+        project.shareAction.bind(to: actionRunner, title: Localized.share)
     }
 
     var deleteAction: BoundUserAction<Void> {
-        DeleteProjectAction(project: project)
+        project.deleteAction
             .bind(to: actionRunner, title: Localized.delete, options: .destructive)
     }
 }

@@ -27,7 +27,7 @@ final class EditProjectImageCellViewModel {
     }
 
     var deleteAction: BoundUserAction<Void> {
-        DeleteProjectImageAction(image: projectImage)
+        projectImage.deleteAction
             .bind(to: actionRunner, title: Localized.delete, options: .destructive)
     }
 }
