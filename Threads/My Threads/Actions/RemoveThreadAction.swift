@@ -23,14 +23,9 @@ struct RemoveThreadAction: ReactiveUserAction, DestructiveUserAction {
     func publisher(context: UserActionContext<RemoveThreadAction>) -> AnyPublisher<Void, Error> {
         Event.current[.threadNumber] = thread.number
 
-        return Future { promise in
-            UserActivity.showThread(self.thread).delete {
-                RunLoop.main.perform {
-                    self.thread.removeFromCollection()
-                    promise(.success(()))
-                }
-            }
-        }.eraseToAnyPublisher()
+        return UserActivity.showThread(self.thread).delete().handleEvents(receiveOutput: {
+            self.thread.removeFromCollection()
+        }).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
 }
 

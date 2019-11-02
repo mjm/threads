@@ -6,6 +6,7 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
+import Combine
 import CoreData
 import CoreServices
 import CoreSpotlight
@@ -185,12 +186,16 @@ enum UserActivity {
         }
     }
 
-    func delete(completion: @escaping () -> Void = {}) {
+    func delete() -> AnyPublisher<Void, Never> {
         if let identifier = persistentIdentifier {
-            NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [identifier]) {
-                self.addToCurrentEvent()
-                completion()
-            }
+            return Future { promise in
+                NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [identifier]) {
+                    self.addToCurrentEvent()
+                    promise(.success(()))
+                }
+            }.receive(on: RunLoop.main).eraseToAnyPublisher()
+        } else {
+            return Just(()).eraseToAnyPublisher()
         }
     }
 

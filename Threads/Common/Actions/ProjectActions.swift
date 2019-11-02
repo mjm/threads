@@ -129,14 +129,9 @@ struct DeleteProjectAction: ReactiveUserAction, DestructiveUserAction {
     func publisher(context: UserActionContext<DeleteProjectAction>) -> AnyPublisher<Void, Error> {
         Event.current[.projectName] = project.name
 
-        return Future { promise in
-            UserActivity.showProject(self.project).delete {
-                RunLoop.main.perform {
-                    context.managedObjectContext.delete(self.project)
-                    promise(.success(()))
-                }
-            }
-        }.eraseToAnyPublisher()
+        return UserActivity.showProject(self.project).delete().handleEvents(receiveOutput: {
+            context.managedObjectContext.delete(self.project)
+        }).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
 }
 
