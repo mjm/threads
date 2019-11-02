@@ -54,20 +54,20 @@ extension CollectionThreadCellViewModel {
         }
 
         if thread.onBobbin {
-            return MarkOffBobbinAction(thread: thread)
+            return thread.markOffBobbinAction
                 .bind(to: actionRunner, title: Localized.offBobbin)
         } else {
-            return MarkOnBobbinAction(thread: thread)
+            return thread.markOnBobbinAction
                 .bind(to: actionRunner, title: Localized.onBobbin)
         }
     }
 
     var stockAction: BoundUserAction<Void> {
         if thread.amountInCollection == 0 {
-            return MarkInStockAction(thread: thread)
+            return thread.markInStockAction
                 .bind(to: actionRunner, title: Localized.inStock)
         } else {
-            return MarkOutOfStockAction(thread: thread)
+            return thread.markOutOfStockAction
                 .bind(to: actionRunner, title: Localized.outOfStock, options: .destructive)
         }
     }
@@ -77,13 +77,13 @@ extension CollectionThreadCellViewModel {
 extension CollectionThreadCellViewModel {
     var markActions: [BoundUserAction<Void>] {
         if thread.amountInCollection == 0 {
-            return [MarkInStockAction(thread: thread).bind(to: actionRunner)]
+            return [thread.markInStockAction.bind(to: actionRunner)]
         } else {
             return [
                 thread.onBobbin
-                    ? MarkOffBobbinAction(thread: thread).bind(to: actionRunner)
-                    : MarkOnBobbinAction(thread: thread).bind(to: actionRunner),
-                MarkOutOfStockAction(thread: thread).bind(to: actionRunner),
+                    ? thread.markOffBobbinAction.bind(to: actionRunner)
+                    : thread.markOnBobbinAction.bind(to: actionRunner),
+                thread.markOutOfStockAction.bind(to: actionRunner),
             ]
         }
     }
@@ -94,7 +94,7 @@ extension CollectionThreadCellViewModel {
             let projects = try thread.managedObjectContext!.fetch(request)
 
             return projects.map { project in
-                AddToProjectAction(thread: thread, project: project, showBanner: true)
+                thread.addToProjectAction(project, showBanner: true)
                     .bind(to: actionRunner, title: project.displayName)
             }
         } catch {
@@ -104,12 +104,12 @@ extension CollectionThreadCellViewModel {
     }
 
     var addToShoppingListAction: BoundUserAction<Void> {
-        AddToShoppingListAction(thread: thread, showBanner: true)
+        thread.addToShoppingListAction(showBanner: true)
             .bind(to: actionRunner)
     }
 
     var removeAction: BoundUserAction<Void> {
-        RemoveThreadAction(thread: thread)
+        thread.removeFromCollectionAction
             .bind(
                 to: actionRunner,
                 title: Localized.removeFromCollection,

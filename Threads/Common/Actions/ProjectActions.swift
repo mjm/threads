@@ -280,3 +280,9 @@ struct DeleteProjectImageAction: SyncUserAction {
         image.delete()
     }
 }
+
+extension Thread {
+    func addToProjectAction(_ project: Project, showBanner: Bool = false) -> AddToProjectAction {
+        AddToProjectAction(thread: self, project: project, showBanner: showBanner)
+    }
+}

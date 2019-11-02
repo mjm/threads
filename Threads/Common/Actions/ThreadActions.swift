@@ -159,3 +159,12 @@ struct AddThreadAction: AsyncUserAction {
 
     #endif
 }
+
+extension Thread {
+    var markOffBobbinAction: MarkOffBobbinAction { MarkOffBobbinAction(thread: self) }
+    var markOnBobbinAction: MarkOnBobbinAction { MarkOnBobbinAction(thread: self) }
+    var markInStockAction: MarkInStockAction { MarkInStockAction(thread: self) }
+    var markOutOfStockAction: MarkOutOfStockAction { MarkOutOfStockAction(thread: self) }
+
+    var removeFromCollectionAction: RemoveThreadAction { RemoveThreadAction(thread: self) }
+}

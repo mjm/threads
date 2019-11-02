@@ -129,3 +129,9 @@ struct RemoveFromShoppingListAction: SyncUserAction {
         thread.removeFromShoppingList()
     }
 }
+
+extension Thread {
+    func addToShoppingListAction(showBanner: Bool = false) -> AddToShoppingListAction {
+        AddToShoppingListAction(thread: self, showBanner: showBanner)
+    }
+}
