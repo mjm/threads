@@ -31,10 +31,10 @@ extension TextViewCollectionViewCell: UITextViewDelegate {
 
 // source: https://medium.com/@georgetsifrikas/embedding-uitextview-inside-uitableviewcell-9a28794daf01
 @IBDesignable
-class NoPaddingTextView: UITextView {
+class SidePaddingTextView: UITextView {
     override func layoutSubviews() {
         super.layoutSubviews()
-        textContainerInset = .zero
+        textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         textContainer.lineFragmentPadding = 0
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,12 +16,12 @@
                 <rect key="frame" x="0.0" y="0.0" width="286" height="121"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="249" verticalCompressionResistancePriority="1000" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" usesAttributedText="YES" allowsEditingTextAttributes="YES" translatesAutoresizingMaskIntoConstraints="NO" id="epb-u1-o3I" customClass="NoPaddingTextView" customModule="Threads">
-                        <rect key="frame" x="16" y="8" width="254" height="105"/>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="249" verticalCompressionResistancePriority="1000" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" usesAttributedText="YES" allowsEditingTextAttributes="YES" translatesAutoresizingMaskIntoConstraints="NO" id="epb-u1-o3I" customClass="SidePaddingTextView" customModule="Threads" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="286" height="121"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <attributedString key="attributedText">
                             <fragment>
-                                <mutableString key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
+                                <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <attributes>
                                     <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <font key="NSFont" size="16" name="SFProText-Regular"/>
@@ -34,7 +34,7 @@
                             <outlet property="delegate" destination="TDa-uV-5R8" id="9iB-Yo-gUS"/>
                         </connections>
                     </textView>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XNp-Sq-SD3" customClass="SeparatorView" customModule="Threads">
+                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XNp-Sq-SD3" customClass="SeparatorView" customModule="Threads">
                         <rect key="frame" x="0.0" y="120.5" width="286" height="0.5"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     </view>
@@ -42,12 +42,12 @@
                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="XNp-Sq-SD3" secondAttribute="trailing" id="4TL-ty-Ikm"/>
-                    <constraint firstAttribute="bottom" secondItem="epb-u1-o3I" secondAttribute="bottom" constant="8" id="EQo-1f-0ve"/>
+                    <constraint firstAttribute="bottom" secondItem="epb-u1-o3I" secondAttribute="bottom" id="EQo-1f-0ve"/>
                     <constraint firstAttribute="bottom" secondItem="XNp-Sq-SD3" secondAttribute="bottom" id="ExX-Tp-Eca"/>
-                    <constraint firstItem="epb-u1-o3I" firstAttribute="leading" secondItem="SXy-o9-5Zm" secondAttribute="leading" constant="16" id="Ptj-Pp-Kfl"/>
-                    <constraint firstItem="epb-u1-o3I" firstAttribute="top" secondItem="SXy-o9-5Zm" secondAttribute="top" constant="8" id="U9x-5u-T44"/>
+                    <constraint firstItem="epb-u1-o3I" firstAttribute="leading" secondItem="SXy-o9-5Zm" secondAttribute="leading" id="Ptj-Pp-Kfl"/>
+                    <constraint firstItem="epb-u1-o3I" firstAttribute="top" secondItem="SXy-o9-5Zm" secondAttribute="top" id="U9x-5u-T44"/>
                     <constraint firstItem="XNp-Sq-SD3" firstAttribute="leading" secondItem="SXy-o9-5Zm" secondAttribute="leading" id="c7P-GZ-hZU"/>
-                    <constraint firstAttribute="trailing" secondItem="epb-u1-o3I" secondAttribute="trailing" constant="16" id="cXy-tq-vl2"/>
+                    <constraint firstAttribute="trailing" secondItem="epb-u1-o3I" secondAttribute="trailing" id="cXy-tq-vl2"/>
                 </constraints>
             </collectionViewCellContentView>
             <size key="customSize" width="286" height="121"/>
