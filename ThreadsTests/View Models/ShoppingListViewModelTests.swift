@@ -88,7 +88,8 @@ final class ShoppingListViewModelTests: ViewModelTestCase {
         thread1.addToShoppingList()
         thread2.addToShoppingList()
 
-        subject.unpurchasedCount.assign(to: \.unpurchasedCount, on: fakeView).store(in: &cancellables)
+        subject.unpurchasedCount.assign(to: \.unpurchasedCount, on: fakeView).store(
+            in: &cancellables)
         await(fakeView.unpurchasedCount == 2)
 
         thread1.togglePurchased()
