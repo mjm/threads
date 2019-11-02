@@ -56,6 +56,10 @@ class ViewModelTestCase: XCTestCase {
         XCTFail("Timed out waiting for assertion to evaluate to true", file: file, line: line)
     }
 
+    func nextLoop() {
+        RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 0.01))
+    }
+
     func getThread(_ number: String) throws -> Threads.Thread {
         try Threads.Thread.withNumber(number, context: context)!
     }
