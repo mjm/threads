@@ -114,9 +114,16 @@
 		C97FCDFE232F495F000B1590 /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDFD232F495F000B1590 /* UserAction.swift */; };
 		C97FCE00232F4C9F000B1590 /* UserActionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDFF232F4C9F000B1590 /* UserActionContext.swift */; };
 		C97FCE02232F4CB3000B1590 /* UserActionRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */; };
-		C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE03232F4E13000B1590 /* ThreadActions.swift */; };
 		C97FCE06233068C0000B1590 /* ShoppingListActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE05233068C0000B1590 /* ShoppingListActions.swift */; };
 		C97FCE08233073AA000B1590 /* ProjectActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE07233073AA000B1590 /* ProjectActions.swift */; };
+		C9815E62236E195800D5DDEB /* MarkOffBobbinAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E61236E195800D5DDEB /* MarkOffBobbinAction.swift */; };
+		C9815E64236E196100D5DDEB /* MarkInStockAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E63236E196100D5DDEB /* MarkInStockAction.swift */; };
+		C9815E66236E196300D5DDEB /* MarkOnBobbinAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E65236E196300D5DDEB /* MarkOnBobbinAction.swift */; };
+		C9815E68236E196500D5DDEB /* MarkOutOfStockAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E67236E196500D5DDEB /* MarkOutOfStockAction.swift */; };
+		C9815E6A236E1A7E00D5DDEB /* RemoveThreadAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E69236E1A7E00D5DDEB /* RemoveThreadAction.swift */; };
+		C9815E6C236E1B1400D5DDEB /* AddToCollectionAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E6B236E1B1400D5DDEB /* AddToCollectionAction.swift */; };
+		C9815E6F236E1B8500D5DDEB /* AddThreadsAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E6E236E1B8500D5DDEB /* AddThreadsAction.swift */; };
+		C9815E71236E1BCF00D5DDEB /* EventKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E70236E1BCF00D5DDEB /* EventKeys.swift */; };
 		C983AC452368FC1D00AA930F /* CollectionThreadCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC442368FC1D00AA930F /* CollectionThreadCellViewModel.swift */; };
 		C983AC472368FF8C00AA930F /* ReactiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */; };
 		C983AC4A23691D6400AA930F /* ShoppingListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC4923691D6400AA930F /* ShoppingListCellViewModel.swift */; };
@@ -264,9 +271,16 @@
 		C97FCDFD232F495F000B1590 /* UserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAction.swift; sourceTree = "<group>"; };
 		C97FCDFF232F4C9F000B1590 /* UserActionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionContext.swift; sourceTree = "<group>"; };
 		C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionRunner.swift; sourceTree = "<group>"; };
-		C97FCE03232F4E13000B1590 /* ThreadActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadActions.swift; sourceTree = "<group>"; };
 		C97FCE05233068C0000B1590 /* ShoppingListActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActions.swift; sourceTree = "<group>"; };
 		C97FCE07233073AA000B1590 /* ProjectActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectActions.swift; sourceTree = "<group>"; };
+		C9815E61236E195800D5DDEB /* MarkOffBobbinAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkOffBobbinAction.swift; sourceTree = "<group>"; };
+		C9815E63236E196100D5DDEB /* MarkInStockAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkInStockAction.swift; sourceTree = "<group>"; };
+		C9815E65236E196300D5DDEB /* MarkOnBobbinAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkOnBobbinAction.swift; sourceTree = "<group>"; };
+		C9815E67236E196500D5DDEB /* MarkOutOfStockAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkOutOfStockAction.swift; sourceTree = "<group>"; };
+		C9815E69236E1A7E00D5DDEB /* RemoveThreadAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveThreadAction.swift; sourceTree = "<group>"; };
+		C9815E6B236E1B1400D5DDEB /* AddToCollectionAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToCollectionAction.swift; sourceTree = "<group>"; };
+		C9815E6E236E1B8500D5DDEB /* AddThreadsAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadsAction.swift; sourceTree = "<group>"; };
+		C9815E70236E1BCF00D5DDEB /* EventKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventKeys.swift; sourceTree = "<group>"; };
 		C983AC442368FC1D00AA930F /* CollectionThreadCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionThreadCellViewModel.swift; sourceTree = "<group>"; };
 		C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveTableViewCell.swift; sourceTree = "<group>"; };
 		C983AC4923691D6400AA930F /* ShoppingListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListCellViewModel.swift; sourceTree = "<group>"; };
@@ -542,6 +556,7 @@
 				C9491DF3231D897B0031F463 /* AppDelegate.swift */,
 				C9491DF5231D897B0031F463 /* SceneDelegate.swift */,
 				C906E3B323526FCC003EE053 /* MacSceneDelegate.swift */,
+				C9815E70236E1BCF00D5DDEB /* EventKeys.swift */,
 				C97FCDAF232C8ED7000B1590 /* UserActivity.swift */,
 				C97FCDBC232D79E7000B1590 /* Localized.swift */,
 				C97FCDBB232D78AA000B1590 /* Localizable.stringsdict */,
@@ -584,6 +599,7 @@
 		C97FCDE5232DFC03000B1590 /* My Threads */ = {
 			isa = PBXGroup;
 			children = (
+				C9815E60236E192700D5DDEB /* Actions */,
 				C983AC432368FB8D00AA930F /* Cells */,
 				C97FCDD0232DCE0F000B1590 /* MyThreads.storyboard */,
 				C9491E0E231D8E5B0031F463 /* MyThreadsViewController.swift */,
@@ -619,6 +635,7 @@
 		C97FCDE8232DFCB2000B1590 /* Add Thread */ = {
 			isa = PBXGroup;
 			children = (
+				C9815E6D236E1B5400D5DDEB /* Actions */,
 				C9082F5D2369414300768CA1 /* Cells */,
 				C97FCDDF232DCE86000B1590 /* AddThread.storyboard */,
 				C9491E14231DACFA0031F463 /* AddThreadViewController.swift */,
@@ -637,9 +654,29 @@
 				C95028F02366B29700BB02C4 /* UserActionPresenter.swift */,
 				C95028E62366070200BB02C4 /* ReplaySubject.swift */,
 				C9082F6D236A7BCC00768CA1 /* BoundUserAction.swift */,
-				C97FCE03232F4E13000B1590 /* ThreadActions.swift */,
 				C97FCE05233068C0000B1590 /* ShoppingListActions.swift */,
 				C97FCE07233073AA000B1590 /* ProjectActions.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
+		C9815E60236E192700D5DDEB /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				C9815E6B236E1B1400D5DDEB /* AddToCollectionAction.swift */,
+				C9815E63236E196100D5DDEB /* MarkInStockAction.swift */,
+				C9815E61236E195800D5DDEB /* MarkOffBobbinAction.swift */,
+				C9815E65236E196300D5DDEB /* MarkOnBobbinAction.swift */,
+				C9815E67236E196500D5DDEB /* MarkOutOfStockAction.swift */,
+				C9815E69236E1A7E00D5DDEB /* RemoveThreadAction.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
+		C9815E6D236E1B5400D5DDEB /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				C9815E6E236E1B8500D5DDEB /* AddThreadsAction.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -841,6 +878,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C97FCDA62329A921000B1590 /* SeparatorView.swift in Sources */,
+				C9815E62236E195800D5DDEB /* MarkOffBobbinAction.swift in Sources */,
 				C97FCDEC232E014D000B1590 /* NSManagedObjectContext.swift in Sources */,
 				C95028EF2366AD0100BB02C4 /* MyThreadsViewModel.swift in Sources */,
 				C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */,
@@ -861,11 +899,11 @@
 				C97FCE06233068C0000B1590 /* ShoppingListActions.swift in Sources */,
 				C9571DF62353EF5400CCA56B /* AddThreadSceneDelegate.swift in Sources */,
 				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
+				C9815E64236E196100D5DDEB /* MarkInStockAction.swift in Sources */,
 				C9082F5F2369415400768CA1 /* AddThreadCellViewModel.swift in Sources */,
 				C983AC4A23691D6400AA930F /* ShoppingListCellViewModel.swift in Sources */,
 				C943E9BD236D2971003EBA2C /* ToolbarViewModel.swift in Sources */,
 				C97FCDC3232DA92E000B1590 /* NSAttributedString.swift in Sources */,
-				C97FCE04232F4E13000B1590 /* ThreadActions.swift in Sources */,
 				C97FCDA8232B4F4A000B1590 /* ProjectThread.swift in Sources */,
 				C9082F66236A6D9B00768CA1 /* ThreadDetailsCellViewModel.swift in Sources */,
 				C944A9612367ECA700C1B2A1 /* ProjectDetailViewModel.swift in Sources */,
@@ -880,6 +918,7 @@
 				C97FCDB0232C8ED7000B1590 /* UserActivity.swift in Sources */,
 				C9082F63236A6D1F00768CA1 /* ThreadDetailViewModel.swift in Sources */,
 				C944A95B2367C69D00C1B2A1 /* AddThreadViewModel.swift in Sources */,
+				C9815E6C236E1B1400D5DDEB /* AddToCollectionAction.swift in Sources */,
 				C97FCDF8232EB846000B1590 /* ViewImageCollectionViewCell.swift in Sources */,
 				C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */,
 				C9491E4223248B940031F463 /* ProjectListViewController.swift in Sources */,
@@ -888,6 +927,7 @@
 				C919A3EF236BECF8000C862D /* SidebarProjectCellViewModel.swift in Sources */,
 				C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */,
 				C92064A6236AA152002F9079 /* ViewProjectImageCellViewModel.swift in Sources */,
+				C9815E68236E196500D5DDEB /* MarkOutOfStockAction.swift in Sources */,
 				C9082F5C2369262500768CA1 /* Operators.swift in Sources */,
 				C97FCDEA232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
@@ -898,6 +938,7 @@
 				C97FCDB3232CAD4E000B1590 /* TextInputCollectionViewCell.swift in Sources */,
 				C97FCE08233073AA000B1590 /* ProjectActions.swift in Sources */,
 				C906E3BB23527C61003EE053 /* SplitViewController.swift in Sources */,
+				C9815E6F236E1B8500D5DDEB /* AddThreadsAction.swift in Sources */,
 				C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */,
 				C95028F12366B29700BB02C4 /* UserActionPresenter.swift in Sources */,
 				C9491E372320C67A0031F463 /* SwatchView.swift in Sources */,
@@ -905,6 +946,7 @@
 				C97FCDE3232DD3D2000B1590 /* ThreadPreviewViewController.swift in Sources */,
 				C95D2565236B2F1F00582A05 /* EditProjectDetailViewModel.swift in Sources */,
 				C9082F6E236A7BCC00768CA1 /* BoundUserAction.swift in Sources */,
+				C9815E6A236E1A7E00D5DDEB /* RemoveThreadAction.swift in Sources */,
 				C97FCDEE232E941D000B1590 /* Cells.swift in Sources */,
 				C95028F32366B74700BB02C4 /* ViewModel.swift in Sources */,
 				C9082F6C236A76F700768CA1 /* ThreadProjectTableViewCell.swift in Sources */,
@@ -918,6 +960,7 @@
 				C983AC472368FF8C00AA930F /* ReactiveTableViewCell.swift in Sources */,
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
 				C95028E32362BCC800BB02C4 /* ReactiveViewControllers.swift in Sources */,
+				C9815E71236E1BCF00D5DDEB /* EventKeys.swift in Sources */,
 				C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */,
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
@@ -932,6 +975,7 @@
 				C95028E72366070200BB02C4 /* ReplaySubject.swift in Sources */,
 				C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */,
 				C99677EE235A6C5400AE2F5C /* OpenInSafariActivity.swift in Sources */,
+				C9815E66236E196300D5DDEB /* MarkOnBobbinAction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
