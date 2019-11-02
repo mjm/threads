@@ -21,8 +21,10 @@ final class MyThreadsViewModel: ViewModel, SnapshotViewModel {
     override init(context: NSManagedObjectContext = .view) {
         super.init(context: context)
 
+        let actionRunner = self.actionRunner
+
         $threadViewModels.applyingDifferences(threadChanges.ignoreError()) { thread in
-            CollectionThreadCellViewModel(thread: thread)
+            CollectionThreadCellViewModel(thread: thread, actionRunner: actionRunner)
         }.assign(to: \.threadViewModels, on: self).store(in: &cancellables)
     }
 
@@ -108,81 +110,6 @@ extension MyThreadsViewModel {
             actionRunner.perform(MarkOutOfStockAction(thread: thread))
         } else {
             actionRunner.perform(MarkInStockAction(thread: thread))
-        }
-    }
-}
-
-// MARK: - Context Menu Actions
-extension MyThreadsViewModel {
-    func markActions(for item: Item) -> [BoundUserAction<Void>] {
-        let thread = item.thread
-
-        if thread.amountInCollection == 0 {
-            return [MarkInStockAction(thread: thread).bind(to: actionRunner)]
-        } else {
-            return [
-                thread.onBobbin
-                    ? MarkOffBobbinAction(thread: thread).bind(to: actionRunner)
-                    : MarkOnBobbinAction(thread: thread).bind(to: actionRunner),
-                MarkOutOfStockAction(thread: thread).bind(to: actionRunner),
-            ]
-        }
-    }
-
-    func projectActions(for item: Item) -> [BoundUserAction<Void>] {
-        let thread = item.thread
-
-        do {
-            let request = Project.allProjectsFetchRequest()
-            let projects = try context.fetch(request)
-
-            return projects.map { project in
-                AddToProjectAction(thread: thread, project: project, showBanner: true)
-                    .bind(to: actionRunner, title: project.displayName)
-            }
-        } catch {
-            presenter?.present(error: error)
-            return []
-        }
-    }
-
-    func addToShoppingListAction(for item: Item) -> BoundUserAction<Void> {
-        AddToShoppingListAction(thread: item.thread, showBanner: true)
-            .bind(to: actionRunner)
-    }
-
-    func removeAction(for item: Item) -> BoundUserAction<Void> {
-        RemoveThreadAction(thread: item.thread)
-            .bind(
-                to: actionRunner,
-                title: Localized.removeFromCollection,
-                options: .destructive)
-    }
-}
-
-// MARK: - Swipe Actions
-extension MyThreadsViewModel {
-    func bobbinAction(for item: Item) -> BoundUserAction<Void>? {
-        guard item.thread.amountInCollection > 0 else {
-            return nil
-        }
-
-        if item.thread.onBobbin {
-            return MarkOffBobbinAction(thread: item.thread)
-                .bind(to: actionRunner, title: Localized.offBobbin)
-        } else {
-            return MarkOnBobbinAction(thread: item.thread)
-                .bind(to: actionRunner, title: Localized.onBobbin)
-        }
-    }
-
-    func stockAction(for item: Item) -> BoundUserAction<Void> {
-        if item.thread.amountInCollection == 0 {
-            return MarkInStockAction(thread: item.thread)
-                .bind(to: actionRunner, title: Localized.inStock)
-        } else {
-            return MarkOutOfStockAction(thread: item.thread)
-                .bind(to: actionRunner, title: Localized.outOfStock, options: .destructive)
         }
     }
 }

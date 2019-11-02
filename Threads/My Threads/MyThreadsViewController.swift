@@ -168,7 +168,7 @@ extension MyThreadsViewController {
         _ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
     ) -> UISwipeActionsConfiguration? {
         guard let item = dataSource.itemIdentifier(for: indexPath),
-            let bobbinAction = viewModel.bobbinAction(for: item)
+            let bobbinAction = item.bobbinAction
         else {
             return nil
         }
@@ -188,7 +188,7 @@ extension MyThreadsViewController {
             return nil
         }
 
-        let stockAction = viewModel.stockAction(for: item)
+        let stockAction = item.stockAction
         let stock = stockAction.contextualAction()
         if !stockAction.isDestructive {
             stock.backgroundColor = UIColor(named: "InStockSwipe")
@@ -207,25 +207,23 @@ extension MyThreadsViewController {
             return nil
         }
 
-        let thread = item.thread
-
         return UIContextMenuConfiguration(
             identifier: viewModel.identifier(for: item),
             previewProvider: {
                 self.storyboard!.instantiateViewController(identifier: "ThreadPreview") { coder in
-                    ThreadPreviewViewController(coder: coder, thread: thread)
+                    ThreadPreviewViewController(coder: coder, thread: item.thread)
                 }
             }
         ) { suggestedActions in
 
-            let addToShoppingList = self.viewModel.addToShoppingListAction(for: item)
+            let addToShoppingList = item.addToShoppingListAction
                 .menuAction(image: UIImage(systemName: "cart.badge.plus"))
 
             // Load projects for submenu
             let addToProjectMenu: UIMenuElement
             let projectImage = UIImage(systemName: "rectangle.3.offgrid")
 
-            let projectActions = self.viewModel.projectActions(for: item)
+            let projectActions = item.projectActions
             if projectActions.isEmpty {
                 addToProjectMenu
                     = UIAction(
@@ -247,9 +245,9 @@ extension MyThreadsViewController {
 
             let markMenu = UIMenu(
                 title: "", options: .displayInline,
-                children: self.viewModel.markActions(for: item).map { $0.menuAction() })
+                children: item.markActions.map { $0.menuAction() })
 
-            let remove = self.viewModel.removeAction(for: item)
+            let remove = item.removeAction
                 .menuAction(image: UIImage(systemName: "trash"))
 
             return UIMenu(

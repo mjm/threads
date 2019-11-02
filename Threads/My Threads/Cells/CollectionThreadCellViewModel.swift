@@ -7,6 +7,7 @@
 //
 
 import Combine
+import CoreData
 import UIKit
 
 final class CollectionThreadCellViewModel: ThreadCellViewModel {
@@ -16,9 +17,11 @@ final class CollectionThreadCellViewModel: ThreadCellViewModel {
     }
 
     let thread: Thread
+    let actionRunner: UserActionRunner
 
-    init(thread: Thread) {
+    init(thread: Thread, actionRunner: UserActionRunner) {
         self.thread = thread
+        self.actionRunner = actionRunner
     }
 
     var isOutOfStock: AnyPublisher<Bool, Never> {
@@ -40,6 +43,77 @@ final class CollectionThreadCellViewModel: ThreadCellViewModel {
                 return nil
             }
         }.eraseToAnyPublisher()
+    }
+}
+
+// MARK: - Swipe Actions
+extension CollectionThreadCellViewModel {
+    var bobbinAction: BoundUserAction<Void>? {
+        guard thread.amountInCollection > 0 else {
+            return nil
+        }
+
+        if thread.onBobbin {
+            return MarkOffBobbinAction(thread: thread)
+                .bind(to: actionRunner, title: Localized.offBobbin)
+        } else {
+            return MarkOnBobbinAction(thread: thread)
+                .bind(to: actionRunner, title: Localized.onBobbin)
+        }
+    }
+
+    var stockAction: BoundUserAction<Void> {
+        if thread.amountInCollection == 0 {
+            return MarkInStockAction(thread: thread)
+                .bind(to: actionRunner, title: Localized.inStock)
+        } else {
+            return MarkOutOfStockAction(thread: thread)
+                .bind(to: actionRunner, title: Localized.outOfStock, options: .destructive)
+        }
+    }
+}
+
+// MARK: - Context Menu Actions
+extension CollectionThreadCellViewModel {
+    var markActions: [BoundUserAction<Void>] {
+        if thread.amountInCollection == 0 {
+            return [MarkInStockAction(thread: thread).bind(to: actionRunner)]
+        } else {
+            return [
+                thread.onBobbin
+                    ? MarkOffBobbinAction(thread: thread).bind(to: actionRunner)
+                    : MarkOnBobbinAction(thread: thread).bind(to: actionRunner),
+                MarkOutOfStockAction(thread: thread).bind(to: actionRunner),
+            ]
+        }
+    }
+
+    var projectActions: [BoundUserAction<Void>] {
+        do {
+            let request = Project.allProjectsFetchRequest()
+            let projects = try thread.managedObjectContext!.fetch(request)
+
+            return projects.map { project in
+                AddToProjectAction(thread: thread, project: project, showBanner: true)
+                    .bind(to: actionRunner, title: project.displayName)
+            }
+        } catch {
+            actionRunner.presenter?.present(error: error)
+            return []
+        }
+    }
+
+    var addToShoppingListAction: BoundUserAction<Void> {
+        AddToShoppingListAction(thread: thread, showBanner: true)
+            .bind(to: actionRunner)
+    }
+
+    var removeAction: BoundUserAction<Void> {
+        RemoveThreadAction(thread: thread)
+            .bind(
+                to: actionRunner,
+                title: Localized.removeFromCollection,
+                options: .destructive)
     }
 }
 
