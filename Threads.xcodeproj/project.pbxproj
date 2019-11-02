@@ -114,7 +114,6 @@
 		C97FCDFE232F495F000B1590 /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDFD232F495F000B1590 /* UserAction.swift */; };
 		C97FCE00232F4C9F000B1590 /* UserActionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCDFF232F4C9F000B1590 /* UserActionContext.swift */; };
 		C97FCE02232F4CB3000B1590 /* UserActionRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */; };
-		C97FCE06233068C0000B1590 /* ShoppingListActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE05233068C0000B1590 /* ShoppingListActions.swift */; };
 		C97FCE08233073AA000B1590 /* ProjectActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCE07233073AA000B1590 /* ProjectActions.swift */; };
 		C9815E62236E195800D5DDEB /* MarkOffBobbinAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E61236E195800D5DDEB /* MarkOffBobbinAction.swift */; };
 		C9815E64236E196100D5DDEB /* MarkInStockAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E63236E196100D5DDEB /* MarkInStockAction.swift */; };
@@ -124,6 +123,11 @@
 		C9815E6C236E1B1400D5DDEB /* AddToCollectionAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E6B236E1B1400D5DDEB /* AddToCollectionAction.swift */; };
 		C9815E6F236E1B8500D5DDEB /* AddThreadsAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E6E236E1B8500D5DDEB /* AddThreadsAction.swift */; };
 		C9815E71236E1BCF00D5DDEB /* EventKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E70236E1BCF00D5DDEB /* EventKeys.swift */; };
+		C9815E74236E1E1400D5DDEB /* AddToShoppingListAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E73236E1E1400D5DDEB /* AddToShoppingListAction.swift */; };
+		C9815E76236E1E6200D5DDEB /* AddPurchasedToCollectionAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E75236E1E6200D5DDEB /* AddPurchasedToCollectionAction.swift */; };
+		C9815E78236E1E9600D5DDEB /* TogglePurchasedAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E77236E1E9600D5DDEB /* TogglePurchasedAction.swift */; };
+		C9815E7A236E1EEC00D5DDEB /* ChangeShoppingListAmountAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E79236E1EEC00D5DDEB /* ChangeShoppingListAmountAction.swift */; };
+		C9815E7C236E1F5300D5DDEB /* RemoveFromShoppingListAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E7B236E1F5300D5DDEB /* RemoveFromShoppingListAction.swift */; };
 		C983AC452368FC1D00AA930F /* CollectionThreadCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC442368FC1D00AA930F /* CollectionThreadCellViewModel.swift */; };
 		C983AC472368FF8C00AA930F /* ReactiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */; };
 		C983AC4A23691D6400AA930F /* ShoppingListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC4923691D6400AA930F /* ShoppingListCellViewModel.swift */; };
@@ -271,7 +275,6 @@
 		C97FCDFD232F495F000B1590 /* UserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAction.swift; sourceTree = "<group>"; };
 		C97FCDFF232F4C9F000B1590 /* UserActionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionContext.swift; sourceTree = "<group>"; };
 		C97FCE01232F4CB2000B1590 /* UserActionRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionRunner.swift; sourceTree = "<group>"; };
-		C97FCE05233068C0000B1590 /* ShoppingListActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActions.swift; sourceTree = "<group>"; };
 		C97FCE07233073AA000B1590 /* ProjectActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectActions.swift; sourceTree = "<group>"; };
 		C9815E61236E195800D5DDEB /* MarkOffBobbinAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkOffBobbinAction.swift; sourceTree = "<group>"; };
 		C9815E63236E196100D5DDEB /* MarkInStockAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkInStockAction.swift; sourceTree = "<group>"; };
@@ -281,6 +284,11 @@
 		C9815E6B236E1B1400D5DDEB /* AddToCollectionAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToCollectionAction.swift; sourceTree = "<group>"; };
 		C9815E6E236E1B8500D5DDEB /* AddThreadsAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadsAction.swift; sourceTree = "<group>"; };
 		C9815E70236E1BCF00D5DDEB /* EventKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventKeys.swift; sourceTree = "<group>"; };
+		C9815E73236E1E1400D5DDEB /* AddToShoppingListAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToShoppingListAction.swift; sourceTree = "<group>"; };
+		C9815E75236E1E6200D5DDEB /* AddPurchasedToCollectionAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPurchasedToCollectionAction.swift; sourceTree = "<group>"; };
+		C9815E77236E1E9600D5DDEB /* TogglePurchasedAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TogglePurchasedAction.swift; sourceTree = "<group>"; };
+		C9815E79236E1EEC00D5DDEB /* ChangeShoppingListAmountAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeShoppingListAmountAction.swift; sourceTree = "<group>"; };
+		C9815E7B236E1F5300D5DDEB /* RemoveFromShoppingListAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveFromShoppingListAction.swift; sourceTree = "<group>"; };
 		C983AC442368FC1D00AA930F /* CollectionThreadCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionThreadCellViewModel.swift; sourceTree = "<group>"; };
 		C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveTableViewCell.swift; sourceTree = "<group>"; };
 		C983AC4923691D6400AA930F /* ShoppingListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListCellViewModel.swift; sourceTree = "<group>"; };
@@ -612,6 +620,7 @@
 		C97FCDE6232DFC5F000B1590 /* Shopping List */ = {
 			isa = PBXGroup;
 			children = (
+				C9815E72236E1E0500D5DDEB /* Actions */,
 				C983AC4823691D3F00AA930F /* Cells */,
 				C97FCDD5232DCE43000B1590 /* ShoppingList.storyboard */,
 				C9491E32231F7B2C0031F463 /* ShoppingListViewController.swift */,
@@ -654,7 +663,6 @@
 				C95028F02366B29700BB02C4 /* UserActionPresenter.swift */,
 				C95028E62366070200BB02C4 /* ReplaySubject.swift */,
 				C9082F6D236A7BCC00768CA1 /* BoundUserAction.swift */,
-				C97FCE05233068C0000B1590 /* ShoppingListActions.swift */,
 				C97FCE07233073AA000B1590 /* ProjectActions.swift */,
 			);
 			path = Actions;
@@ -677,6 +685,18 @@
 			isa = PBXGroup;
 			children = (
 				C9815E6E236E1B8500D5DDEB /* AddThreadsAction.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
+		C9815E72236E1E0500D5DDEB /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				C9815E75236E1E6200D5DDEB /* AddPurchasedToCollectionAction.swift */,
+				C9815E73236E1E1400D5DDEB /* AddToShoppingListAction.swift */,
+				C9815E79236E1EEC00D5DDEB /* ChangeShoppingListAmountAction.swift */,
+				C9815E7B236E1F5300D5DDEB /* RemoveFromShoppingListAction.swift */,
+				C9815E77236E1E9600D5DDEB /* TogglePurchasedAction.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -895,8 +915,8 @@
 				C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */,
 				C919A3F1236BF3DA000C862D /* SplitViewModel.swift in Sources */,
 				C97FCDA323296433000B1590 /* EditProjectThreadCollectionViewCell.swift in Sources */,
+				C9815E74236E1E1400D5DDEB /* AddToShoppingListAction.swift in Sources */,
 				C97FCDBD232D79E7000B1590 /* Localized.swift in Sources */,
-				C97FCE06233068C0000B1590 /* ShoppingListActions.swift in Sources */,
 				C9571DF62353EF5400CCA56B /* AddThreadSceneDelegate.swift in Sources */,
 				C9491E0F231D8E5B0031F463 /* MyThreadsViewController.swift in Sources */,
 				C9815E64236E196100D5DDEB /* MarkInStockAction.swift in Sources */,
@@ -947,6 +967,7 @@
 				C95D2565236B2F1F00582A05 /* EditProjectDetailViewModel.swift in Sources */,
 				C9082F6E236A7BCC00768CA1 /* BoundUserAction.swift in Sources */,
 				C9815E6A236E1A7E00D5DDEB /* RemoveThreadAction.swift in Sources */,
+				C9815E7A236E1EEC00D5DDEB /* ChangeShoppingListAmountAction.swift in Sources */,
 				C97FCDEE232E941D000B1590 /* Cells.swift in Sources */,
 				C95028F32366B74700BB02C4 /* ViewModel.swift in Sources */,
 				C9082F6C236A76F700768CA1 /* ThreadProjectTableViewCell.swift in Sources */,
@@ -955,12 +976,14 @@
 				C97FCDAE232C8796000B1590 /* Project+UIActivityItemSource.swift in Sources */,
 				C9491DF6231D897B0031F463 /* SceneDelegate.swift in Sources */,
 				C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */,
+				C9815E78236E1E9600D5DDEB /* TogglePurchasedAction.swift in Sources */,
 				C906E3B9235272A0003EE053 /* SidebarViewController.swift in Sources */,
 				C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */,
 				C983AC472368FF8C00AA930F /* ReactiveTableViewCell.swift in Sources */,
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
 				C95028E32362BCC800BB02C4 /* ReactiveViewControllers.swift in Sources */,
 				C9815E71236E1BCF00D5DDEB /* EventKeys.swift in Sources */,
+				C9815E76236E1E6200D5DDEB /* AddPurchasedToCollectionAction.swift in Sources */,
 				C955EDE8234028A8000ACC39 /* ViewControllers.swift in Sources */,
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
@@ -974,6 +997,7 @@
 				C97FCDBF232D9FD0000B1590 /* TextViewCollectionViewCell.swift in Sources */,
 				C95028E72366070200BB02C4 /* ReplaySubject.swift in Sources */,
 				C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */,
+				C9815E7C236E1F5300D5DDEB /* RemoveFromShoppingListAction.swift in Sources */,
 				C99677EE235A6C5400AE2F5C /* OpenInSafariActivity.swift in Sources */,
 				C9815E66236E196300D5DDEB /* MarkOnBobbinAction.swift in Sources */,
 			);
