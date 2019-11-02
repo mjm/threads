@@ -10,49 +10,6 @@ import Combine
 import CoreData
 import UIKit
 
-// MARK: - View Controller
-
-class ReactiveViewController: UIViewController {
-    private(set) var actionRunner: UserActionRunner!
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        actionRunner
-            = UserActionRunner(presenter: self, managedObjectContext: managedObjectContext)
-    }
-
-    #if !targetEnvironment(macCatalyst)
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        becomeFirstResponder()
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        resignFirstResponder()
-    }
-    #endif
-
-    override var canBecomeFirstResponder: Bool {
-        true
-    }
-
-    override var undoManager: UndoManager? {
-        managedObjectContext.undoManager
-    }
-
-    //    override func updateUserActivityState(_ activity: NSUserActivity) {
-    //        currentUserActivity?.update(activity)
-    //    }
-
-    // MARK: - Subclasses can override
-
-    var managedObjectContext: NSManagedObjectContext {
-        return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
-    }
-}
-
 // MARK: - Table View Controller
 
 class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>: UITableViewController
@@ -60,7 +17,6 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
     typealias DataSource = TableViewDiffableDataSource<SectionType, CellType>
     typealias Snapshot = NSDiffableDataSourceSnapshot<SectionType, CellType>
 
-    private(set) var actionRunner: UserActionRunner!
     private(set) var dataSource: DataSource!
     @Published var animate: Bool = false
 
@@ -68,9 +24,6 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        actionRunner
-            = UserActionRunner(presenter: self, managedObjectContext: managedObjectContext)
 
         registerCellTypes()
 
@@ -114,7 +67,7 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
     }
 
     override var undoManager: UndoManager? {
-        managedObjectContext.undoManager
+        NSManagedObjectContext.view.undoManager
     }
 
     //    override func updateUserActivityState(_ activity: NSUserActivity) {
@@ -133,10 +86,6 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
     }
 
     // MARK: - Subclasses can override
-
-    var managedObjectContext: NSManagedObjectContext {
-        return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
-    }
 
     var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
         [:]
@@ -158,7 +107,6 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
     typealias DataSource = UICollectionViewDiffableDataSource<SectionType, CellType>
     typealias Snapshot = NSDiffableDataSourceSnapshot<SectionType, CellType>
 
-    private(set) var actionRunner: UserActionRunner!
     private(set) var dataSource: DataSource!
     @Published var animate: Bool = false
 
@@ -166,9 +114,6 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        actionRunner
-            = UserActionRunner(presenter: self, managedObjectContext: managedObjectContext)
 
         registerCellTypes()
 
@@ -214,7 +159,7 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
     }
 
     override var undoManager: UndoManager? {
-        managedObjectContext.undoManager
+        NSManagedObjectContext.view.undoManager
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -240,10 +185,6 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
 
     // MARK: - Subclasses can override
 
-    var managedObjectContext: NSManagedObjectContext {
-        return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
-    }
-
     var cellTypes: [String: RegisteredCellType<UICollectionViewCell>] {
         [:]
     }
@@ -257,7 +198,6 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
     }
 
     func dataSourceWillInitialize() {}
-    func dataSourceDidUpdateSnapshot(animated: Bool) {}
 
     func subscribe() {}
 }

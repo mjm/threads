@@ -46,10 +46,6 @@ class ProjectDetailViewController: ReactiveCollectionViewController<
         fatalError("ThreadDetailViewController should be created in an IBSegueAction")
     }
 
-    override var managedObjectContext: NSManagedObjectContext {
-        viewModel.context
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 

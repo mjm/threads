@@ -201,14 +201,14 @@ extension MyThreadsViewController {
         _ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath,
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
-        guard let cell = dataSource.itemIdentifier(for: indexPath) else {
+        guard let item = dataSource.itemIdentifier(for: indexPath) else {
             return nil
         }
 
-        let thread = cell.thread
+        let thread = item.thread
 
         return UIContextMenuConfiguration(
-            identifier: thread.objectID,
+            identifier: viewModel.identifier(for: item),
             previewProvider: {
                 self.storyboard!.instantiateViewController(identifier: "ThreadPreview") { coder in
                     ThreadPreviewViewController(coder: coder, thread: thread)
@@ -216,14 +216,14 @@ extension MyThreadsViewController {
             }
         ) { suggestedActions in
 
-            let addToShoppingList = self.viewModel.addToShoppingListAction(for: cell)
+            let addToShoppingList = self.viewModel.addToShoppingListAction(for: item)
                 .menuAction(image: UIImage(systemName: "cart.badge.plus"))
 
             // Load projects for submenu
             let addToProjectMenu: UIMenuElement
             let projectImage = UIImage(systemName: "rectangle.3.offgrid")
 
-            let projectActions = self.viewModel.projectActions(for: cell)
+            let projectActions = self.viewModel.projectActions(for: item)
             if projectActions.isEmpty {
                 addToProjectMenu
                     = UIAction(
@@ -245,9 +245,9 @@ extension MyThreadsViewController {
 
             let markMenu = UIMenu(
                 title: "", options: .displayInline,
-                children: self.viewModel.markActions(for: cell).map { $0.menuAction() })
+                children: self.viewModel.markActions(for: item).map { $0.menuAction() })
 
-            let remove = self.viewModel.removeAction(for: cell)
+            let remove = self.viewModel.removeAction(for: item)
                 .menuAction(image: UIImage(systemName: "trash"))
 
             return UIMenu(
@@ -266,9 +266,10 @@ extension MyThreadsViewController {
         willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration,
         animator: UIContextMenuInteractionCommitAnimating
     ) {
-        let thread
-            = managedObjectContext.object(with: configuration.identifier as! NSManagedObjectID)
-            as! Thread
+        guard let thread = viewModel.thread(for: configuration.identifier) else {
+            return
+        }
+        
         animator.addAnimations {
             self.showDetail(for: thread)
         }

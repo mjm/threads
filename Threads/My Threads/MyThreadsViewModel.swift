@@ -55,6 +55,14 @@ final class MyThreadsViewModel: ViewModel {
     var userActivity: AnyPublisher<UserActivity, Never> {
         Just(.showMyThreads).eraseToAnyPublisher()
     }
+
+    func identifier(for item: Item) -> NSCopying {
+        item.thread.objectID
+    }
+
+    func thread(for identifier: NSCopying) -> Thread? {
+        context.object(with: identifier as! NSManagedObjectID) as? Thread
+    }
 }
 
 // MARK: - Actions

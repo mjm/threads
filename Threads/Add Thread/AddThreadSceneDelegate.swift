@@ -28,7 +28,7 @@ class AddThreadSceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         guard
             case let .addThreads(mode) = UserActivity(
-                userActivity: userActivity, context: addThreadController.managedObjectContext)
+                userActivity: userActivity, context: addThreadController.viewModel.context)
         else {
             NSLog("AddThread scene was created with the wrong type of user activity")
             closeWindow(session)

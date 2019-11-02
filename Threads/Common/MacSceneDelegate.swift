@@ -55,7 +55,7 @@ class MacSceneDelegate: UIResponder, UIWindowSceneDelegate {
         let rootViewController = window.rootViewController as! SplitViewController
 
         if let activity = rootViewController.detailViewController.currentUserActivity {
-            UserActivity(userActivity: activity, context: managedObjectContext)?.addToCurrentEvent()
+            UserActivity(userActivity: activity, context: .view)?.addToCurrentEvent()
             Event.current.send("saving activity")
             return activity
         }
@@ -70,7 +70,7 @@ class MacSceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let rootViewController = window.rootViewController as! SplitViewController
 
-        let userActivity = UserActivity(userActivity: activity, context: managedObjectContext)
+        let userActivity = UserActivity(userActivity: activity, context: .view)
         userActivity?.addToCurrentEvent()
 
         switch userActivity {
@@ -87,10 +87,6 @@ class MacSceneDelegate: UIResponder, UIWindowSceneDelegate {
         default:
             return
         }
-    }
-
-    private var managedObjectContext: NSManagedObjectContext {
-        (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     }
 }
 

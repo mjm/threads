@@ -57,7 +57,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let displayedController = navController.topViewController
 
         if let activity = displayedController?.userActivity {
-            UserActivity(userActivity: activity, context: managedObjectContext)?.addToCurrentEvent()
+            UserActivity(userActivity: activity, context: .view)?.addToCurrentEvent()
             Event.current.send("saving activity")
             return activity
         }
@@ -68,7 +68,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func restoreActivity(_ activity: NSUserActivity, animated: Bool) {
         Event.current[.activityType] = activity.activityType
 
-        let userActivity = UserActivity(userActivity: activity, context: managedObjectContext)
+        let userActivity = UserActivity(userActivity: activity, context: .view)
         userActivity?.addToCurrentEvent()
 
         switch userActivity {
@@ -146,9 +146,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     private var topViewController: UIViewController {
         return navigationController.topViewController!
-    }
-
-    private var managedObjectContext: NSManagedObjectContext {
-        (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     }
 }
