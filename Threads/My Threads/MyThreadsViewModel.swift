@@ -16,7 +16,7 @@ final class MyThreadsViewModel: ViewModel, SnapshotViewModel {
     typealias Item = CollectionThreadCellViewModel
 
     @Published private(set) var threadViewModels: [Item] = []
-    @Published var selectedCell: Item?
+    @Published var selection: Item?
 
     override init(context: NSManagedObjectContext = .view) {
         super.init(context: context)
@@ -50,7 +50,7 @@ final class MyThreadsViewModel: ViewModel, SnapshotViewModel {
             .eraseToAnyPublisher()
     }
 
-    var selectedThread: Thread? { selectedCell?.thread }
+    var selectedThread: Thread? { selection?.thread }
 
     var userActivity: AnyPublisher<UserActivity, Never> {
         Just(.showMyThreads).eraseToAnyPublisher()
@@ -73,44 +73,6 @@ extension MyThreadsViewModel {
 
     func addThreads() {
         actionRunner.perform(AddThreadAction(mode: .collection))
-    }
-
-    var canDeleteSelectedThread: Bool { selectedThread != nil }
-
-    func deleteSelectedThread() {
-        if let thread = selectedThread {
-            actionRunner.perform(thread.removeFromCollectionAction)
-        }
-    }
-
-    var canToggleSelectedThreadOnBobbin: Bool {
-        (selectedThread?.amountInCollection ?? 0) > 0
-    }
-
-    func toggleSelectedThreadOnBobbin() {
-        guard let thread = selectedThread, thread.amountInCollection > 0 else {
-            return
-        }
-
-        if thread.onBobbin {
-            actionRunner.perform(thread.markOffBobbinAction)
-        } else {
-            actionRunner.perform(thread.markOnBobbinAction)
-        }
-    }
-
-    var canToggleSelectedThreadInStock: Bool { selectedThread != nil }
-
-    func toggleSelectedThreadInStock() {
-        guard let thread = selectedThread else {
-            return
-        }
-
-        if thread.amountInCollection > 0 {
-            actionRunner.perform(thread.markOutOfStockAction)
-        } else {
-            actionRunner.perform(thread.markInStockAction)
-        }
     }
 }
 

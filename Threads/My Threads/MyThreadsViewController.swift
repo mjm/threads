@@ -95,15 +95,15 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
     }
 
     override func delete(_ sender: Any?) {
-        viewModel.deleteSelectedThread()
+        viewModel.selection?.removeAction.perform()
     }
 
     @objc func toggleOnBobbin(_ sender: Any?) {
-        viewModel.toggleSelectedThreadOnBobbin()
+        viewModel.selection?.bobbinAction?.perform()
     }
 
     @objc func toggleInStock(_ sender: Any?) {
-        viewModel.toggleSelectedThreadInStock()
+        viewModel.selection?.stockAction.perform()
     }
 
     @IBAction func unwindDeleteThread(segue: UIStoryboardSegue) {
@@ -130,7 +130,7 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
 
         switch action {
         case #selector(delete(_:)):
-            return viewModel.canDeleteSelectedThread
+            return viewModel.selection?.removeAction.canPerform ?? false
         default:
             return true
         }
@@ -142,10 +142,10 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
         switch command.action {
         case #selector(toggleOnBobbin(_:)):
             command.state = (viewModel.selectedThread?.onBobbin ?? false) ? .on : .off
-            command.attributes = viewModel.canToggleSelectedThreadOnBobbin ? [] : .disabled
+            command.update(viewModel.selection?.bobbinAction)
         case #selector(toggleInStock(_:)):
             command.state = (viewModel.selectedThread?.amountInCollection ?? 0) > 0 ? .on : .off
-            command.attributes = viewModel.canToggleSelectedThreadInStock ? [] : .disabled
+            command.update(viewModel.selection?.stockAction)
         default:
             return
         }
@@ -155,7 +155,7 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
 // MARK: - Table View Delegate
 extension MyThreadsViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.selectedCell = dataSource.itemIdentifier(for: indexPath)
+        viewModel.selection = dataSource.itemIdentifier(for: indexPath)
 
         #if !targetEnvironment(macCatalyst)
         if let thread = viewModel.selectedThread {
@@ -245,7 +245,11 @@ extension MyThreadsViewController {
 
             let markMenu = UIMenu(
                 title: "", options: .displayInline,
-                children: item.markActions.map { $0.menuAction() })
+                children: item.markActions.map {
+                    var action = $0
+                    action.isDestructive = false
+                    return action.menuAction()
+                })
 
             let remove = item.removeAction
                 .menuAction(image: UIImage(systemName: "trash"))

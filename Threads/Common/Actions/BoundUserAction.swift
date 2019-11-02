@@ -26,18 +26,21 @@ struct BoundUserAction<ResultType> {
         ResultType, Error
     >
 
-    private var title: String
-    private var options: BoundUserActionOptions
-    private var canPerformBlock: CanPerformHandler
-    private var performBlock: PerformHandler
+    fileprivate var title: String
+    fileprivate var shortTitle: String
+    fileprivate var options: BoundUserActionOptions
+    fileprivate var canPerformBlock: CanPerformHandler
+    fileprivate var performBlock: PerformHandler
 
     init(
         title: String,
+        shortTitle: String? = nil,
         options: BoundUserActionOptions = [],
         canPerform: @escaping CanPerformHandler = { true },
         perform: @escaping PerformHandler
     ) {
         self.title = title
+        self.shortTitle = shortTitle ?? title
         self.options = options
         self.canPerformBlock = canPerform
         self.performBlock = perform
@@ -47,16 +50,20 @@ struct BoundUserAction<ResultType> {
         _ action: Action,
         runner: UserActionRunner,
         title: String? = nil,
+        shortTitle: String? = nil,
         options: BoundUserActionOptions = []
     ) where Action.ResultType == ResultType {
-        guard let title = title ?? action.undoActionName else {
+        guard let shortTitle = shortTitle ?? title ?? action.shortDisplayName,
+            let title = title ?? action.displayName
+        else {
             preconditionFailure(
-                "Could not find a title for \(action). Either pass a title: argument or set the undoActionName on the action."
+                "Could not find a title for \(action). Either pass a title: argument or set the displayName on the action."
             )
         }
 
         self.init(
             title: title,
+            shortTitle: shortTitle,
             options: options,
             canPerform: { action.canPerform },
             perform: { source, willPerform in
@@ -65,7 +72,18 @@ struct BoundUserAction<ResultType> {
         )
     }
 
-    var isDestructive: Bool { options.contains(.destructive) }
+    var isDestructive: Bool {
+        get {
+            options.contains(.destructive)
+        }
+        set {
+            if newValue {
+                options.insert(.destructive)
+            } else {
+                options.remove(.destructive)
+            }
+        }
+    }
 
     var canPerform: Bool { canPerformBlock() }
 
@@ -77,6 +95,7 @@ struct BoundUserAction<ResultType> {
     }
 }
 
+// MARK: - Creating UIKIt actions
 extension BoundUserAction {
     func alertAction(
         willPerform: @escaping () -> Void = {},
@@ -124,13 +143,23 @@ extension BoundUserAction {
     ) -> UIContextualAction {
         let style: UIContextualAction.Style = options.contains(.destructive)
             ? .destructive : .normal
-        return UIContextualAction(style: style, title: title) { _, _, contextualActionCompletion in
+        return UIContextualAction(style: style, title: shortTitle) {
+            _, _, contextualActionCompletion in
             self.perform(willPerform: willPerform)
                 .ignoreError()
                 .handle(receiveValue: { value in
                     completion(value)
                     contextualActionCompletion(true)
                 })
+        }
+    }
+}
+
+extension UICommand {
+    func update<T>(_ action: BoundUserAction<T>?, updateTitle: Bool = false) {
+        self.attributes = action?.canPerform ?? false ? [] : .disabled
+        if updateTitle, let action = action {
+            self.title = action.title
         }
     }
 }

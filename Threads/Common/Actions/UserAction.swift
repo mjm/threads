@@ -20,6 +20,17 @@ protocol UserAction {
     /// If nil, no action name will be set. This is strongly discouraged.
     var undoActionName: String? { get }
 
+    /// The name used by default when this action is shown in the user interface.
+    ///
+    /// If not implemented, it defaults to the undo action name.
+    var displayName: String? { get }
+
+    /// The name used by default when this action is shown in space-constrained parts of the user interface, like
+    /// table row swipe actions.
+    ///
+    /// If not implemented, it defaults to the display name.
+    var shortDisplayName: String? { get }
+
     /// Whether to save the managed object context after the action completes.
     ///
     /// If not implemented, it defaults to true. It's probably to best to leave it that way.
@@ -27,7 +38,7 @@ protocol UserAction {
 
     /// Whether the action is currently valid to perform.
     ///
-    /// This will be used to automatically disable contextual menu actions. If not implemented, it defaults to true.
+    /// This will be used to automatically disable menu actions. If not implemented, it defaults to true.
     var canPerform: Bool { get }
 
     /// Do the action's work, possibly asynchronously.
@@ -50,6 +61,9 @@ protocol UserAction {
 extension UserAction {
     var saveAfterComplete: Bool { true }
     var canPerform: Bool { true }
+
+    var displayName: String? { undoActionName }
+    var shortDisplayName: String? { displayName }
 
     func run(on runner: UserActionRunner, context: UserActionContext<Self>) {
         runner.reallyPerform(self, context: context)

@@ -19,7 +19,8 @@ extension Event.Key {
 struct MarkOffBobbinAction: SyncUserAction {
     let thread: Thread
 
-    let undoActionName: String? = Localized.markOffBobbin
+    var undoActionName: String? { Localized.markOffBobbin }
+    var shortDisplayName: String? { Localized.offBobbin }
 
     func perform(_ context: UserActionContext<MarkOffBobbinAction>) throws {
         Event.current[.threadNumber] = thread.number
@@ -30,7 +31,8 @@ struct MarkOffBobbinAction: SyncUserAction {
 struct MarkOnBobbinAction: SyncUserAction {
     let thread: Thread
 
-    let undoActionName: String? = Localized.markOnBobbin
+    var undoActionName: String? { Localized.markOnBobbin }
+    var shortDisplayName: String? { Localized.onBobbin }
 
     func perform(_ context: UserActionContext<MarkOnBobbinAction>) throws {
         Event.current[.threadNumber] = thread.number
@@ -41,7 +43,8 @@ struct MarkOnBobbinAction: SyncUserAction {
 struct MarkInStockAction: SyncUserAction {
     let thread: Thread
 
-    let undoActionName: String? = Localized.markInStock
+    var undoActionName: String? { Localized.markInStock }
+    var shortDisplayName: String? { Localized.inStock }
 
     func perform(_ context: UserActionContext<MarkInStockAction>) throws {
         Event.current[.threadNumber] = thread.number
@@ -52,7 +55,8 @@ struct MarkInStockAction: SyncUserAction {
 struct MarkOutOfStockAction: SyncUserAction {
     let thread: Thread
 
-    let undoActionName: String? = Localized.markOutOfStock
+    var undoActionName: String? { Localized.markOutOfStock }
+    var shortDisplayName: String? { Localized.outOfStock }
 
     func perform(_ context: UserActionContext<MarkOutOfStockAction>) throws {
         Event.current[.threadNumber] = thread.number
@@ -64,7 +68,7 @@ struct MarkOutOfStockAction: SyncUserAction {
 struct AddToCollectionAction: SyncUserAction {
     let threads: [Thread]
 
-    let undoActionName: String? = Localized.addToCollection
+    var undoActionName: String? { Localized.addToCollection }
 
     func perform(_ context: UserActionContext<AddToCollectionAction>) throws {
         Event.current[.threadCount] = threads.count
@@ -77,7 +81,8 @@ struct AddToCollectionAction: SyncUserAction {
 struct RemoveThreadAction: ReactiveUserAction, DestructiveUserAction {
     let thread: Thread
 
-    let undoActionName: String? = Localized.removeThread
+    var undoActionName: String? { Localized.removeThread }
+    var displayName: String? { Localized.removeFromCollection }
 
     let confirmationTitle = Localized.removeThread
     let confirmationMessage = Localized.removeThreadPrompt

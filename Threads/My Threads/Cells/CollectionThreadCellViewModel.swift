@@ -54,21 +54,19 @@ extension CollectionThreadCellViewModel {
         }
 
         if thread.onBobbin {
-            return thread.markOffBobbinAction
-                .bind(to: actionRunner, title: Localized.offBobbin)
+            return thread.markOffBobbinAction.bind(to: actionRunner)
         } else {
-            return thread.markOnBobbinAction
-                .bind(to: actionRunner, title: Localized.onBobbin)
+            return thread.markOnBobbinAction.bind(to: actionRunner)
         }
     }
 
     var stockAction: BoundUserAction<Void> {
         if thread.amountInCollection == 0 {
             return thread.markInStockAction
-                .bind(to: actionRunner, title: Localized.inStock)
+                .bind(to: actionRunner)
         } else {
             return thread.markOutOfStockAction
-                .bind(to: actionRunner, title: Localized.outOfStock, options: .destructive)
+                .bind(to: actionRunner, options: .destructive)
         }
     }
 }
@@ -76,15 +74,10 @@ extension CollectionThreadCellViewModel {
 // MARK: - Context Menu Actions
 extension CollectionThreadCellViewModel {
     var markActions: [BoundUserAction<Void>] {
-        if thread.amountInCollection == 0 {
-            return [thread.markInStockAction.bind(to: actionRunner)]
+        if let bobbinAction = bobbinAction {
+            return [bobbinAction, stockAction]
         } else {
-            return [
-                thread.onBobbin
-                    ? thread.markOffBobbinAction.bind(to: actionRunner)
-                    : thread.markOnBobbinAction.bind(to: actionRunner),
-                thread.markOutOfStockAction.bind(to: actionRunner),
-            ]
+            return [stockAction]
         }
     }
 
@@ -112,7 +105,6 @@ extension CollectionThreadCellViewModel {
         thread.removeFromCollectionAction
             .bind(
                 to: actionRunner,
-                title: Localized.removeFromCollection,
                 options: .destructive)
     }
 }
