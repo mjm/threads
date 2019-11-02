@@ -13,8 +13,7 @@ import UIKit
 // MARK: - Table View Controller
 
 class ReactiveTableViewController<ViewModel: SnapshotViewModel>: UITableViewController
-    where ViewModel.Item: ReusableCell
-{
+where ViewModel.Item: ReusableCell {
     typealias DataSource = TableViewDiffableDataSource<ViewModel.Section, ViewModel.Item>
     typealias Snapshot = ViewModel.Snapshot
 
@@ -104,8 +103,7 @@ class ReactiveTableViewController<ViewModel: SnapshotViewModel>: UITableViewCont
 // MARK: - Collection View Controller
 
 class ReactiveCollectionViewController<ViewModel: SnapshotViewModel>: UICollectionViewController
-    where ViewModel.Item: ReusableCell
-{
+where ViewModel.Item: ReusableCell {
     typealias DataSource = UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>
     typealias Snapshot = ViewModel.Snapshot
 

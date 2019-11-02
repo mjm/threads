@@ -21,6 +21,7 @@ struct BoundUserActionOptions: OptionSet {
 
 struct BoundUserAction<ResultType> {
     typealias CanPerformHandler = () -> Bool
+
     typealias PerformHandler = (UserActionSource?, @escaping () -> Void) -> AnyPublisher<
         ResultType, Error
     >

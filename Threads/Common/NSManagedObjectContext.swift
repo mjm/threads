@@ -61,6 +61,7 @@ struct ManagedObjectChangesPublisher<Object: NSManagedObject>: Publisher {
 
         private var demand: Subscribers.Demand = .none
         private var lastSentState: [Object] = []
+
         private var currentDifferences: CollectionDifference<Object> = [Object]().difference(
             from: [Object]())
 

@@ -151,7 +151,8 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
         let quantityTicks = pendingPurchaseTick.map { _ -> Set<Thread> in [] }
 
         let allTicks = toggleTicks.merge(with: quantityTicks)
-        return allTicks.debounce(for: .init(purchaseDelay), scheduler: RunLoop.main).eraseToAnyPublisher()
+        return allTicks.debounce(for: .init(purchaseDelay), scheduler: RunLoop.main)
+            .eraseToAnyPublisher()
     }
 
     private func handleAction(_ action: ShoppingListCellViewModel.Action, for thread: Thread) {

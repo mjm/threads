@@ -176,7 +176,8 @@ extension ProjectListViewController {
                     UIAction(title: Localized.edit, image: UIImage(systemName: "pencil")) { _ in
                         self.showDetail(for: project, editing: true)
                     },
-                    item.addToShoppingListAction.menuAction(image: UIImage(systemName: "cart.badge.plus")),
+                    item.addToShoppingListAction.menuAction(
+                        image: UIImage(systemName: "cart.badge.plus")),
                     item.shareAction.menuAction(image: UIImage(systemName: "square.and.arrow.up")),
                     item.deleteAction.menuAction(image: UIImage(systemName: "trash")),
                 ])

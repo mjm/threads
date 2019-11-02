@@ -28,9 +28,12 @@ final class ToolbarViewModel: ViewModel {
 
             guard let itemProvider = itemProvider else { return }
 
-            itemProvider.title.assign(to: \.title, on: self).store(in: &self.itemProviderSubscriptions)
-            itemProvider.leadingToolbarItems.assign(to: \.leadingItems, on: self).store(in: &self.itemProviderSubscriptions)
-            itemProvider.trailingToolbarItems.assign(to: \.trailingItems, on: self).store(in: &self.itemProviderSubscriptions)
+            itemProvider.title.assign(to: \.title, on: self).store(
+                in: &self.itemProviderSubscriptions)
+            itemProvider.leadingToolbarItems.assign(to: \.leadingItems, on: self).store(
+                in: &self.itemProviderSubscriptions)
+            itemProvider.trailingToolbarItems.assign(to: \.trailingItems, on: self).store(
+                in: &self.itemProviderSubscriptions)
         }.store(in: &cancellables)
     }
 

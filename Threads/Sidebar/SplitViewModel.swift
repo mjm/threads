@@ -52,7 +52,8 @@ final class SplitViewModel: ViewModel {
     }
 
     func bind(to detailModel: DetailViewModel) {
-        detailModel.$selection.combineLatest(detailModel.$isEditingProject) { selection, isEditingProject in
+        detailModel.$selection.combineLatest(detailModel.$isEditingProject) {
+            selection, isEditingProject in
             switch selection {
             case .collection:
                 return .collection
@@ -63,14 +64,17 @@ final class SplitViewModel: ViewModel {
             }
         }.removeDuplicates().assign(to: \.selection, on: self).store(in: &cancellables)
 
-        $selection.removeDuplicates().combineLatest(detailModel.$selection) { selection, existingDetailSelection in
+        $selection.removeDuplicates().combineLatest(detailModel.$selection) {
+            selection, existingDetailSelection in
             switch selection {
             case .collection:
                 return .collection
             case .shoppingList:
                 return .shoppingList
-            case .project(let project, editing: let editing):
-                if case .project(let currentProjectModel) = existingDetailSelection, currentProjectModel.project == project {
+            case .project(let project, let editing):
+                if case .project(let currentProjectModel) = existingDetailSelection,
+                    currentProjectModel.project == project
+                {
                     return .project(currentProjectModel)
                 } else {
                     return .project(ProjectDetailViewModel(project: project, editing: editing))
@@ -79,7 +83,8 @@ final class SplitViewModel: ViewModel {
         }.assign(to: \.selection, on: detailModel).store(in: &cancellables)
 
         #if targetEnvironment(macCatalyst)
-        detailModel.toolbarItemProvider.optionally().assign(to: \.itemProvider, on: toolbarViewModel).store(in: &cancellables)
+        detailModel.toolbarItemProvider.optionally().assign(
+            to: \.itemProvider, on: toolbarViewModel).store(in: &cancellables)
         #endif
     }
 

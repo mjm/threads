@@ -28,12 +28,17 @@ class DetailViewController: UITabBarController {
 
         tabBar.isHidden = true
 
-        myThreadsViewController = UIStoryboard(name: "MyThreads", bundle: nil).instantiateInitialViewController { coder in
-            MyThreadsViewController(coder: coder, viewModel: self.viewModel.collectionViewModel)
-        }
-        shoppingListViewController = UIStoryboard(name: "ShoppingList", bundle: nil).instantiateInitialViewController { coder in
-            ShoppingListViewController(coder: coder, viewModel: self.viewModel.shoppingListViewModel)
-        }
+        myThreadsViewController
+            = UIStoryboard(name: "MyThreads", bundle: nil).instantiateInitialViewController {
+                coder in
+                MyThreadsViewController(coder: coder, viewModel: self.viewModel.collectionViewModel)
+            }
+        shoppingListViewController
+            = UIStoryboard(name: "ShoppingList", bundle: nil).instantiateInitialViewController {
+                coder in
+                ShoppingListViewController(
+                    coder: coder, viewModel: self.viewModel.shoppingListViewModel)
+            }
 
         viewControllers = [myThreadsViewController, shoppingListViewController]
 

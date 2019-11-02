@@ -271,7 +271,7 @@ extension MyThreadsViewController {
         guard let thread = viewModel.thread(for: configuration.identifier) else {
             return
         }
-        
+
         animator.addAnimations {
             self.showDetail(for: thread)
         }

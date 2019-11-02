@@ -34,7 +34,8 @@ final class DetailViewModel: ViewModel {
             guard let self = self else { return }
 
             if case .project(let model) = selection {
-                self.currentProjectEditing = model.$isEditing.assign(to: \.isEditingProject, on: self)
+                self.currentProjectEditing
+                    = model.$isEditing.assign(to: \.isEditingProject, on: self)
             } else {
                 self.currentProjectEditing = nil
                 self.isEditingProject = false

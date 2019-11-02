@@ -34,7 +34,8 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
     @IBOutlet var actionsButtonItem: UIBarButtonItem!
 
     convenience init?(coder: NSCoder, project: Project, editing: Bool = false) {
-        self.init(coder: coder, viewModel: ProjectDetailViewModel(project: project, editing: editing))
+        self.init(
+            coder: coder, viewModel: ProjectDetailViewModel(project: project, editing: editing))
     }
 
     init?(coder: NSCoder, viewModel: ProjectDetailViewModel) {

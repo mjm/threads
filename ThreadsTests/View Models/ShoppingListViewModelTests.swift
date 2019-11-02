@@ -29,7 +29,8 @@ final class ShoppingListViewModelTests: ViewModelTestCase {
         thread1.addToShoppingList()
         thread2.addToShoppingList()
 
-        subject.canAddPurchasedToCollection.assign(to: \.canAddPurchased, on: fakeView).store(in: &cancellables)
+        subject.canAddPurchasedToCollection.assign(to: \.canAddPurchased, on: fakeView).store(
+            in: &cancellables)
         XCTAssertFalse(fakeView.canAddPurchased)
 
         thread1.purchased = true

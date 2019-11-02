@@ -40,7 +40,10 @@ class ViewModelTestCase: XCTestCase {
         super.tearDown()
     }
 
-    func await(_ test: @autoclosure () -> Bool, timeout: TimeInterval = 5.0, file: StaticString = #file, line: UInt = #line) {
+    func await(
+        _ test: @autoclosure () -> Bool, timeout: TimeInterval = 5.0, file: StaticString = #file,
+        line: UInt = #line
+    ) {
         let endDate = Date(timeIntervalSinceNow: timeout)
         while Date() < endDate {
             if test() {

@@ -87,7 +87,8 @@ final class AddThreadViewModelTests: ViewModelTestCase {
         XCTAssertFalse(fakeView.canAdd)
 
         subject.select(thread: fakeView.filteredThreads.first { $0.number == "150" }!)
-        await(fakeView.filteredCount == 0 && fakeView.selectedCount == 1 && fakeView.queryText == "")
+        await(
+            fakeView.filteredCount == 0 && fakeView.selectedCount == 1 && fakeView.queryText == "")
         XCTAssertEqual(fakeView.selectedThreads.map { $0.number! }, ["150"])
         XCTAssertTrue(fakeView.canAdd)
     }
