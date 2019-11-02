@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+	against=HEAD
+else
+	# Initial commit: diff against an empty tree object
+	against=$(git hash-object -t tree /dev/null)
+fi
+
+changed_files() {
+    git diff --cached --name-only --diff-filter=ACMR $against | grep '.swift$' | tr '\n' '\0'
+}
+
+# Redirect output to stderr.
+exec 1>&2
+
+if ! command -v swift-format >/dev/null 2>&1; then
+    echo >&2 "format: swift-format command can't be found."
+    echo >&2 "format: run bin/install-swift-format to install it."
+    exit 1
+fi
+
+echo "Formatting..."
+changed_files | xargs -0 swift-format --configuration .swift-format.json -i -r
+changed_files | xargs -0 git add

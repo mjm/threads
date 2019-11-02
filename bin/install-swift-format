@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [[ -d ../swift-format ]]; then
+    pushd ../swift-format
+    git pull
+else
+    git clone -b swift-5.1-branch https://github.com/apple/swift-format ../swift-format
+    pushd ../swift-format
+fi
+
+swift build -c release
+cp .build/release/swift-format /usr/local/bin/swift-format

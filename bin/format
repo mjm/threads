@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if ! command -v swift-format >/dev/null 2>&1; then
+    echo >&2 "format: swift-format command can't be found."
+    echo >&2 "format: run bin/install-swift-format to install it."
+    exit 1
+fi
+
+echo "Formatting..."
+swift-format --configuration .swift-format.json -i -r .
+echo "Done formatting."
