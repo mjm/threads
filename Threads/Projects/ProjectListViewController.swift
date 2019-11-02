@@ -14,10 +14,7 @@ extension ProjectListViewModel.Item: ReusableCell {
     var cellIdentifier: String { "Project" }
 }
 
-class ProjectListViewController: ReactiveCollectionViewController<
-    ProjectListViewModel.Section, ProjectListViewModel.Item
->
-{
+class ProjectListViewController: ReactiveCollectionViewController<ProjectListViewModel> {
     let viewModel: ProjectListViewModel
 
     required init?(coder: NSCoder) {

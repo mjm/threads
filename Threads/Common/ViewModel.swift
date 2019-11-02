@@ -8,7 +8,7 @@
 
 import Combine
 import CoreData
-import Foundation
+import UIKit
 
 class ViewModel {
     var cancellables = Set<AnyCancellable>()
@@ -29,4 +29,13 @@ class ViewModel {
             actionRunner.presenter = newValue
         }
     }
+}
+
+protocol SnapshotViewModel {
+    associatedtype Section: Hashable
+    associatedtype Item: Hashable
+
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+
+    var snapshot: AnyPublisher<Snapshot, Never> { get }
 }

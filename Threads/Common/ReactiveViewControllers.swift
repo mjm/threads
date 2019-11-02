@@ -12,10 +12,11 @@ import UIKit
 
 // MARK: - Table View Controller
 
-class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>: UITableViewController
+class ReactiveTableViewController<ViewModel: SnapshotViewModel>: UITableViewController
+    where ViewModel.Item: ReusableCell
 {
-    typealias DataSource = TableViewDiffableDataSource<SectionType, CellType>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<SectionType, CellType>
+    typealias DataSource = TableViewDiffableDataSource<ViewModel.Section, ViewModel.Item>
+    typealias Snapshot = ViewModel.Snapshot
 
     private(set) var dataSource: DataSource!
     @Published var animate: Bool = false
@@ -91,7 +92,7 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
         [:]
     }
 
-    func populate(cell: UITableViewCell, item: CellType) {
+    func populate(cell: UITableViewCell, item: ViewModel.Item) {
         preconditionFailure("populate(cell:item:) must be implemented for \(type(of: self))")
     }
 
@@ -102,10 +103,11 @@ class ReactiveTableViewController<SectionType: Hashable, CellType: ReusableCell>
 
 // MARK: - Collection View Controller
 
-class ReactiveCollectionViewController<SectionType: Hashable, CellType: ReusableCell>: UICollectionViewController
+class ReactiveCollectionViewController<ViewModel: SnapshotViewModel>: UICollectionViewController
+    where ViewModel.Item: ReusableCell
 {
-    typealias DataSource = UICollectionViewDiffableDataSource<SectionType, CellType>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<SectionType, CellType>
+    typealias DataSource = UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>
+    typealias Snapshot = ViewModel.Snapshot
 
     private(set) var dataSource: DataSource!
     @Published var animate: Bool = false
@@ -189,7 +191,7 @@ class ReactiveCollectionViewController<SectionType: Hashable, CellType: Reusable
         [:]
     }
 
-    func populate(cell: UICollectionViewCell, item: CellType) {
+    func populate(cell: UICollectionViewCell, item: ViewModel.Item) {
         preconditionFailure("populate(cell:item:) must be implemented for \(type(of: self))")
     }
 

@@ -14,10 +14,7 @@ extension ShoppingListViewModel.Item: ReusableCell {
     var cellIdentifier: String { "Thread" }
 }
 
-class ShoppingListViewController: ReactiveTableViewController<
-    ShoppingListViewModel.Section, ShoppingListViewModel.Item
->
-{
+class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewModel> {
     let viewModel: ShoppingListViewModel
 
     @IBOutlet var addCheckedButton: UIButton!

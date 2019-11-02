@@ -10,7 +10,7 @@ import Combine
 import CoreData
 import UIKit
 
-final class ProjectDetailViewModel: ViewModel {
+final class ProjectDetailViewModel: ViewModel, SnapshotViewModel {
     enum Section {
         case viewImages
         case editImages
@@ -31,8 +31,6 @@ final class ProjectDetailViewModel: ViewModel {
         case editThread(EditProjectThreadCellViewModel)
         case add
     }
-
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     let project: Project
 

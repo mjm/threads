@@ -10,12 +10,10 @@ import Combine
 import CoreData
 import UIKit
 
-final class ProjectListViewModel: ViewModel {
+final class ProjectListViewModel: ViewModel, SnapshotViewModel {
     enum Section { case projects }
 
     typealias Item = ProjectCellViewModel
-
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     @Published private(set) var projectViewModels: [ProjectCellViewModel] = []
 

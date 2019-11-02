@@ -10,15 +10,13 @@ import Combine
 import CoreData
 import UIKit
 
-final class ShoppingListViewModel: ViewModel {
+final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
     enum Section {
         case unpurchased
         case purchased
     }
 
     typealias Item = ShoppingListCellViewModel
-
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     @Published private(set) var threadViewModels: [Item] = []
     @Published var selectedItem: Item?

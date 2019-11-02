@@ -14,10 +14,7 @@ extension MyThreadsViewModel.Item: ReusableCell {
     var cellIdentifier: String { "Thread" }
 }
 
-class MyThreadsViewController: ReactiveTableViewController<
-    MyThreadsViewModel.Section, MyThreadsViewModel.Item
->
-{
+class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
     let viewModel: MyThreadsViewModel
 
     required init?(coder: NSCoder) {

@@ -10,15 +10,13 @@ import Combine
 import CoreData
 import UIKit
 
-final class AddThreadViewModel: ViewModel {
+final class AddThreadViewModel: ViewModel, SnapshotViewModel {
     enum Section {
         case filtered
         case selected
     }
 
     typealias Item = AddThreadCellViewModel
-
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     @Published private(set) var choices: [Item] = []
     @Published var threadToSelect: Thread?

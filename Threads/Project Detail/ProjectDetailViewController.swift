@@ -26,10 +26,7 @@ extension ProjectDetailViewModel.Item: ReusableCell {
     }
 }
 
-class ProjectDetailViewController: ReactiveCollectionViewController<
-    ProjectDetailViewModel.Section, ProjectDetailViewModel.Item
->
-{
+class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetailViewModel> {
     let viewModel: ProjectDetailViewModel
 
     private var editNameOnAppear: Bool

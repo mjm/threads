@@ -14,10 +14,7 @@ extension AddThreadViewModel.Item: ReusableCell {
     var cellIdentifier: String { "Thread" }
 }
 
-class AddThreadViewController: ReactiveTableViewController<
-    AddThreadViewModel.Section, AddThreadViewModel.Item
->
-{
+class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
     var onDismiss: (() -> Void)!
 
     private(set) var canDismiss = true

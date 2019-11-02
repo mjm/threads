@@ -10,7 +10,7 @@ import Combine
 import CoreData
 import UIKit
 
-final class ThreadDetailViewModel: ViewModel {
+final class ThreadDetailViewModel: ViewModel, SnapshotViewModel {
     enum Section {
         case details
         case shoppingList
@@ -22,8 +22,6 @@ final class ThreadDetailViewModel: ViewModel {
         case shoppingList(ShoppingListCellViewModel)
         case project(ThreadProjectCellViewModel)
     }
-
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     let thread: Thread
 

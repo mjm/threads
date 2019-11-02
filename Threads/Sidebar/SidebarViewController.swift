@@ -15,10 +15,7 @@ extension SidebarViewModel.Item: ReusableCell {
     }
 }
 
-class SidebarViewController: ReactiveTableViewController<
-    SidebarViewModel.Section, SidebarViewModel.Item
->
-{
+class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
     let viewModel: SidebarViewModel
 
     required init?(coder: NSCoder) {

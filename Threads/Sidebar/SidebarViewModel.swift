@@ -10,7 +10,7 @@ import Combine
 import CoreData
 import UIKit
 
-final class SidebarViewModel: ViewModel {
+final class SidebarViewModel: ViewModel, SnapshotViewModel {
     enum Section {
         case threads
         case projects
@@ -21,8 +21,6 @@ final class SidebarViewModel: ViewModel {
         case shoppingList
         case project(SidebarProjectCellViewModel)
     }
-
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     @Published private(set) var projectViewModels: [SidebarProjectCellViewModel] = []
     @Published var selectedItem: Item = .collection

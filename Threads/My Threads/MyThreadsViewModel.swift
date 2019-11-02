@@ -10,12 +10,10 @@ import Combine
 import CoreData
 import UIKit
 
-final class MyThreadsViewModel: ViewModel {
+final class MyThreadsViewModel: ViewModel, SnapshotViewModel {
     enum Section { case threads }
 
     typealias Item = CollectionThreadCellViewModel
-
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     @Published private(set) var threadViewModels: [Item] = []
     @Published var selectedCell: Item?

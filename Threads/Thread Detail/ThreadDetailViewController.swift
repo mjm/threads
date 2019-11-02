@@ -20,10 +20,7 @@ extension ThreadDetailViewModel.Item: ReusableCell {
     }
 }
 
-class ThreadDetailViewController: ReactiveTableViewController<
-    ThreadDetailViewModel.Section, ThreadDetailViewModel.Item
->
-{
+class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewModel> {
     let viewModel: ThreadDetailViewModel
 
     @IBOutlet var actionsButtonItem: UIBarButtonItem!
