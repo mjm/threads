@@ -91,21 +91,21 @@ final class ThreadDetailViewModel: ViewModel, SnapshotViewModel {
         var actions: [BoundUserAction<Void>] = []
 
         if !thread.inShoppingList {
-            actions.append(AddToShoppingListAction(thread: thread).bind(to: actionRunner))
+            actions.append(thread.addToShoppingListAction().bind(to: actionRunner))
         }
 
         // TODO add to project
 
         if thread.amountInCollection == 0 {
-            actions.append(MarkInStockAction(thread: thread).bind(to: actionRunner))
+            actions.append(thread.markInStockAction.bind(to: actionRunner))
         } else {
             actions.append(
                 thread.onBobbin
-                    ? MarkOffBobbinAction(thread: thread).bind(to: actionRunner)
-                    : MarkOnBobbinAction(thread: thread).bind(to: actionRunner)
+                    ? thread.markOffBobbinAction.bind(to: actionRunner)
+                    : thread.markOnBobbinAction.bind(to: actionRunner)
             )
 
-            actions.append(MarkOutOfStockAction(thread: thread).bind(to: actionRunner))
+            actions.append(thread.markOutOfStockAction.bind(to: actionRunner))
         }
 
         // remove needs special handling in the view controller
@@ -114,7 +114,7 @@ final class ThreadDetailViewModel: ViewModel, SnapshotViewModel {
     }
 
     var removeAction: BoundUserAction<Void> {
-        RemoveThreadAction(thread: thread)
+        thread.removeFromCollectionAction
             .bind(
                 to: actionRunner,
                 title: Localized.removeFromCollection,
@@ -124,11 +124,11 @@ final class ThreadDetailViewModel: ViewModel, SnapshotViewModel {
     private func handleShoppingAction(_ action: ShoppingListCellViewModel.Action) {
         switch action {
         case .togglePurchased:
-            actionRunner.perform(TogglePurchasedAction(thread: thread))
+            actionRunner.perform(thread.togglePurchasedAction)
         case .increment:
-            actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .increment))
+            actionRunner.perform(thread.incrementShoppingListAmountAction)
         case .decrement:
-            actionRunner.perform(ChangeShoppingListAmountAction(thread: thread, change: .decrement))
+            actionRunner.perform(thread.decrementShoppingListAmountAction)
         }
     }
 }
