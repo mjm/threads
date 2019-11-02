@@ -34,6 +34,7 @@
 		C943E9BB236D1561003EBA2C /* ShoppingListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943E9BA236D1561003EBA2C /* ShoppingListViewModelTests.swift */; };
 		C943E9BD236D2971003EBA2C /* ToolbarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943E9BC236D2971003EBA2C /* ToolbarViewModel.swift */; };
 		C943E9BF236D2C1B003EBA2C /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943E9BE236D2C1B003EBA2C /* DetailViewModel.swift */; };
+		C943E9C1236D5391003EBA2C /* CollectionThreadCellViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943E9C0236D5391003EBA2C /* CollectionThreadCellViewModelTests.swift */; };
 		C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */; };
 		C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */; };
 		C944A95B2367C69D00C1B2A1 /* AddThreadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */; };
@@ -172,6 +173,7 @@
 		C943E9BA236D1561003EBA2C /* ShoppingListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListViewModelTests.swift; sourceTree = "<group>"; };
 		C943E9BC236D2971003EBA2C /* ToolbarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarViewModel.swift; sourceTree = "<group>"; };
 		C943E9BE236D2C1B003EBA2C /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
+		C943E9C0236D5391003EBA2C /* CollectionThreadCellViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionThreadCellViewModelTests.swift; sourceTree = "<group>"; };
 		C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewModelTests.swift; sourceTree = "<group>"; };
 		C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTestCase.swift; sourceTree = "<group>"; };
 		C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadViewModel.swift; sourceTree = "<group>"; };
@@ -437,9 +439,10 @@
 		C944A955236776C800C1B2A1 /* View Models */ = {
 			isa = PBXGroup;
 			children = (
+				C944A95C2367D44E00C1B2A1 /* AddThreadViewModelTests.swift */,
+				C943E9C0236D5391003EBA2C /* CollectionThreadCellViewModelTests.swift */,
 				C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */,
 				C943E9BA236D1561003EBA2C /* ShoppingListViewModelTests.swift */,
-				C944A95C2367D44E00C1B2A1 /* AddThreadViewModelTests.swift */,
 				C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */,
 			);
 			path = "View Models";
@@ -937,6 +940,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C944A95D2367D44E00C1B2A1 /* AddThreadViewModelTests.swift in Sources */,
+				C943E9C1236D5391003EBA2C /* CollectionThreadCellViewModelTests.swift in Sources */,
 				C9082F57236922BF00768CA1 /* Helpers.swift in Sources */,
 				C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */,
 				C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */,
