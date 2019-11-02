@@ -390,6 +390,21 @@ extension ProjectDetailViewController {
     @objc func addImageToProject(_ sender: Any) {
         viewModel.addImageAction.perform()
     }
+
+    @objc func toggleEditingProject(_ sender: Any) {
+        viewModel.editAction.perform()
+    }
+
+    override func validate(_ command: UICommand) {
+        super.validate(command)
+
+        switch command.action {
+        case #selector(toggleEditingProject(_:)):
+            command.update(viewModel.editAction, updateTitle: true)
+        default:
+            return
+        }
+    }
 }
 
 // MARK: - Collection View Delegate

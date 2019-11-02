@@ -196,7 +196,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 ]), atStartOfMenu: .file)
 
         let share = UICommand(
-            title: "Share", action: #selector(SplitViewController.shareProject(_:)),
+            title: "Share", action: #selector(ProjectDetailViewController.shareProject(_:)),
             propertyList: UICommandTagShare)
         if let closeMenu = builder.menu(for: .close) {
             builder.replace(
@@ -229,7 +229,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         children: [
                             UIKeyCommand(
                                 title: "Add Threads…",
-                                action: #selector(SplitViewController.addThreads(_:)),
+                                action: #selector(MyThreadsViewController.addThreads(_:)),
                                 input: "n", modifierFlags: [.command, .shift]),
                         ]),
                     UIMenu(
@@ -274,7 +274,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         children: [
                             UIKeyCommand(
                                 title: "Edit",
-                                action: #selector(SplitViewController.toggleEditingProject(_:)),
+                                action: #selector(ProjectDetailViewController
+                                    .toggleEditingProject(_:)),
                                 input: "e", modifierFlags: [.command, .shift]),
                             UICommand(
                                 title: "Add Image…",
@@ -282,7 +283,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             ),
                             UICommand(
                                 title: "Add to Shopping List",
-                                action: #selector(SplitViewController.addProjectToShoppingList(_:))),
+                                action: #selector(ProjectDetailViewController
+                                    .addProjectToShoppingList(_:))),
                         ]),
                 ]), afterMenu: .view)
     }

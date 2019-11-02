@@ -68,6 +68,7 @@ enum Localized {
     static let dontAdd = NSLocalizedString("Don't Add", comment: "")
 
     static let edit = NSLocalizedString("Edit", comment: "")
+    static let stopEditing = NSLocalizedString("Stop Editing", comment: "")
     static let share = NSLocalizedString("Share", comment: "")
     static let delete = NSLocalizedString("Delete", comment: "")
 

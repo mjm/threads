@@ -56,13 +56,8 @@ final class ProjectDetailViewModel: ViewModel, SnapshotViewModel {
         }.store(in: &cancellables)
     }
 
-    var currentMode: AnyPublisher<ProjectDetailMode, Never> {
-        let viewModeModel = self.viewModeModel!
-        let editModeModel = self.editModeModel!
-
-        return $isEditing.removeDuplicates().map { editing -> ProjectDetailMode in
-            editing ? editModeModel : viewModeModel
-        }.eraseToAnyPublisher()
+    var currentMode: ProjectDetailMode {
+        isEditing ? editModeModel : viewModeModel
     }
 
     var snapshot: AnyPublisher<Snapshot, Never> {
@@ -107,10 +102,17 @@ extension ProjectDetailViewModel {
         project.deleteAction.bind(to: actionRunner, title: Localized.delete, options: .destructive)
     }
 
-    private var editAction: BoundUserAction<Void> {
-        BoundUserAction(title: Localized.edit) { _, _ in
-            self.isEditing = true
-            return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+    var editAction: BoundUserAction<Void> {
+        if isEditing {
+            return BoundUserAction(title: Localized.stopEditing) { _, _ in
+                self.isEditing = false
+                return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+            }
+        } else {
+            return BoundUserAction(title: Localized.edit) { _, _ in
+                self.isEditing = true
+                return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+            }
         }
     }
 

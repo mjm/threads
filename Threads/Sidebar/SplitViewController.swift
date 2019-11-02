@@ -59,80 +59,8 @@ class SplitViewController: UISplitViewController {
         viewModel.selection = .shoppingList
     }
 
-    @objc func addThreads(_ sender: Any) {
-        guard let currentController = detailViewController?.selectedViewController else {
-            return
-        }
-
-        let action = #selector(addThreads(_:))
-        if currentController.canPerformAction(action, withSender: sender) {
-            currentController.perform(action, with: sender)
-        }
-    }
-
-    @objc func toggleEditingProject(_ sender: Any) {
-        guard let controller = projectDetailViewController else {
-            return
-        }
-
-        controller.setEditing(!controller.isEditing, animated: true)
-    }
-
-    @objc func shareProject(_ sender: Any) {
-        guard let controller = projectDetailViewController else {
-            return
-        }
-
-        controller.shareProject(sender)
-    }
-
-    @objc func addProjectToShoppingList(_ sender: Any) {
-        guard let controller = projectDetailViewController else {
-            return
-        }
-
-        controller.addProjectToShoppingList(sender)
-    }
-
     @objc func buyPremium(_ sender: Any) {
         viewModel.buyPremium()
-    }
-
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        guard super.canPerformAction(action, withSender: sender) else {
-            return false
-        }
-
-        switch action {
-        case #selector(shareProject(_:)),
-            #selector(addProjectToShoppingList(_:)):
-            return projectDetailViewController != nil
-        case #selector(addThreads(_:)):
-            guard let currentController = detailViewController?.selectedViewController else {
-                return false
-            }
-
-            return currentController.canPerformAction(action, withSender: sender)
-        default:
-            return true
-        }
-    }
-
-    override func validate(_ command: UICommand) {
-        super.validate(command)
-
-        switch command.action {
-        case #selector(toggleEditingProject(_:)):
-            if let controller = projectDetailViewController {
-                command.title = controller.isEditing ? "Stop Editing" : "Edit"
-                command.attributes = []
-            } else {
-                command.title = "Edit"
-                command.attributes = .disabled
-            }
-        default:
-            return
-        }
     }
 
     var sidebarViewController: SidebarViewController! {
@@ -229,21 +157,21 @@ extension SplitViewController: NSToolbarDelegate {
             item.toolTip = "Add threads"
             item.image = UIImage(systemName: "plus")
             item.isBordered = true
-            item.action = #selector(addThreads(_:))
+            item.action = #selector(MyThreadsViewController.addThreads(_:))
             return item
         case .edit:
             let item = NSToolbarItem(itemIdentifier: .edit)
             item.toolTip = "Edit this project"
             item.image = UIImage(systemName: "pencil")
             item.isBordered = true
-            item.action = #selector(toggleEditingProject(_:))
+            item.action = #selector(ProjectDetailViewController.toggleEditingProject(_:))
             return item
         case .doneEditing:
             let item = NSToolbarItem(itemIdentifier: .doneEditing)
             item.toolTip = "Stop editing this project"
             item.title = "Done"
             item.isBordered = true
-            item.action = #selector(toggleEditingProject(_:))
+            item.action = #selector(ProjectDetailViewController.toggleEditingProject(_:))
             return item
         case .share:
             let item = NSSharingServicePickerToolbarItem(itemIdentifier: .share)
