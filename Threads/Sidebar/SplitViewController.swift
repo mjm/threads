@@ -23,6 +23,8 @@ class SplitViewController: UISplitViewController {
 
         primaryBackgroundStyle = .sidebar
 
+        viewModel.presenter = self
+
         viewModel.bind(to: sidebarViewController.viewModel)
         viewModel.bind(to: detailViewController.viewModel)
     }
