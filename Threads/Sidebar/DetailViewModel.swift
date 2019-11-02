@@ -7,6 +7,7 @@
 //
 
 import Combine
+import CoreData
 import UIKit
 
 final class DetailViewModel: ViewModel {
@@ -40,4 +41,22 @@ final class DetailViewModel: ViewModel {
             }
         }.store(in: &cancellables)
     }
+
+    #if targetEnvironment(macCatalyst)
+    var toolbarItemProvider: AnyPublisher<ToolbarItemProviding, Never> {
+        let collectionModel = self.collectionViewModel
+        let shoppingListModel = self.shoppingListViewModel
+
+        return $selection.map { selection in
+            switch selection {
+            case .collection:
+                return collectionModel
+            case .shoppingList:
+                return shoppingListModel
+            case .project(let projectModel):
+                return projectModel
+            }
+        }.eraseToAnyPublisher()
+    }
+    #endif
 }

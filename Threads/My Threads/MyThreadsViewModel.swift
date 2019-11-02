@@ -187,6 +187,17 @@ extension MyThreadsViewModel {
     }
 }
 
+// MARK: - Toolbar
+#if targetEnvironment(macCatalyst)
+
+extension MyThreadsViewModel: ToolbarItemProviding {
+    var title: AnyPublisher<String, Never> {
+        Just("My Threads").eraseToAnyPublisher()
+    }
+}
+
+#endif
+
 class AddThreadsToCollectionMode: AddThreadMode {
     let context: NSManagedObjectContext
 

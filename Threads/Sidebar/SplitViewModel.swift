@@ -19,7 +19,10 @@ final class SplitViewModel: ViewModel {
 
     @Published var selection: Selection = .collection
 
+    let toolbarViewModel: ToolbarViewModel
+
     override init(context: NSManagedObjectContext = .view) {
+        toolbarViewModel = ToolbarViewModel(context: context)
         super.init(context: context)
     }
 
@@ -74,6 +77,10 @@ final class SplitViewModel: ViewModel {
                 }
             }
         }.assign(to: \.selection, on: detailModel).store(in: &cancellables)
+
+        #if targetEnvironment(macCatalyst)
+        detailModel.toolbarItemProvider.optionally().assign(to: \.itemProvider, on: toolbarViewModel).store(in: &cancellables)
+        #endif
     }
 
     func addProject() {

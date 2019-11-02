@@ -10,19 +10,7 @@ import Combine
 import CoreData
 import UIKit
 
-extension SplitViewModel.Selection {
-    var toolbarTitle: String {
-        switch self {
-        case .collection: return "My Threads"
-        case .shoppingList: return "Shopping List"
-        case let .project(project, editing: _): return project.name ?? Localized.unnamedProject
-        }
-    }
-}
-
 class SplitViewController: UISplitViewController {
-    private var actionRunner: UserActionRunner!
-
     let viewModel: SplitViewModel
 
     required init?(coder: NSCoder) {
@@ -33,24 +21,28 @@ class SplitViewController: UISplitViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        actionRunner
-            = UserActionRunner(presenter: self, managedObjectContext: managedObjectContext)
-
         primaryBackgroundStyle = .sidebar
 
         viewModel.bind(to: sidebarViewController.viewModel)
         viewModel.bind(to: detailViewController.viewModel)
     }
 
-    private var toolbarSubscription: AnyCancellable?
+    private var toolbarSubscriptions = Set<AnyCancellable>()
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        toolbarSubscription
-            = viewModel.$selection.sink { [weak self] selection in
-                self?.updateToolbar(selection)
-            }
+        #if targetEnvironment(macCatalyst)
+        toolbarSubscriptions.removeAll()
+
+        viewModel.toolbarViewModel.items.sink { [weak self] items in
+            self?.updateToolbarItems(items)
+        }.store(in: &toolbarSubscriptions)
+
+        viewModel.toolbarViewModel.$title.sink { [weak self] title in
+            self?.updateToolbarTitle(title)
+        }.store(in: &toolbarSubscriptions)
+        #endif
     }
 
     @objc func addProject(_ sender: Any) {
@@ -159,45 +151,31 @@ class SplitViewController: UISplitViewController {
         return nil
     }
 
-    func updateToolbar(_ selection: SplitViewModel.Selection? = nil) {
-        #if targetEnvironment(macCatalyst)
-        guard let scene = view.window?.windowScene, let titlebar = scene.titlebar,
-            let toolbar = titlebar.toolbar
-        else {
+    #if targetEnvironment(macCatalyst)
+    private var toolbar: NSToolbar? {
+        view.window?.windowScene?.titlebar?.toolbar
+    }
+
+    private func updateToolbarItems(_ items: [NSToolbarItem.Identifier]) {
+        guard let toolbar = toolbar else {
             return
         }
 
-        let selection = selection ?? viewModel.selection
+        toolbar.setItemIdentifiers(items)
+    }
 
-        var desiredState: [NSToolbarItem.Identifier] = [
-            .addProject, .title, .flexibleSpace, .addThreads, .share,
-        ]
-        if selection == .shoppingList {
-            desiredState.insert(
-                .addCheckedToCollection, at: desiredState.index(desiredState.endIndex, offsetBy: -2)
-            )
+    private func updateToolbarTitle(_ title: String) {
+        guard let toolbar = toolbar else {
+            return
         }
-        if case .project = selection {
-            if projectDetailViewController?.isEditing ?? false {
-                desiredState.append(contentsOf: [.doneEditing])
-            } else {
-                desiredState.append(contentsOf: [.edit])
-            }
-        }
-
-        toolbar.setItemIdentifiers(desiredState)
 
         if let titleIdentifier = toolbar.centeredItemIdentifier,
             let titleItem = toolbar.items.first(where: { $0.itemIdentifier == titleIdentifier })
         {
-            titleItem.title = selection.toolbarTitle
+            titleItem.title = title
         }
-        #endif
     }
-
-    var managedObjectContext: NSManagedObjectContext {
-        return (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
-    }
+    #endif
 }
 
 extension SplitViewController: UIActivityItemsConfigurationReading {

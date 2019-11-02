@@ -80,12 +80,6 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             self?.navigationItem.setRightBarButtonItems(items, animated: animate)
         }.store(in: &cancellables)
 
-        isEditing.sink { [weak self] _ in
-            if let rootViewController = self?.splitViewController as? SplitViewController {
-                rootViewController.updateToolbar()
-            }
-        }.store(in: &cancellables)
-
         viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(
             in: &cancellables)
     }

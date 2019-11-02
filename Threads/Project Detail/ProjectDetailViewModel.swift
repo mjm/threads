@@ -136,6 +136,23 @@ extension ProjectDetailViewModel {
     }
 }
 
+// MARK: - Toolbar
+#if targetEnvironment(macCatalyst)
+
+extension ProjectDetailViewModel: ToolbarItemProviding {
+    var title: AnyPublisher<String, Never> {
+        project.publisher(for: \.displayName).eraseToAnyPublisher()
+    }
+
+    var trailingToolbarItems: AnyPublisher<[NSToolbarItem.Identifier], Never> {
+        $isEditing.map { editing in
+            editing ? [.doneEditing] : [.edit]
+        }.eraseToAnyPublisher()
+    }
+}
+
+#endif
+
 extension ProjectDetailViewModel: Equatable {
     static func == (lhs: ProjectDetailViewModel, rhs: ProjectDetailViewModel) -> Bool {
         ObjectIdentifier(lhs) == ObjectIdentifier(rhs)

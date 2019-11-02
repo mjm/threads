@@ -184,6 +184,21 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
     }
 }
 
+// MARK: - Toolbar
+#if targetEnvironment(macCatalyst)
+
+extension ShoppingListViewModel: ToolbarItemProviding {
+    var title: AnyPublisher<String, Never> {
+        Just("Shopping List").eraseToAnyPublisher()
+    }
+
+    var leadingToolbarItems: AnyPublisher<[NSToolbarItem.Identifier], Never> {
+        Just([.addCheckedToCollection]).eraseToAnyPublisher()
+    }
+}
+
+#endif
+
 class AddThreadsToShoppingListMode: AddThreadMode {
     let context: NSManagedObjectContext
 
