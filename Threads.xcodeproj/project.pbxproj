@@ -31,6 +31,7 @@
 		C92064A4236AA123002F9079 /* ViewProjectThreadCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92064A3236AA123002F9079 /* ViewProjectThreadCellViewModel.swift */; };
 		C92064A6236AA152002F9079 /* ViewProjectImageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92064A5236AA152002F9079 /* ViewProjectImageCellViewModel.swift */; };
 		C942E44D2336C7F400987EAB /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942E44C2336C7F400987EAB /* BannerController.swift */; };
+		C943E9BB236D1561003EBA2C /* ShoppingListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943E9BA236D1561003EBA2C /* ShoppingListViewModelTests.swift */; };
 		C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */; };
 		C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */; };
 		C944A95B2367C69D00C1B2A1 /* AddThreadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */; };
@@ -166,6 +167,7 @@
 		C92064A3236AA123002F9079 /* ViewProjectThreadCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewProjectThreadCellViewModel.swift; sourceTree = "<group>"; };
 		C92064A5236AA152002F9079 /* ViewProjectImageCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewProjectImageCellViewModel.swift; sourceTree = "<group>"; };
 		C942E44C2336C7F400987EAB /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
+		C943E9BA236D1561003EBA2C /* ShoppingListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListViewModelTests.swift; sourceTree = "<group>"; };
 		C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyThreadsViewModelTests.swift; sourceTree = "<group>"; };
 		C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTestCase.swift; sourceTree = "<group>"; };
 		C944A95A2367C69D00C1B2A1 /* AddThreadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadViewModel.swift; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 			isa = PBXGroup;
 			children = (
 				C944A956236776DC00C1B2A1 /* MyThreadsViewModelTests.swift */,
+				C943E9BA236D1561003EBA2C /* ShoppingListViewModelTests.swift */,
 				C944A95C2367D44E00C1B2A1 /* AddThreadViewModelTests.swift */,
 				C944A9582367784300C1B2A1 /* ViewModelTestCase.swift */,
 			);
@@ -929,6 +932,7 @@
 				C9082F57236922BF00768CA1 /* Helpers.swift in Sources */,
 				C944A957236776DC00C1B2A1 /* MyThreadsViewModelTests.swift in Sources */,
 				C944A9592367784300C1B2A1 /* ViewModelTestCase.swift in Sources */,
+				C943E9BB236D1561003EBA2C /* ShoppingListViewModelTests.swift in Sources */,
 				C9491E29231DDBC60031F463 /* ColorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

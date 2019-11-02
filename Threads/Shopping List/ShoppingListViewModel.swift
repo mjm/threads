@@ -26,15 +26,24 @@ final class ShoppingListViewModel: ViewModel {
     @Published private(set) var willRemoveSelectedOnDecrement = false
 
     private let pendingPurchaseTick = PassthroughSubject<(), Never>()
+    private let purchaseChanged = CurrentValueSubject<(), Never>(())
 
-    override init(context: NSManagedObjectContext = .view) {
+    private let purchaseDelay: TimeInterval
+
+    init(context: NSManagedObjectContext = .view, purchaseDelay: TimeInterval = 3.0) {
+        self.purchaseDelay = purchaseDelay
         super.init(context: context)
 
+        let purchaseChanged = self.purchaseChanged
         $threadViewModels.applyingDifferences(threadChanges.ignoreError()) { [weak self] thread in
             let model = ShoppingListCellViewModel(thread: thread)
+
             model.actions.sink { [weak self] action in
                 self?.handleAction(action, for: thread)
             }.store(in: &model.cancellables)
+
+            model.isPurchased.map { _ in }.subscribe(purchaseChanged).store(in: &model.cancellables)
+
             return model
         }.assign(to: \.threadViewModels, on: self).store(in: &cancellables)
 
@@ -62,8 +71,8 @@ final class ShoppingListViewModel: ViewModel {
     }
 
     private var partitionedItems: AnyPublisher<([Item], [Item]), Never> {
-        $threadViewModels.combineLatest($pendingPurchases) {
-            items, pendingPurchases in
+        $threadViewModels.combineLatest($pendingPurchases, purchaseChanged) {
+            items, pendingPurchases, _ in
             var partitioned = items
             let pivot = partitioned.stablePartition {
                 $0.thread.purchased && !pendingPurchases.contains($0.thread)
@@ -80,13 +89,13 @@ final class ShoppingListViewModel: ViewModel {
     }
 
     var canAddPurchasedToCollection: AnyPublisher<Bool, Never> {
-        $threadViewModels.map { models in
+        $threadViewModels.combineLatest(purchaseChanged).map { models, _ in
             !models.filter { $0.thread.purchased }.isEmpty
         }.eraseToAnyPublisher()
     }
 
     var unpurchasedCount: AnyPublisher<Int, Never> {
-        $threadViewModels.map { models in
+        $threadViewModels.combineLatest(purchaseChanged).map { models, _ in
             models.filter { !$0.thread.purchased }.count
         }.eraseToAnyPublisher()
     }
@@ -144,7 +153,7 @@ final class ShoppingListViewModel: ViewModel {
         let quantityTicks = pendingPurchaseTick.map { _ -> Set<Thread> in [] }
 
         let allTicks = toggleTicks.merge(with: quantityTicks)
-        return allTicks.debounce(for: 3.0, scheduler: RunLoop.main).eraseToAnyPublisher()
+        return allTicks.debounce(for: .init(purchaseDelay), scheduler: RunLoop.main).eraseToAnyPublisher()
     }
 
     private func handleAction(_ action: ShoppingListCellViewModel.Action, for thread: Thread) {
