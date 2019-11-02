@@ -44,7 +44,7 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        viewModel.snapshot.combineLatest($animate).receive(on: RunLoop.main).apply(to: dataSource).store(in: &cancellables)
 
         viewModel.isEmpty.sink { [weak self] isEmpty in
             self?.setShowEmptyView(isEmpty)
@@ -54,7 +54,7 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
             in: &cancellables)
 
         #if !targetEnvironment(macCatalyst)
-        viewModel.canAddPurchasedToCollection.combineLatest($animate).sink {
+        viewModel.canAddPurchasedToCollection.combineLatest($animate).receive(on: RunLoop.main).sink {
             [weak self] showButton, animate in
             self?.setShowAddToCollectionButton(showButton, animated: animate)
         }.store(in: &cancellables)
