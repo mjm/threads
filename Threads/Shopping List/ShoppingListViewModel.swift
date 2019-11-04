@@ -11,7 +11,7 @@ import CoreData
 import UIKit
 
 final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
-    enum Section {
+    enum Section: CaseIterable {
         case unpurchased
         case purchased
     }
@@ -58,28 +58,31 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
     }
 
     var snapshot: AnyPublisher<Snapshot, Never> {
-        partitionedItems.map { (unpurchased, purchased) in
+        sectionedItems.map { itemsBySection in
             var snapshot = Snapshot()
 
-            snapshot.appendSections([.unpurchased, .purchased])
-            snapshot.appendItems(unpurchased, toSection: .unpurchased)
-            snapshot.appendItems(purchased, toSection: .purchased)
+            for section in Section.allCases {
+                if let items = itemsBySection[section] {
+                    snapshot.appendSections([section])
+                    snapshot.appendItems(items, toSection: section)
+                }
+            }
 
             return snapshot
         }.eraseToAnyPublisher()
     }
 
-    private var partitionedItems: AnyPublisher<([Item], [Item]), Never> {
+    private var sectionedItems: AnyPublisher<[Section: [Item]], Never> {
         $threadViewModels.combineLatest($pendingPurchases, purchaseChanged) {
             items, pendingPurchases, _ in
-            var partitioned = items
-            let pivot = partitioned.stablePartition {
-                $0.thread.purchased && !pendingPurchases.contains($0.thread)
-            }
 
-            let unpurchased = Array(partitioned[..<pivot])
-            let purchased = Array(partitioned[pivot...])
-            return (unpurchased, purchased)
+            Dictionary(grouping: items) { item in
+                if item.thread.purchased && !pendingPurchases.contains(item.thread) {
+                    return .purchased
+                } else {
+                    return .unpurchased
+                }
+            }
         }.eraseToAnyPublisher()
     }
 

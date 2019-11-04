@@ -66,7 +66,6 @@
 		C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E3823235D880031F463 /* ShoppingListThreadTableViewCell.swift */; };
 		C9491E3C23235E210031F463 /* ShoppingListThreadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9491E3923235D890031F463 /* ShoppingListThreadTableViewCell.xib */; };
 		C9491E3E23235FBF0031F463 /* ThreadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */; };
-		C9491E4023246AC80031F463 /* Partition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E3F23246AC80031F463 /* Partition.swift */; };
 		C9491E4223248B940031F463 /* ProjectListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E4123248B940031F463 /* ProjectListViewController.swift */; };
 		C9491E44232491D90031F463 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E43232491D90031F463 /* Project.swift */; };
 		C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */; };
@@ -230,7 +229,6 @@
 		C9491E3823235D880031F463 /* ShoppingListThreadTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListThreadTableViewCell.swift; sourceTree = "<group>"; };
 		C9491E3923235D890031F463 /* ShoppingListThreadTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShoppingListThreadTableViewCell.xib; sourceTree = "<group>"; };
 		C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadTableViewCell.swift; sourceTree = "<group>"; };
-		C9491E3F23246AC80031F463 /* Partition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Partition.swift; sourceTree = "<group>"; };
 		C9491E4123248B940031F463 /* ProjectListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectListViewController.swift; sourceTree = "<group>"; };
 		C9491E43232491D90031F463 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		C94EB2FF2325E6A900D4CF56 /* ProjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -800,7 +798,6 @@
 				C97FCDFA232F3BC3000B1590 /* Image.swift */,
 				C97FCDC2232DA92E000B1590 /* NSAttributedString.swift */,
 				C97FCDEB232E014D000B1590 /* NSManagedObjectContext.swift */,
-				C9491E3F23246AC80031F463 /* Partition.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1007,7 +1004,6 @@
 				C97FCE02232F4CB3000B1590 /* UserActionRunner.swift in Sources */,
 				C906E3B423526FCC003EE053 /* MacSceneDelegate.swift in Sources */,
 				C9082F68236A6DC500768CA1 /* ThreadProjectCellViewModel.swift in Sources */,
-				C9491E4023246AC80031F463 /* Partition.swift in Sources */,
 				C944A9632367F05B00C1B2A1 /* ProjectListViewModel.swift in Sources */,
 				C9491E31231F4C8B0031F463 /* ThreadDetailViewController.swift in Sources */,
 				C97FCDFB232F3BC3000B1590 /* Image.swift in Sources */,
