@@ -145,6 +145,7 @@
 		C99677F1235B497600AE2F5C /* StoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677F0235B497600AE2F5C /* StoreObserver.swift */; };
 		C99677F3235B499C00AE2F5C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99677F2235B499C00AE2F5C /* StoreKit.framework */; };
 		C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9967801235C02EA00AE2F5C /* StoreActions.swift */; };
+		C9BEF0F0236FB43A005893EE /* Snapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0EF236FB43A005893EE /* Snapshots.swift */; };
 		C9C6328D236E31690013025E /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C6328C236E31690013025E /* CoreData.swift */; };
 		C9C8C0DE235CBA7200787BEA /* Events in Frameworks */ = {isa = PBXBuildFile; productRef = C9C8C0DD235CBA7200787BEA /* Events */; };
 		C9E01488235D4AA5007B2626 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01487235D4AA5007B2626 /* AppDelegate.swift */; };
@@ -314,6 +315,7 @@
 		C99677F0235B497600AE2F5C /* StoreObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreObserver.swift; sourceTree = "<group>"; };
 		C99677F2235B499C00AE2F5C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		C9967801235C02EA00AE2F5C /* StoreActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreActions.swift; sourceTree = "<group>"; };
+		C9BEF0EF236FB43A005893EE /* Snapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshots.swift; sourceTree = "<group>"; };
 		C9C6328C236E31690013025E /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		C9E01485235D4AA5007B2626 /* ThreadsAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThreadsAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E01487235D4AA5007B2626 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -372,6 +374,7 @@
 			isa = PBXGroup;
 			children = (
 				C9082F5B2369262500768CA1 /* Operators.swift */,
+				C9BEF0EF236FB43A005893EE /* Snapshots.swift */,
 				C9C6328C236E31690013025E /* CoreData.swift */,
 			);
 			path = Combine;
@@ -1046,6 +1049,7 @@
 				C9815E8A236E2D9D00D5DDEB /* AddImageToProjectAction.swift in Sources */,
 				C9815E6A236E1A7E00D5DDEB /* RemoveThreadAction.swift in Sources */,
 				C9815E7A236E1EEC00D5DDEB /* ChangeShoppingListAmountAction.swift in Sources */,
+				C9BEF0F0236FB43A005893EE /* Snapshots.swift in Sources */,
 				C97FCDEE232E941D000B1590 /* Cells.swift in Sources */,
 				C95028F32366B74700BB02C4 /* ViewModel.swift in Sources */,
 				C9815E8E236E2E4500D5DDEB /* DeleteProjectImageAction.swift in Sources */,

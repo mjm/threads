@@ -23,11 +23,11 @@ final class ViewProjectDetailViewModel: ProjectDetailMode {
     init(project: Project) {
         self.project = project
 
-        $imageViewModels.applyingDifferences(imageChanges.ignoreError()) { projectImage in
+        $imageViewModels.applyingChanges(imageChanges.ignoreError()) { projectImage in
             ViewProjectImageCellViewModel(projectImage: projectImage)
         }.assign(to: \.imageViewModels, on: self).store(in: &cancellables)
 
-        $threadViewModels.applyingDifferences(threadChanges.ignoreError()) { projectThread in
+        $threadViewModels.applyingChanges(threadChanges.ignoreError()) { projectThread in
             ViewProjectThreadCellViewModel(projectThread: projectThread)
         }.assign(to: \.threadViewModels, on: self).store(in: &cancellables)
     }

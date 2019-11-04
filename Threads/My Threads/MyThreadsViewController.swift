@@ -39,7 +39,7 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        viewModel.snapshot.apply(to: dataSource, animate: $animate).store(in: &cancellables)
 
         viewModel.isEmpty.sink { [weak self] isEmpty in
             self?.setShowEmptyView(isEmpty)

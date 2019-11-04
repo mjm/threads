@@ -30,7 +30,7 @@ final class SidebarViewModel: ViewModel, SnapshotViewModel {
 
         let actionRunner = self.actionRunner
 
-        $projectViewModels.applyingDifferences(projectChanges.ignoreError()) { project in
+        $projectViewModels.applyingChanges(projectChanges.ignoreError()) { project in
             SidebarProjectCellViewModel(project: project, actionRunner: actionRunner)
         }.assign(to: \.projectViewModels, on: self).store(in: &cancellables)
     }

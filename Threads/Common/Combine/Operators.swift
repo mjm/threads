@@ -30,18 +30,18 @@ extension Publisher {
                 }, receiveValue: receiveValue)
     }
 
-    func applyingDifferences<DiffPublisher: Publisher, DiffItem>(
-        _ diffs: DiffPublisher,
-        _ transform: @escaping (DiffItem) -> Self.Output.Element
-    ) -> AnyPublisher<Self.Output, Self.Failure>
-    where Self.Output: RangeReplaceableCollection,
-        Self.Output.Index == Int,
-        DiffPublisher.Output == CollectionDifference<DiffItem>,
-        DiffPublisher.Failure == Self.Failure
+    func applyingChanges<Changes: Publisher, ChangeItem>(
+        _ changes: Changes,
+        _ transform: @escaping (ChangeItem) -> Output.Element
+    ) -> AnyPublisher<Output, Failure>
+    where Output: RangeReplaceableCollection,
+        Output.Index == Int,
+        Changes.Output == CollectionDifference<ChangeItem>,
+        Changes.Failure == Failure
     {
-        combineLatest(diffs) { existing, diff -> Self.Output in
+        zip(changes) { existing, changes -> Output in
             var objects = existing
-            for change in diff {
+            for change in changes {
                 switch change {
                 case .remove(let offset, _, _):
                     objects.remove(at: offset)

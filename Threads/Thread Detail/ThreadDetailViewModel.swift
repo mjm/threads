@@ -39,7 +39,7 @@ final class ThreadDetailViewModel: ViewModel, SnapshotViewModel {
         shoppingListViewModel
             = ShoppingListCellViewModel(thread: thread, actionRunner: actionRunner)
 
-        $projectViewModels.applyingDifferences(projectChanges.ignoreError()) { projectThread in
+        $projectViewModels.applyingChanges(projectChanges.ignoreError()) { projectThread in
             ThreadProjectCellViewModel(projectThread: projectThread)
         }.assign(to: \.projectViewModels, on: self).store(in: &cancellables)
     }

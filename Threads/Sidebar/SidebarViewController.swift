@@ -47,7 +47,7 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.apply(to: dataSource, animate: false).store(in: &cancellables)
+        viewModel.snapshot.apply(to: dataSource, animate: Just(false)).store(in: &cancellables)
 
         viewModel.$selectedItem.sink { [weak self] item in
             guard let self = self else { return }

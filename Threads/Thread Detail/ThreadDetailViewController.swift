@@ -66,7 +66,7 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewMo
             String(format: Localized.dmcNumber, number!)
         }.assign(to: \.title, on: navigationItem).store(in: &cancellables)
 
-        viewModel.snapshot.combineLatest($animate).apply(to: dataSource).store(in: &cancellables)
+        viewModel.snapshot.apply(to: dataSource, animate: $animate).store(in: &cancellables)
 
         viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(
             in: &cancellables)

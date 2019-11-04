@@ -23,7 +23,7 @@ final class MyThreadsViewModel: ViewModel, SnapshotViewModel {
 
         let actionRunner = self.actionRunner
 
-        $threadViewModels.applyingDifferences(threadChanges.ignoreError()) { thread in
+        $threadViewModels.applyingChanges(threadChanges.ignoreError()) { thread in
             CollectionThreadCellViewModel(thread: thread, actionRunner: actionRunner)
         }.assign(to: \.threadViewModels, on: self).store(in: &cancellables)
     }

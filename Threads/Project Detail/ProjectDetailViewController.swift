@@ -57,7 +57,7 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.combineLatest($animate).receive(on: RunLoop.main).apply(to: dataSource)
+        viewModel.snapshot.apply(to: dataSource, animate: $animate, on: RunLoop.main)
             .store(in: &cancellables)
         viewModel.name.assign(to: \.title, on: navigationItem).store(
             in: &cancellables)

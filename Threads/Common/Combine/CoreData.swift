@@ -10,10 +10,10 @@ import Combine
 import CoreData
 
 extension NSManagedObjectContext {
-    func changesPublisher<T: NSManagedObject>(for request: NSFetchRequest<T>)
-        -> ManagedObjectChangesPublisher<T>
+    func changesPublisher<Object: NSManagedObject>(for fetchRequest: NSFetchRequest<Object>)
+        -> ManagedObjectChangesPublisher<Object>
     {
-        ManagedObjectChangesPublisher(request: request, context: self)
+        ManagedObjectChangesPublisher(fetchRequest: fetchRequest, context: self)
     }
 }
 
@@ -21,40 +21,34 @@ struct ManagedObjectChangesPublisher<Object: NSManagedObject>: Publisher {
     typealias Output = CollectionDifference<Object>
     typealias Failure = Error
 
-    let request: NSFetchRequest<Object>
+    let fetchRequest: NSFetchRequest<Object>
     let context: NSManagedObjectContext
 
-    init(request: NSFetchRequest<Object>, context: NSManagedObjectContext) {
-        self.request = request
+    init(fetchRequest: NSFetchRequest<Object>, context: NSManagedObjectContext) {
+        self.fetchRequest = fetchRequest
         self.context = context
     }
 
-    func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
-        let inner = Inner(downstream: subscriber, request: request, context: context)
+    func receive<S: Subscriber>(subscriber: S) where Failure == S.Failure, Output == S.Input {
+        let inner = Inner(downstream: subscriber, fetchRequest: fetchRequest, context: context)
         subscriber.receive(subscription: inner)
     }
 
-    private final class Inner<Downstream: Subscriber>: NSObject, Combine.Subscription,
+    private final class Inner<Downstream: Subscriber>: NSObject, Subscription,
         NSFetchedResultsControllerDelegate
     where Downstream.Input == CollectionDifference<Object>, Downstream.Failure == Error {
         private let downstream: Downstream
         private var fetchedResultsController: NSFetchedResultsController<Object>?
 
-        private var demand: Subscribers.Demand = .none
-        private var lastSentState: [Object] = []
-
-        private var currentDifferences: CollectionDifference<Object> = [Object]().difference(
-            from: [Object]())
-
         init(
             downstream: Downstream,
-            request: NSFetchRequest<Object>,
+            fetchRequest: NSFetchRequest<Object>,
             context: NSManagedObjectContext
         ) {
             self.downstream = downstream
             fetchedResultsController
                 = NSFetchedResultsController(
-                    fetchRequest: request,
+                    fetchRequest: fetchRequest,
                     managedObjectContext: context,
                     sectionNameKeyPath: nil,
                     cacheName: nil)
@@ -71,8 +65,20 @@ struct ManagedObjectChangesPublisher<Object: NSManagedObject>: Publisher {
             }
         }
 
+        private var demand: Subscribers.Demand = .none
+
         func request(_ demand: Subscribers.Demand) {
             self.demand += demand
+            fulfillDemand()
+        }
+
+        private var lastSentState: [Object] = []
+        private var currentDifferences = CollectionDifference<Object>([])!
+
+        private func updateDiff() {
+            currentDifferences
+                = Array(fetchedResultsController?.fetchedObjects ?? []).difference(
+                    from: lastSentState)
             fulfillDemand()
         }
 
@@ -85,13 +91,6 @@ struct ManagedObjectChangesPublisher<Object: NSManagedObject>: Publisher {
                 demand += newDemand
                 demand -= 1
             }
-        }
-
-        private func updateDiff() {
-            currentDifferences
-                = Array(fetchedResultsController?.fetchedObjects ?? []).difference(
-                    from: lastSentState)
-            fulfillDemand()
         }
 
         func cancel() {

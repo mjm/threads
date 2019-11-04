@@ -28,11 +28,11 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
         self.project = project
         self.actionRunner = actionRunner
 
-        $imageViewModels.applyingDifferences(imageChanges.ignoreError()) { projectImage in
+        $imageViewModels.applyingChanges(imageChanges.ignoreError()) { projectImage in
             EditProjectImageCellViewModel(projectImage: projectImage, actionRunner: actionRunner)
         }.assign(to: \.imageViewModels, on: self).store(in: &cancellables)
 
-        $threadViewModels.applyingDifferences(threadChanges.ignoreError()) {
+        $threadViewModels.applyingChanges(threadChanges.ignoreError()) {
             [weak self] projectThread in
             let model = EditProjectThreadCellViewModel(projectThread: projectThread)
             model.actions.sink { [weak self] action in

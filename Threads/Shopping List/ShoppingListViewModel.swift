@@ -34,7 +34,7 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
 
         let actionRunner = self.actionRunner
         let purchaseChanged = self.purchaseChanged
-        $threadViewModels.applyingDifferences(threadChanges.ignoreError()) { [weak self] thread in
+        $threadViewModels.applyingChanges(threadChanges.ignoreError()) { [weak self] thread in
             let model = ShoppingListCellViewModel(thread: thread, actionRunner: actionRunner)
 
             model.actions.sink { [weak self] action in

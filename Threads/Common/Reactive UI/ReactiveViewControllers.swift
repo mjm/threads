@@ -202,38 +202,6 @@ where ViewModel.Item: ReusableCell {
     func subscribe() {}
 }
 
-extension Publisher {
-    func apply<Section, Item>(
-        to dataSource: UITableViewDiffableDataSource<Section, Item>, animate: Bool = true
-    ) -> AnyCancellable
-    where Output == NSDiffableDataSourceSnapshot<Section, Item>, Failure == Never {
-        combineLatest(Just(animate)).apply(to: dataSource)
-    }
-
-    func apply<Section, Item>(to dataSource: UITableViewDiffableDataSource<Section, Item>)
-        -> AnyCancellable
-    where Output == (NSDiffableDataSourceSnapshot<Section, Item>, Bool), Failure == Never {
-        sink { (snapshot, animate) in
-            dataSource.apply(snapshot, animatingDifferences: animate)
-        }
-    }
-
-    func apply<Section, Item>(
-        to dataSource: UICollectionViewDiffableDataSource<Section, Item>, animate: Bool = true
-    ) -> AnyCancellable
-    where Output == NSDiffableDataSourceSnapshot<Section, Item>, Failure == Never {
-        combineLatest(Just(animate)).apply(to: dataSource)
-    }
-
-    func apply<Section, Item>(to dataSource: UICollectionViewDiffableDataSource<Section, Item>)
-        -> AnyCancellable
-    where Output == (NSDiffableDataSourceSnapshot<Section, Item>, Bool), Failure == Never {
-        sink { (snapshot, animate) in
-            dataSource.apply(snapshot, animatingDifferences: animate)
-        }
-    }
-}
-
 enum RegisteredCellType<T> {
     case `class`(T.Type)
     case nib(T.Type)

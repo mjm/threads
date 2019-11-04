@@ -44,7 +44,7 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.combineLatest($animate).receive(on: RunLoop.main).apply(to: dataSource)
+        viewModel.snapshot.apply(to: dataSource, animate: $animate, on: RunLoop.main)
             .store(in: &cancellables)
 
         viewModel.isEmpty.sink { [weak self] isEmpty in
