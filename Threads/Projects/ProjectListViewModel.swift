@@ -24,7 +24,7 @@ final class ProjectListViewModel: ViewModel, SnapshotViewModel {
 
         $projectViewModels.applyingChanges(projectChanges.ignoreError()) { project in
             ProjectCellViewModel(project: project, actionRunner: actionRunner)
-        }.assignWeakly(to: \.projectViewModels, on: self).store(in: &cancellables)
+        }.assign(to: \.projectViewModels, on: self, weak: true).store(in: &cancellables)
     }
 
     var projectChanges: ManagedObjectChangesPublisher<Project> {

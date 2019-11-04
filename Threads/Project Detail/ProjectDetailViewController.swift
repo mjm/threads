@@ -81,9 +81,9 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             self?.navigationItem.setRightBarButtonItems(items, animated: animate)
         }.store(in: &cancellables)
 
-        viewModel.userActivity.map { $0.userActivity }.assignWeakly(to: \.userActivity, on: self)
-            .store(
-                in: &cancellables)
+        viewModel.userActivity.map { $0.userActivity }
+            .assign(to: \.userActivity, on: self, weak: true)
+            .store(in: &cancellables)
     }
 
     override func dataSourceWillInitialize() {

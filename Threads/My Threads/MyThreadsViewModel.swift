@@ -25,7 +25,7 @@ final class MyThreadsViewModel: ViewModel, SnapshotViewModel {
 
         $threadViewModels.applyingChanges(threadChanges.ignoreError()) { thread in
             CollectionThreadCellViewModel(thread: thread, actionRunner: actionRunner)
-        }.assignWeakly(to: \.threadViewModels, on: self).store(in: &cancellables)
+        }.assign(to: \.threadViewModels, on: self, weak: true).store(in: &cancellables)
     }
 
     var threadChanges: ManagedObjectChangesPublisher<Thread> {

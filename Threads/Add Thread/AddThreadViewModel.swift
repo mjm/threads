@@ -40,7 +40,7 @@ final class AddThreadViewModel: ViewModel, SnapshotViewModel {
 
         normalizedQuery.combineLatest(filteredChoices) { query, choices -> Thread? in
             choices.first { $0.thread.number?.lowercased() == query }?.thread
-        }.assignWeakly(to: \.threadToSelect, on: self).store(in: &cancellables)
+        }.assign(to: \.threadToSelect, on: self, weak: true).store(in: &cancellables)
     }
 
     var normalizedQuery: AnyPublisher<String, Never> {

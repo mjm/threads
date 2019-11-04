@@ -66,12 +66,18 @@ extension Publisher where Failure == Never {
         handle(receiveCompletion: { _ in }, receiveValue: receiveValue)
     }
 
-    func assignWeakly<Root: AnyObject>(
-        to keyPath: ReferenceWritableKeyPath<Root, Output>, on object: Root
+    func assign<Root: AnyObject>(
+        to keyPath: ReferenceWritableKeyPath<Root, Output>,
+        on object: Root,
+        weak: Bool
     ) -> AnyCancellable {
         // TODO maybe implement this as a real subscriber
-        sink { [weak object] newValue in
-            object?[keyPath: keyPath] = newValue
+        if weak {
+            return sink { [weak object] newValue in
+                object?[keyPath: keyPath] = newValue
+            }
+        } else {
+            return assign(to: keyPath, on: object)
         }
     }
 }

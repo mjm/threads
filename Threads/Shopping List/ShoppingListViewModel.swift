@@ -44,14 +44,14 @@ final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
             model.isPurchased.map { _ in }.subscribe(purchaseChanged).store(in: &model.cancellables)
 
             return model
-        }.assignWeakly(to: \.threadViewModels, on: self).store(in: &cancellables)
+        }.assign(to: \.threadViewModels, on: self, weak: true).store(in: &cancellables)
 
-        resetPendingPurchases.assignWeakly(to: \.pendingPurchases, on: self).store(
+        resetPendingPurchases.assign(to: \.pendingPurchases, on: self, weak: true).store(
             in: &cancellables)
 
         $selection.flatMap { itemModel -> AnyPublisher<Bool, Never> in
             itemModel?.willRemoveOnDecrement ?? Just(false).eraseToAnyPublisher()
-        }.assignWeakly(to: \.willRemoveSelectedOnDecrement, on: self).store(in: &cancellables)
+        }.assign(to: \.willRemoveSelectedOnDecrement, on: self, weak: true).store(in: &cancellables)
     }
 
     var threadChanges: ManagedObjectChangesPublisher<Thread> {

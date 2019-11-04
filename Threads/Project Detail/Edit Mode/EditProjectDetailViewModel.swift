@@ -30,7 +30,7 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
 
         $imageViewModels.applyingChanges(imageChanges.ignoreError()) { projectImage in
             EditProjectImageCellViewModel(projectImage: projectImage, actionRunner: actionRunner)
-        }.assignWeakly(to: \.imageViewModels, on: self).store(in: &cancellables)
+        }.assign(to: \.imageViewModels, on: self, weak: true).store(in: &cancellables)
 
         $threadViewModels.applyingChanges(threadChanges.ignoreError()) {
             [weak self] projectThread in
@@ -39,7 +39,7 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
                 self?.handleAction(action, for: projectThread)
             }.store(in: &model.cancellables)
             return model
-        }.assignWeakly(to: \.threadViewModels, on: self).store(in: &cancellables)
+        }.assign(to: \.threadViewModels, on: self, weak: true).store(in: &cancellables)
     }
 
     private var context: NSManagedObjectContext {

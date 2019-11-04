@@ -51,9 +51,9 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
             self?.setShowEmptyView(isEmpty)
         }.store(in: &cancellables)
 
-        viewModel.userActivity.map { $0.userActivity }.assignWeakly(to: \.userActivity, on: self)
-            .store(
-                in: &cancellables)
+        viewModel.userActivity.map { $0.userActivity }
+            .assign(to: \.userActivity, on: self, weak: true)
+            .store(in: &cancellables)
 
         #if !targetEnvironment(macCatalyst)
         viewModel.canAddPurchasedToCollection.combineLatest($animate).receive(on: RunLoop.main).sink

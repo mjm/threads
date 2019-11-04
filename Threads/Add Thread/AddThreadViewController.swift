@@ -68,8 +68,9 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
         let addButton = navigationItem.rightBarButtonItems!.first!
 
         viewModel.canAddSelected.assign(to: \.isEnabled, on: addButton).store(in: &cancellables)
-        viewModel.canAddSelected.invert().assignWeakly(to: \.canDismiss, on: self).store(
-            in: &cancellables)
+        viewModel.canAddSelected.invert()
+            .assign(to: \.canDismiss, on: self, weak: true)
+            .store(in: &cancellables)
 
         viewModel.$selectedItems.map { threads in
             String.localizedStringWithFormat(Localized.addBatchButton, threads.count)
