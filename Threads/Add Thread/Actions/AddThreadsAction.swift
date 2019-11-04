@@ -54,6 +54,7 @@ struct AddThreadsAction: ReactiveUserAction {
         let addThreadController = navController.viewControllers[0] as! AddThreadViewController
 
         let onDismiss = PassthroughSubject<(), Never>()
+        coordinator.onDismiss = onDismiss
 
         addThreadController.viewModel.mode = mode.makeMode(context: context.managedObjectContext)
         addThreadController.onDismiss = {
@@ -70,6 +71,8 @@ struct AddThreadsAction: ReactiveUserAction {
 
     class Coordinator: NSObject, UIAdaptivePresentationControllerDelegate {
 
+        weak var onDismiss: PassthroughSubject<(), Never>?
+
         func presentationControllerShouldDismiss(_ presentationController: UIPresentationController)
             -> Bool
         {
@@ -77,6 +80,15 @@ struct AddThreadsAction: ReactiveUserAction {
                 as! UINavigationController
             let addThreadController = navController.viewControllers[0] as! AddThreadViewController
             return addThreadController.canDismiss
+        }
+
+        func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+            let navController = presentationController.presentedViewController
+                as! UINavigationController
+            let addThreadController = navController.viewControllers[0] as! AddThreadViewController
+            addThreadController.onDismiss = nil
+            onDismiss?.send()
+            onDismiss?.send(completion: .finished)
         }
     }
 

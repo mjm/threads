@@ -59,7 +59,7 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
 
         viewModel.snapshot.apply(to: dataSource, animate: Just(false)).store(in: &cancellables)
 
-        viewModel.$query.removeDuplicates().map { q -> String? in q }.assign(
+        viewModel.$query.removeDuplicates().optionally().assign(
             to: \.searchBar.text, on: searchController).store(in: &cancellables)
 
         viewModel.canQuickSelect.assign(to: \.isEnabled, on: quickAddButton).store(
@@ -68,7 +68,7 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
         let addButton = navigationItem.rightBarButtonItems!.first!
 
         viewModel.canAddSelected.assign(to: \.isEnabled, on: addButton).store(in: &cancellables)
-        viewModel.canAddSelected.map { !$0 }.assign(to: \.canDismiss, on: self).store(
+        viewModel.canAddSelected.invert().assignWeakly(to: \.canDismiss, on: self).store(
             in: &cancellables)
 
         viewModel.$selectedItems.map { threads in
@@ -104,6 +104,12 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
         }
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        searchController.isActive = false
+    }
+
     @IBAction func tapKeyboardShortcut(sender: UIBarButtonItem) {
         viewModel.query = sender.title!
     }
@@ -114,11 +120,13 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
 
     @IBAction func cancel() {
         onDismiss()
+        onDismiss = nil
     }
 
     @IBAction func add() {
         viewModel.addSelected()
         onDismiss()
+        onDismiss = nil
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {

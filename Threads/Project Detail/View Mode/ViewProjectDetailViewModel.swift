@@ -25,11 +25,11 @@ final class ViewProjectDetailViewModel: ProjectDetailMode {
 
         $imageViewModels.applyingChanges(imageChanges.ignoreError()) { projectImage in
             ViewProjectImageCellViewModel(projectImage: projectImage)
-        }.assign(to: \.imageViewModels, on: self).store(in: &cancellables)
+        }.assignWeakly(to: \.imageViewModels, on: self).store(in: &cancellables)
 
         $threadViewModels.applyingChanges(threadChanges.ignoreError()) { projectThread in
             ViewProjectThreadCellViewModel(projectThread: projectThread)
-        }.assign(to: \.threadViewModels, on: self).store(in: &cancellables)
+        }.assignWeakly(to: \.threadViewModels, on: self).store(in: &cancellables)
     }
 
     private var context: NSManagedObjectContext {

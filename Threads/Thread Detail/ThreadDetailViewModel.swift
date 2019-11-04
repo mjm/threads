@@ -41,7 +41,7 @@ final class ThreadDetailViewModel: ViewModel, SnapshotViewModel {
 
         $projectViewModels.applyingChanges(projectChanges.ignoreError()) { projectThread in
             ThreadProjectCellViewModel(projectThread: projectThread)
-        }.assign(to: \.projectViewModels, on: self).store(in: &cancellables)
+        }.assignWeakly(to: \.projectViewModels, on: self).store(in: &cancellables)
     }
 
     var projectChanges: ManagedObjectChangesPublisher<ProjectThread> {

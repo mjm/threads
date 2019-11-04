@@ -23,7 +23,7 @@ class ThreadDetailsTableViewCell: ReactiveTableViewCell {
         model.label.assign(to: \.text, on: labelLabel).store(in: &cancellables)
 
         let background = model.color.map { c -> UIColor? in c ?? .systemBackground }
-        background.assign(to: \.backgroundColor, on: self).store(in: &cancellables)
+        background.assignWeakly(to: \.backgroundColor, on: self).store(in: &cancellables)
 
         let foreground = background.map { $0?.labelColor }
         foreground.assign(to: \.textColor, on: labelLabel).store(in: &cancellables)

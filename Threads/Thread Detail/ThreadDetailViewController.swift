@@ -68,8 +68,9 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewMo
 
         viewModel.snapshot.apply(to: dataSource, animate: $animate).store(in: &cancellables)
 
-        viewModel.userActivity.map { $0.userActivity }.assign(to: \.userActivity, on: self).store(
-            in: &cancellables)
+        viewModel.userActivity.map { $0.userActivity }.assignWeakly(to: \.userActivity, on: self)
+            .store(
+                in: &cancellables)
     }
 
     override func dataSourceWillInitialize() {

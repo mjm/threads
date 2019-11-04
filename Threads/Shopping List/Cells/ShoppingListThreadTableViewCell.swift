@@ -41,7 +41,7 @@ class ShoppingListThreadTableViewCell: ThreadTableViewCell<ShoppingListCellViewM
         isNotPurchased.assign(to: \.isEnabled, on: increaseButton).store(in: &cancellables)
 
         model.isPurchased.map { $0 ? UIColor.secondarySystemBackground : UIColor.systemBackground }
-            .assign(to: \.backgroundColor, on: self)
+            .assignWeakly(to: \.backgroundColor, on: self)
             .store(in: &cancellables)
 
         let purchasedSelected = model.isPurchased.combineLatest(selectedOrHighlighted)
