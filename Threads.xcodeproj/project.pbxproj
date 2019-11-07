@@ -145,6 +145,7 @@
 		C99677F3235B499C00AE2F5C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99677F2235B499C00AE2F5C /* StoreKit.framework */; };
 		C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9967801235C02EA00AE2F5C /* StoreActions.swift */; };
 		C9BEF0F0236FB43A005893EE /* Snapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0EF236FB43A005893EE /* Snapshots.swift */; };
+		C9BEF0F22372797E005893EE /* WithLatestFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F12372797E005893EE /* WithLatestFrom.swift */; };
 		C9C6328D236E31690013025E /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C6328C236E31690013025E /* CoreData.swift */; };
 		C9C8C0DE235CBA7200787BEA /* Events in Frameworks */ = {isa = PBXBuildFile; productRef = C9C8C0DD235CBA7200787BEA /* Events */; };
 		C9E01488235D4AA5007B2626 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01487235D4AA5007B2626 /* AppDelegate.swift */; };
@@ -314,6 +315,7 @@
 		C99677F2235B499C00AE2F5C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		C9967801235C02EA00AE2F5C /* StoreActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreActions.swift; sourceTree = "<group>"; };
 		C9BEF0EF236FB43A005893EE /* Snapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshots.swift; sourceTree = "<group>"; };
+		C9BEF0F12372797E005893EE /* WithLatestFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithLatestFrom.swift; sourceTree = "<group>"; };
 		C9C6328C236E31690013025E /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		C9E01485235D4AA5007B2626 /* ThreadsAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThreadsAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E01487235D4AA5007B2626 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -374,6 +376,7 @@
 				C9082F5B2369262500768CA1 /* Operators.swift */,
 				C9BEF0EF236FB43A005893EE /* Snapshots.swift */,
 				C9C6328C236E31690013025E /* CoreData.swift */,
+				C9BEF0F12372797E005893EE /* WithLatestFrom.swift */,
 			);
 			path = Combine;
 			sourceTree = "<group>";
@@ -1077,6 +1080,7 @@
 				C95028E72366070200BB02C4 /* ReplaySubject.swift in Sources */,
 				C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */,
 				C9815E7C236E1F5300D5DDEB /* RemoveFromShoppingListAction.swift in Sources */,
+				C9BEF0F22372797E005893EE /* WithLatestFrom.swift in Sources */,
 				C99677EE235A6C5400AE2F5C /* OpenInSafariActivity.swift in Sources */,
 				C9815E8C236E2DF600D5DDEB /* MoveProjectImageAction.swift in Sources */,
 				C9815E66236E196300D5DDEB /* MarkOnBobbinAction.swift in Sources */,

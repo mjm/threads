@@ -22,7 +22,7 @@ extension Publisher {
         Failure == Never,
         Animate.Failure == Never
     {
-        combineLatest(animate).receive(on: scheduler).applySink(dataSource)
+        withLatestFrom(animate).receive(on: scheduler).applySink(dataSource)
     }
 
     func apply<DataSource: DiffableSnapshotApplying, Animate: Publisher>(
@@ -36,7 +36,7 @@ extension Publisher {
         Failure == Never,
         Animate.Failure == Never
     {
-        combineLatest(animate).applySink(dataSource)
+        withLatestFrom(animate).applySink(dataSource)
     }
 
     func apply<DataSource: DiffableSnapshotApplying>(
@@ -47,7 +47,7 @@ extension Publisher {
         Output == DataSource.SnapshotType,
         Failure == Never
     {
-        combineLatest(Just(true)).applySink(dataSource)
+        withLatestFrom(Just(true)).applySink(dataSource)
     }
 
     private func applySink<DataSource: DiffableSnapshotApplying>(
