@@ -16,50 +16,67 @@ protocol ReusableCell: Hashable {
     static var allCellIdentifiers: [Identifier] { get }
 }
 
+extension ReusableCell {
+    static func register(with view: Identifier.CellType.View) {
+        for identifier in allCellIdentifiers {
+            identifier.register(with: view)
+        }
+    }
+}
+
 extension ReusableCell where Identifier: CaseIterable {
     static var allCellIdentifiers: [Identifier] {
         Array(Identifier.allCases)
     }
 }
 
-extension ReusableCell where Identifier.CellType == UITableViewCell {
-    static func register(with tableView: UITableView) {
-        for identifier in allCellIdentifiers {
-            switch identifier.cellType {
-            case let .class(cellClass):
-                tableView.register(cellClass, forCellReuseIdentifier: identifier.rawValue)
-            case let .nib(cellClass):
-                cellClass.registerNib(on: tableView, reuseIdentifier: identifier.rawValue)
-            case .storyboard:
-                break
-            }
-        }
-    }
-}
-
-extension ReusableCell where Identifier.CellType == UICollectionViewCell {
-    static func register(with collectionView: UICollectionView) {
-        for identifier in allCellIdentifiers {
-            switch identifier.cellType {
-            case let .class(cellClass):
-                collectionView.register(cellClass, forCellWithReuseIdentifier: identifier.rawValue)
-            case let .nib(cellClass):
-                cellClass.registerNib(on: collectionView, reuseIdentifier: identifier.rawValue)
-            case .storyboard:
-                break
-            }
-        }
-    }
-}
-
 protocol CellIdentifier: RawRepresentable where RawValue == String {
-    associatedtype CellType
+    associatedtype CellType: Cell
 
     var cellType: RegisteredCellType<CellType> { get }
+    func register(with: CellType.View)
 }
 
-enum RegisteredCellType<T> {
+extension CellIdentifier where CellType == UITableViewCell {
+    func register(with tableView: UITableView) {
+        switch cellType {
+        case let .class(cellClass):
+            tableView.register(cellClass, forCellReuseIdentifier: rawValue)
+        case let .nib(cellClass):
+            cellClass.registerNib(on: tableView, reuseIdentifier: rawValue)
+        case .storyboard:
+            break
+        }
+    }
+}
+
+extension CellIdentifier where CellType == UICollectionViewCell {
+    func register(with collectionView: UICollectionView) {
+        switch cellType {
+        case let .class(cellClass):
+            collectionView.register(cellClass, forCellWithReuseIdentifier: rawValue)
+        case let .nib(cellClass):
+            cellClass.registerNib(on: collectionView, reuseIdentifier: rawValue)
+        case .storyboard:
+            break
+        }
+    }
+}
+
+enum RegisteredCellType<T: Cell> {
     case `class`(T.Type)
     case nib(T.Type)
     case storyboard
+}
+
+protocol Cell {
+    associatedtype View
+}
+
+extension UITableViewCell: Cell {
+    typealias View = UITableView
+}
+
+extension UICollectionViewCell: Cell {
+    typealias View = UICollectionView
 }
