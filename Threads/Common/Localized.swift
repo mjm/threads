@@ -66,6 +66,8 @@ enum Localized {
     static let searchForNewThreads = NSLocalizedString("Search for new threads", comment: "")
     static let addBatchButton = NSLocalizedString("AddBatchButton", comment: "Add or Add ({num})")
     static let dontAdd = NSLocalizedString("Don't Add", comment: "")
+    static let matchingThreads = NSLocalizedString("Matching Threads", comment: "")
+    static let threadsToAdd = NSLocalizedString("Threads to Add", comment: "")
 
     static let edit = NSLocalizedString("Edit", comment: "")
     static let stopEditing = NSLocalizedString("Stop Editing", comment: "")

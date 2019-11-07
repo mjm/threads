@@ -52,13 +52,23 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
         super.viewDidLoad()
 
         navigationItem.rightBarButtonItems = [actionsButtonItem]
+
+        collectionView.dragInteractionEnabled = true
+        collectionView.dragDelegate = self
+        collectionView.dropDelegate = self
     }
 
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.apply(to: dataSource, animate: $animate, on: RunLoop.main)
-            .store(in: &cancellables)
+        dataSource
+            = DataSource(collectionView) { [weak self] cell, item in
+                self?.populate(cell: cell, item: item)
+            }.withSupplementaryViews { [weak self] _, kind, indexPath, section in
+                self?.supplementaryView(kind: kind, indexPath: indexPath, section: section)
+            }
+            .bound(to: viewModel.snapshot, animate: $animate, on: RunLoop.main)
+
         viewModel.name.assign(to: \.title, on: navigationItem).store(
             in: &cancellables)
 
@@ -86,48 +96,39 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             .store(in: &cancellables)
     }
 
-    override func dataSourceWillInitialize() {
-        dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
-            guard let section = self?.dataSource.snapshot().sectionIdentifiers[indexPath.section]
-            else {
-                return nil
-            }
-
-            switch (kind, section) {
-            case (UICollectionView.elementKindSectionHeader, .threads):
-                let view
-                    = collectionView.dequeueReusableSupplementaryView(
-                        ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath)
-                    as! SectionHeaderLabelView
-                self?.viewModel.threadCount.map { count in
-                    String.localizedStringWithFormat(Localized.threadsSectionHeader, count)
-                }.sink { [weak view] text in
-                    view?.textLabel.text = text
-                    view?.setNeedsLayout()
-                }.store(in: &view.cancellables)
-                return view
-            case (UICollectionView.elementKindSectionHeader, .details):
-                let view
-                    = collectionView.dequeueReusableSupplementaryView(
-                        ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath)
-                    as! SectionHeaderLabelView
-                view.textLabel.text = nil
-                return view
-            case (UICollectionView.elementKindSectionHeader, .notes):
-                let view
-                    = collectionView.dequeueReusableSupplementaryView(
-                        ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath)
-                    as! SectionHeaderLabelView
-                view.textLabel.text = Localized.notesSectionHeader
-                return view
-            default:
-                return nil
-            }
+    private func supplementaryView(
+        kind: String, indexPath: IndexPath, section: ProjectDetailViewModel.Section
+    ) -> UICollectionReusableView? {
+        switch (kind, section) {
+        case (UICollectionView.elementKindSectionHeader, .threads):
+            let view
+                = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath)
+                as! SectionHeaderLabelView
+            self.viewModel.threadCount.map { count in
+                String.localizedStringWithFormat(Localized.threadsSectionHeader, count)
+            }.sink { [weak view] text in
+                view?.textLabel.text = text
+                view?.setNeedsLayout()
+            }.store(in: &view.cancellables)
+            return view
+        case (UICollectionView.elementKindSectionHeader, .details):
+            let view
+                = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath)
+                as! SectionHeaderLabelView
+            view.textLabel.text = nil
+            return view
+        case (UICollectionView.elementKindSectionHeader, .notes):
+            let view
+                = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath)
+                as! SectionHeaderLabelView
+            view.textLabel.text = Localized.notesSectionHeader
+            return view
+        default:
+            return nil
         }
-
-        collectionView.dragInteractionEnabled = true
-        collectionView.dragDelegate = self
-        collectionView.dropDelegate = self
     }
 
     override var cellTypes: [String: RegisteredCellType<UICollectionViewCell>] {
@@ -143,7 +144,7 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
         ]
     }
 
-    override func populate(cell: UICollectionViewCell, item: ProjectDetailViewModel.Item) {
+    private func populate(cell: UICollectionViewCell, item: ProjectDetailViewModel.Item) {
         switch item {
 
         case let .viewImage(model):

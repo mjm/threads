@@ -144,8 +144,10 @@
 		C99677F1235B497600AE2F5C /* StoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677F0235B497600AE2F5C /* StoreObserver.swift */; };
 		C99677F3235B499C00AE2F5C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99677F2235B499C00AE2F5C /* StoreKit.framework */; };
 		C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9967801235C02EA00AE2F5C /* StoreActions.swift */; };
-		C9BEF0F0236FB43A005893EE /* Snapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0EF236FB43A005893EE /* Snapshots.swift */; };
+		C9BEF0F0236FB43A005893EE /* DiffableSnapshotApplying.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0EF236FB43A005893EE /* DiffableSnapshotApplying.swift */; };
 		C9BEF0F22372797E005893EE /* WithLatestFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F12372797E005893EE /* WithLatestFrom.swift */; };
+		C9BEF0F62373E2E3005893EE /* CollectionViewDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F52373E2E3005893EE /* CollectionViewDiffableDataSource.swift */; };
+		C9BEF0F82373ECAF005893EE /* ReusableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F72373ECAF005893EE /* ReusableCell.swift */; };
 		C9C6328D236E31690013025E /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C6328C236E31690013025E /* CoreData.swift */; };
 		C9C8C0DE235CBA7200787BEA /* Events in Frameworks */ = {isa = PBXBuildFile; productRef = C9C8C0DD235CBA7200787BEA /* Events */; };
 		C9E01488235D4AA5007B2626 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01487235D4AA5007B2626 /* AppDelegate.swift */; };
@@ -314,8 +316,10 @@
 		C99677F0235B497600AE2F5C /* StoreObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreObserver.swift; sourceTree = "<group>"; };
 		C99677F2235B499C00AE2F5C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		C9967801235C02EA00AE2F5C /* StoreActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreActions.swift; sourceTree = "<group>"; };
-		C9BEF0EF236FB43A005893EE /* Snapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshots.swift; sourceTree = "<group>"; };
+		C9BEF0EF236FB43A005893EE /* DiffableSnapshotApplying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableSnapshotApplying.swift; sourceTree = "<group>"; };
 		C9BEF0F12372797E005893EE /* WithLatestFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithLatestFrom.swift; sourceTree = "<group>"; };
+		C9BEF0F52373E2E3005893EE /* CollectionViewDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDiffableDataSource.swift; sourceTree = "<group>"; };
+		C9BEF0F72373ECAF005893EE /* ReusableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableCell.swift; sourceTree = "<group>"; };
 		C9C6328C236E31690013025E /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		C9E01485235D4AA5007B2626 /* ThreadsAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThreadsAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E01487235D4AA5007B2626 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -374,7 +378,6 @@
 			isa = PBXGroup;
 			children = (
 				C9082F5B2369262500768CA1 /* Operators.swift */,
-				C9BEF0EF236FB43A005893EE /* Snapshots.swift */,
 				C9C6328C236E31690013025E /* CoreData.swift */,
 				C9BEF0F12372797E005893EE /* WithLatestFrom.swift */,
 			);
@@ -597,7 +600,6 @@
 				C97FCDAF232C8ED7000B1590 /* UserActivity.swift */,
 				C97FCDBC232D79E7000B1590 /* Localized.swift */,
 				C97FCDBB232D78AA000B1590 /* Localizable.stringsdict */,
-				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
 				C955EDE7234028A8000ACC39 /* ViewControllers.swift */,
 				C9491E3D23235FBF0031F463 /* ThreadTableViewCell.swift */,
 				C97FCDAD232C8796000B1590 /* Project+UIActivityItemSource.swift */,
@@ -770,6 +772,10 @@
 			isa = PBXGroup;
 			children = (
 				C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */,
+				C9BEF0EF236FB43A005893EE /* DiffableSnapshotApplying.swift */,
+				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
+				C9BEF0F52373E2E3005893EE /* CollectionViewDiffableDataSource.swift */,
+				C9BEF0F72373ECAF005893EE /* ReusableCell.swift */,
 				C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */,
 				C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */,
 				C95028F22366B74700BB02C4 /* ViewModel.swift */,
@@ -977,6 +983,7 @@
 				C97FCDEC232E014D000B1590 /* NSManagedObjectContext.swift in Sources */,
 				C95028EF2366AD0100BB02C4 /* MyThreadsViewModel.swift in Sources */,
 				C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */,
+				C9BEF0F62373E2E3005893EE /* CollectionViewDiffableDataSource.swift in Sources */,
 				C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */,
 				C9082F71236A9ADE00768CA1 /* ProjectCellViewModel.swift in Sources */,
 				C97FCDF1232EA234000B1590 /* ProjectImage.swift in Sources */,
@@ -1048,7 +1055,7 @@
 				C9815E8A236E2D9D00D5DDEB /* AddImageToProjectAction.swift in Sources */,
 				C9815E6A236E1A7E00D5DDEB /* RemoveThreadAction.swift in Sources */,
 				C9815E7A236E1EEC00D5DDEB /* ChangeShoppingListAmountAction.swift in Sources */,
-				C9BEF0F0236FB43A005893EE /* Snapshots.swift in Sources */,
+				C9BEF0F0236FB43A005893EE /* DiffableSnapshotApplying.swift in Sources */,
 				C97FCDEE232E941D000B1590 /* Cells.swift in Sources */,
 				C95028F32366B74700BB02C4 /* ViewModel.swift in Sources */,
 				C9815E8E236E2E4500D5DDEB /* DeleteProjectImageAction.swift in Sources */,
@@ -1070,6 +1077,7 @@
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
 				C942E44D2336C7F400987EAB /* BannerController.swift in Sources */,
+				C9BEF0F82373ECAF005893EE /* ReusableCell.swift in Sources */,
 				C97FCE00232F4C9F000B1590 /* UserActionContext.swift in Sources */,
 				C92064A4236AA123002F9079 /* ViewProjectThreadCellViewModel.swift in Sources */,
 				C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */,

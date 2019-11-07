@@ -25,7 +25,12 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.apply(to: dataSource, animate: $animate).store(in: &cancellables)
+        dataSource
+            = DataSource(collectionView) { cell, cellModel in
+                let cell = cell as! ProjectCollectionViewCell
+                cell.bind(cellModel)
+            }
+            .bound(to: viewModel.snapshot, animate: $animate)
 
         viewModel.isEmpty.sink { [weak self] empty in
             self?.setShowEmptyView(empty)
@@ -60,11 +65,6 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
 
     override var cellTypes: [String: RegisteredCellType<UICollectionViewCell>] {
         ["Project": .nib(ProjectCollectionViewCell.self)]
-    }
-
-    override func populate(cell: UICollectionViewCell, item: ProjectListViewModel.Item) {
-        let cell = cell as! ProjectCollectionViewCell
-        cell.bind(item)
     }
 
     override func createLayout() -> UICollectionViewLayout {

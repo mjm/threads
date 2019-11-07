@@ -35,19 +35,28 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
         tableView.addGestureRecognizer(tapRecognizer)
     }
 
-    override func dataSourceWillInitialize() {
-        dataSource.sectionTitle = { tableView, _, section in
-            switch section {
-            case .threads: return nil
-            case .projects: return Localized.projects
-            }
-        }
-    }
-
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.apply(to: dataSource, animate: Just(false)).store(in: &cancellables)
+        dataSource
+            = DataSource(tableView) { cell, item in
+                let cell = cell as! ReactiveTableViewCell
+
+                switch item {
+                case .collection:
+                    cell.imageView?.image = UIImage(systemName: "tray.full")
+                    cell.textLabel?.text = Localized.myThreads
+                case .shoppingList:
+                    cell.imageView?.image = UIImage(systemName: "cart")
+                    cell.textLabel?.text = Localized.shoppingList
+                case let .project(model):
+                    cell.imageView?.image = UIImage(systemName: "rectangle.3.offgrid.fill")
+                    cell.imageView?.tintColor = .systemGray
+                    model.name.assign(to: \.text, on: cell.textLabel!).store(in: &cell.cancellables)
+                }
+            }
+            .withSectionTitles([.projects: Localized.projects])
+            .bound(to: viewModel.snapshot, animate: false)
 
         viewModel.$selectedItem.sink { [weak self] item in
             guard let self = self else { return }
@@ -61,23 +70,6 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
         [
             "Cell": .class(ReactiveTableViewCell.self),
         ]
-    }
-
-    override func populate(cell: UITableViewCell, item: SidebarViewModel.Item) {
-        let cell = cell as! ReactiveTableViewCell
-
-        switch item {
-        case .collection:
-            cell.imageView?.image = UIImage(systemName: "tray.full")
-            cell.textLabel?.text = Localized.myThreads
-        case .shoppingList:
-            cell.imageView?.image = UIImage(systemName: "cart")
-            cell.textLabel?.text = Localized.shoppingList
-        case let .project(model):
-            cell.imageView?.image = UIImage(systemName: "rectangle.3.offgrid.fill")
-            cell.imageView?.tintColor = .systemGray
-            model.name.assign(to: \.text, on: cell.textLabel!).store(in: &cell.cancellables)
-        }
     }
 
     override func tableView(

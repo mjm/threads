@@ -17,29 +17,15 @@ where ViewModel.Item: ReusableCell {
     typealias DataSource = TableViewDiffableDataSource<ViewModel.Section, ViewModel.Item>
     typealias Snapshot = ViewModel.Snapshot
 
-    private(set) var dataSource: DataSource!
     @Published var animate: Bool = false
-
     var cancellables = Set<AnyCancellable>()
+
+    var dataSource: DataSource!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         registerCellTypes()
-
-        dataSource
-            = DataSource(tableView: tableView) { [weak self] tableView, indexPath, item in
-                guard let self = self else {
-                    return nil
-                }
-
-                let cell = tableView.dequeueReusableCell(
-                    withIdentifier: item.cellIdentifier, for: indexPath)
-                self.populate(cell: cell, item: item)
-                return cell
-            }
-
-        dataSourceWillInitialize()
 
         subscribe()
     }
@@ -91,12 +77,6 @@ where ViewModel.Item: ReusableCell {
         [:]
     }
 
-    func populate(cell: UITableViewCell, item: ViewModel.Item) {
-        preconditionFailure("populate(cell:item:) must be implemented for \(type(of: self))")
-    }
-
-    func dataSourceWillInitialize() {}
-
     func subscribe() {}
 }
 
@@ -104,10 +84,10 @@ where ViewModel.Item: ReusableCell {
 
 class ReactiveCollectionViewController<ViewModel: SnapshotViewModel>: UICollectionViewController
 where ViewModel.Item: ReusableCell {
-    typealias DataSource = UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>
+    typealias DataSource = CollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>
     typealias Snapshot = ViewModel.Snapshot
 
-    private(set) var dataSource: DataSource!
+    var dataSource: DataSource!
     @Published var animate: Bool = false
 
     var cancellables = Set<AnyCancellable>()
@@ -115,24 +95,9 @@ where ViewModel.Item: ReusableCell {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        registerCellTypes()
-
-        dataSource
-            = DataSource(collectionView: collectionView) {
-                [weak self] collectionView, indexPath, item in
-                guard let self = self else {
-                    return nil
-                }
-
-                let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: item.cellIdentifier, for: indexPath)
-                self.populate(cell: cell, item: item)
-                return cell
-            }
-
-        dataSourceWillInitialize()
         collectionView.collectionViewLayout = createLayout()
 
+        registerCellTypes()
         subscribe()
     }
 
@@ -189,15 +154,9 @@ where ViewModel.Item: ReusableCell {
         [:]
     }
 
-    func populate(cell: UICollectionViewCell, item: ViewModel.Item) {
-        preconditionFailure("populate(cell:item:) must be implemented for \(type(of: self))")
-    }
-
     func createLayout() -> UICollectionViewLayout {
         UICollectionViewFlowLayout()
     }
-
-    func dataSourceWillInitialize() {}
 
     func subscribe() {}
 }
@@ -205,8 +164,4 @@ where ViewModel.Item: ReusableCell {
 enum RegisteredCellType<T> {
     case `class`(T.Type)
     case nib(T.Type)
-}
-
-protocol ReusableCell: Hashable {
-    var cellIdentifier: String { get }
 }

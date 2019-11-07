@@ -39,7 +39,13 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.apply(to: dataSource, animate: $animate).store(in: &cancellables)
+        dataSource
+            = DataSource(tableView) { cell, cellModel in
+                let cell = cell as! CollectionThreadTableViewCell
+                cell.bind(cellModel)
+            }
+            .editable()
+            .bound(to: viewModel.snapshot, animate: $animate)
 
         viewModel.isEmpty.sink { [weak self] isEmpty in
             self?.setShowEmptyView(isEmpty)
@@ -48,10 +54,6 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
         viewModel.userActivity.map { $0.userActivity }
             .assign(to: \.userActivity, on: self, weak: true)
             .store(in: &cancellables)
-    }
-
-    override func dataSourceWillInitialize() {
-        dataSource.canEditRow = { _, _, _ in true }
     }
 
     private func setShowEmptyView(_ showEmptyView: Bool) {
@@ -80,11 +82,6 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
 
     override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
         ["Thread": .nib(CollectionThreadTableViewCell.self)]
-    }
-
-    override func populate(cell: UITableViewCell, item: MyThreadsViewModel.Item) {
-        let cell = cell as! CollectionThreadTableViewCell
-        cell.bind(item)
     }
 
     @objc func buyPremium(_ sender: Any) {

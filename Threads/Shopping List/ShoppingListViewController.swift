@@ -44,8 +44,12 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.apply(to: dataSource, animate: $animate, on: RunLoop.main)
-            .store(in: &cancellables)
+        dataSource
+            = DataSource(tableView) { cell, cellModel in
+                let cell = cell as! ShoppingListThreadTableViewCell
+                cell.bind(cellModel)
+            }
+            .bound(to: viewModel.snapshot, animate: $animate, on: RunLoop.main)
 
         viewModel.isEmpty.sink { [weak self] isEmpty in
             self?.setShowEmptyView(isEmpty)
@@ -56,7 +60,8 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
             .store(in: &cancellables)
 
         #if !targetEnvironment(macCatalyst)
-        viewModel.canAddPurchasedToCollection.combineLatest($animate).receive(on: RunLoop.main).sink
+        viewModel.canAddPurchasedToCollection.withLatestFrom($animate).receive(on: RunLoop.main)
+            .sink
         {
             [weak self] showButton, animate in
             self?.setShowAddToCollectionButton(showButton, animated: animate)
@@ -129,13 +134,6 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
 
     override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
         ["Thread": .nib(ShoppingListThreadTableViewCell.self)]
-    }
-
-    private var threadCellObservers: [NSManagedObjectID: AnyCancellable] = [:]
-
-    override func populate(cell: UITableViewCell, item: ShoppingListViewModel.Item) {
-        let cell = cell as! ShoppingListThreadTableViewCell
-        cell.bind(item)
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -62,28 +62,35 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewMo
     override func subscribe() {
         viewModel.presenter = self
 
+        dataSource
+            = DataSource(tableView) { cell, item in
+                switch item {
+                case .details(let model):
+                    let cell = cell as! ThreadDetailsTableViewCell
+                    cell.bind(model)
+
+                case .shoppingList(let model):
+                    let cell = cell as! ShoppingListThreadTableViewCell
+                    cell.bind(model)
+
+                case .project(let model):
+                    let cell = cell as! ThreadProjectTableViewCell
+                    cell.bind(model)
+                }
+            }
+            .withSectionTitles([
+                .shoppingList: Localized.inShoppingList,
+                .projects: Localized.projects,
+            ])
+            .bound(to: viewModel.snapshot, animate: $animate)
+
         viewModel.number.map { number in
             String(format: Localized.dmcNumber, number!)
         }.assign(to: \.title, on: navigationItem).store(in: &cancellables)
 
-        viewModel.snapshot.apply(to: dataSource, animate: $animate).store(in: &cancellables)
-
         viewModel.userActivity.map { $0.userActivity }
             .assign(to: \.userActivity, on: self, weak: true)
             .store(in: &cancellables)
-    }
-
-    override func dataSourceWillInitialize() {
-        dataSource.sectionTitle = { _, _, section in
-            switch section {
-            case .details:
-                return nil
-            case .shoppingList:
-                return Localized.inShoppingList
-            case .projects:
-                return Localized.projects
-            }
-        }
     }
 
     override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
@@ -91,25 +98,6 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewMo
             "ShoppingList": .nib(ShoppingListThreadTableViewCell.self),
             "Project": .class(ThreadProjectTableViewCell.self),
         ]
-    }
-
-    private var shoppingListSubscription: AnyCancellable?
-
-    override func populate(cell: UITableViewCell, item: ThreadDetailViewModel.Item) {
-        switch item {
-
-        case .details(let model):
-            let cell = cell as! ThreadDetailsTableViewCell
-            cell.bind(model)
-
-        case .shoppingList(let model):
-            let cell = cell as! ShoppingListThreadTableViewCell
-            cell.bind(model)
-
-        case .project(let model):
-            let cell = cell as! ThreadProjectTableViewCell
-            cell.bind(model)
-        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

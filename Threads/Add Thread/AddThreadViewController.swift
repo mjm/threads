@@ -57,7 +57,17 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
     override func subscribe() {
         viewModel.presenter = self
 
-        viewModel.snapshot.apply(to: dataSource, animate: Just(false)).store(in: &cancellables)
+        dataSource
+            = DataSource(tableView) { cell, cellModel in
+                let cell = cell as! CollectionThreadTableViewCell
+                cell.bind(cellModel)
+            }
+            .editable()
+            .withSectionTitles([
+                .filtered: Localized.matchingThreads,
+                .selected: Localized.threadsToAdd,
+            ])
+            .bound(to: viewModel.snapshot, animate: false)
 
         viewModel.$query.removeDuplicates().optionally().assign(
             to: \.searchBar.text, on: searchController).store(in: &cancellables)
@@ -77,24 +87,8 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
         }.assign(to: \.title, on: addButton).store(in: &cancellables)
     }
 
-    override func dataSourceWillInitialize() {
-        dataSource.canEditRow = { _, _, _ in true }
-
-        dataSource.sectionTitle = { _, _, section in
-            switch section {
-            case .filtered: return NSLocalizedString("Matching Threads", comment: "")
-            case .selected: return NSLocalizedString("Threads to Add", comment: "")
-            }
-        }
-    }
-
     override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
         ["Thread": .nib(CollectionThreadTableViewCell.self)]
-    }
-
-    override func populate(cell: UITableViewCell, item: AddThreadViewModel.Item) {
-        let cell = cell as! CollectionThreadTableViewCell
-        cell.bind(item)
     }
 
     override func viewDidAppear(_ animated: Bool) {
