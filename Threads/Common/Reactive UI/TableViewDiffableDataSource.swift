@@ -14,16 +14,18 @@ class TableViewDiffableDataSource<
 >: UITableViewDiffableDataSource<
     SectionIdentifierType, ItemIdentifierType
 >, DiffableSnapshotApplying
-{
+where ItemIdentifierType.Identifier.CellType == UITableViewCell {
     var cancellables = Set<AnyCancellable>()
 
     init(
         _ tableView: UITableView,
         configureCell: @escaping (UITableViewCell, ItemIdentifierType) -> Void
     ) {
+        ItemIdentifierType.register(with: tableView)
+
         super.init(tableView: tableView) { tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(
-                withIdentifier: item.cellIdentifier, for: indexPath)
+                withIdentifier: item.cellIdentifier.rawValue, for: indexPath)
             configureCell(cell, item)
             return cell
         }

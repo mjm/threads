@@ -11,7 +11,15 @@ import CoreData
 import UIKit
 
 extension MyThreadsViewModel.Item: ReusableCell {
-    var cellIdentifier: String { "Thread" }
+    enum Identifier: String, CaseIterable, CellIdentifier {
+        case thread = "Thread"
+
+        var cellType: RegisteredCellType<UITableViewCell> {
+            .nib(CollectionThreadTableViewCell.self)
+        }
+    }
+
+    var cellIdentifier: Identifier { .thread }
 }
 
 class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
@@ -78,10 +86,6 @@ class MyThreadsViewController: ReactiveTableViewController<MyThreadsViewModel> {
             tableView.backgroundView = nil
             tableView.tableFooterView = nil
         }
-    }
-
-    override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
-        ["Thread": .nib(CollectionThreadTableViewCell.self)]
     }
 
     @objc func buyPremium(_ sender: Any) {

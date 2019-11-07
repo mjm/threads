@@ -14,16 +14,18 @@ class CollectionViewDiffableDataSource<
 >: UICollectionViewDiffableDataSource<
     SectionIdentifierType, ItemIdentifierType
 >, DiffableSnapshotApplying
-{
+where ItemIdentifierType.Identifier.CellType == UICollectionViewCell {
     var cancellables = Set<AnyCancellable>()
 
     init(
         _ collectionView: UICollectionView,
         configureCell: @escaping (UICollectionViewCell, ItemIdentifierType) -> Void
     ) {
+        ItemIdentifierType.register(with: collectionView)
+
         super.init(collectionView: collectionView) { collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: item.cellIdentifier, for: indexPath)
+                withReuseIdentifier: item.cellIdentifier.rawValue, for: indexPath)
             configureCell(cell, item)
             return cell
         }

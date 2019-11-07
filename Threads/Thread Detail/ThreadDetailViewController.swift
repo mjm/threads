@@ -11,11 +11,25 @@ import CoreData
 import UIKit
 
 extension ThreadDetailViewModel.Item: ReusableCell {
-    var cellIdentifier: String {
+    enum Identifier: String, CaseIterable, CellIdentifier {
+        case details = "Details"
+        case shoppingList = "ShoppingList"
+        case project = "Project"
+
+        var cellType: RegisteredCellType<UITableViewCell> {
+            switch self {
+            case .details: return .storyboard
+            case .shoppingList: return .nib(ShoppingListThreadTableViewCell.self)
+            case .project: return .class(ThreadProjectTableViewCell.self)
+            }
+        }
+    }
+
+    var cellIdentifier: Identifier {
         switch self {
-        case .details: return "Details"
-        case .shoppingList: return "ShoppingList"
-        case .project: return "Project"
+        case .details: return .details
+        case .shoppingList: return .shoppingList
+        case .project: return .project
         }
     }
 }
@@ -91,13 +105,6 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewMo
         viewModel.userActivity.map { $0.userActivity }
             .assign(to: \.userActivity, on: self, weak: true)
             .store(in: &cancellables)
-    }
-
-    override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
-        [
-            "ShoppingList": .nib(ShoppingListThreadTableViewCell.self),
-            "Project": .class(ThreadProjectTableViewCell.self),
-        ]
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

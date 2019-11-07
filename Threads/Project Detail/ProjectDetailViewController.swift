@@ -12,16 +12,37 @@ import CoreServices
 import UIKit
 
 extension ProjectDetailViewModel.Item: ReusableCell {
-    var cellIdentifier: String {
+    enum Identifier: String, CaseIterable, CellIdentifier {
+        case image = "Image"
+        case textView = "TextView"
+        case thread = "Thread"
+        case editImage = "EditImage"
+        case textInput = "TextInput"
+        case editThread = "EditThread"
+        case add = "Add"
+
+        var cellType: RegisteredCellType<UICollectionViewCell> {
+            switch self {
+            case .textInput: return .nib(TextInputCollectionViewCell.self)
+            case .textView: return .nib(TextViewCollectionViewCell.self)
+            case .image: return .nib(ViewImageCollectionViewCell.self)
+            case .thread: return .nib(ViewProjectThreadCollectionViewCell.self)
+            case .editImage: return .nib(EditImageCollectionViewCell.self)
+            case .editThread: return .nib(EditProjectThreadCollectionViewCell.self)
+            case .add: return .storyboard
+            }
+        }
+    }
+
+    var cellIdentifier: Identifier {
         switch self {
-        case .viewImage: return "Image"
-        case .viewNotes: return "TextView"
-        case .viewThread: return "Thread"
-        case .editImage, .imagePlaceholder: return "EditImage"
-        case .editName: return "TextInput"
-        case .editNotes: return "TextView"
-        case .editThread: return "EditThread"
-        case .add: return "Add"
+        case .viewImage: return .image
+        case .viewNotes, .editNotes: return .textView
+        case .viewThread: return .thread
+        case .editImage, .imagePlaceholder: return .editImage
+        case .editName: return .textInput
+        case .editThread: return .editThread
+        case .add: return .add
         }
     }
 }
@@ -129,19 +150,6 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
         default:
             return nil
         }
-    }
-
-    override var cellTypes: [String: RegisteredCellType<UICollectionViewCell>] {
-        [
-            "TextInput": .nib(TextInputCollectionViewCell.self),
-            "TextView": .nib(TextViewCollectionViewCell.self),
-
-            "Image": .nib(ViewImageCollectionViewCell.self),
-            "Thread": .nib(ViewProjectThreadCollectionViewCell.self),
-
-            "EditImage": .nib(EditImageCollectionViewCell.self),
-            "EditThread": .nib(EditProjectThreadCollectionViewCell.self),
-        ]
     }
 
     private func populate(cell: UICollectionViewCell, item: ProjectDetailViewModel.Item) {

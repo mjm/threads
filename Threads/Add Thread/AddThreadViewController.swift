@@ -11,7 +11,15 @@ import CoreData
 import UIKit
 
 extension AddThreadViewModel.Item: ReusableCell {
-    var cellIdentifier: String { "Thread" }
+    enum Identifier: String, CaseIterable, CellIdentifier {
+        case thread = "Thread"
+
+        var cellType: RegisteredCellType<UITableViewCell> {
+            .nib(CollectionThreadTableViewCell.self)
+        }
+    }
+
+    var cellIdentifier: Identifier { .thread }
 }
 
 class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
@@ -85,10 +93,6 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
         viewModel.$selectedItems.map { threads in
             String.localizedStringWithFormat(Localized.addBatchButton, threads.count)
         }.assign(to: \.title, on: addButton).store(in: &cancellables)
-    }
-
-    override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
-        ["Thread": .nib(CollectionThreadTableViewCell.self)]
     }
 
     override func viewDidAppear(_ animated: Bool) {

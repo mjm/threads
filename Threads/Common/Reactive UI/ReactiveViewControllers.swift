@@ -13,7 +13,7 @@ import UIKit
 // MARK: - Table View Controller
 
 class ReactiveTableViewController<ViewModel: SnapshotViewModel>: UITableViewController
-where ViewModel.Item: ReusableCell {
+where ViewModel.Item: ReusableCell, ViewModel.Item.Identifier.CellType == UITableViewCell {
     typealias DataSource = TableViewDiffableDataSource<ViewModel.Section, ViewModel.Item>
     typealias Snapshot = ViewModel.Snapshot
 
@@ -24,8 +24,6 @@ where ViewModel.Item: ReusableCell {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        registerCellTypes()
 
         subscribe()
     }
@@ -60,22 +58,7 @@ where ViewModel.Item: ReusableCell {
     //        currentUserActivity?.update(activity)
     //    }
 
-    private func registerCellTypes() {
-        for (identifier, type) in cellTypes {
-            switch type {
-            case let .class(cellClass):
-                tableView.register(cellClass, forCellReuseIdentifier: identifier)
-            case let .nib(cellClass):
-                cellClass.registerNib(on: tableView, reuseIdentifier: identifier)
-            }
-        }
-    }
-
     // MARK: - Subclasses can override
-
-    var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
-        [:]
-    }
 
     func subscribe() {}
 }
@@ -83,7 +66,7 @@ where ViewModel.Item: ReusableCell {
 // MARK: - Collection View Controller
 
 class ReactiveCollectionViewController<ViewModel: SnapshotViewModel>: UICollectionViewController
-where ViewModel.Item: ReusableCell {
+where ViewModel.Item: ReusableCell, ViewModel.Item.Identifier.CellType == UICollectionViewCell {
     typealias DataSource = CollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>
     typealias Snapshot = ViewModel.Snapshot
 
@@ -97,7 +80,6 @@ where ViewModel.Item: ReusableCell {
 
         collectionView.collectionViewLayout = createLayout()
 
-        registerCellTypes()
         subscribe()
     }
 
@@ -137,31 +119,11 @@ where ViewModel.Item: ReusableCell {
     //        currentUserActivity?.update(activity)
     //    }
 
-    private func registerCellTypes() {
-        for (identifier, type) in cellTypes {
-            switch type {
-            case let .class(cellClass):
-                collectionView.register(cellClass, forCellWithReuseIdentifier: identifier)
-            case let .nib(cellClass):
-                cellClass.registerNib(on: collectionView, reuseIdentifier: identifier)
-            }
-        }
-    }
-
     // MARK: - Subclasses can override
-
-    var cellTypes: [String: RegisteredCellType<UICollectionViewCell>] {
-        [:]
-    }
 
     func createLayout() -> UICollectionViewLayout {
         UICollectionViewFlowLayout()
     }
 
     func subscribe() {}
-}
-
-enum RegisteredCellType<T> {
-    case `class`(T.Type)
-    case nib(T.Type)
 }

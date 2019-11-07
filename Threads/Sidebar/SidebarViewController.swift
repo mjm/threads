@@ -10,9 +10,15 @@ import Combine
 import UIKit
 
 extension SidebarViewModel.Item: ReusableCell {
-    var cellIdentifier: String {
-        "Cell"
+    enum Identifier: String, CaseIterable, CellIdentifier {
+        case cell = "Cell"
+
+        var cellType: RegisteredCellType<UITableViewCell> {
+            .class(ReactiveTableViewCell.self)
+        }
     }
+
+    var cellIdentifier: Identifier { .cell }
 }
 
 class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
@@ -64,12 +70,6 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
             let indexPath = self.dataSource.indexPath(for: item)
             self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         }.store(in: &cancellables)
-    }
-
-    override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
-        [
-            "Cell": .class(ReactiveTableViewCell.self),
-        ]
     }
 
     override func tableView(

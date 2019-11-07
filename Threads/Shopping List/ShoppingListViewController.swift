@@ -11,7 +11,15 @@ import CoreData
 import UIKit
 
 extension ShoppingListViewModel.Item: ReusableCell {
-    var cellIdentifier: String { "Thread" }
+    enum Identifier: String, CaseIterable, CellIdentifier {
+        case thread = "Thread"
+
+        var cellType: RegisteredCellType<UITableViewCell> {
+            .nib(ShoppingListThreadTableViewCell.self)
+        }
+    }
+
+    var cellIdentifier: Identifier { .thread }
 }
 
 class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewModel> {
@@ -130,10 +138,6 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
                 tableView.tableFooterView = nil
             }
         }
-    }
-
-    override var cellTypes: [String: RegisteredCellType<UITableViewCell>] {
-        ["Thread": .nib(ShoppingListThreadTableViewCell.self)]
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

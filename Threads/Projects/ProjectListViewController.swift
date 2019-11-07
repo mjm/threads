@@ -11,7 +11,15 @@ import CoreData
 import UIKit
 
 extension ProjectListViewModel.Item: ReusableCell {
-    var cellIdentifier: String { "Project" }
+    enum Identifier: String, CaseIterable, CellIdentifier {
+        case project = "Project"
+
+        var cellType: RegisteredCellType<UICollectionViewCell> {
+            .nib(ProjectCollectionViewCell.self)
+        }
+    }
+
+    var cellIdentifier: Identifier { .project }
 }
 
 class ProjectListViewController: ReactiveCollectionViewController<ProjectListViewModel> {
@@ -61,10 +69,6 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
         } else {
             collectionView.backgroundView = nil
         }
-    }
-
-    override var cellTypes: [String: RegisteredCellType<UICollectionViewCell>] {
-        ["Project": .nib(ProjectCollectionViewCell.self)]
     }
 
     override func createLayout() -> UICollectionViewLayout {
