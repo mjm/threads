@@ -16,4 +16,10 @@ class ViewImageCollectionViewCell: ReactiveCollectionViewCell {
         imageView.imageView.contentMode = .scaleAspectFill
         model.thumbnail.assign(to: \.image, on: imageView.imageView).store(in: &cancellables)
     }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        imageView.imageView.image = nil
+    }
 }

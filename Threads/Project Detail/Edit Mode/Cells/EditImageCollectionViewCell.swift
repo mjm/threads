@@ -28,4 +28,10 @@ class EditImageCollectionViewCell: ReactiveCollectionViewCell {
         imageView.image = UIImage(systemName: "camera.fill")
         imageView.contentMode = .center
     }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        imageView.image = nil
+    }
 }

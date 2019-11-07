@@ -29,8 +29,11 @@ public class ProjectImage: NSManagedObject {
     }
 
     @objc dynamic var thumbnailImage: UIImage? {
-        if let thumbnailData = thumbnailData {
-            return UIImage(data: thumbnailData)
+        if let image = cachedThumbnailImage {
+            return image
+        } else if let thumbnailData = thumbnailData {
+            cachedThumbnailImage = UIImage(data: thumbnailData)
+            return cachedThumbnailImage!
         } else if let image = image {
             let thumbnail = image.croppedToSquare(side: 600)
             thumbnailData = thumbnail.jpegData(compressionQuality: 1.0)
@@ -39,6 +42,8 @@ public class ProjectImage: NSManagedObject {
             return nil
         }
     }
+
+    private var cachedThumbnailImage: UIImage?
 
     class func keyPathsForValuesAffectingThumbnailImage() -> Set<String> {
         ["thumbnailData", "data"]

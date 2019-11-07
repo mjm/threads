@@ -43,4 +43,10 @@ class ProjectCollectionViewCell: ReactiveCollectionViewCell {
             self?.imageView.setNeedsLayout()
         }.store(in: &cancellables)
     }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        imageView.imageView.image = nil
+    }
 }
