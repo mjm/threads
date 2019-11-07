@@ -66,8 +66,9 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
             self?.setTabBarCount(unpurchased: count)
         }.store(in: &cancellables)
         #else
-        viewModel.canAddPurchasedToCollection.assignWeakly(to: \.canAddPurchased, on: self).store(
-            in: &cancellables)
+        viewModel.canAddPurchasedToCollection.assign(to: \.canAddPurchased, on: self, weak: true)
+            .store(
+                in: &cancellables)
         #endif
     }
 
