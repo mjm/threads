@@ -65,3 +65,11 @@ where ItemIdentifierType.Identifier.CellType == UITableViewCell {
         return sectionTitle(tableView, section, sectionIdentifier)
     }
 }
+
+extension TableViewDiffableDataSource where ItemIdentifierType: BindableCell {
+    convenience init(_ tableView: UITableView) {
+        self.init(tableView) { cell, item in
+            item.bind(to: cell)
+        }
+    }
+}

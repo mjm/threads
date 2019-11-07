@@ -45,6 +45,8 @@ extension ProjectDetailViewModel.Item: ReusableCell {
         case .add: return .add
         }
     }
+
+    // TODO give name and notes a view model then make this a BindableCell
 }
 
 class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetailViewModel> {

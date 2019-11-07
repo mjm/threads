@@ -10,7 +10,7 @@ import Combine
 import CoreData
 import UIKit
 
-extension ProjectListViewModel.Item: ReusableCell {
+extension ProjectListViewModel.Item: BindableCell {
     enum Identifier: String, CaseIterable, CellIdentifier {
         case project = "Project"
 
@@ -20,6 +20,11 @@ extension ProjectListViewModel.Item: ReusableCell {
     }
 
     var cellIdentifier: Identifier { .project }
+
+    func bind(to cell: UICollectionViewCell) {
+        let cell = cell as! ProjectCollectionViewCell
+        cell.bind(self)
+    }
 }
 
 class ProjectListViewController: ReactiveCollectionViewController<ProjectListViewModel> {
@@ -34,10 +39,7 @@ class ProjectListViewController: ReactiveCollectionViewController<ProjectListVie
         viewModel.presenter = self
 
         dataSource
-            = DataSource(collectionView) { cell, cellModel in
-                let cell = cell as! ProjectCollectionViewCell
-                cell.bind(cellModel)
-            }
+            = DataSource(collectionView)
             .bound(to: viewModel.snapshot, animate: $animate)
 
         viewModel.isEmpty.sink { [weak self] empty in

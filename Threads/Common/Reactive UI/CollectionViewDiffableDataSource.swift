@@ -49,3 +49,11 @@ where ItemIdentifierType.Identifier.CellType == UICollectionViewCell {
         return self
     }
 }
+
+extension CollectionViewDiffableDataSource where ItemIdentifierType: BindableCell {
+    convenience init(_ collectionView: UICollectionView) {
+        self.init(collectionView) { cell, item in
+            item.bind(to: cell)
+        }
+    }
+}

@@ -9,7 +9,7 @@
 import Combine
 import UIKit
 
-extension SidebarViewModel.Item: ReusableCell {
+extension SidebarViewModel.Item: BindableCell {
     enum Identifier: String, CaseIterable, CellIdentifier {
         case cell = "Cell"
 
@@ -19,6 +19,23 @@ extension SidebarViewModel.Item: ReusableCell {
     }
 
     var cellIdentifier: Identifier { .cell }
+
+    func bind(to cell: UITableViewCell) {
+        let cell = cell as! ReactiveTableViewCell
+
+        switch self {
+        case .collection:
+            cell.imageView?.image = UIImage(systemName: "tray.full")
+            cell.textLabel?.text = Localized.myThreads
+        case .shoppingList:
+            cell.imageView?.image = UIImage(systemName: "cart")
+            cell.textLabel?.text = Localized.shoppingList
+        case let .project(model):
+            cell.imageView?.image = UIImage(systemName: "rectangle.3.offgrid.fill")
+            cell.imageView?.tintColor = .systemGray
+            model.name.assign(to: \.text, on: cell.textLabel!).store(in: &cell.cancellables)
+        }
+    }
 }
 
 class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
@@ -45,22 +62,7 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
         viewModel.presenter = self
 
         dataSource
-            = DataSource(tableView) { cell, item in
-                let cell = cell as! ReactiveTableViewCell
-
-                switch item {
-                case .collection:
-                    cell.imageView?.image = UIImage(systemName: "tray.full")
-                    cell.textLabel?.text = Localized.myThreads
-                case .shoppingList:
-                    cell.imageView?.image = UIImage(systemName: "cart")
-                    cell.textLabel?.text = Localized.shoppingList
-                case let .project(model):
-                    cell.imageView?.image = UIImage(systemName: "rectangle.3.offgrid.fill")
-                    cell.imageView?.tintColor = .systemGray
-                    model.name.assign(to: \.text, on: cell.textLabel!).store(in: &cell.cancellables)
-                }
-            }
+            = DataSource(tableView)
             .withSectionTitles([.projects: Localized.projects])
             .bound(to: viewModel.snapshot, animate: false)
 

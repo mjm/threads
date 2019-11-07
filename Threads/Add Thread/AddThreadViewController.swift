@@ -10,7 +10,7 @@ import Combine
 import CoreData
 import UIKit
 
-extension AddThreadViewModel.Item: ReusableCell {
+extension AddThreadViewModel.Item: BindableCell {
     enum Identifier: String, CaseIterable, CellIdentifier {
         case thread = "Thread"
 
@@ -20,6 +20,11 @@ extension AddThreadViewModel.Item: ReusableCell {
     }
 
     var cellIdentifier: Identifier { .thread }
+
+    func bind(to cell: UITableViewCell) {
+        let cell = cell as! CollectionThreadTableViewCell
+        cell.bind(self)
+    }
 }
 
 class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
@@ -66,10 +71,7 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
         viewModel.presenter = self
 
         dataSource
-            = DataSource(tableView) { cell, cellModel in
-                let cell = cell as! CollectionThreadTableViewCell
-                cell.bind(cellModel)
-            }
+            = DataSource(tableView)
             .editable()
             .withSectionTitles([
                 .filtered: Localized.matchingThreads,

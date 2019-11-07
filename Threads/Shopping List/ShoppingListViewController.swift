@@ -10,7 +10,7 @@ import Combine
 import CoreData
 import UIKit
 
-extension ShoppingListViewModel.Item: ReusableCell {
+extension ShoppingListViewModel.Item: BindableCell {
     enum Identifier: String, CaseIterable, CellIdentifier {
         case thread = "Thread"
 
@@ -20,6 +20,11 @@ extension ShoppingListViewModel.Item: ReusableCell {
     }
 
     var cellIdentifier: Identifier { .thread }
+
+    func bind(to cell: UITableViewCell) {
+        let cell = cell as! ShoppingListThreadTableViewCell
+        cell.bind(self)
+    }
 }
 
 class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewModel> {
@@ -53,10 +58,7 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
         viewModel.presenter = self
 
         dataSource
-            = DataSource(tableView) { cell, cellModel in
-                let cell = cell as! ShoppingListThreadTableViewCell
-                cell.bind(cellModel)
-            }
+            = DataSource(tableView)
             .bound(to: viewModel.snapshot, animate: $animate, on: RunLoop.main)
 
         viewModel.isEmpty.sink { [weak self] isEmpty in

@@ -148,6 +148,7 @@
 		C9BEF0F22372797E005893EE /* WithLatestFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F12372797E005893EE /* WithLatestFrom.swift */; };
 		C9BEF0F62373E2E3005893EE /* CollectionViewDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F52373E2E3005893EE /* CollectionViewDiffableDataSource.swift */; };
 		C9BEF0F82373ECAF005893EE /* ReusableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F72373ECAF005893EE /* ReusableCell.swift */; };
+		C9BEF0FA2373F5E3005893EE /* BindableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F92373F5E3005893EE /* BindableCell.swift */; };
 		C9C6328D236E31690013025E /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C6328C236E31690013025E /* CoreData.swift */; };
 		C9C8C0DE235CBA7200787BEA /* Events in Frameworks */ = {isa = PBXBuildFile; productRef = C9C8C0DD235CBA7200787BEA /* Events */; };
 		C9E01488235D4AA5007B2626 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01487235D4AA5007B2626 /* AppDelegate.swift */; };
@@ -320,6 +321,7 @@
 		C9BEF0F12372797E005893EE /* WithLatestFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithLatestFrom.swift; sourceTree = "<group>"; };
 		C9BEF0F52373E2E3005893EE /* CollectionViewDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDiffableDataSource.swift; sourceTree = "<group>"; };
 		C9BEF0F72373ECAF005893EE /* ReusableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableCell.swift; sourceTree = "<group>"; };
+		C9BEF0F92373F5E3005893EE /* BindableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindableCell.swift; sourceTree = "<group>"; };
 		C9C6328C236E31690013025E /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		C9E01485235D4AA5007B2626 /* ThreadsAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThreadsAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E01487235D4AA5007B2626 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -776,6 +778,7 @@
 				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
 				C9BEF0F52373E2E3005893EE /* CollectionViewDiffableDataSource.swift */,
 				C9BEF0F72373ECAF005893EE /* ReusableCell.swift */,
+				C9BEF0F92373F5E3005893EE /* BindableCell.swift */,
 				C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */,
 				C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */,
 				C95028F22366B74700BB02C4 /* ViewModel.swift */,
@@ -1067,6 +1070,7 @@
 				C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */,
 				C9815E78236E1E9600D5DDEB /* TogglePurchasedAction.swift in Sources */,
 				C906E3B9235272A0003EE053 /* SidebarViewController.swift in Sources */,
+				C9BEF0FA2373F5E3005893EE /* BindableCell.swift in Sources */,
 				C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */,
 				C983AC472368FF8C00AA930F /* ReactiveTableViewCell.swift in Sources */,
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,

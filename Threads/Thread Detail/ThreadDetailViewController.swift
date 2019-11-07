@@ -10,7 +10,7 @@ import Combine
 import CoreData
 import UIKit
 
-extension ThreadDetailViewModel.Item: ReusableCell {
+extension ThreadDetailViewModel.Item: BindableCell {
     enum Identifier: String, CaseIterable, CellIdentifier {
         case details = "Details"
         case shoppingList = "ShoppingList"
@@ -30,6 +30,22 @@ extension ThreadDetailViewModel.Item: ReusableCell {
         case .details: return .details
         case .shoppingList: return .shoppingList
         case .project: return .project
+        }
+    }
+
+    func bind(to cell: UITableViewCell) {
+        switch self {
+        case .details(let model):
+            let cell = cell as! ThreadDetailsTableViewCell
+            cell.bind(model)
+
+        case .shoppingList(let model):
+            let cell = cell as! ShoppingListThreadTableViewCell
+            cell.bind(model)
+
+        case .project(let model):
+            let cell = cell as! ThreadProjectTableViewCell
+            cell.bind(model)
         }
     }
 }
@@ -77,21 +93,7 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewMo
         viewModel.presenter = self
 
         dataSource
-            = DataSource(tableView) { cell, item in
-                switch item {
-                case .details(let model):
-                    let cell = cell as! ThreadDetailsTableViewCell
-                    cell.bind(model)
-
-                case .shoppingList(let model):
-                    let cell = cell as! ShoppingListThreadTableViewCell
-                    cell.bind(model)
-
-                case .project(let model):
-                    let cell = cell as! ThreadProjectTableViewCell
-                    cell.bind(model)
-                }
-            }
+            = DataSource(tableView)
             .withSectionTitles([
                 .shoppingList: Localized.inShoppingList,
                 .projects: Localized.projects,
