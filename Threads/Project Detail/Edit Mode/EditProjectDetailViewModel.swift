@@ -17,6 +17,7 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
     let project: Project
     private let actionRunner: UserActionRunner
 
+    let projectDetailModel: ProjectDetailCellViewModel
     @Published private(set) var imageViewModels: [EditProjectImageCellViewModel] = []
     @Published private(set) var threadViewModels: [EditProjectThreadCellViewModel] = []
 
@@ -27,6 +28,7 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
         actionRunner: UserActionRunner
     ) {
         self.project = project
+        self.projectDetailModel = ProjectDetailCellViewModel(project: project)
         self.actionRunner = actionRunner
 
         $imageViewModels.applyingChanges(imageChanges.ignoreError()) { projectImage in
@@ -57,13 +59,15 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
 
     var snapshot: AnyPublisher<ProjectDetailViewModel.Snapshot, Never> {
         $threadViewModels.combineLatest($imageViewModels, notes) {
-            threadModels, imageModels, notes -> Snapshot in
+            [projectDetailModel] threadModels, imageModels, notes -> Snapshot in
             var snapshot = Snapshot()
 
             snapshot.appendSections([.editImages, .details])
             snapshot.appendItems(imageModels.map { .editImage($0) }, toSection: .editImages)
             snapshot.appendItems([.imagePlaceholder], toSection: .editImages)
-            snapshot.appendItems([.editName, .editNotes], toSection: .details)
+            snapshot.appendItems(
+                [.editName(projectDetailModel), .editNotes(projectDetailModel)], toSection: .details
+            )
 
             snapshot.appendSections([.threads])
             snapshot.appendItems(threadModels.map { .editThread($0) }, toSection: .threads)
@@ -74,6 +78,10 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
 
             return snapshot
         }.eraseToAnyPublisher()
+    }
+
+    var nameItem: ProjectDetailViewModel.Item {
+        .editName(projectDetailModel)
     }
 
     private var notes: AnyPublisher<NSAttributedString?, Never> {

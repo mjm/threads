@@ -16,6 +16,7 @@ final class ViewProjectDetailViewModel: ProjectDetailMode {
 
     let project: Project
 
+    let projectDetailModel: ProjectDetailCellViewModel
     @Published private(set) var imageViewModels: [ViewProjectImageCellViewModel] = []
     @Published private(set) var threadViewModels: [ViewProjectThreadCellViewModel] = []
 
@@ -23,6 +24,7 @@ final class ViewProjectDetailViewModel: ProjectDetailMode {
 
     init(project: Project) {
         self.project = project
+        self.projectDetailModel = ProjectDetailCellViewModel(project: project)
 
         $imageViewModels.applyingChanges(imageChanges.ignoreError()) { projectImage in
             ViewProjectImageCellViewModel(projectImage: projectImage)
@@ -47,7 +49,7 @@ final class ViewProjectDetailViewModel: ProjectDetailMode {
 
     var snapshot: AnyPublisher<ProjectDetailViewModel.Snapshot, Never> {
         $threadViewModels.combineLatest($imageViewModels, notes) {
-            threadModels, imageModels, notes -> Snapshot in
+            [projectDetailModel] threadModels, imageModels, notes -> Snapshot in
             var snapshot = Snapshot()
 
             if !imageModels.isEmpty {
@@ -56,7 +58,7 @@ final class ViewProjectDetailViewModel: ProjectDetailMode {
             }
             if let notes = notes, notes.length > 0 {
                 snapshot.appendSections([.notes])
-                snapshot.appendItems([.viewNotes], toSection: .notes)
+                snapshot.appendItems([.viewNotes(projectDetailModel)], toSection: .notes)
             }
 
             snapshot.appendSections([.threads])

@@ -11,7 +11,7 @@ import CoreData
 import CoreServices
 import UIKit
 
-extension ProjectDetailViewModel.Item: ReusableCell {
+extension ProjectDetailViewModel.Item: BindableCell {
     enum Identifier: String, CaseIterable, CellIdentifier {
         case image = "Image"
         case textView = "TextView"
@@ -46,7 +46,56 @@ extension ProjectDetailViewModel.Item: ReusableCell {
         }
     }
 
-    // TODO give name and notes a view model then make this a BindableCell
+    func bind(to cell: UICollectionViewCell) {
+        switch self {
+
+        case let .viewImage(model):
+            let cell = cell as! ViewImageCollectionViewCell
+            cell.bind(model)
+
+        case .viewNotes(let model):
+            let cell = cell as! TextViewCollectionViewCell
+            cell.textView.isEditable = false
+            cell.textView.dataDetectorTypes = .all
+            cell.bind(to: \.formattedNotes, on: model.project)
+
+        case let .viewThread(model):
+            let cell = cell as! ViewProjectThreadCollectionViewCell
+            cell.bind(model)
+
+        case let .editImage(model):
+            let cell = cell as! EditImageCollectionViewCell
+            cell.bind(model)
+
+        case .imagePlaceholder:
+            let cell = cell as! EditImageCollectionViewCell
+            cell.showPlaceholder()
+
+        case .editName(let model):
+            let cell = cell as! TextInputCollectionViewCell
+            cell.textField.placeholder = Localized.projectName
+            cell.bind(to: \.name, on: model.project)
+            cell.actionPublisher().sink { [weak cell] action in
+                switch action {
+                case .return:
+                    cell?.textField.resignFirstResponder()
+                }
+            }.store(in: &cell.cancellables)
+
+        case .editNotes(let model):
+            let cell = cell as! TextViewCollectionViewCell
+            cell.textView.isEditable = true
+            cell.textView.dataDetectorTypes = []
+            cell.bind(to: \.formattedNotes, on: model.project)
+
+        case let .editThread(model):
+            let cell = cell as! EditProjectThreadCollectionViewCell
+            cell.bind(model)
+
+        case .add:
+            return
+        }
+    }
 }
 
 class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetailViewModel> {
@@ -85,9 +134,8 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
         viewModel.presenter = self
 
         dataSource
-            = DataSource(collectionView) { [weak self] cell, item in
-                self?.populate(cell: cell, item: item)
-            }.withSupplementaryViews { [weak self] _, kind, indexPath, section in
+            = DataSource(collectionView)
+            .withSupplementaryViews { [weak self] _, kind, indexPath, section in
                 self?.supplementaryView(kind: kind, indexPath: indexPath, section: section)
             }
             .bound(to: viewModel.snapshot, animate: $animate, on: RunLoop.main)
@@ -98,7 +146,7 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
         // Editing changes
         let isEditing = viewModel.$isEditing.removeDuplicates()
 
-        isEditing.combineLatest($animate).sink { [weak self] editing, animated in
+        isEditing.withLatestFrom($animate).sink { [weak self] editing, animated in
             self?.setEditing(editing, animated: animated)
         }.store(in: &cancellables)
 
@@ -110,7 +158,7 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
             guard let self = self else { return [] }
             return editing ? [self.editButtonItem] : [self.actionsButtonItem]
         }
-        barButtonItems.combineLatest($animate).sink { [weak self] items, animate in
+        barButtonItems.withLatestFrom($animate).sink { [weak self] items, animate in
             self?.navigationItem.setRightBarButtonItems(items, animated: animate)
         }.store(in: &cancellables)
 
@@ -154,62 +202,11 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
         }
     }
 
-    private func populate(cell: UICollectionViewCell, item: ProjectDetailViewModel.Item) {
-        switch item {
-
-        case let .viewImage(model):
-            let cell = cell as! ViewImageCollectionViewCell
-            cell.bind(model)
-
-        case .viewNotes:
-            let cell = cell as! TextViewCollectionViewCell
-            cell.textView.isEditable = false
-            cell.textView.dataDetectorTypes = .all
-            cell.bind(to: \.formattedNotes, on: viewModel.project)
-
-        case let .viewThread(model):
-            let cell = cell as! ViewProjectThreadCollectionViewCell
-            cell.bind(model)
-
-        case let .editImage(model):
-            let cell = cell as! EditImageCollectionViewCell
-            cell.bind(model)
-
-        case .imagePlaceholder:
-            let cell = cell as! EditImageCollectionViewCell
-            cell.showPlaceholder()
-
-        case .editName:
-            let cell = cell as! TextInputCollectionViewCell
-            cell.textField.placeholder = Localized.projectName
-            cell.bind(to: \.name, on: viewModel.project)
-            cell.actionPublisher().sink { [weak cell] action in
-                switch action {
-                case .return:
-                    cell?.textField.resignFirstResponder()
-                }
-            }.store(in: &cell.cancellables)
-
-        case .editNotes:
-            let cell = cell as! TextViewCollectionViewCell
-            cell.textView.isEditable = true
-            cell.textView.dataDetectorTypes = []
-            cell.bind(to: \.formattedNotes, on: viewModel.project)
-
-        case let .editThread(model):
-            let cell = cell as! EditProjectThreadCollectionViewCell
-            cell.bind(model)
-
-        case .add:
-            return
-        }
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         if editNameOnAppear {
-            if let indexPath = dataSource.indexPath(for: .editName),
+            if let indexPath = dataSource.indexPath(for: viewModel.editModeModel.nameItem),
                 let cell = collectionView.cellForItem(at: indexPath) as? TextInputCollectionViewCell
             {
                 cell.textField.becomeFirstResponder()

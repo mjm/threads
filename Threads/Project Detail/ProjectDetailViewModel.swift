@@ -21,13 +21,13 @@ final class ProjectDetailViewModel: ViewModel, SnapshotViewModel {
 
     enum Item: Hashable {
         case viewImage(ViewProjectImageCellViewModel)
-        case viewNotes
+        case viewNotes(ProjectDetailCellViewModel)
         case viewThread(ViewProjectThreadCellViewModel)
 
         case editImage(EditProjectImageCellViewModel)
         case imagePlaceholder
-        case editName
-        case editNotes
+        case editName(ProjectDetailCellViewModel)
+        case editNotes(ProjectDetailCellViewModel)
         case editThread(EditProjectThreadCellViewModel)
         case add
     }
