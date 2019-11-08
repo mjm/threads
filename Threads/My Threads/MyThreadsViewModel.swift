@@ -6,7 +6,8 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Combine
+import Combinable
+import CombinableCoreData
 import CoreData
 import UIKit
 

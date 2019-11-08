@@ -6,7 +6,7 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Combine
+import CombinableUI
 import CoreData
 import UIKit
 
@@ -94,7 +94,7 @@ class ThreadDetailViewController: ReactiveTableViewController<ThreadDetailViewMo
 
         dataSource
             = DataSource(tableView)
-            .withSectionTitles([
+            .titled([
                 .shoppingList: Localized.inShoppingList,
                 .projects: Localized.projects,
             ])

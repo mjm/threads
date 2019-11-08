@@ -6,10 +6,11 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Combine
+import Combinable
+import CombinableUI
 import UIKit
 
-class ThreadDetailsTableViewCell: ReactiveTableViewCell {
+class ThreadDetailsTableViewCell: CombinableTableViewCell {
     @IBOutlet var labelLabel: UILabel!
     @IBOutlet var statusStackView: UIStackView!
     @IBOutlet var onBobbinStackView: UIStackView!

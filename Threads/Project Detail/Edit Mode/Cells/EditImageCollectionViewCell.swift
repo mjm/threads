@@ -6,10 +6,11 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
+import CombinableUI
 import UIKit
 
 @IBDesignable
-class EditImageCollectionViewCell: ReactiveCollectionViewCell {
+class EditImageCollectionViewCell: CombinableCollectionViewCell {
     @IBOutlet var imageView: UIImageView!
 
     override func awakeFromNib() {

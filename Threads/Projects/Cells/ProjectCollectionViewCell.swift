@@ -6,11 +6,11 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Combine
+import CombinableUI
 import UIKit
 
 @IBDesignable
-class ProjectCollectionViewCell: ReactiveCollectionViewCell {
+class ProjectCollectionViewCell: CombinableCollectionViewCell {
     @IBOutlet var imageView: RoundedShadowImageView!
     @IBOutlet var nameLabel: UILabel!
 

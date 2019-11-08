@@ -6,10 +6,10 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Combine
+import CombinableUI
 import UIKit
 
-class ThreadTableViewCell<ViewModel: ThreadCellViewModel>: ReactiveTableViewCell {
+class ThreadTableViewCell<ViewModel: ThreadCellViewModel>: CombinableTableViewCell {
     @IBOutlet var colorView: SwatchView!
     @IBOutlet var labelLabel: UILabel!
     @IBOutlet var numberLabel: UILabel!

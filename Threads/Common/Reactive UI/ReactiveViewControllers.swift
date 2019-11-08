@@ -6,7 +6,7 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Combine
+import CombinableUI
 import CoreData
 import UIKit
 
@@ -14,7 +14,7 @@ import UIKit
 
 class ReactiveTableViewController<ViewModel: SnapshotViewModel>: UITableViewController
 where ViewModel.Item: ReusableCell, ViewModel.Item.Identifier.CellType == UITableViewCell {
-    typealias DataSource = TableViewDiffableDataSource<ViewModel.Section, ViewModel.Item>
+    typealias DataSource = CombinableTableViewDataSource<ViewModel.Section, ViewModel.Item>
     typealias Snapshot = ViewModel.Snapshot
 
     @Published var animate: Bool = false
@@ -67,7 +67,7 @@ where ViewModel.Item: ReusableCell, ViewModel.Item.Identifier.CellType == UITabl
 
 class ReactiveCollectionViewController<ViewModel: SnapshotViewModel>: UICollectionViewController
 where ViewModel.Item: ReusableCell, ViewModel.Item.Identifier.CellType == UICollectionViewCell {
-    typealias DataSource = CollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>
+    typealias DataSource = CombinableCollectionViewDataSource<ViewModel.Section, ViewModel.Item>
     typealias Snapshot = ViewModel.Snapshot
 
     var dataSource: DataSource!

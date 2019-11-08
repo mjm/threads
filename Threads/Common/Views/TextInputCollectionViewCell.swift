@@ -6,10 +6,10 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Combine
+import CombinableUI
 import UIKit
 
-class TextInputCollectionViewCell: ReactiveCollectionViewCell {
+class TextInputCollectionViewCell: CombinableCollectionViewCell {
     enum Action {
         case `return`
     }

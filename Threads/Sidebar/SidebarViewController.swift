@@ -6,7 +6,7 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Combine
+import CombinableUI
 import UIKit
 
 extension SidebarViewModel.Item: BindableCell {
@@ -14,14 +14,14 @@ extension SidebarViewModel.Item: BindableCell {
         case cell = "Cell"
 
         var cellType: RegisteredCellType<UITableViewCell> {
-            .class(ReactiveTableViewCell.self)
+            .class(CombinableTableViewCell.self)
         }
     }
 
     var cellIdentifier: Identifier { .cell }
 
     func bind(to cell: UITableViewCell) {
-        let cell = cell as! ReactiveTableViewCell
+        let cell = cell as! CombinableTableViewCell
 
         switch self {
         case .collection:
@@ -63,7 +63,7 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
 
         dataSource
             = DataSource(tableView)
-            .withSectionTitles([.projects: Localized.projects])
+            .titled([.projects: Localized.projects])
             .bound(to: viewModel.snapshot, animate: false)
 
         viewModel.$selectedItem.sink { [weak self] item in

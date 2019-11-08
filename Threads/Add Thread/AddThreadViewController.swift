@@ -6,7 +6,7 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Combine
+import CombinableUI
 import CoreData
 import UIKit
 
@@ -73,7 +73,7 @@ class AddThreadViewController: ReactiveTableViewController<AddThreadViewModel> {
         dataSource
             = DataSource(tableView)
             .editable()
-            .withSectionTitles([
+            .titled([
                 .filtered: Localized.matchingThreads,
                 .selected: Localized.threadsToAdd,
             ])

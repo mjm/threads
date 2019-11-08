@@ -13,7 +13,6 @@
 		C906E3BB23527C61003EE053 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3BA23527C61003EE053 /* SplitViewController.swift */; };
 		C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906E3BC23528E82003EE053 /* DetailViewController.swift */; };
 		C9082F57236922BF00768CA1 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F56236922BF00768CA1 /* Helpers.swift */; };
-		C9082F5C2369262500768CA1 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F5B2369262500768CA1 /* Operators.swift */; };
 		C9082F5F2369415400768CA1 /* AddThreadCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F5E2369415400768CA1 /* AddThreadCellViewModel.swift */; };
 		C9082F61236941D400768CA1 /* AddThreadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F60236941D400768CA1 /* AddThreadTableViewCell.swift */; };
 		C9082F63236A6D1F00768CA1 /* ThreadDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F62236A6D1F00768CA1 /* ThreadDetailViewModel.swift */; };
@@ -23,7 +22,6 @@
 		C9082F6C236A76F700768CA1 /* ThreadProjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F6B236A76F700768CA1 /* ThreadProjectTableViewCell.swift */; };
 		C9082F6E236A7BCC00768CA1 /* BoundUserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F6D236A7BCC00768CA1 /* BoundUserAction.swift */; };
 		C9082F71236A9ADE00768CA1 /* ProjectCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F70236A9ADE00768CA1 /* ProjectCellViewModel.swift */; };
-		C9082F73236A9C3700768CA1 /* ReactiveCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */; };
 		C919A3EC236BEAF7000C862D /* SidebarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C919A3EB236BEAF7000C862D /* SidebarViewModel.swift */; };
 		C919A3EF236BECF8000C862D /* SidebarProjectCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C919A3EE236BECF8000C862D /* SidebarProjectCellViewModel.swift */; };
 		C919A3F1236BF3DA000C862D /* SplitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C919A3F0236BF3DA000C862D /* SplitViewModel.swift */; };
@@ -54,7 +52,6 @@
 		C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E10231DA9A20031F463 /* DMCThread.swift */; };
 		C9491E13231DAA5D0031F463 /* AllThreads.json in Resources */ = {isa = PBXBuildFile; fileRef = C9491E12231DAA5D0031F463 /* AllThreads.json */; };
 		C9491E15231DACFB0031F463 /* AddThreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E14231DACFA0031F463 /* AddThreadViewController.swift */; };
-		C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */; };
 		C9491E19231DD7D00031F463 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E18231DD7D00031F463 /* Color.swift */; };
 		C9491E29231DDBC60031F463 /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E28231DDBC60031F463 /* ColorTests.swift */; };
 		C9491E2C231DE0070031F463 /* CollectionThreadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9491E2A231DE0070031F463 /* CollectionThreadTableViewCell.swift */; };
@@ -135,7 +132,6 @@
 		C9815E8C236E2DF600D5DDEB /* MoveProjectImageAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E8B236E2DF600D5DDEB /* MoveProjectImageAction.swift */; };
 		C9815E8E236E2E4500D5DDEB /* DeleteProjectImageAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9815E8D236E2E4500D5DDEB /* DeleteProjectImageAction.swift */; };
 		C983AC452368FC1D00AA930F /* CollectionThreadCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC442368FC1D00AA930F /* CollectionThreadCellViewModel.swift */; };
-		C983AC472368FF8C00AA930F /* ReactiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */; };
 		C983AC4A23691D6400AA930F /* ShoppingListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AC4923691D6400AA930F /* ShoppingListCellViewModel.swift */; };
 		C98F07C82333093800BAB311 /* ProjectPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07C72333093800BAB311 /* ProjectPreviewViewController.swift */; };
 		C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F07C92334716F00BAB311 /* RoundedShadowView.swift */; };
@@ -144,12 +140,9 @@
 		C99677F1235B497600AE2F5C /* StoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99677F0235B497600AE2F5C /* StoreObserver.swift */; };
 		C99677F3235B499C00AE2F5C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99677F2235B499C00AE2F5C /* StoreKit.framework */; };
 		C9967802235C02EA00AE2F5C /* StoreActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9967801235C02EA00AE2F5C /* StoreActions.swift */; };
-		C9BEF0F0236FB43A005893EE /* DiffableSnapshotApplying.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0EF236FB43A005893EE /* DiffableSnapshotApplying.swift */; };
-		C9BEF0F22372797E005893EE /* WithLatestFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F12372797E005893EE /* WithLatestFrom.swift */; };
-		C9BEF0F62373E2E3005893EE /* CollectionViewDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F52373E2E3005893EE /* CollectionViewDiffableDataSource.swift */; };
-		C9BEF0F82373ECAF005893EE /* ReusableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F72373ECAF005893EE /* ReusableCell.swift */; };
-		C9BEF0FA2373F5E3005893EE /* BindableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BEF0F92373F5E3005893EE /* BindableCell.swift */; };
-		C9C6328D236E31690013025E /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C6328C236E31690013025E /* CoreData.swift */; };
+		C9A46F79237521E700174EE8 /* Combinable in Frameworks */ = {isa = PBXBuildFile; productRef = C9A46F78237521E700174EE8 /* Combinable */; };
+		C9A46F7B237521E700174EE8 /* CombinableCoreData in Frameworks */ = {isa = PBXBuildFile; productRef = C9A46F7A237521E700174EE8 /* CombinableCoreData */; };
+		C9A46F7D237521E700174EE8 /* CombinableUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9A46F7C237521E700174EE8 /* CombinableUI */; };
 		C9C8C0DE235CBA7200787BEA /* Events in Frameworks */ = {isa = PBXBuildFile; productRef = C9C8C0DD235CBA7200787BEA /* Events */; };
 		C9E01488235D4AA5007B2626 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01487235D4AA5007B2626 /* AppDelegate.swift */; };
 		C9E0148A235D4AA5007B2626 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01489235D4AA5007B2626 /* ViewController.swift */; };
@@ -175,7 +168,6 @@
 		C906E3BA23527C61003EE053 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		C906E3BC23528E82003EE053 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		C9082F56236922BF00768CA1 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
-		C9082F5B2369262500768CA1 /* Operators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		C9082F5E2369415400768CA1 /* AddThreadCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadCellViewModel.swift; sourceTree = "<group>"; };
 		C9082F60236941D400768CA1 /* AddThreadTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadTableViewCell.swift; sourceTree = "<group>"; };
 		C9082F62236A6D1F00768CA1 /* ThreadDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailViewModel.swift; sourceTree = "<group>"; };
@@ -185,7 +177,6 @@
 		C9082F6B236A76F700768CA1 /* ThreadProjectTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadProjectTableViewCell.swift; sourceTree = "<group>"; };
 		C9082F6D236A7BCC00768CA1 /* BoundUserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundUserAction.swift; sourceTree = "<group>"; };
 		C9082F70236A9ADE00768CA1 /* ProjectCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCellViewModel.swift; sourceTree = "<group>"; };
-		C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveCollectionViewCell.swift; sourceTree = "<group>"; };
 		C919A3EB236BEAF7000C862D /* SidebarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewModel.swift; sourceTree = "<group>"; };
 		C919A3EE236BECF8000C862D /* SidebarProjectCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarProjectCellViewModel.swift; sourceTree = "<group>"; };
 		C919A3F0236BF3DA000C862D /* SplitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewModel.swift; sourceTree = "<group>"; };
@@ -219,7 +210,6 @@
 		C9491E10231DA9A20031F463 /* DMCThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMCThread.swift; sourceTree = "<group>"; };
 		C9491E12231DAA5D0031F463 /* AllThreads.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AllThreads.json; sourceTree = "<group>"; };
 		C9491E14231DACFA0031F463 /* AddThreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddThreadViewController.swift; sourceTree = "<group>"; };
-		C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewDiffableDataSource.swift; sourceTree = "<group>"; };
 		C9491E18231DD7D00031F463 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		C9491E1E231DDBB70031F463 /* ThreadsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ThreadsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9491E22231DDBB70031F463 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -308,7 +298,6 @@
 		C9815E8B236E2DF600D5DDEB /* MoveProjectImageAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveProjectImageAction.swift; sourceTree = "<group>"; };
 		C9815E8D236E2E4500D5DDEB /* DeleteProjectImageAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteProjectImageAction.swift; sourceTree = "<group>"; };
 		C983AC442368FC1D00AA930F /* CollectionThreadCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionThreadCellViewModel.swift; sourceTree = "<group>"; };
-		C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveTableViewCell.swift; sourceTree = "<group>"; };
 		C983AC4923691D6400AA930F /* ShoppingListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListCellViewModel.swift; sourceTree = "<group>"; };
 		C98F07C72333093800BAB311 /* ProjectPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectPreviewViewController.swift; sourceTree = "<group>"; };
 		C98F07C92334716F00BAB311 /* RoundedShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShadowView.swift; sourceTree = "<group>"; };
@@ -317,12 +306,6 @@
 		C99677F0235B497600AE2F5C /* StoreObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreObserver.swift; sourceTree = "<group>"; };
 		C99677F2235B499C00AE2F5C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		C9967801235C02EA00AE2F5C /* StoreActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreActions.swift; sourceTree = "<group>"; };
-		C9BEF0EF236FB43A005893EE /* DiffableSnapshotApplying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableSnapshotApplying.swift; sourceTree = "<group>"; };
-		C9BEF0F12372797E005893EE /* WithLatestFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithLatestFrom.swift; sourceTree = "<group>"; };
-		C9BEF0F52373E2E3005893EE /* CollectionViewDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDiffableDataSource.swift; sourceTree = "<group>"; };
-		C9BEF0F72373ECAF005893EE /* ReusableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableCell.swift; sourceTree = "<group>"; };
-		C9BEF0F92373F5E3005893EE /* BindableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindableCell.swift; sourceTree = "<group>"; };
-		C9C6328C236E31690013025E /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		C9E01485235D4AA5007B2626 /* ThreadsAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThreadsAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E01487235D4AA5007B2626 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9E01489235D4AA5007B2626 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -338,9 +321,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9A46F7D237521E700174EE8 /* CombinableUI in Frameworks */,
 				C9491E0D231D8A230031F463 /* CloudKit.framework in Frameworks */,
 				C99677F3235B499C00AE2F5C /* StoreKit.framework in Frameworks */,
+				C9A46F79237521E700174EE8 /* Combinable in Frameworks */,
 				C9C8C0DE235CBA7200787BEA /* Events in Frameworks */,
+				C9A46F7B237521E700174EE8 /* CombinableCoreData in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,16 +360,6 @@
 				C943E9BC236D2971003EBA2C /* ToolbarViewModel.swift */,
 			);
 			path = Sidebar;
-			sourceTree = "<group>";
-		};
-		C9082F5A2369261C00768CA1 /* Combine */ = {
-			isa = PBXGroup;
-			children = (
-				C9082F5B2369262500768CA1 /* Operators.swift */,
-				C9C6328C236E31690013025E /* CoreData.swift */,
-				C9BEF0F12372797E005893EE /* WithLatestFrom.swift */,
-			);
-			path = Combine;
 			sourceTree = "<group>";
 		};
 		C9082F5D2369414300768CA1 /* Cells */ = {
@@ -590,7 +566,6 @@
 			isa = PBXGroup;
 			children = (
 				C97FCDFC232F4945000B1590 /* Actions */,
-				C9082F5A2369261C00768CA1 /* Combine */,
 				C9C6328F236E32350013025E /* Extensions */,
 				C9C6328A236E30670013025E /* Models */,
 				C9C6328B236E31130013025E /* Reactive UI */,
@@ -774,13 +749,6 @@
 			isa = PBXGroup;
 			children = (
 				C95028E22362BCC800BB02C4 /* ReactiveViewControllers.swift */,
-				C9BEF0EF236FB43A005893EE /* DiffableSnapshotApplying.swift */,
-				C9491E16231DC8670031F463 /* TableViewDiffableDataSource.swift */,
-				C9BEF0F52373E2E3005893EE /* CollectionViewDiffableDataSource.swift */,
-				C9BEF0F72373ECAF005893EE /* ReusableCell.swift */,
-				C9BEF0F92373F5E3005893EE /* BindableCell.swift */,
-				C983AC462368FF8C00AA930F /* ReactiveTableViewCell.swift */,
-				C9082F72236A9C3700768CA1 /* ReactiveCollectionViewCell.swift */,
 				C95028F22366B74700BB02C4 /* ViewModel.swift */,
 			);
 			path = "Reactive UI";
@@ -846,6 +814,9 @@
 			name = Threads;
 			packageProductDependencies = (
 				C9C8C0DD235CBA7200787BEA /* Events */,
+				C9A46F78237521E700174EE8 /* Combinable */,
+				C9A46F7A237521E700174EE8 /* CombinableCoreData */,
+				C9A46F7C237521E700174EE8 /* CombinableUI */,
 			);
 			productName = Threads;
 			productReference = C9491DF0231D897B0031F463 /* Threads.app */;
@@ -919,6 +890,7 @@
 			mainGroup = C9491DE7231D897A0031F463;
 			packageReferences = (
 				C9C8C0DC235CBA7200787BEA /* XCRemoteSwiftPackageReference "Events" */,
+				C9A46F77237521E700174EE8 /* XCRemoteSwiftPackageReference "Combinable" */,
 			);
 			productRefGroup = C9491DF1231D897B0031F463 /* Products */;
 			projectDirPath = "";
@@ -986,8 +958,6 @@
 				C97FCDEC232E014D000B1590 /* NSManagedObjectContext.swift in Sources */,
 				C95028EF2366AD0100BB02C4 /* MyThreadsViewModel.swift in Sources */,
 				C98F07CA2334716F00BAB311 /* RoundedShadowView.swift in Sources */,
-				C9BEF0F62373E2E3005893EE /* CollectionViewDiffableDataSource.swift in Sources */,
-				C9491E17231DC8670031F463 /* TableViewDiffableDataSource.swift in Sources */,
 				C9082F71236A9ADE00768CA1 /* ProjectCellViewModel.swift in Sources */,
 				C97FCDF1232EA234000B1590 /* ProjectImage.swift in Sources */,
 				C99677F1235B497600AE2F5C /* StoreObserver.swift in Sources */,
@@ -1034,7 +1004,6 @@
 				C94EB3012325E6A900D4CF56 /* ProjectCollectionViewCell.swift in Sources */,
 				C92064A6236AA152002F9079 /* ViewProjectImageCellViewModel.swift in Sources */,
 				C9815E68236E196500D5DDEB /* MarkOutOfStockAction.swift in Sources */,
-				C9082F5C2369262500768CA1 /* Operators.swift in Sources */,
 				C97FCDEA232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
 				C92064A2236A9F64002F9079 /* ViewProjectDetailViewModel.swift in Sources */,
@@ -1045,7 +1014,6 @@
 				C906E3BB23527C61003EE053 /* SplitViewController.swift in Sources */,
 				C9815E7F236E2AF600D5DDEB /* CreateProjectAction.swift in Sources */,
 				C9815E6F236E1B8500D5DDEB /* AddThreadsAction.swift in Sources */,
-				C9C6328D236E31690013025E /* CoreData.swift in Sources */,
 				C94EB3042326D60600D4CF56 /* ProjectDetailViewController.swift in Sources */,
 				C95028F12366B29700BB02C4 /* UserActionPresenter.swift in Sources */,
 				C9815E88236E2D3B00D5DDEB /* ShareProjectAction.swift in Sources */,
@@ -1058,7 +1026,6 @@
 				C9815E8A236E2D9D00D5DDEB /* AddImageToProjectAction.swift in Sources */,
 				C9815E6A236E1A7E00D5DDEB /* RemoveThreadAction.swift in Sources */,
 				C9815E7A236E1EEC00D5DDEB /* ChangeShoppingListAmountAction.swift in Sources */,
-				C9BEF0F0236FB43A005893EE /* DiffableSnapshotApplying.swift in Sources */,
 				C97FCDEE232E941D000B1590 /* Cells.swift in Sources */,
 				C95028F32366B74700BB02C4 /* ViewModel.swift in Sources */,
 				C9815E8E236E2E4500D5DDEB /* DeleteProjectImageAction.swift in Sources */,
@@ -1070,9 +1037,7 @@
 				C9491E3A23235D890031F463 /* ShoppingListThreadTableViewCell.swift in Sources */,
 				C9815E78236E1E9600D5DDEB /* TogglePurchasedAction.swift in Sources */,
 				C906E3B9235272A0003EE053 /* SidebarViewController.swift in Sources */,
-				C9BEF0FA2373F5E3005893EE /* BindableCell.swift in Sources */,
 				C9491E33231F7B2C0031F463 /* ShoppingListViewController.swift in Sources */,
-				C983AC472368FF8C00AA930F /* ReactiveTableViewCell.swift in Sources */,
 				C9491E19231DD7D00031F463 /* Color.swift in Sources */,
 				C95028E32362BCC800BB02C4 /* ReactiveViewControllers.swift in Sources */,
 				C9815E71236E1BCF00D5DDEB /* EventKeys.swift in Sources */,
@@ -1081,18 +1046,15 @@
 				C9491DFE231D897B0031F463 /* Threads.xcdatamodeld in Sources */,
 				C9491E11231DA9A20031F463 /* DMCThread.swift in Sources */,
 				C942E44D2336C7F400987EAB /* BannerController.swift in Sources */,
-				C9BEF0F82373ECAF005893EE /* ReusableCell.swift in Sources */,
 				C97FCE00232F4C9F000B1590 /* UserActionContext.swift in Sources */,
 				C92064A4236AA123002F9079 /* ViewProjectThreadCellViewModel.swift in Sources */,
 				C97FCDAB232C77E3000B1590 /* ViewProjectThreadCollectionViewCell.swift in Sources */,
-				C9082F73236A9C3700768CA1 /* ReactiveCollectionViewCell.swift in Sources */,
 				C9491E44232491D90031F463 /* Project.swift in Sources */,
 				C95D2569236B2F8C00582A05 /* EditProjectThreadCellViewModel.swift in Sources */,
 				C97FCDBF232D9FD0000B1590 /* TextViewCollectionViewCell.swift in Sources */,
 				C95028E72366070200BB02C4 /* ReplaySubject.swift in Sources */,
 				C906E3BD23528E82003EE053 /* DetailViewController.swift in Sources */,
 				C9815E7C236E1F5300D5DDEB /* RemoveFromShoppingListAction.swift in Sources */,
-				C9BEF0F22372797E005893EE /* WithLatestFrom.swift in Sources */,
 				C99677EE235A6C5400AE2F5C /* OpenInSafariActivity.swift in Sources */,
 				C9815E8C236E2DF600D5DDEB /* MoveProjectImageAction.swift in Sources */,
 				C9815E66236E196300D5DDEB /* MarkOnBobbinAction.swift in Sources */,
@@ -1490,6 +1452,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C9A46F77237521E700174EE8 /* XCRemoteSwiftPackageReference "Combinable" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mjm/Combinable.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		C9C8C0DC235CBA7200787BEA /* XCRemoteSwiftPackageReference "Events" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mjm/Events.git";
@@ -1501,6 +1471,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C9A46F78237521E700174EE8 /* Combinable */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9A46F77237521E700174EE8 /* XCRemoteSwiftPackageReference "Combinable" */;
+			productName = Combinable;
+		};
+		C9A46F7A237521E700174EE8 /* CombinableCoreData */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9A46F77237521E700174EE8 /* XCRemoteSwiftPackageReference "Combinable" */;
+			productName = CombinableCoreData;
+		};
+		C9A46F7C237521E700174EE8 /* CombinableUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9A46F77237521E700174EE8 /* XCRemoteSwiftPackageReference "Combinable" */;
+			productName = CombinableUI;
+		};
 		C9C8C0DD235CBA7200787BEA /* Events */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9C8C0DC235CBA7200787BEA /* XCRemoteSwiftPackageReference "Events" */;

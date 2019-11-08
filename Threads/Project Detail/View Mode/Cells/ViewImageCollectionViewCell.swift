@@ -6,10 +6,11 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
+import CombinableUI
 import UIKit
 
 @IBDesignable
-class ViewImageCollectionViewCell: ReactiveCollectionViewCell {
+class ViewImageCollectionViewCell: CombinableCollectionViewCell {
     @IBOutlet var imageView: RoundedShadowImageView!
 
     func bind(_ model: ViewProjectImageCellViewModel) {

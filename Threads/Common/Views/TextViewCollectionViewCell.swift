@@ -6,10 +6,10 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
-import Combine
+import CombinableUI
 import UIKit
 
-class TextViewCollectionViewCell: ReactiveCollectionViewCell {
+class TextViewCollectionViewCell: CombinableCollectionViewCell {
     @IBOutlet var textView: UITextView!
 
     let onChange = PassthroughSubject<NSAttributedString?, Never>()
