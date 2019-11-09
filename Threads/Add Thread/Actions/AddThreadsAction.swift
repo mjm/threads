@@ -48,7 +48,7 @@ struct AddThreadsAction: ReactiveUserAction {
 
     let coordinator = Coordinator()
 
-    func publisher(context: UserActionContext<AddThreadsAction>) -> AnyPublisher<(), Error> {
+    func publisher(context: UserActions.Context<AddThreadsAction>) -> AnyPublisher<(), Error> {
         let storyboard = UIStoryboard(name: "AddThread", bundle: nil)
         let navController = storyboard.instantiateViewController(identifier: "NavController")
             as! UINavigationController
