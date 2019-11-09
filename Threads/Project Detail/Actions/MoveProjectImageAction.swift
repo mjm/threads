@@ -7,6 +7,7 @@
 //
 
 import Events
+import UserActions
 
 struct MoveProjectImageAction: SimpleUserAction {
     let project: Project

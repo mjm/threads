@@ -9,6 +9,7 @@
 import Combine
 import CoreData
 import UIKit
+import UserActions
 
 struct AddThreadsAction: ReactiveUserAction {
     enum Mode {
@@ -34,7 +35,7 @@ struct AddThreadsAction: ReactiveUserAction {
 
     #if targetEnvironment(macCatalyst)
 
-    func publisher(context: UserActionContext<AddThreadsAction>) -> AnyPublisher<(), Error> {
+    func publisher(context: UserActions.Context<AddThreadsAction>) -> AnyPublisher<(), Error> {
         let activity = UserActivity.addThreads(mode).userActivity
         UIApplication.shared.requestSceneSessionActivation(
             nil, userActivity: activity, options: nil)

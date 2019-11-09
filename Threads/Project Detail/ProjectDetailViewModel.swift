@@ -9,6 +9,7 @@
 import Combine
 import CoreData
 import UIKit
+import UserActions
 
 final class ProjectDetailViewModel: ViewModel, SnapshotViewModel {
     enum Section {
@@ -179,7 +180,7 @@ class AddThreadsToProjectMode: AddThreadMode {
         return allThreads.filter { !existingThreads.contains($0) }
     }
 
-    func add(threads: [Thread], actionRunner: UserActionRunner) {
+    func add(threads: [Thread], actionRunner: UserActions.Runner) {
         actionRunner.perform(threads.addToProjectAction(project))
     }
 }

@@ -8,6 +8,7 @@
 
 import Combine
 import Events
+import UserActions
 
 struct DeleteProjectAction: ReactiveUserAction, DestructiveUserAction {
     let project: Project
@@ -18,7 +19,7 @@ struct DeleteProjectAction: ReactiveUserAction, DestructiveUserAction {
     let confirmationMessage: String = Localized.deleteProjectPrompt
     let confirmationButtonTitle: String = Localized.delete
 
-    func publisher(context: UserActionContext<DeleteProjectAction>) -> AnyPublisher<Void, Error> {
+    func publisher(context: UserActions.Context<DeleteProjectAction>) -> AnyPublisher<Void, Error> {
         Event.current[.projectName] = project.name
 
         return UserActivity.showProject(self.project).delete().handleEvents(receiveOutput: {

@@ -7,11 +7,12 @@
 //
 
 import Events
+import UserActions
 
 struct AddPurchasedToCollectionAction: SyncUserAction {
     var undoActionName: String? { Localized.addToCollection }
 
-    func perform(_ context: UserActionContext<AddPurchasedToCollectionAction>) throws {
+    func perform(_ context: UserActions.Context<AddPurchasedToCollectionAction>) throws {
         let request = Thread.purchasedFetchRequest()
         let threads = try context.managedObjectContext.fetch(request)
 

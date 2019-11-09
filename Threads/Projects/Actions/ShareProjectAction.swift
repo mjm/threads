@@ -9,6 +9,7 @@
 import Combine
 import Events
 import UIKit
+import UserActions
 
 struct ShareProjectAction: ReactiveUserAction {
     let project: Project
@@ -17,7 +18,7 @@ struct ShareProjectAction: ReactiveUserAction {
     // context of the app.
     var undoActionName: String? { nil }
 
-    func publisher(context: UserActionContext<ShareProjectAction>) -> AnyPublisher<Void, Error> {
+    func publisher(context: UserActions.Context<ShareProjectAction>) -> AnyPublisher<Void, Error> {
         Event.current[.projectName] = project.name
 
         let activityController = UIActivityViewController(

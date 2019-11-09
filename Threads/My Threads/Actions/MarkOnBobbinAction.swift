@@ -7,6 +7,7 @@
 //
 
 import Events
+import UserActions
 
 struct MarkOnBobbinAction: SimpleUserAction {
     let thread: Thread

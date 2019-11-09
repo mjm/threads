@@ -10,12 +10,13 @@ import Combinable
 import CombinableCoreData
 import CoreData
 import UIKit
+import UserActions
 
 final class EditProjectDetailViewModel: ProjectDetailMode {
     typealias Snapshot = ProjectDetailViewModel.Snapshot
 
     let project: Project
-    private let actionRunner: UserActionRunner
+    private let actionRunner: UserActions.Runner
 
     let projectDetailModel: ProjectDetailCellViewModel
     @Published private(set) var imageViewModels: [EditProjectImageCellViewModel] = []
@@ -25,7 +26,7 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
 
     init(
         project: Project,
-        actionRunner: UserActionRunner
+        actionRunner: UserActions.Runner
     ) {
         self.project = project
         self.projectDetailModel = ProjectDetailCellViewModel(project: project)

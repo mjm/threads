@@ -10,6 +10,7 @@ import Combine
 import CoreServices
 import Events
 import UIKit
+import UserActions
 
 struct AddImageToProjectAction: ReactiveUserAction {
     let project: Project
@@ -18,7 +19,7 @@ struct AddImageToProjectAction: ReactiveUserAction {
 
     var undoActionName: String? { Localized.addImage }
 
-    func publisher(context: UserActionContext<AddImageToProjectAction>) -> AnyPublisher<
+    func publisher(context: UserActions.Context<AddImageToProjectAction>) -> AnyPublisher<
         Void, Swift.Error
     > {
         Event.current[.projectName] = project.name

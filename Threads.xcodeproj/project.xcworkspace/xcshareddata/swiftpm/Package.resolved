@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/mjm/Combinable.git",
         "state": {
           "branch": "master",
-          "revision": "3a9eba48541c0caf2d605069345519e310cc16a7",
+          "revision": "4f3a723782551c7fdbd8547bca6a1335c98ff4da",
           "version": null
         }
       },
@@ -25,6 +25,15 @@
         "state": {
           "branch": "master",
           "revision": "f72d2b3732cabf9acb898e7738f2cb903f914172",
+          "version": null
+        }
+      },
+      {
+        "package": "UserActions",
+        "repositoryURL": "https://github.com/mjm/UserActions.git",
+        "state": {
+          "branch": "master",
+          "revision": "8f802b5de38ffbfa532bb56fe395cbc855f0892e",
           "version": null
         }
       }

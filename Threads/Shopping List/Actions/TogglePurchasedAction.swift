@@ -7,6 +7,7 @@
 //
 
 import Events
+import UserActions
 
 struct TogglePurchasedAction: SimpleUserAction {
     let thread: Thread

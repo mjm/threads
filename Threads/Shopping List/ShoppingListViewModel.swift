@@ -10,6 +10,7 @@ import Combinable
 import CombinableCoreData
 import CoreData
 import UIKit
+import UserActions
 
 final class ShoppingListViewModel: ViewModel, SnapshotViewModel {
     enum Section: CaseIterable {
@@ -168,7 +169,7 @@ class AddThreadsToShoppingListMode: AddThreadMode {
         return try context.fetch(request)
     }
 
-    func add(threads: [Thread], actionRunner: UserActionRunner) {
+    func add(threads: [Thread], actionRunner: UserActions.Runner) {
         actionRunner.perform(threads.addToShoppingListAction)
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import Events
+import UserActions
 
 struct RemoveFromShoppingListAction: SimpleUserAction {
     let thread: Thread

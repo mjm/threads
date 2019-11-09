@@ -8,12 +8,13 @@
 
 import Combine
 import UIKit
+import UserActions
 
 final class ProjectCellViewModel {
     let project: Project
-    let actionRunner: UserActionRunner
+    let actionRunner: UserActions.Runner
 
-    init(project: Project, actionRunner: UserActionRunner) {
+    init(project: Project, actionRunner: UserActions.Runner) {
         self.project = project
         self.actionRunner = actionRunner
     }

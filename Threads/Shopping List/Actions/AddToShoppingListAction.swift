@@ -7,6 +7,7 @@
 //
 
 import Events
+import UserActions
 
 struct AddToShoppingListAction: SyncUserAction {
     let threads: [Thread]
@@ -32,7 +33,7 @@ struct AddToShoppingListAction: SyncUserAction {
         }
     }
 
-    func perform(_ context: UserActionContext<AddToShoppingListAction>) throws {
+    func perform(_ context: UserActions.Context<AddToShoppingListAction>) throws {
         Event.current[.threadCount] = threads.count
 
         for thread in threads {

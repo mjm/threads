@@ -9,6 +9,7 @@
 import Combine
 import CoreData
 import UIKit
+import UserActions
 
 final class CollectionThreadCellViewModel: ThreadCellViewModel {
     enum Status {
@@ -17,9 +18,9 @@ final class CollectionThreadCellViewModel: ThreadCellViewModel {
     }
 
     let thread: Thread
-    let actionRunner: UserActionRunner
+    let actionRunner: UserActions.Runner
 
-    init(thread: Thread, actionRunner: UserActionRunner) {
+    init(thread: Thread, actionRunner: UserActions.Runner) {
         self.thread = thread
         self.actionRunner = actionRunner
     }

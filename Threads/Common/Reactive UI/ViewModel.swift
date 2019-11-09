@@ -9,16 +9,18 @@
 import Combine
 import CoreData
 import UIKit
+import UserActions
 
 class ViewModel {
     var cancellables = Set<AnyCancellable>()
     let context: NSManagedObjectContext
-    let actionRunner: UserActionRunner
+    let actionRunner: UserActions.Runner
 
     init(context: NSManagedObjectContext = .view) {
         self.context = context
 
-        actionRunner = UserActionRunner(managedObjectContext: context)
+        actionRunner = UserActions.Runner()
+        actionRunner.delegate = self
     }
 
     var presenter: UserActionPresenter? {
@@ -28,6 +30,25 @@ class ViewModel {
         set {
             actionRunner.presenter = newValue
         }
+    }
+}
+
+extension ViewModel: UserActionRunnerDelegate {
+    func actionRunner<A>(
+        _ actionRunner: UserActions.Runner, willPerformAction action: A,
+        context: UserActions.Context<A>
+    ) where A: UserAction {
+        context.managedObjectContext = self.context
+        if let undoActionName = action.undoActionName {
+            self.context.undoManager?.setActionName(undoActionName)
+        }
+    }
+
+    func actionRunner<A>(
+        _ actionRunner: UserActions.Runner, didCompleteAction action: A,
+        context: UserActions.Context<A>
+    ) where A: UserAction {
+        self.context.commit()
     }
 }
 

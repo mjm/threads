@@ -9,6 +9,7 @@
 import Combine
 import CoreData
 import UIKit
+import UserActions
 
 final class AddThreadViewModel: ViewModel, SnapshotViewModel {
     enum Section {
@@ -110,7 +111,7 @@ final class AddThreadViewModel: ViewModel, SnapshotViewModel {
 
 protocol AddThreadMode {
     func addThreadChoices() throws -> [Thread]
-    func add(threads: [Thread], actionRunner: UserActionRunner)
+    func add(threads: [Thread], actionRunner: UserActions.Runner)
 }
 
 fileprivate final class NoOpAddThreadMode: AddThreadMode {
@@ -118,6 +119,6 @@ fileprivate final class NoOpAddThreadMode: AddThreadMode {
         []
     }
 
-    func add(threads: [Thread], actionRunner: UserActionRunner) {
+    func add(threads: [Thread], actionRunner: UserActions.Runner) {
     }
 }

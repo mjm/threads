@@ -8,6 +8,7 @@
 
 import Combine
 import UIKit
+import UserActions
 
 final class ShoppingListCellViewModel: ThreadCellViewModel {
     enum Action {
@@ -17,9 +18,9 @@ final class ShoppingListCellViewModel: ThreadCellViewModel {
     }
 
     let thread: Thread
-    let actionRunner: UserActionRunner
+    let actionRunner: UserActions.Runner
 
-    init(thread: Thread, actionRunner: UserActionRunner) {
+    init(thread: Thread, actionRunner: UserActions.Runner) {
         self.thread = thread
         self.actionRunner = actionRunner
     }

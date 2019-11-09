@@ -10,6 +10,7 @@ import Combine
 import Events
 import Foundation
 import StoreKit
+import UserActions
 
 extension Event.Key {
     static let fetchProductsTime: Event.Key = "fetch_products_ms"
@@ -18,8 +19,9 @@ extension Event.Key {
 struct BuyPremiumAction: ReactiveUserAction {
     let undoActionName: String? = nil
 
-    func publisher(context: UserActionContext<BuyPremiumAction>) -> AnyPublisher<Void, Swift.Error>
-    {
+    func publisher(context: UserActions.Context<BuyPremiumAction>) -> AnyPublisher<
+        Void, Swift.Error
+    > {
         Event.current.startTimer(.fetchProductsTime)
         return StoreObserver.default.fetch(products: [.premium])
             .handleEvents(receiveCompletion: { _ in

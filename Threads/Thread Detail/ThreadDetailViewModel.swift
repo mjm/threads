@@ -10,6 +10,7 @@ import Combinable
 import CombinableCoreData
 import CoreData
 import UIKit
+import UserActions
 
 final class ThreadDetailViewModel: ViewModel, SnapshotViewModel {
     enum Section {

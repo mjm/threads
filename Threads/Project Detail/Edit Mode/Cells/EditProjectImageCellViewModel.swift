@@ -8,12 +8,13 @@
 
 import Combine
 import UIKit
+import UserActions
 
 final class EditProjectImageCellViewModel {
     let projectImage: ProjectImage
-    let actionRunner: UserActionRunner
+    let actionRunner: UserActions.Runner
 
-    init(projectImage: ProjectImage, actionRunner: UserActionRunner) {
+    init(projectImage: ProjectImage, actionRunner: UserActions.Runner) {
         self.projectImage = projectImage
         self.actionRunner = actionRunner
     }

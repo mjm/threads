@@ -7,6 +7,7 @@
 //
 
 import Events
+import UserActions
 
 struct ChangeShoppingListAmountAction: SimpleUserAction {
     enum Change {

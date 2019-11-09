@@ -7,6 +7,7 @@
 //
 
 import Events
+import UserActions
 
 struct MarkInStockAction: SimpleUserAction {
     let thread: Thread

@@ -9,13 +9,15 @@
 import Combine
 import Events
 import UIKit
+import UserActions
 
 struct CreateProjectAction: ReactiveUserAction {
     var undoActionName: String? { Localized.newProject }
 
     #if targetEnvironment(macCatalyst)
-    func publisher(context: UserActionContext<CreateProjectAction>) -> AnyPublisher<Project, Error>
-    {
+    func publisher(context: UserActions.Context<CreateProjectAction>) -> AnyPublisher<
+        Project, Error
+    > {
         Future { promise in
             let alert = UIAlertController(
                 title: "Create a Project", message: "Enter a name for your new project:",
@@ -39,8 +41,9 @@ struct CreateProjectAction: ReactiveUserAction {
         }.eraseToAnyPublisher()
     }
     #else
-    func publisher(context: UserActionContext<CreateProjectAction>) -> AnyPublisher<Project, Error>
-    {
+    func publisher(context: UserActions.Context<CreateProjectAction>) -> AnyPublisher<
+        Project, Error
+    > {
         let project = Project(context: context.managedObjectContext)
         return Just(project).setFailureType(to: Error.self).eraseToAnyPublisher()
     }

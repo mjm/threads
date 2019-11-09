@@ -7,6 +7,7 @@
 //
 
 import Events
+import UserActions
 
 struct AddToProjectAction: SyncUserAction {
     let threads: [Thread]
@@ -36,7 +37,7 @@ struct AddToProjectAction: SyncUserAction {
         }
     }
 
-    func perform(_ context: UserActionContext<AddToProjectAction>) throws {
+    func perform(_ context: UserActions.Context<AddToProjectAction>) throws {
         Event.current[.threadCount] = threads.count
         Event.current[.projectName] = project.name
 

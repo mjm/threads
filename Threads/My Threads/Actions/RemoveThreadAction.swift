@@ -9,6 +9,7 @@
 import Combine
 import Events
 import Foundation
+import UserActions
 
 struct RemoveThreadAction: ReactiveUserAction, DestructiveUserAction {
     let thread: Thread
@@ -20,7 +21,7 @@ struct RemoveThreadAction: ReactiveUserAction, DestructiveUserAction {
     var confirmationMessage: String { Localized.removeThreadPrompt }
     var confirmationButtonTitle: String { Localized.remove }
 
-    func publisher(context: UserActionContext<RemoveThreadAction>) -> AnyPublisher<Void, Error> {
+    func publisher(context: UserActions.Context<RemoveThreadAction>) -> AnyPublisher<Void, Error> {
         Event.current[.threadNumber] = thread.number
 
         return UserActivity.showThread(self.thread).delete().handleEvents(receiveOutput: {

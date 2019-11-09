@@ -7,6 +7,7 @@
 //
 
 import Events
+import UserActions
 
 struct DeleteProjectImageAction: SimpleUserAction {
     let image: ProjectImage

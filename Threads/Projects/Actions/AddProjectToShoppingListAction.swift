@@ -7,13 +7,14 @@
 //
 
 import Events
+import UserActions
 
 struct AddProjectToShoppingListAction: SyncUserAction {
     let project: Project
 
     var undoActionName: String? { Localized.addToShoppingList }
 
-    func perform(_ context: UserActionContext<AddProjectToShoppingListAction>) throws {
+    func perform(_ context: UserActions.Context<AddProjectToShoppingListAction>) throws {
         Event.current[.projectName] = project.name
         project.addToShoppingList()
 

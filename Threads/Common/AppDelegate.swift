@@ -10,6 +10,7 @@ import CoreData
 import Events
 import StoreKit
 import UIKit
+import UserActions
 
 func printResponderChain(_ responder: UIResponder?) {
     guard let responder = responder else { return }
@@ -44,8 +45,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         SKPaymentQueue.default().add(StoreObserver.default)
+
         Event.sink = OSLogEventSink(subsystem: "com.mattmoriarity.Threads", category: "events")
         Event.global[.premium] = { StoreObserver.default.hasPurchased(.premium) }
+
         return true
     }
 

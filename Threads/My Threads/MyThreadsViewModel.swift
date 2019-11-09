@@ -10,6 +10,7 @@ import Combinable
 import CombinableCoreData
 import CoreData
 import UIKit
+import UserActions
 
 final class MyThreadsViewModel: ViewModel, SnapshotViewModel {
     enum Section { case threads }
@@ -100,7 +101,7 @@ class AddThreadsToCollectionMode: AddThreadMode {
         return try context.fetch(request)
     }
 
-    func add(threads: [Thread], actionRunner: UserActionRunner) {
+    func add(threads: [Thread], actionRunner: UserActions.Runner) {
         actionRunner.perform(threads.addToCollectionAction)
     }
 }
