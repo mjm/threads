@@ -63,7 +63,13 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
 
         dataSource
             = DataSource(tableView)
-            .titled([.projects: Localized.projects])
+            .titled { _, _, section in
+                if case .projects(let status) = section {
+                    return status.displayName
+                }
+
+                return nil
+            }
             .bound(to: viewModel.snapshot, animate: false)
 
         viewModel.$selectedItem.sink { [weak self] item in

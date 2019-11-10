@@ -111,6 +111,11 @@ enum Localized {
     static let inShoppingList = NSLocalizedString("In Shopping List", comment: "")
     static let projects = NSLocalizedString("Projects", comment: "")
 
+    static let activeProjects = NSLocalizedString("Active Projects", comment: "")
+    static let plannedProjects = NSLocalizedString("Planned Projects", comment: "")
+    static let completedProjects = NSLocalizedString("Completed Projects", comment: "")
+    static let archivedProjects = NSLocalizedString("Archived Projects", comment: "")
+
     static let addImage = NSLocalizedString("Add Image", comment: "")
     static let moveImage = NSLocalizedString("Move Image", comment: "")
     static let deleteImage = NSLocalizedString("Delete Image", comment: "")

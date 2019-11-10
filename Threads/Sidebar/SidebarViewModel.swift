@@ -12,9 +12,9 @@ import CoreData
 import UIKit
 
 final class SidebarViewModel: ViewModel, SnapshotViewModel {
-    enum Section {
+    enum Section: Hashable {
         case threads
-        case projects
+        case projects(Project.Status)
     }
 
     enum Item: Hashable {
@@ -37,18 +37,35 @@ final class SidebarViewModel: ViewModel, SnapshotViewModel {
     }
 
     var projectChanges: ManagedObjectChangesPublisher<Project> {
-        context.changesPublisher(for: Project.allProjectsFetchRequest())
+        context.changesPublisher(for: Project.projectsByStatusRequest())
     }
 
     var snapshot: AnyPublisher<Snapshot, Never> {
-        $projectViewModels.map { projectModels in
+        projectModelsByStatus.map { projectModelsByStatus in
             var snapshot = Snapshot()
 
-            snapshot.appendSections([.threads, .projects])
+            snapshot.appendSections([.threads])
             snapshot.appendItems([.collection, .shoppingList], toSection: .threads)
-            snapshot.appendItems(projectModels.map { .project($0) }, toSection: .projects)
+
+            for status in Project.Status.allCases {
+                if let projectModels = projectModelsByStatus[status] {
+                    let section = Section.projects(status)
+                    snapshot.appendSections([section])
+                    snapshot.appendItems(projectModels.map { .project($0) }, toSection: section)
+                }
+            }
 
             return snapshot
+        }.eraseToAnyPublisher()
+    }
+
+    private var projectModelsByStatus:
+        AnyPublisher<[Project.Status: [SidebarProjectCellViewModel]], Never>
+    {
+        $projectViewModels.map { projectModels in
+            Dictionary(grouping: projectModels) { model in
+                model.project.status
+            }
         }.eraseToAnyPublisher()
     }
 }

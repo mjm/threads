@@ -19,9 +19,34 @@ extension Event.Key {
 }
 
 extension Project {
+    enum Status: Int16, CaseIterable {
+        case active = -1
+        case planned = 0
+        case completed = 1
+        case archived = 2
+
+        var displayName: String {
+            switch self {
+            case .active: return Localized.activeProjects
+            case .planned: return Localized.plannedProjects
+            case .completed: return Localized.completedProjects
+            case .archived: return Localized.archivedProjects
+            }
+        }
+    }
+
     class func allProjectsFetchRequest() -> NSFetchRequest<Project> {
         let request: NSFetchRequest<Project> = fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        return request
+    }
+
+    class func projectsByStatusRequest() -> NSFetchRequest<Project> {
+        let request: NSFetchRequest<Project> = fetchRequest()
+        request.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Project.statusValue, ascending: true),
+            NSSortDescriptor(keyPath: \Project.name, ascending: true),
+        ]
         return request
     }
 
@@ -46,6 +71,11 @@ extension Project {
         image.data = data
         image.order = Int64(allImages.count)  // it matters that this one comes before the next line
         mutableSetValue(forKey: "images").add(image)
+    }
+
+    var status: Status {
+        get { Status(rawValue: statusValue) ?? .planned }
+        set { statusValue = newValue.rawValue }
     }
 
     var allImages: Set<ProjectImage> {
