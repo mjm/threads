@@ -15,6 +15,12 @@ struct ChangeProjectStatusAction: SimpleUserAction {
 
     var undoActionName: String? { Localized.changeStatus }
 
+    var displayName: String? { status.shortDisplayName }
+
+    var canPerform: Bool {
+        project.status != status
+    }
+
     func perform() throws {
         Event.current[.projectName] = project.name
         Event.current[.projectStatus] = status

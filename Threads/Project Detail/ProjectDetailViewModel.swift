@@ -117,6 +117,11 @@ extension ProjectDetailViewModel {
         }
     }
 
+    func statusAction(status: Project.Status) -> BoundUserAction<Void> {
+        project.changeStatusAction(status: status)
+            .bind(to: actionRunner)
+    }
+
     func addThreads() {
         actionRunner.perform(project.addThreadsAction)
     }

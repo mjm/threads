@@ -404,12 +404,25 @@ extension ProjectDetailViewController {
         viewModel.editAction.perform()
     }
 
+    @objc func changeProjectStatus(_ sender: UICommand) {
+        let statusValue = sender.propertyList as! Int
+        let status = Project.Status(rawValue: Int16(statusValue))!
+        viewModel.statusAction(status: status).perform()
+    }
+
     override func validate(_ command: UICommand) {
         super.validate(command)
 
         switch command.action {
         case #selector(toggleEditingProject(_:)):
             command.update(viewModel.editAction, updateTitle: true)
+        case #selector(changeProjectStatus(_:)):
+            let statusValue = command.propertyList as! Int
+            let status = Project.Status(rawValue: Int16(statusValue))!
+            let action = viewModel.statusAction(status: status)
+
+            command.update(action)
+            command.state = action.canPerform ? .off : .on
         default:
             return
         }

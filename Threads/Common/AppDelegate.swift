@@ -273,6 +273,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 title: "Project",
                 children: [
                     UIMenu(
+                        title: Localized.status,
+                        children: Project.Status.allCases.map { status in
+                            UICommand(
+                                title: status.shortDisplayName,
+                                action: #selector(ProjectDetailViewController
+                                    .changeProjectStatus(_:)),
+                                propertyList: Int(status.rawValue))
+                        }),
+                    UIMenu(
                         title: "", options: .displayInline,
                         children: [
                             UIKeyCommand(

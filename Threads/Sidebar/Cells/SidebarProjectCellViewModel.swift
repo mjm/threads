@@ -47,7 +47,7 @@ final class SidebarProjectCellViewModel {
         let index = Project.Status.allCases.firstIndex(of: project.status)
         let actions = Project.Status.allCases.map { status in
             project.changeStatusAction(status: status)
-                .bind(to: actionRunner, title: status.shortDisplayName)
+                .bind(to: actionRunner)
         }
 
         return (actions, index)
