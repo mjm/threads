@@ -87,6 +87,7 @@ enum Localized {
 
     static let notesSectionHeader = NSLocalizedString("NOTES", comment: "")
 
+    static let purchased = NSLocalizedString("Purchased", comment: "")
     static let changePurchased = NSLocalizedString("Change Purchased", comment: "")
     static let changeQuantity = NSLocalizedString("Change Quantity", comment: "")
     static let increaseQuantity = NSLocalizedString("Increase Quantity", comment: "")

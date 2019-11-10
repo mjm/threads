@@ -45,7 +45,7 @@ final class ShoppingListCellViewModel: ThreadCellViewModel {
 
     func togglePurchasedAction(immediate: Bool = false) -> BoundUserAction<Void> {
         thread.togglePurchasedAction
-            .bind(to: actionRunner)
+            .bind(to: actionRunner, title: Localized.purchased)
             .onWillPerform {
                 self.onAction.send(.togglePurchased(immediate: immediate))
             }
@@ -59,6 +59,10 @@ final class ShoppingListCellViewModel: ThreadCellViewModel {
             }
     }
 
+    var isDecreaseRemove: Bool {
+        thread.decrementShoppingListAmountAction.isRemoval
+    }
+
     var decreaseQuantityAction: BoundUserAction<Void> {
         thread.decrementShoppingListAmountAction
             .bind(to: actionRunner)
@@ -68,7 +72,8 @@ final class ShoppingListCellViewModel: ThreadCellViewModel {
     }
 
     var removeAction: BoundUserAction<Void> {
-        thread.removeFromShoppingListAction.bind(to: actionRunner)
+        thread.removeFromShoppingListAction
+            .bind(to: actionRunner, options: .destructive)
     }
 }
 

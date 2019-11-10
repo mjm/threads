@@ -145,6 +145,54 @@ class ShoppingListViewController: ReactiveTableViewController<ShoppingListViewMo
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.selection = dataSource.itemIdentifier(for: indexPath)
     }
+
+    override func tableView(
+        _ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        guard let item = dataSource.itemIdentifier(for: indexPath) else {
+            return nil
+        }
+
+        return UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: {
+                UIStoryboard(name: "MyThreads", bundle: nil).instantiateViewController(
+                    identifier: "ThreadPreview"
+                ) { coder in
+                    ThreadPreviewViewController(coder: coder, thread: item.thread)
+                }
+            }
+        ) { suggestedActions in
+            let purchased = item.togglePurchasedAction(immediate: true)
+                .menuAction(state: item.thread.purchased ? .on : .off)
+
+            let increase = item.increaseQuantityAction.menuAction()
+            let decrease = item.decreaseQuantityAction.menuAction()
+
+            let remove = item.removeAction
+                .menuAction(image: UIImage(systemName: "trash"))
+
+            if item.isDecreaseRemove {
+                return UIMenu(
+                    title: "",
+                    children: [
+                        purchased,
+                        increase,
+                        remove,
+                    ])
+            } else {
+                return UIMenu(
+                    title: "",
+                    children: [
+                        purchased,
+                        UIMenu(title: "", options: .displayInline, children: [increase, decrease]),
+                        remove,
+                    ])
+            }
+        }
+
+    }
 }
 
 // MARK: - Actions
