@@ -183,4 +183,45 @@ extension ThreadDetailViewController {
             return
         }
     }
+
+    override func tableView(
+        _ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        guard let item = dataSource.itemIdentifier(for: indexPath),
+            case .project(let projectModel) = item
+        else {
+            return nil
+        }
+
+        return UIContextMenuConfiguration(
+            identifier: viewModel.identifier(for: item),
+            previewProvider: {
+                UIStoryboard(name: "Projects", bundle: nil).instantiateViewController(
+                    identifier: "ProjectPreview"
+                ) { coder in
+                    ProjectPreviewViewController(
+                        coder: coder, project: projectModel.projectThread.project!)
+                }
+            }
+        )
+    }
+
+    override func tableView(
+        _ tableView: UITableView,
+        willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration,
+        animator: UIContextMenuInteractionCommitAnimating
+    ) {
+        guard let project = viewModel.project(for: configuration.identifier) else {
+            return
+        }
+
+        animator.addAnimations {
+            guard let scene = self.view.window?.windowScene else {
+                return
+            }
+
+            scene.delegate?.scene?(scene, continue: UserActivity.showProject(project).userActivity)
+        }
+    }
 }

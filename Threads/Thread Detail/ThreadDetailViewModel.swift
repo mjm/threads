@@ -120,4 +120,16 @@ final class ThreadDetailViewModel: ViewModel, SnapshotViewModel {
                 title: Localized.removeFromCollection,
                 options: .destructive)
     }
+
+    func identifier(for item: Item) -> NSCopying? {
+        if case .project(let model) = item {
+            return model.projectThread.project?.objectID
+        }
+
+        return nil
+    }
+
+    func project(for identifier: NSCopying) -> Project? {
+        context.object(with: identifier as! NSManagedObjectID) as? Project
+    }
 }
