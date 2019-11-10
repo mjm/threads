@@ -19,7 +19,7 @@ extension Event.Key {
 }
 
 extension Project {
-    enum Status: Int16, CaseIterable {
+    enum Status: Int16, CaseIterable, Encodable {
         case active = -1
         case planned = 0
         case completed = 1
@@ -32,6 +32,20 @@ extension Project {
             case .completed: return Localized.completedProjects
             case .archived: return Localized.archivedProjects
             }
+        }
+
+        var shortDisplayName: String {
+            switch self {
+            case .active: return Localized.active
+            case .planned: return Localized.planned
+            case .completed: return Localized.completed
+            case .archived: return Localized.archived
+            }
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+            try container.encode(String(describing: self))
         }
     }
 

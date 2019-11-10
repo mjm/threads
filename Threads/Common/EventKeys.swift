@@ -17,6 +17,7 @@ extension Event.Key {
     static let removed: Event.Key = "removed"
 
     static let projectName: Event.Key = "project_name"
+    static let projectStatus: Event.Key = "project_status"
     static let byteCount: Event.Key = "byte_count"
     static let activityType: Event.Key = "activity_type"
 }

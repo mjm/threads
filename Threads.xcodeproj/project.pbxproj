@@ -138,6 +138,7 @@
 		C9A46F7B237521E700174EE8 /* CombinableCoreData in Frameworks */ = {isa = PBXBuildFile; productRef = C9A46F7A237521E700174EE8 /* CombinableCoreData */; };
 		C9A46F7D237521E700174EE8 /* CombinableUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9A46F7C237521E700174EE8 /* CombinableUI */; };
 		C9A46F7F2375287E00174EE8 /* ProjectDetailCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A46F7E2375287E00174EE8 /* ProjectDetailCellViewModel.swift */; };
+		C9A749602377D75A0046E924 /* ChangeProjectStatusAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A7495F2377D75A0046E924 /* ChangeProjectStatusAction.swift */; };
 		C9C8C0DE235CBA7200787BEA /* Events in Frameworks */ = {isa = PBXBuildFile; productRef = C9C8C0DD235CBA7200787BEA /* Events */; };
 		C9E01488235D4AA5007B2626 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01487235D4AA5007B2626 /* AppDelegate.swift */; };
 		C9E0148A235D4AA5007B2626 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E01489235D4AA5007B2626 /* ViewController.swift */; };
@@ -298,6 +299,7 @@
 		C99677F2235B499C00AE2F5C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		C9967801235C02EA00AE2F5C /* StoreActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreActions.swift; sourceTree = "<group>"; };
 		C9A46F7E2375287E00174EE8 /* ProjectDetailCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailCellViewModel.swift; sourceTree = "<group>"; };
+		C9A7495F2377D75A0046E924 /* ChangeProjectStatusAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeProjectStatusAction.swift; sourceTree = "<group>"; };
 		C9E01485235D4AA5007B2626 /* ThreadsAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThreadsAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9E01487235D4AA5007B2626 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9E01489235D4AA5007B2626 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -676,6 +678,7 @@
 			isa = PBXGroup;
 			children = (
 				C9815E83236E2C4B00D5DDEB /* AddProjectToShoppingListAction.swift */,
+				C9A7495F2377D75A0046E924 /* ChangeProjectStatusAction.swift */,
 				C9815E7E236E2AF600D5DDEB /* CreateProjectAction.swift */,
 				C9815E85236E2CB500D5DDEB /* DeleteProjectAction.swift */,
 				C9815E87236E2D3B00D5DDEB /* ShareProjectAction.swift */,
@@ -996,6 +999,7 @@
 				C92064A6236AA152002F9079 /* ViewProjectImageCellViewModel.swift in Sources */,
 				C9E97A6623769D18006A5161 /* CoreData.swift in Sources */,
 				C9815E68236E196500D5DDEB /* MarkOutOfStockAction.swift in Sources */,
+				C9A749602377D75A0046E924 /* ChangeProjectStatusAction.swift in Sources */,
 				C97FCDEA232DFD6D000B1590 /* ProjectThreadCollectionViewCell.swift in Sources */,
 				C9491DF4231D897B0031F463 /* AppDelegate.swift in Sources */,
 				C92064A2236A9F64002F9079 /* ViewProjectDetailViewModel.swift in Sources */,

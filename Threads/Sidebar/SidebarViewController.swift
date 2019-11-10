@@ -95,11 +95,18 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
         return UIContextMenuConfiguration(identifier: model.project.objectID, previewProvider: nil)
         {
             suggestedActions in
-            UIMenu(
+            let (statuses, onStatusIndex) = model.statusActions
+
+            return UIMenu(
                 title: "",
                 children: [
                     model.addToShoppingListAction.menuAction(
                         image: UIImage(systemName: "cart.badge.plus")),
+                    UIMenu(
+                        title: Localized.status,
+                        children: statuses.enumerated().map { i, status in
+                            status.menuAction(state: i == onStatusIndex ? .on : .off)
+                        }),
                     model.shareAction.menuAction(
                         image: UIImage(systemName: "square.and.arrow.up"),
                         source: .view(cell)),

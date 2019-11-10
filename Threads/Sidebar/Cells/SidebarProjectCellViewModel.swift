@@ -14,6 +14,8 @@ final class SidebarProjectCellViewModel {
     let project: Project
     let actionRunner: UserActions.Runner
 
+    var cancellables = Set<AnyCancellable>()
+
     init(project: Project, actionRunner: UserActions.Runner) {
         self.project = project
         self.actionRunner = actionRunner
@@ -21,6 +23,12 @@ final class SidebarProjectCellViewModel {
 
     var name: AnyPublisher<String?, Never> {
         project.publisher(for: \.displayName).optionally().eraseToAnyPublisher()
+    }
+
+    var status: AnyPublisher<Project.Status, Never> {
+        project.publisher(for: \.statusValue)
+            .map { Project.Status(rawValue: $0) ?? .planned }
+            .eraseToAnyPublisher()
     }
 
     var addToShoppingListAction: BoundUserAction<Void> {
@@ -33,6 +41,16 @@ final class SidebarProjectCellViewModel {
 
     var deleteAction: BoundUserAction<Void> {
         project.deleteAction.bind(to: actionRunner, title: Localized.delete, options: .destructive)
+    }
+
+    var statusActions: ([BoundUserAction<Void>], Int?) {
+        let index = Project.Status.allCases.firstIndex(of: project.status)
+        let actions = Project.Status.allCases.map { status in
+            project.changeStatusAction(status: status)
+                .bind(to: actionRunner, title: status.shortDisplayName)
+        }
+
+        return (actions, index)
     }
 }
 

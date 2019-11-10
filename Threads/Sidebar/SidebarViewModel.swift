@@ -26,13 +26,20 @@ final class SidebarViewModel: ViewModel, SnapshotViewModel {
     @Published private(set) var projectViewModels: [SidebarProjectCellViewModel] = []
     @Published var selectedItem: Item = .collection
 
+    private let statusChanged = CurrentValueSubject<(), Never>(())
+
     override init(context: NSManagedObjectContext = .view) {
         super.init(context: context)
 
         let actionRunner = self.actionRunner
 
-        $projectViewModels.applyingChanges(projectChanges.ignoreError()) { project in
-            SidebarProjectCellViewModel(project: project, actionRunner: actionRunner)
+        $projectViewModels.applyingChanges(projectChanges.ignoreError()) {
+            [statusChanged] project in
+            let model = SidebarProjectCellViewModel(project: project, actionRunner: actionRunner)
+
+            model.status.map { _ in }.subscribe(statusChanged).store(in: &model.cancellables)
+
+            return model
         }.assign(to: \.projectViewModels, on: self).store(in: &cancellables)
     }
 
@@ -62,7 +69,7 @@ final class SidebarViewModel: ViewModel, SnapshotViewModel {
     private var projectModelsByStatus:
         AnyPublisher<[Project.Status: [SidebarProjectCellViewModel]], Never>
     {
-        $projectViewModels.map { projectModels in
+        $projectViewModels.combineLatest(statusChanged) { projectModels, _ in
             Dictionary(grouping: projectModels) { model in
                 model.project.status
             }

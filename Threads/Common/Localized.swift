@@ -78,6 +78,8 @@ enum Localized {
     static let changeProject = NSLocalizedString("Change Project", comment: "")
     static let deleteProject = NSLocalizedString("Delete Project", comment: "")
     static let newProject = NSLocalizedString("New Project", comment: "")
+    static let changeStatus = NSLocalizedString("Change Status", comment: "")
+    static let status = NSLocalizedString("Status", comment: "")
 
     static let deleteProjectPrompt = NSLocalizedString(
         "Are you sure you want to delete this project?", comment: "")
@@ -115,6 +117,11 @@ enum Localized {
     static let plannedProjects = NSLocalizedString("Planned Projects", comment: "")
     static let completedProjects = NSLocalizedString("Completed Projects", comment: "")
     static let archivedProjects = NSLocalizedString("Archived Projects", comment: "")
+
+    static let active = NSLocalizedString("Active", comment: "")
+    static let planned = NSLocalizedString("Planned", comment: "")
+    static let completed = NSLocalizedString("Completed", comment: "")
+    static let archived = NSLocalizedString("Archived", comment: "")
 
     static let addImage = NSLocalizedString("Add Image", comment: "")
     static let moveImage = NSLocalizedString("Move Image", comment: "")
