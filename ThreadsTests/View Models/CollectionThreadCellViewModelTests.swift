@@ -6,14 +6,16 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
+import UserActions
 import XCTest
 
 @testable import Threads
 
 final class CollectionThreadCellViewModelTests: ViewModelTestCase {
     var thread: Threads.Thread!
+    var parent: MyThreadsViewModel!
     var subject: CollectionThreadCellViewModel!
-    var actionRunner: UserActionRunner!
+    var actionRunner: UserActions.Runner!
     var fakeView: FakeView!
 
     override func setUp() {
@@ -23,8 +25,9 @@ final class CollectionThreadCellViewModelTests: ViewModelTestCase {
             thread = try getThread("10")
             thread.addToCollection()
 
-            actionRunner = UserActionRunner(managedObjectContext: context)
-            subject = CollectionThreadCellViewModel(thread: thread, actionRunner: actionRunner)
+            parent = MyThreadsViewModel()
+            subject
+                = CollectionThreadCellViewModel(thread: thread, actionRunner: parent.actionRunner)
             fakeView = FakeView()
         } catch {
             XCTFail("Unexpected error setting up test: \(error)")

@@ -7,6 +7,7 @@
 //
 
 import CoreData
+import UserActions
 import XCTest
 
 @testable import Threads
@@ -210,7 +211,7 @@ final class AddThreadViewModelTests: ViewModelTestCase {
             return try context.fetch(request)
         }
 
-        func add(threads: [Threads.Thread], actionRunner: UserActionRunner) {
+        func add(threads: [Threads.Thread], actionRunner: UserActions.Runner) {
             addedThreads.append(contentsOf: threads)
         }
     }

@@ -6,6 +6,7 @@
 //  Copyright © 2019 Matt Moriarity. All rights reserved.
 //
 
+import UserActions
 import XCTest
 
 @testable import Threads
@@ -14,7 +15,7 @@ final class MyThreadsViewModelTests: ViewModelTestCase {
     var subject: MyThreadsViewModel!
     var fakeView: FakeView!
 
-    var actionRunner: UserActionRunner { subject.actionRunner }
+    var actionRunner: UserActions.Runner { subject.actionRunner }
 
     override func setUp() {
         super.setUp()
