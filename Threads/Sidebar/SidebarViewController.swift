@@ -72,7 +72,7 @@ class SidebarViewController: ReactiveTableViewController<SidebarViewModel> {
             }
             .bound(to: viewModel.snapshot, animate: false)
 
-        viewModel.$selectedItem.sink { [weak self] item in
+        viewModel.$selectedItem.combineLatest(viewModel.snapshot).sink { [weak self] item, _ in
             guard let self = self else { return }
 
             let indexPath = self.dataSource.indexPath(for: item)
