@@ -18,6 +18,12 @@ final class ViewProjectThreadCellViewModel: ProjectThreadCellViewModel {
         self.projectThread = projectThread
     }
 
+    var isNeeded: AnyPublisher<Bool, Never> {
+        projectThread.publisher(for: \.thread?.amountInCollection).map { amount in
+            (amount ?? 0) == 0
+        }.eraseToAnyPublisher()
+    }
+
     var isInCollection: Bool {
         (projectThread.thread?.amountInCollection ?? 0) > 0
     }
