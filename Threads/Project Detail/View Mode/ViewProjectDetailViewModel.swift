@@ -48,7 +48,7 @@ final class ViewProjectDetailViewModel: ProjectDetailMode {
     }
 
     var snapshot: AnyPublisher<ProjectDetailViewModel.Snapshot, Never> {
-        $threadViewModels.combineLatest($imageViewModels, notes) {
+        sectionedThreadModels.combineLatest($imageViewModels, notes) {
             [projectDetailModel] threadModels, imageModels, notes -> Snapshot in
             var snapshot = Snapshot()
 
@@ -61,14 +61,29 @@ final class ViewProjectDetailViewModel: ProjectDetailMode {
                 snapshot.appendItems([.viewNotes(projectDetailModel)], toSection: .notes)
             }
 
-            snapshot.appendSections([.threads])
-            snapshot.appendItems(
-                threadModels.enumerated().map { (index, item) in
-                    item.isLastItem = threadModels.index(after: index) == threadModels.endIndex
-                    return .viewThread(item)
-                }, toSection: .threads)
+            let filters: [ProjectDetailViewModel.ThreadFilter] = [.notInCollection, .inCollection]
+            for filter in filters {
+                if let models = threadModels[filter], !models.isEmpty {
+                    snapshot.appendSections([.threads(filter)])
+                    snapshot.appendItems(
+                        models.enumerated().map { (index, item) in
+                            item.isLastItem = models.index(after: index) == models.endIndex
+                            return .viewThread(item)
+                        }, toSection: .threads(filter))
+                }
+            }
 
             return snapshot
+        }.eraseToAnyPublisher()
+    }
+
+    private var sectionedThreadModels:
+        AnyPublisher<[ProjectDetailViewModel.ThreadFilter: [ViewProjectThreadCellViewModel]], Never>
+    {
+        $threadViewModels.map { models in
+            Dictionary(grouping: models) { model in
+                return model.isInCollection ? .inCollection : .notInCollection
+            }
         }.eraseToAnyPublisher()
     }
 

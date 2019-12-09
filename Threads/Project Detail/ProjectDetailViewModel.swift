@@ -12,12 +12,18 @@ import UIKit
 import UserActions
 
 final class ProjectDetailViewModel: ViewModel, SnapshotViewModel {
-    enum Section {
+    enum Section: Hashable {
         case viewImages
         case editImages
         case details
         case notes
-        case threads
+        case threads(ThreadFilter)
+    }
+
+    enum ThreadFilter {
+        case all
+        case inCollection
+        case notInCollection
     }
 
     enum Item: Hashable {
@@ -78,6 +84,19 @@ final class ProjectDetailViewModel: ViewModel, SnapshotViewModel {
 
     var userActivity: AnyPublisher<UserActivity, Never> {
         Just(.showProject(project)).eraseToAnyPublisher()
+    }
+
+    func threadCount(filter: ThreadFilter) -> AnyPublisher<Int, Never> {
+        viewModeModel.$threadViewModels.map { models in
+            switch filter {
+            case .all:
+                return models.count
+            case .inCollection:
+                return models.filter { $0.isInCollection }.count
+            case .notInCollection:
+                return models.filter { !$0.isInCollection }.count
+            }
+        }.eraseToAnyPublisher()
     }
 }
 

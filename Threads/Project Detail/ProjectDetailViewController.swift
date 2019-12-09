@@ -98,6 +98,19 @@ extension ProjectDetailViewModel.Item: BindableCell {
     }
 }
 
+extension ProjectDetailViewModel.ThreadFilter {
+    var labelFormatString: String {
+        switch self {
+        case .all:
+            return Localized.threadsSectionHeader
+        case .inCollection:
+            return Localized.inCollectionThreadsSectionHeader
+        case .notInCollection:
+            return Localized.notInCollectionThreadsSectionHeader
+        }
+    }
+}
+
 class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetailViewModel> {
     let viewModel: ProjectDetailViewModel
 
@@ -171,13 +184,13 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
         kind: String, indexPath: IndexPath, section: ProjectDetailViewModel.Section
     ) -> UICollectionReusableView? {
         switch (kind, section) {
-        case (UICollectionView.elementKindSectionHeader, .threads):
+        case (UICollectionView.elementKindSectionHeader, .threads(let filter)):
             let view
                 = collectionView.dequeueReusableSupplementaryView(
                     ofKind: kind, withReuseIdentifier: "HeaderLabel", for: indexPath)
                 as! SectionHeaderLabelView
-            self.viewModel.threadCount.map { count in
-                String.localizedStringWithFormat(Localized.threadsSectionHeader, count)
+            self.viewModel.threadCount(filter: filter).map { count in
+                String.localizedStringWithFormat(filter.labelFormatString, count)
             }.sink { [weak view] text in
                 view?.textLabel.text = text
                 view?.setNeedsLayout()
@@ -353,7 +366,7 @@ class ProjectDetailViewController: ReactiveCollectionViewController<ProjectDetai
                     elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
                 section.boundarySupplementaryItems = [sectionHeader]
                 section.contentInsets
-                    = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 44, trailing: 0)
+                    = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0)
                 return section
             }
         }

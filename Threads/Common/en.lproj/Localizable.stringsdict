@@ -52,6 +52,42 @@
 			<string>%lu THREAD</string>
 		</dict>
 	</dict>
+	<key>InCollectionThreadsSectionHeader</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@ YOU HAVE</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>other</key>
+			<string>%lu THREADS</string>
+			<key>zero</key>
+			<string>THREADS</string>
+			<key>one</key>
+			<string>%lu THREAD</string>
+		</dict>
+	</dict>
+	<key>NotInCollectionThreadsSectionHeader</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@ YOU NEED</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>other</key>
+			<string>%lu THREADS</string>
+			<key>zero</key>
+			<string>THREADS</string>
+			<key>one</key>
+			<string>%lu THREAD</string>
+		</dict>
+	</dict>
 	<key>UsedInProjects</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>

@@ -17,6 +17,10 @@ final class ViewProjectThreadCellViewModel: ProjectThreadCellViewModel {
     init(projectThread: ProjectThread) {
         self.projectThread = projectThread
     }
+
+    var isInCollection: Bool {
+        (projectThread.thread?.amountInCollection ?? 0) > 0
+    }
 }
 
 extension ViewProjectThreadCellViewModel: Hashable {

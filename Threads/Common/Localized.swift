@@ -87,6 +87,14 @@ enum Localized {
     static let threadsSectionHeader = NSLocalizedString(
         "ThreadsSectionHeader", comment: "THREADS or 1 THREAD or 2 THREADS")
 
+    static let inCollectionThreadsSectionHeader = NSLocalizedString(
+        "InCollectionThreadsSectionHeader",
+        comment: "THREADS YOU HAVE or 1 THREAD YOU HAVE or 2 THREADS YOU HAVE")
+
+    static let notInCollectionThreadsSectionHeader = NSLocalizedString(
+        "NotInCollectionThreadsSectionHeader",
+        comment: "THREADS YOU NEED or 1 THREAD YOU NEED or 2 THREADS YOU NEED")
+
     static let notesSectionHeader = NSLocalizedString("NOTES", comment: "")
 
     static let purchased = NSLocalizedString("Purchased", comment: "")

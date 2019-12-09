@@ -70,11 +70,11 @@ final class EditProjectDetailViewModel: ProjectDetailMode {
                 [.editName(projectDetailModel), .editNotes(projectDetailModel)], toSection: .details
             )
 
-            snapshot.appendSections([.threads])
-            snapshot.appendItems(threadModels.map { .editThread($0) }, toSection: .threads)
+            snapshot.appendSections([.threads(.all)])
+            snapshot.appendItems(threadModels.map { .editThread($0) }, toSection: .threads(.all))
 
             #if !targetEnvironment(macCatalyst)
-            snapshot.appendItems([.add], toSection: .threads)
+            snapshot.appendItems([.add], toSection: .threads(.all))
             #endif
 
             return snapshot
